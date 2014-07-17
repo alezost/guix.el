@@ -153,6 +153,7 @@ PARENT-MODE is a parent mode for the `guix-TYPE-mode'."
           (get-fun       (intern (concat "guix-" type-str "-get-packages")))
           (set-fun       (intern (concat "guix-" type-str "-set")))
           (show-fun      (intern (concat "guix-" type-str "-show-packages")))
+          (get-show-fun  (intern (concat "guix-" type-str "-get-show-packages")))
           (insert-fun    (intern (concat "guix-" type-str "-insert-packages"))))
       `(progn
          (defgroup ,group nil
@@ -235,6 +236,13 @@ This function will not update the information, use
              (,insert-fun packages))
            (when (cdr packages)
              (message "%d packages." (length packages))))
+
+         (defun ,get-show-fun (search-type &rest search-vals)
+           ,(concat "Search for packages and show results in the " type-str " buffer.\n"
+                    "See `guix-get-packages' for the meaning of SEARCH-TYPE and\n"
+                    "SEARCH-VALS.")
+           (let ((packages (,get-fun search-type search-vals)))
+             (,set-fun packages search-type search-vals)))
 
          (let ((map ,mode-map))
            (define-key map (kbd "l") 'guix-history-back)

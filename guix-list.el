@@ -38,12 +38,6 @@
 
 (guix-define-buffer-type list tabulated-list-mode)
 
-(defcustom guix-list-single-package nil
-  "If non-nil, list a package even if it is the only matching result.
-If nil, show the single package in info buffer."
-  :type 'boolean
-  :group 'guix-list)
-
 (defvar guix-list-column-format
   '((name 20 t)
     (version 10 nil)
@@ -112,23 +106,6 @@ this list are appended to SEARCH-VALS."
    (if (equal guix-list-required-params 'all)
        search-vals
      (append search-vals (guix-list-get-params-for-receiving)))))
-
-(defun guix-list-get-show-packages (search-type &rest search-vals)
-  "Search for packages and show results.
-
-See `guix-list-get-packages' for the meaning of SEARCH-TYPE and
-SEARCH-VALS.
-
-Results may be displayed in the info buffer, see
-`guix-list-single-package' for details."
-  (let ((packages (guix-list-get-packages search-type search-vals)))
-    (if (or guix-list-single-package
-            (cdr packages))
-        (guix-list-set packages search-type search-vals)
-      (unless (equal guix-list-required-params 'all)
-        ;; If we don't have all info, we should receive it
-        (setq packages (guix-info-get-packages search-type search-vals)))
-      (guix-info-set packages search-type search-vals))))
 
 (defun guix-list-insert-packages (packages)
   "Display PACKAGES in the current list buffer."

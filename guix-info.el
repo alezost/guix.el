@@ -136,13 +136,6 @@ If nil, display all parameters with no particular order.")
 
 (defalias 'guix-info-get-packages 'guix-get-packages)
 
-(defun guix-info-get-show-packages (search-type &rest search-vals)
-  "Search for packages and show results in info buffer.
-See `guix-info-get-packages' for the meaning of SEARCH-TYPE and
-SEARCH-VALS."
-  (let ((packages (guix-info-get-packages search-type search-vals)))
-    (guix-info-set packages search-type search-vals)))
-
 (defun guix-info-insert-packages (packages)
   "Display PACKAGES in the current info buffer.
 PACKAGES should have a form of `guix-packages'."

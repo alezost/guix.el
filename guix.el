@@ -41,11 +41,18 @@
 ;;; Code:
 
 (require 'guix-list)
+(require 'guix-info)
 
 (defgroup guix nil
   "Interface for Guix package manager."
   :prefix "guix-"
   :group 'external)
+
+(defcustom guix-list-single-package nil
+  "If non-nil, list a package even if it is the only matching result.
+If nil, show a single package in the info buffer."
+  :type 'boolean
+  :group 'guix)
 
 (defvar guix-search-params '(name synopsis description)
   "Default list of parameters for searching by regexp.
@@ -54,6 +61,23 @@ Parameters are symbols from `guix-param-alist'.")
 (defvar guix-search-history nil
   "A history of minibuffer prompts.")
 
+(defun guix-get-show-packages (search-type &rest search-vals)
+  "Search for packages and show results.
+
+See `guix-get-packages' for the meaning of SEARCH-TYPE and
+SEARCH-VALS.
+
+Results are displayed in the list buffer, unless a single package
+is found and `guix-list-single-package' is nil."
+  (let ((packages (guix-list-get-packages search-type search-vals)))
+    (if (or guix-list-single-package
+            (cdr packages))
+        (guix-list-set packages search-type search-vals)
+      (unless (equal guix-list-required-params 'all)
+        ;; If we don't have all info, we should receive it
+        (setq packages (guix-info-get-packages search-type search-vals)))
+      (guix-info-set packages search-type search-vals))))
+
 ;;;###autoload
 (defun guix-search-by-name (name)
   "Search for Guix packages by NAME.
@@ -61,7 +85,7 @@ NAME is a string with name specification.  It may optionally contain
 a version number.  Examples: \"guile\", \"guile-2.0.11\"."
   (interactive
    (list (read-string "Package name: " nil 'guix-search-history)))
-  (guix-list-get-show-packages 'name name))
+  (guix-get-show-packages 'name name))
 
 ;;;###autoload
 (defun guix-search-by-regexp (regexp &rest params)
@@ -71,25 +95,25 @@ If PARAMS are not specified, use `guix-search-params'."
   (interactive
    (list (read-string "Regexp: " nil 'guix-search-history)))
   (or params (setq params guix-search-params))
-  (guix-list-get-show-packages 'regexp regexp params))
+  (guix-get-show-packages 'regexp regexp params))
 
 ;; ;;;###autoload
 ;; (defun guix-installed-packages ()
 ;;   "Display information about installed Guix packages."
 ;;   (interactive)
-;;   (guix-list-get-show-packages 'installed))
+;;   (guix-get-show-packages 'installed))
 
 ;;;###autoload
 (defun guix-all-available-packages ()
   "Display information about all available Guix packages."
   (interactive)
-  (guix-list-get-show-packages 'all-available))
+  (guix-get-show-packages 'all-available))
 
 ;;;###autoload
 (defun guix-newest-available-packages ()
   "Display information about the newest available Guix packages."
   (interactive)
-  (guix-list-get-show-packages 'newest-available))
+  (guix-get-show-packages 'newest-available))
 
 (provide 'guix)
 
