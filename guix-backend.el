@@ -21,6 +21,7 @@
 
 ;;; Code:
 
+(require 'guix-utils)
 (require 'geiser-repl)
 
 (defvar guix-helper-file
@@ -183,8 +184,8 @@ It defines a search function which is called with VALS as
 arguments.
 
 Returning value is a list of the form of `guix-packages'."
-  (let ((fun (cdr (assq type guix-search-type-alist))))
-    (or fun (error "Wrong search type ‘%s’" type))
+  (let ((fun (guix-get-key-val type guix-search-type-alist)))
+    (or fun (error "Wrong search type '%S'" type))
     (let ((packages (guix-eval-read
                      (apply #'guix-make-guile-expression fun vals))))
       (or packages (error "Packages not found")))))

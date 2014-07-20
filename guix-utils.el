@@ -51,15 +51,62 @@ If FACE is non-nil, propertize returned string with this FACE."
   "Return one-line string from a multi-line STR."
   (replace-regexp-in-string "\n" " " str))
 
+(defun guix-format-insert (val &optional face format)
+  "Insert VAL at point.
+If FACE is non-nil, propertize VAL with FACE.
+If FORMAT is non-nil, format VAL with FORMAT."
+  (let ((str (guix-get-string val face)))
+    (insert (if format
+                (format format str)
+              str))))
+
 (defun guix-mapinsert (function sequence separator)
   "Like `mapconcat' but for inserting text.
 Apply FUNCTION to each element of SEQUENCE, and insert SEPARATOR
 at point between each FUNCTION call."
-  (funcall function (car sequence))
-  (mapc (lambda (obj)
-          (insert separator)
-          (funcall function obj))
-        (cdr sequence)))
+  (when sequence
+    (funcall function (car sequence))
+    (mapc (lambda (obj)
+            (insert separator)
+            (funcall function obj))
+          (cdr sequence))))
+
+(defun guix-insert-button (label face action &optional message
+                                 &rest properties)
+  "Make button with LABEL and insert it at point.
+Propertize button with FACE.
+ACTION is a function called when the button is pressed.  It
+should accept button as the argument.
+MESSAGE is a button message.
+See `insert-text-button' for the meaning of PROPERTIES."
+  (apply #'insert-text-button
+         label
+         'face face
+         'action action
+         'follow-link t
+         'help-echo message
+         properties))
+
+(defun guix-get-filled-string (str col)
+  "Return string by filling STR to column COL."
+  (with-temp-buffer
+    (insert str)
+    (let ((fill-column col))
+      (fill-region (point-min) (point-max)))
+    (buffer-string)))
+
+(defsubst guix-get-key-val (key alist)
+  "Return value from ALIST by KEY.
+KEY should be a symbol."
+  (cdr (assq key alist)))
+
+(defun guix-get-string-by-key (key alist)
+  "Return string from ALIST of the form: ((KEY . STRING) ...)
+If STRING for KEY is not found, made a string from the KEY symbol."
+  (let ((str (guix-get-key-val key alist)))
+    (or str
+        (prog1 (symbol-name key)
+          (message "Couldn't find '%S' key." key)))))
 
 (provide 'guix-utils)
 

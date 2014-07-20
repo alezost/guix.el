@@ -55,8 +55,7 @@ If nil, show a single package in the info buffer."
   :group 'guix)
 
 (defvar guix-search-params '(name synopsis description)
-  "Default list of parameters for searching by regexp.
-Parameters are symbols from `guix-param-alist'.")
+  "Default list of package parameters for searching by regexp.")
 
 (defvar guix-search-history nil
   "A history of minibuffer prompts.")

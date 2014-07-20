@@ -31,44 +31,45 @@
 
 ;;; Parameters (fields) of the packages
 
-(defvar guix-param-alist
-  '((name          . "Name")
-    (version       . "Version")
-    (license       . "License")
-    (synopsis      . "Synopsis")
-    (description   . "Description")
-    (home-url      . "Home page")
-    (outputs       . "Outputs")
-    (inputs        . "Inputs")
-    (native-inputs . "Native inputs")
-    (location      . "Location"))
-  "Association list of names and titles of package parameters.
-Titles are used for displaying package information.")
+(defvar guix-param-titles
+  '((general
+     (name          . "Name")
+     (version       . "Version")
+     (license       . "License")
+     (synopsis      . "Synopsis")
+     (description   . "Description")
+     (home-url      . "Home page")
+     (outputs       . "Outputs")
+     (inputs        . "Inputs")
+     (native-inputs . "Native inputs")
+     (location      . "Location")
+     (installed     . "Installed"))
+    (installed
+     (path          . "Installed path")
+     (dependencies  . "Dependencies")
+     (output        . "Output")))
+  "List for defining titles of package parameters.
+Titles are used for displaying package information.
+Each element of the list has a form:
 
-(defun guix-get-param-title (param)
-  "Return a title of a package parameter PARAM."
-  (let ((desc (cdr (assq param guix-param-alist))))
-    (or desc
-        (progn
-          (setq desc (symbol-name param))
-          (message "Couldn't find ‘%s’ in `guix-param-alist'."
-                   desc)
-          desc))))
+  (INFO-TYPE (PARAM . TITLE) ...)")
 
-(defsubst guix-get-param-val (param info)
-  "Return a value of a parameter PARAM from a package INFO.
-INFO is alist of parameters and their values."
-  (cdr (assq param info)))
+(defun guix-get-param-title (param &optional info-type)
+  "Return title of a package parameter PARAM of INFO-TYPE."
+  (guix-get-string-by-key param
+                          (guix-get-key-val (or info-type 'general)
+                                            guix-param-titles)))
 
 (defun guix-get-name-spec (name version &optional output)
   "Return Guix package specification by its NAME, VERSION and OUTPUT."
   (concat name "-" version
           (when output (concat ":" output))))
 
-(defun guix-get-full-name (info)
-  "Return full name specification of the package by its INFO."
-  (guix-get-name-spec (guix-get-param-val 'name info)
-                      (guix-get-param-val 'version info)))
+(defun guix-get-full-name (info &optional output)
+  "Return name specification of the package by its INFO and OUTPUT."
+  (guix-get-name-spec (guix-get-key-val 'name info)
+                      (guix-get-key-val 'version info)
+                      output))
 
 
 ;;; Location of the packages
@@ -114,7 +115,7 @@ following form:
 
   ((PARAM . VAL) ...)
 
-PARAM is a parameter name from `guix-param-alist'.
+PARAM is a name of the package parameter.
 VAL is a value of this parameter.")
 (put 'guix-packages 'permanent-local t)
 
@@ -233,7 +234,8 @@ This function will not update the information, use
            (let ((inhibit-read-only t))
              (erase-buffer)
              (,mode)
-             (,insert-fun packages))
+             (,insert-fun packages)
+             (goto-char (point-min)))
            (when (cdr packages)
              (message "%d packages." (length packages))))
 

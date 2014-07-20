@@ -21,15 +21,67 @@
  (ice-9 vlist)
  (srfi srfi-1)
  (srfi srfi-11)
- (gnu packages)
  (guix packages)
+ (guix profiles)
  (guix ui)
- (guix licenses))
+ (guix licenses)
+ (gnu packages))
+
+(define current-manifest)
+
+(define (set-current-manifest!)
+  (set! current-manifest
+        ;; Is this path always correct?
+        (profile-manifest (string-append (getenv "HOME")
+                                         "/.guix-profile"))))
+(set-current-manifest!)
 
 (define (funcall-or-map fun obj)
   (if (list? obj)
       (map fun obj)
       (fun obj)))
+
+(define (get-info object fields field-alist)
+  "Return info about the OBJECT.
+
+FIELD-ALIST is alist of fields (symbols) and functions.  Each function
+should accept OBJECT as a single argument.
+
+FIELDS are fields from FIELD-ALIST.  If FIELDS are not specified, use
+all available fields.
+
+For each field from FIELDS a corresponding function is called on OBJECT.
+Returning value is alist of FIELDS and the values of funcalls."
+  (let ((use-all-fields (null? fields)))
+    (fold (lambda (field-assoc res)
+            (let ((field (car field-assoc))
+                  (fun   (cdr field-assoc)))
+              (if (or use-all-fields
+                      (memq field fields))
+                  (cons (cons field (fun object)) res)
+                  res)))
+          '()
+          field-alist)))
+
+(define package-installed-field-alist
+  (list
+   (cons 'output        manifest-entry-output)
+   (cons 'path          manifest-entry-path)
+   (cons 'dependencies  manifest-entry-dependencies)))
+
+(define (package-installed-info package . fields)
+  "Return additional info about the PACKAGE if it is installed.
+FIELDS are field names from `package-installed-field-alist', if FIELDS
+are not specified, use all fields.
+Returning value is list of alists of names and values of package fields."
+  (let* ((pattern (manifest-pattern (name (package-name package))
+                                    (version (package-version package))
+                                    (output #f)))
+         (entries (manifest-matching-entries current-manifest
+                                             (list pattern))))
+    (map (lambda (entry)
+           (get-info entry fields package-installed-field-alist))
+         entries)))
 
 (define (package-inputs-names inputs)
   "Return list of full names of the packages from INPUTS.
@@ -62,7 +114,8 @@ INPUTS can be either package inputs or native inputs."
    (cons 'native-inputs (lambda (pkg) (package-inputs-names
                                   (package-native-inputs pkg))))
    (cons 'location      (lambda (pkg) (location->string
-                                  (package-location pkg))))))
+                                  (package-location pkg))))
+   (cons 'installed     package-installed-info)))
 
 (define (package-field-accessor field)
   "Return the procedure of a package FIELD from `package-field-alist'."
@@ -77,24 +130,13 @@ INPUTS can be either package inputs or native inputs."
 FIELDS are field names from `package-field-alist', if FIELDS are not
 specified, use all fields.
 Returning value is alist of names and values of package fields."
-  (let ((use-all-fields (null? fields)))
-    (let loop ((field-alist package-field-alist)
-               (res '()))
-      (if (null? field-alist)
-          res
-          (let* ((field-elem (car field-alist))
-                 (field (car field-elem))
-                 (fun   (cdr field-elem)))
-            (loop (cdr field-alist)
-                  (if (or use-all-fields
-                          (memq field fields))
-                      (cons (cons field (fun package)) res)
-                      res)))))))
+  (get-info package fields package-field-alist))
 
 (define (find-packages-by-spec spec . fields)
   "Search for packages by name specification SPEC.
 Return list of package info.
 For the meaning of FIELDS, see `package-info'."
+  (set-current-manifest!)
   (let-values (((name version out)
                 (package-specification->name+version+output spec)))
     (map (lambda (pkg)
@@ -113,6 +155,7 @@ For the meaning of FIELDS, see `package-info'."
 MATCH-FIELDS is a list of fields that REGEXP can match.
 For the meaning of RET-FIELDS, see `package-info'.
 Return list of package info."
+  (set-current-manifest!)
   (let ((re (make-regexp regexp regexp/icase)))
     (fold-packages (lambda (pkg res)
                      (if (package-match? re pkg match-fields)
@@ -123,6 +166,7 @@ Return list of package info."
 (define (newest-available-packages . fields)
   "Return list of package info for the newest available packages.
 For the meaning of FIELDS, see `package-info'."
+  (set-current-manifest!)
   (vhash-fold (lambda (key val res)
                 (cons (apply package-info (cadr val) fields) res))
               '()
@@ -131,6 +175,7 @@ For the meaning of FIELDS, see `package-info'."
 (define (all-available-packages . fields)
   "Return list of package info for all available packages.
 For the meaning of FIELDS, see `package-info'."
+  (set-current-manifest!)
   (fold-packages (lambda (pkg res)
                    (cons (apply package-info pkg fields) res))
                  '()))

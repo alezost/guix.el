@@ -41,30 +41,32 @@
 (defvar guix-list-column-format
   '((name 20 t)
     (version 10 nil)
+    (outputs 13 t)
+    (installed 13 t)
     (synopsis 30 nil))
   "List of columns displayed in a buffer with a list of packages.
 Each element of the list should have the form (NAME WIDTH SORT . PROPS).
-NAME is a parameter from `guix-param-alist'.
+PARAM is a name of the package parameter.
 For the meaning of WIDTH, SORT and PROPS, see `tabulated-list-format'.")
 
 (defvar guix-list-column-name-alist ()
   "Alist of titles of columns.
 Each association is a cons of parameter name and column name.
 If no parameter is not found in this alist, the value from
-`guix-param-alist' is used for a column name.")
+`guix-param-titles' is used for a column name.")
 
 (defvar guix-list-column-value-alist
   '((synopsis    . guix-list-get-one-line)
-    (description . guix-list-get-one-line))
-  "Alist for parameter values inserted in columns.
+    (description . guix-list-get-one-line)
+    (installed   . guix-list-get-installed-outputs))
+  "Alist for the values of package parameters inserted in columns.
 
-Each association is a cons of parameter name from
-`guix-param-alist' and a function returning a value
-that will be inserted.
+Car of each assoc is a parameter name.
 
-The function is called with two arguments: the first one is a
-value of the parameter; the second argument is a package
-info (alist of parameters and their values).")
+Cdr is a function returning a value that will be inserted.  The
+function is called with 2 arguments: the first one is the value
+of the parameter; the second argument is a package info (alist of
+parameters and their values).")
 
 (defvar guix-list-required-params '(name version)
   "List of required package parameters.
@@ -140,7 +142,7 @@ of parameters and values."
          (mapcar
           (lambda (col-spec)
             (let* ((param (car col-spec))
-                   (val (guix-get-param-val param info))
+                   (val (guix-get-key-val param info))
                    (fun (cdr (assq param guix-list-column-value-alist))))
               (if (and val fun)
                   (funcall fun val info)
@@ -150,6 +152,15 @@ of parameters and values."
 (defun guix-list-get-one-line (str _)
   "Return one-line string from a multi-line STR."
   (guix-get-one-line str))
+
+(defun guix-list-get-installed-outputs (installed _)
+  "Return string with outputs from INSTALLED list.
+INSTALLED is a list of alists with additional parameters for
+installed package."
+  (guix-get-string
+   (mapcar (lambda (info)
+             (guix-get-key-val 'output info))
+           installed)))
 
 (defun guix-list-get-full-name ()
   "Return full name of the current package."
