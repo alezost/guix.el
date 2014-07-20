@@ -33,21 +33,22 @@
 
 (defvar guix-param-titles
   '((general
-     (name          . "Name")
-     (version       . "Version")
-     (license       . "License")
-     (synopsis      . "Synopsis")
-     (description   . "Description")
-     (home-url      . "Home page")
-     (outputs       . "Outputs")
-     (inputs        . "Inputs")
-     (native-inputs . "Native inputs")
-     (location      . "Location")
-     (installed     . "Installed"))
+     (name              . "Name")
+     (version           . "Version")
+     (license           . "License")
+     (synopsis          . "Synopsis")
+     (description       . "Description")
+     (home-url          . "Home page")
+     (outputs           . "Outputs")
+     (inputs            . "Inputs")
+     (native-inputs     . "Native inputs")
+     (propagated-inputs . "Propagated inputs")
+     (location          . "Location")
+     (installed         . "Installed"))
     (installed
-     (path          . "Installed path")
-     (dependencies  . "Dependencies")
-     (output        . "Output")))
+     (path              . "Installed path")
+     (dependencies      . "Dependencies")
+     (output            . "Output")))
   "List for defining titles of package parameters.
 Titles are used for displaying package information.
 Each element of the list has a form:

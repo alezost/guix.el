@@ -126,20 +126,22 @@ INPUTS can be either package inputs or native inputs."
 
 (define package-field-alist
   (list
-   (cons 'name          package-name)
-   (cons 'version       package-version)
-   (cons 'license       package-license-names)
-   (cons 'synopsis      package-synopsis)
-   (cons 'description   package-description)
-   (cons 'home-url      package-home-page)
-   (cons 'outputs       package-outputs)
-   (cons 'inputs        (lambda (pkg) (package-inputs-names
-                                  (package-inputs pkg))))
-   (cons 'native-inputs (lambda (pkg) (package-inputs-names
-                                  (package-native-inputs pkg))))
-   (cons 'location      (lambda (pkg) (location->string
-                                  (package-location pkg))))
-   (cons 'installed     package-installed-info)))
+   (cons 'name              package-name)
+   (cons 'version           package-version)
+   (cons 'license           package-license-names)
+   (cons 'synopsis          package-synopsis)
+   (cons 'description       package-description)
+   (cons 'home-url          package-home-page)
+   (cons 'outputs           package-outputs)
+   (cons 'inputs            (lambda (pkg) (package-inputs-names
+                                      (package-inputs pkg))))
+   (cons 'native-inputs     (lambda (pkg) (package-inputs-names
+                                      (package-native-inputs pkg))))
+   (cons 'propagated-inputs (lambda (pkg) (package-inputs-names
+                                      (package-propagated-inputs pkg))))
+   (cons 'location          (lambda (pkg) (location->string
+                                      (package-location pkg))))
+   (cons 'installed         package-installed-info)))
 
 (define (package-field-accessor field)
   "Return the procedure of a package FIELD from `package-field-alist'."

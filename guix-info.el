@@ -92,6 +92,11 @@
   "Face used for native inputs of a package."
   :group 'guix-info)
 
+(defface guix-info-propagated-inputs
+  '((t :inherit guix-info-inputs))
+  "Face used for propagated inputs of a package."
+  :group 'guix-info)
+
 (defface guix-info-installed-outputs
   '((default :weight bold)
     (((class color) (min-colors 88) (background light))
@@ -135,12 +140,12 @@
   :type 'boolean
   :group 'guix-info)
 
-(defvar guix-info-param-title-format "%-14s: "
+(defvar guix-info-param-title-format "%-18s: "
   "String used to format a title of a package parameter.
 It should be a '%s'-sequence.  After inserting a title formatted
 with this string, a value of the parameter is inserted.")
 
-(defvar guix-info-multiline-prefix (make-string 16 ?\s)
+(defvar guix-info-multiline-prefix (make-string 20 ?\s)
   "String used to format multi-line parameter values.
 If a value occupies more than one line, this string is inserted
 in the beginning of each line after the first one.")
@@ -155,22 +160,23 @@ number of characters, it will be split into several lines.")
 
 (defvar guix-info-insert-methods
   '((general
-     (name          guix-info-name)
-     (version       guix-info-version)
-     (license       guix-info-license)
-     (synopsis      guix-info-synopsis)
-     (description   guix-info-description)
-     (outputs       guix-info-insert-outputs
-                    guix-info-insert-title-simple)
-     (home-url      guix-info-insert-url)
-     (inputs        guix-info-insert-inputs)
-     (native-inputs guix-info-insert-native-inputs)
-     (location      guix-info-insert-location))
+     (name              guix-info-name)
+     (version           guix-info-version)
+     (license           guix-info-license)
+     (synopsis          guix-info-synopsis)
+     (description       guix-info-description)
+     (outputs           guix-info-insert-outputs
+                        guix-info-insert-title-simple)
+     (home-url          guix-info-insert-url)
+     (inputs            guix-info-insert-inputs)
+     (native-inputs     guix-info-insert-native-inputs)
+     (propagated-inputs guix-info-insert-propagated-inputs)
+     (location          guix-info-insert-location))
     (installed
-     (path          guix-info-insert-output-path
-                    guix-info-insert-title-installed)
-     (dependencies  guix-info-insert-output-dependencies
-                    guix-info-insert-title-installed)))
+     (path              guix-info-insert-output-path
+                        guix-info-insert-title-installed)
+     (dependencies      guix-info-insert-output-dependencies
+                        guix-info-insert-title-installed)))
   "List of methods for inserting values of package parameters.
 Each element of the list should have a form:
 
@@ -190,7 +196,7 @@ argument.")
 
 (defvar guix-info-displayed-params
   '((general name version synopsis outputs location home-url
-             license inputs native-inputs description)
+             license inputs native-inputs propagated-inputs description)
     (installed path dependencies))
   "List of parameters displayed in the info buffer.
 Each element of the list should have a form:
@@ -316,6 +322,10 @@ If FACE is non-nil, propertize inserted line(s) with this FACE."
 (defun guix-info-insert-native-inputs (inputs _)
   "Make buttons from native INPUTS and insert those at point."
   (guix-info-insert-package-names inputs 'guix-info-native-inputs))
+
+(defun guix-info-insert-propagated-inputs (inputs _)
+  "Make buttons from propagated INPUTS and insert those at point."
+  (guix-info-insert-package-names inputs 'guix-info-propagated-inputs))
 
 (defun guix-info-insert-package-names (names face)
   "Make buttons from package NAMES and insert those at point.
