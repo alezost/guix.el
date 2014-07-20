@@ -74,17 +74,18 @@ Each element of the list has a form:
 
 ;;; Location of the packages
 
-(defvar guix-guile-site-directory nil
-  "Default guile site directory.
-If it is not set by a user, it is set after starting Guile REPL.")
+(defvar guix-directory nil
+  "Default Guix directory.
+If it is not set by a user, it is set after starting Guile REPL.
+This directory is used to define location of the packages.")
 
-(defun guix-set-site-directory ()
-  "Set `guix-guile-site-directory' if needed."
-  (or guix-guile-site-directory
-      (setq guix-guile-site-directory
-            (guix-eval-read (guix-make-guile-expression '%site-dir)))))
+(defun guix-set-directory ()
+  "Set `guix-directory' if needed."
+  (or guix-directory
+      (setq guix-directory
+            (guix-eval-read "guix-dir"))))
 
-(add-hook 'guix-after-start-repl-hook 'guix-set-site-directory)
+(add-hook 'guix-after-start-repl-hook 'guix-set-directory)
 
 (defun guix-find-location (location)
   "Go to LOCATION of a package.
@@ -93,10 +94,10 @@ LOCATION is a string of the form:
   \"PATH:LINE:COLUMN\"
 
 If PATH is relative, it is considered to be relative to
-`guix-guile-site-directory'."
+`guix-directory'."
   (cl-multiple-value-bind (path line col)
       (split-string location ":")
-    (let ((file (expand-file-name path guix-guile-site-directory))
+    (let ((file (expand-file-name path guix-directory))
           (line (string-to-number line))
           (col  (string-to-number col)))
       (find-file file)

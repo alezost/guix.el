@@ -22,7 +22,7 @@
 ;;; Code:
 
 (require 'guix-utils)
-(require 'geiser-repl)
+(require 'geiser-mode)
 
 (defvar guix-helper-file
   (expand-file-name
@@ -39,15 +39,6 @@ strings of the form:
   (NAME . ARGS)
 
 Where ARGS is a list of arguments to the guile program.")
-
-(defun guix-get-guile-program ()
-  "Return value suitable for `geiser-guile-binary'.
-Result is a list containing `guix-guile-program' and arguments
-for loading `guix-helper-file'."
-  (let ((guile (if (stringp guix-guile-program)
-                   (list guix-guile-program)
-                 guix-guile-program)))
-    (append guile (list "-l" guix-helper-file))))
 
 
 ;;; REPL
@@ -78,7 +69,8 @@ If you have a slow system, try to increase this time."
   ;; `geiser-repl--to-repl-buffer'.
   (message "Starting Geiser REPL for Guix ...")
   (let ((impl 'guile)
-        (geiser-guile-binary (guix-get-guile-program))
+        (geiser-guile-binary guix-guile-program)
+        (geiser-guile-init-file guix-helper-file)
         (geiser-repl-startup-time guix-repl-startup-time)
         (repl (get-buffer-create guix-repl-buffer-name)))
     (with-current-buffer repl

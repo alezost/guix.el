@@ -17,6 +17,30 @@
 
 ;;; Code:
 
+
+;;; Setting paths
+
+(use-modules (srfi srfi-26))
+
+(define guix-dir)
+
+;; The code is taken from ‘guix’ executable script
+(define (set-paths!)
+  (define-syntax-rule (push! elt v) (set! v (cons elt v)))
+  (let ((module-dir (%site-dir))
+        (updates-dir (and=> (or (getenv "XDG_CONFIG_HOME")
+                                (and=> (getenv "HOME")
+                                       (cut string-append <> "/.config")))
+                            (cut string-append <> "/guix/latest"))))
+    (set! guix-dir (if (and updates-dir (file-exists? updates-dir))
+                       updates-dir
+                       module-dir))
+    (push! guix-dir %load-path)
+    (push! guix-dir %load-compiled-path)))
+
+(set-paths!)
+
+
 (use-modules
  (ice-9 vlist)
  (srfi srfi-1)
