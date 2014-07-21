@@ -32,11 +32,13 @@
                                 (and=> (getenv "HOME")
                                        (cut string-append <> "/.config")))
                             (cut string-append <> "/guix/latest"))))
-    (set! guix-dir (if (and updates-dir (file-exists? updates-dir))
-                       updates-dir
-                       module-dir))
-    (push! guix-dir %load-path)
-    (push! guix-dir %load-compiled-path)))
+    (push! module-dir %load-compiled-path)
+    (if (and updates-dir (file-exists? updates-dir))
+        (begin
+          (set! guix-dir updates-dir)
+          (push! updates-dir %load-path)
+          (push! updates-dir %load-compiled-path))
+        (set! guix-dir module-dir))))
 
 (set-paths!)
 
