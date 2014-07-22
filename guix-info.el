@@ -148,7 +148,11 @@ with this string, a value of the parameter is inserted.")
 (defvar guix-info-multiline-prefix (make-string 20 ?\s)
   "String used to format multi-line parameter values.
 If a value occupies more than one line, this string is inserted
-in the beginning of each line after the first one.")
+in the beginning of each line after the first one.
+This string is used by `guix-info-insert-val-default'.")
+
+(defvar guix-info-indent-string (make-string 2 ?\s)
+  "String used to indent various parts of inserted text.")
 
 (defvar guix-info-fill-column 60
   "Column used for filling (word wrapping) parameters with long lines.
@@ -164,7 +168,8 @@ number of characters, it will be split into several lines.")
      (version           guix-info-version)
      (license           guix-info-license)
      (synopsis          guix-info-synopsis)
-     (description       guix-info-description)
+     (description       guix-info-insert-description
+                        guix-info-insert-title-simple)
      (outputs           guix-info-insert-outputs
                         guix-info-insert-title-simple)
      (home-url          guix-info-insert-url)
@@ -218,6 +223,17 @@ See `guix-info-insert-methods' for details."
   "Return parameters of INFO-TYPE that should be displayed."
   (guix-get-key-val (or info-type 'general)
                     guix-info-displayed-params))
+
+(defun guix-info-get-indent (&optional level)
+  "Return `guix-info-indent-string' \"multiplied\" by LEVEL.
+LEVEL is 1 by default."
+  (let (str)
+    (dotimes (i (or level 1) str)
+      (setq str (concat str guix-info-indent-string)))))
+
+(defun guix-info-insert-indent (&optional level)
+  "Insert `guix-info-indent-string' LEVEL times (1 by default)."
+  (insert (guix-info-get-indent level)))
 
 (defun guix-info-insert-packages (packages)
   "Display PACKAGES in the current info buffer.
@@ -276,23 +292,39 @@ If FACE-OR-FUN is a face, propertize inserted VAL with this face."
 (defun guix-info-insert-val-default (val &optional face)
   "Format and insert parameter value VAL at point.
 
+This function is intended to be called after
+`guix-info-insert-title-default'.
+
 If VAL is a one-line string longer than `guix-info-fill-column',
-split it into several short lines.
+split it into several short lines.  See also
+`guix-info-multiline-prefix'.
 
 If FACE is non-nil, propertize inserted line(s) with this FACE."
-  (if (stringp val)
-      (let ((strings (split-string val "\n *")))
-        (and (null (cdr strings))       ; if not multi-line
-             (> (length val) guix-info-fill-column)
-             (setq strings
-                   (split-string (guix-get-filled-string
-                                  val guix-info-fill-column)
-                                 "\n")))
-        (guix-mapinsert (lambda (str)
-                          (guix-format-insert str face))
-                        strings
-                        (concat "\n" guix-info-multiline-prefix)))
-    (guix-format-insert val face)))
+  (guix-split-insert val face
+                     guix-info-fill-column
+                     (concat "\n" guix-info-multiline-prefix)))
+
+(defun guix-info-insert-val-simple (val &optional face)
+  "Format and insert parameter value VAL at point.
+
+This function is intended to be called after
+`guix-info-insert-title-simple'.
+
+If VAL is a one-line string longer than `guix-info-fill-column',
+split it into several short lines and indent each line with
+`guix-info-indent-string'.
+
+If FACE is non-nil, propertize inserted line(s) with this FACE."
+  (if (null val)
+      (progn (guix-info-insert-indent)
+             (guix-format-insert nil))
+    (let ((prefix (concat "\n" (guix-info-get-indent))))
+      (insert prefix)
+      (guix-split-insert val face guix-info-fill-column prefix))))
+
+(defun guix-info-insert-description (desc _)
+  "Insert description DESC at point."
+  (guix-info-insert-val-simple desc 'guix-info-description))
 
 (defun guix-info-insert-file-path (path _)
   "Make button from file PATH and insert it at point."
@@ -357,24 +389,14 @@ Propertize package button with FACE."
 It should be a '%s'-sequence.  After inserting an output name
 formatted with this string, an action button is inserted.")
 
-(defvar guix-info-output-indent-string (make-string 2 ?\s)
-  "String used to indent package outputs.
-This string is used to indent/separate various parts during
-inserting outputs and installed info.")
-
 (defvar guix-info-obsolete-string "(This package is obsolete)"
   "String used if a package is obsolete.")
-
-(defun guix-info-output-indent (&optional level)
-  "Insert `guix-info-output-indent-string' LEVEL times (1 by default)."
-  (dotimes (i (or level 1))
-    (insert guix-info-output-indent-string)))
 
 (defun guix-info-insert-outputs (outputs info)
   "Insert OUTPUTS from INFO at point."
   (let ((obsolete  (guix-get-key-val 'obsolete info)))
     (when obsolete
-      (guix-info-output-indent)
+      (guix-info-insert-indent)
       (guix-format-insert guix-info-obsolete-string
                           'guix-info-obsolete)))
   (insert "\n")
@@ -396,7 +418,7 @@ current OUTPUT is installed (if there is such output in
                                      output))
                           installed))
          (action-type (if installed-info 'delete 'install)))
-    (guix-info-output-indent)
+    (guix-info-insert-indent)
     (guix-format-insert output
                         (if installed-info
                             'guix-info-installed-outputs
@@ -404,7 +426,7 @@ current OUTPUT is installed (if there is such output in
                         guix-info-output-format)
     (guix-info-insert-action-button action-type full-name)
     (when obsolete
-      (guix-info-output-indent)
+      (guix-info-insert-indent)
       (guix-info-insert-action-button 'update full-name))
     (insert "\n")
     (when installed-info
@@ -423,13 +445,13 @@ NAME is a full name specification of the package."
 
 (defun guix-info-insert-title-installed (title &optional face)
   "Insert TITLE of the installed package parameter at point."
-  (guix-info-output-indent 2)
+  (guix-info-insert-indent 2)
   (guix-info-insert-title-simple title face))
 
 (defun guix-info-insert-output-path (path _)
   "Insert PATH of the installed output."
   (insert "\n")
-  (guix-info-output-indent 3)
+  (guix-info-insert-indent 3)
   (guix-info-insert-file-path path nil))
 
 (defun guix-info-insert-output-dependencies (deps _)
@@ -438,7 +460,7 @@ NAME is a full name specification of the package."
       (mapc (lambda (dep)
               (guix-info-insert-output-path (cadr dep) nil))
             deps)
-    (guix-info-output-indent)
+    (guix-info-insert-indent)
     (guix-format-insert nil)))
 
 (provide 'guix-info)

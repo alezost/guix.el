@@ -43,7 +43,7 @@ If FACE is non-nil, propertize returned string with this FACE."
               ((listp val) (mapconcat #'guix-get-string
                                       val guix-list-separator))
               (t (prin1-to-string val)))))
-    (if face
+    (if (and val face)
         (propertize str 'face face)
       str)))
 
@@ -52,7 +52,7 @@ If FACE is non-nil, propertize returned string with this FACE."
   (replace-regexp-in-string "\n" " " str))
 
 (defun guix-format-insert (val &optional face format)
-  "Insert VAL at point.
+  "Convert VAL into a string and insert it at point.
 If FACE is non-nil, propertize VAL with FACE.
 If FORMAT is non-nil, format VAL with FORMAT."
   (let ((str (guix-get-string val face)))
@@ -79,13 +79,42 @@ ACTION is a function called when the button is pressed.  It
 should accept button as the argument.
 MESSAGE is a button message.
 See `insert-text-button' for the meaning of PROPERTIES."
-  (apply #'insert-text-button
-         label
-         'face face
-         'action action
-         'follow-link t
-         'help-echo message
-         properties))
+  (if (null label)
+      (guix-format-insert nil)
+    (apply #'insert-text-button
+           label
+           'face face
+           'action action
+           'follow-link t
+           'help-echo message
+           properties)))
+
+(defun guix-split-insert (val &optional face col separator)
+  "Convert VAL into a string, split it and insert at point.
+
+If FACE is non-nil, propertize returned string with this FACE.
+
+If COL is non-nil and result string is a one-line string longer
+than COL, split it into several short lines.
+
+Separate inserted lines with SEPARATOR."
+  (if (null val)
+      (guix-format-insert nil)
+    (let ((strings (guix-split-string (guix-get-string val) col)))
+      (guix-mapinsert (lambda (str) (guix-format-insert str face))
+                      strings
+                      (or separator "")))))
+
+(defun guix-split-string (str &optional col)
+  "Split string STR by lines and return list of result strings.
+If COL is non-nil and STR is a one-line string longer than COL,
+split it into several short lines."
+  (let ((strings (split-string str "\n *")))
+    (if (and col
+             (null (cdr strings))       ; if not multi-line
+             (> (length str) col))
+        (split-string (guix-get-filled-string str col) "\n")
+      strings)))
 
 (defun guix-get-filled-string (str col)
   "Return string by filling STR to column COL."
