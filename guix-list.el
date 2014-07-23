@@ -38,6 +38,11 @@
 
 (guix-define-buffer-type list tabulated-list-mode)
 
+(defface guix-list-obsolete
+  '((t :inherit guix-info-obsolete))
+  "Face used if a package is obsolete."
+  :group 'guix-list)
+
 (defvar guix-list-column-format
   '((name 20 t)
     (version 10 nil)
@@ -56,7 +61,8 @@ If no parameter is not found in this alist, the value from
 `guix-param-titles' is used for a column name.")
 
 (defvar guix-list-column-value-alist
-  '((synopsis    . guix-list-get-one-line)
+  '((name        . guix-list-get-name)
+    (synopsis    . guix-list-get-one-line)
     (description . guix-list-get-one-line)
     (installed   . guix-list-get-installed-outputs))
   "Alist for the values of package parameters inserted in columns.
@@ -68,7 +74,7 @@ function is called with 2 arguments: the first one is the value
 of the parameter; the second argument is a package info (alist of
 parameters and their values).")
 
-(defvar guix-list-required-params '(name version)
+(defvar guix-list-required-params '(id)
   "List of required package parameters.
 
 Parameters displayed in a list buffer (columns) and parameters
@@ -78,8 +84,8 @@ May be a special value `all', in which case all supported
 parameters are received (this may be very slow for lists with a
 big number of packages).
 
-Do not remove `name' and `version' from this list as they are
-required for identifying a package.")
+Do not remove `id' from this list as it is required for
+identifying a package.")
 
 (defun guix-list-get-params-for-receiving ()
   "Return list of package parameters that should be received."
@@ -130,7 +136,7 @@ this list are appended to SEARCH-VALS."
 Values are taken from PACKAGES which should have the form of
 `guix-list-packages'."
   (mapcar (lambda (info)
-            (list (guix-get-full-name info)
+            (list (guix-get-key-val 'id info)
                   (guix-list-get-entry info)))
           packages))
 
@@ -149,6 +155,13 @@ of parameters and values."
                 (guix-get-string val))))
           guix-list-column-format)))
 
+(defun guix-list-get-name (name info)
+  "Return NAME of the package.
+Colorize it with `guix-list-obsolete' if needed."
+  (guix-get-string name
+                   (when (guix-get-key-val 'obsolete info)
+                     'guix-list-obsolete)))
+
 (defun guix-list-get-one-line (str _)
   "Return one-line string from a multi-line STR."
   (guix-get-one-line str))
@@ -162,15 +175,15 @@ installed package."
              (guix-get-key-val 'output info))
            installed)))
 
-(defun guix-list-get-full-name ()
-  "Return full name of the current package."
+(defun guix-list-get-id ()
+  "Return ID of the current package."
   (or (tabulated-list-get-id)
       (user-error "No package here")))
 
 (defun guix-list-describe-package ()
   "Describe the current package."
   (interactive)
-  (guix-info-get-show-packages 'name (guix-list-get-full-name)))
+  (guix-info-get-show-packages 'id (guix-list-get-id)))
 
 (provide 'guix-list)
 

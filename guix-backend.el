@@ -156,10 +156,13 @@ Return elisp expression of the first result value of evaluation."
 ;;; Getting packages info
 
 (defvar guix-search-type-alist
-  '((name             . find-packages-by-spec)
-    (regexp           . find-packages-by-regexp)
-    (all-available    . all-available-packages)
-    (newest-available . newest-available-packages))
+  '((id               . packages-info-by-keys)
+    (name             . packages-info-by-spec)
+    (regexp           . packages-info-by-regexp)
+    (all-available    . all-available-packages-info)
+    (newest-available . newest-available-packages-info)
+    (installed        . installed-packages-info)
+    (obsolete         . obsolete-packages-info))
   "Alist of available search options.
 Each association has a form:
 

@@ -35,6 +35,8 @@
 ;;   (add-to-list 'load-path "/path/to/guix-dir")
 ;;   (autoload 'guix-search-by-name "guix" nil t)
 ;;   (autoload 'guix-search-by-regexp "guix" nil t)
+;;   (autoload 'guix-installed-packages "guix" nil t)
+;;   (autoload 'guix-obsolete-packages "guix" nil t)
 ;;   (autoload 'guix-all-available-packages "guix" nil t)
 ;;   (autoload 'guix-newest-available-packages "guix" nil t)
 
@@ -96,11 +98,17 @@ If PARAMS are not specified, use `guix-search-params'."
   (or params (setq params guix-search-params))
   (guix-get-show-packages 'regexp regexp params))
 
-;; ;;;###autoload
-;; (defun guix-installed-packages ()
-;;   "Display information about installed Guix packages."
-;;   (interactive)
-;;   (guix-get-show-packages 'installed))
+;;;###autoload
+(defun guix-installed-packages ()
+  "Display information about installed Guix packages."
+  (interactive)
+  (guix-get-show-packages 'installed))
+
+;;;###autoload
+(defun guix-obsolete-packages ()
+  "Display information about obsolete Guix packages."
+  (interactive)
+  (guix-get-show-packages 'obsolete))
 
 ;;;###autoload
 (defun guix-all-available-packages ()

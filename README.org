@@ -31,25 +31,28 @@ For the manual installation, clone the repo, add the directory to the
 (add-to-list 'load-path "/path/to/guix-dir")
 (autoload 'guix-search-by-name "guix" nil t)
 (autoload 'guix-search-by-regexp "guix" nil t)
+(autoload 'guix-installed-packages "guix" nil t)
+(autoload 'guix-obsolete-packages "guix" nil t)
 (autoload 'guix-all-available-packages "guix" nil t)
 (autoload 'guix-newest-available-packages "guix" nil t)
 #+END_SRC
 
 * Usage
 
-/Note:/ The first start of Guix REPL may take a long time, especially if
-your Guix directories are not compiled, so be patient and do not press
-=C-g=.  If you want to disable auto-compilation, use the following
-setting:
+/Note:/ The first start of Guix REPL may take a long time, so be patient
+and do not press =C-g=. If you want to disable auto-compilation, use the
+following setting:
 
 #+BEGIN_SRC emacs-lisp
 (setq guix-guile-program '("guile" "--no-auto-compile"))
 #+END_SRC
 
-- To list available packages, use the following commands:
+- To list packages, use the following commands:
 
   : M-x guix-all-available-packages
   : M-x guix-newest-available-packages
+  : M-x guix-installed-packages
+  : M-x guix-obsolete-packages
 
 - To search for packages, use:
 
@@ -86,3 +89,8 @@ about the package.
 
 /Hint:/ If you need several "list" or "info" buffers, you can simlpy
 =M-x clone-buffer= them, and each buffer will have its own history.
+
+/Warning:/ Name/version pairs cannot be used to identify Guix packages
+(because a name is not necessarily unique), so =guix.el= uses special
+identifiers that live only during a guile session, so if the Guix REPL
+was restarted, you may want to revert "list" buffer (by pressing =g=).
