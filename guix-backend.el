@@ -63,52 +63,55 @@ If you have a slow system, try to increase this time."
 (defvar guix-repl-buffer nil
   "Geiser REPL buffer used for communicating with Guix.")
 
-(defun guix-start-repl ()
-  "Start Geiser REPL configured for Guix."
+(defun guix-start-repl-maybe ()
+  "Start Geiser REPL configured for Guix if needed."
   ;; A mix of the code from `guix-geiser-repl--start-repl' and
   ;; `geiser-repl--to-repl-buffer'.
-  (message "Starting Geiser REPL for Guix ...")
-  (let ((impl 'guile)
-        (geiser-guile-binary guix-guile-program)
-        (geiser-guile-init-file guix-helper-file)
-        (geiser-repl-startup-time guix-repl-startup-time)
-        (repl (get-buffer-create guix-repl-buffer-name)))
-    (with-current-buffer repl
-      (geiser-repl-mode)
-      (geiser-impl--set-buffer-implementation impl)
-      (geiser-repl--autodoc-mode -1)
-      (goto-char (point-max))
-      (let* ((prompt-re (geiser-repl--prompt-regexp impl))
-             (deb-prompt-re (geiser-repl--debugger-prompt-regexp impl))
-             (prompt (geiser-con--combined-prompt prompt-re deb-prompt-re)))
-        (or prompt-re
-            (error "Oh no! Guix REPL has not been started"))
-        (geiser-repl--start-scheme impl nil prompt)
-        (geiser-repl--quit-setup)
-        (geiser-repl--history-setup)
-        (add-to-list 'geiser-repl--repls (current-buffer))
-        (geiser-repl--set-this-buffer-repl (current-buffer))
-        (setq geiser-repl--connection
-              (geiser-con--make-connection (get-buffer-process (current-buffer))
-                                           prompt-re
-                                           deb-prompt-re))
-        (geiser-repl--startup impl nil)
-        (geiser-repl--autodoc-mode 1)
-        (geiser-company--setup geiser-repl-company-p)
-        (add-hook 'comint-output-filter-functions
-                  'geiser-repl--output-filter
-                  nil
-                  t)
-        (set-process-query-on-exit-flag (get-buffer-process (current-buffer))
-                                        geiser-repl-query-on-kill-p)
-        (setq guix-repl-buffer repl)
-        (message "Guix REPL has been started.")
-        (run-hooks 'guix-after-start-repl-hook)))))
+  (unless (and (buffer-live-p guix-repl-buffer)
+               (get-buffer-process guix-repl-buffer))
+    (when (buffer-live-p guix-repl-buffer)
+      (kill-buffer guix-repl-buffer))
+    (message "Starting Geiser REPL for Guix ...")
+    (let ((impl 'guile)
+          (geiser-guile-binary guix-guile-program)
+          (geiser-guile-init-file guix-helper-file)
+          (geiser-repl-startup-time guix-repl-startup-time)
+          (repl (get-buffer-create guix-repl-buffer-name)))
+      (with-current-buffer repl
+        (geiser-repl-mode)
+        (geiser-impl--set-buffer-implementation impl)
+        (geiser-repl--autodoc-mode -1)
+        (goto-char (point-max))
+        (let* ((prompt-re (geiser-repl--prompt-regexp impl))
+               (deb-prompt-re (geiser-repl--debugger-prompt-regexp impl))
+               (prompt (geiser-con--combined-prompt prompt-re deb-prompt-re)))
+          (or prompt-re
+              (error "Oh no! Guix REPL has not been started"))
+          (geiser-repl--start-scheme impl nil prompt)
+          (geiser-repl--quit-setup)
+          (geiser-repl--history-setup)
+          (add-to-list 'geiser-repl--repls (current-buffer))
+          (geiser-repl--set-this-buffer-repl (current-buffer))
+          (setq geiser-repl--connection
+                (geiser-con--make-connection (get-buffer-process (current-buffer))
+                                             prompt-re
+                                             deb-prompt-re))
+          (geiser-repl--startup impl nil)
+          (geiser-repl--autodoc-mode 1)
+          (geiser-company--setup geiser-repl-company-p)
+          (add-hook 'comint-output-filter-functions
+                    'geiser-repl--output-filter
+                    nil
+                    t)
+          (set-process-query-on-exit-flag (get-buffer-process (current-buffer))
+                                          geiser-repl-query-on-kill-p)
+          (setq guix-repl-buffer repl)
+          (message "Guix REPL has been started.")
+          (run-hooks 'guix-after-start-repl-hook))))))
 
 (defun guix-get-repl-buffer ()
   "Return Guix REPL buffer; start REPL if needed."
-  (or (get-buffer-process guix-repl-buffer)
-      (guix-start-repl))
+  (guix-start-repl-maybe)
   guix-repl-buffer)
 
 (defun guix-switch-to-repl ()
