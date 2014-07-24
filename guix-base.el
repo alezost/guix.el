@@ -187,10 +187,10 @@ PARENT-MODE is a parent mode for the `guix-TYPE-mode'."
            (setq-local guix-history-size ,history-var)
            (and (fboundp ',mode-init-fun) (,mode-init-fun)))
 
-         (defun ,revert-fun (ignore-auto noconfirm)
+         (defun ,revert-fun (_ignore-auto noconfirm)
            "Update information in the current buffer.
 The function is suitable for `revert-buffer-function'.
-See `revert-buffer' for the meaning of IGNORE-AUTO and NOCONFIRM."
+See `revert-buffer' for the meaning of NOCONFIRM."
            (when (or ,revert-var
                      noconfirm
                      (y-or-n-p "Update current information? "))
