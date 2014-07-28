@@ -24,12 +24,14 @@
 (require 'guix-utils)
 (require 'geiser-mode)
 
+(defvar guix-load-path
+  (file-name-directory (or load-file-name
+                           (locate-library "guix")))
+  "Directory with scheme files for \"guix.el\" package.")
+
 (defvar guix-helper-file
-  (expand-file-name
-   "guix-helper.scm"
-   (file-name-directory (or load-file-name
-                            (locate-library "guix"))))
-  "Scheme file used for getting info about packages.")
+  (expand-file-name "guix-helper.scm" guix-load-path)
+  "Auxiliary scheme file for loading.")
 
 (defvar guix-guile-program (or geiser-guile-binary "guile")
   "Name of the guile executable used for Guix REPL.
@@ -74,6 +76,7 @@ If you have a slow system, try to increase this time."
     (message "Starting Geiser REPL for Guix ...")
     (let ((impl 'guile)
           (geiser-guile-binary guix-guile-program)
+          (geiser-guile-load-path (list guix-load-path))
           (geiser-guile-init-file guix-helper-file)
           (geiser-repl-startup-time guix-repl-startup-time)
           (repl (get-buffer-create guix-repl-buffer-name)))

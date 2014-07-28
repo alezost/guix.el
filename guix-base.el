@@ -84,7 +84,7 @@ This directory is used to define location of the packages.")
   "Set `guix-directory' if needed."
   (or guix-directory
       (setq guix-directory
-            (guix-eval-read "guix-dir"))))
+            (guix-eval-read "%guix-dir"))))
 
 (add-hook 'guix-after-start-repl-hook 'guix-set-directory)
 
