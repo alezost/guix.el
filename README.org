@@ -8,7 +8,8 @@ display information about the packages.
 
 * Requirements
 
-- Guix;
+- Guix: if you didn't =guix pull= after <2014-07-26 Sat>, do it before
+  installing "guix.el", because the earlier snapshots are not supported;
 - Emacs 24.3 or above;
 - [[https://github.com/jaor/geiser][Geiser]] as this package use it for interacting with guile process.
 
@@ -40,8 +41,8 @@ For the manual installation, clone the repo, add the directory to the
 * Usage
 
 /Note:/ The first start of Guix REPL may take a long time, so be patient
-and do not press =C-g=. If you want to disable auto-compilation, use the
-following setting:
+and do not press =C-g=.  If you want to disable auto-compilation, use the
+following setting (it is not necessary):
 
 #+BEGIN_SRC emacs-lisp
 (setq guix-guile-program '("guile" "--no-auto-compile"))
@@ -78,7 +79,7 @@ buffer types by default:
 - =h= or =?= – describe current mode to see all available bindings.
 
 Also you can press =RET= in the list buffer to get more information
-about the package.
+about the package (you can mark several packages for describing).
 
 "Info" buffer contains some buttons (as usual you may use =TAB= /
 =S-TAB= to move between buttons) which can be used to:
