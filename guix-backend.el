@@ -161,35 +161,42 @@ Return elisp expression of the first result value of evaluation."
 
 ;;; Getting packages info
 
-(defvar guix-search-type-alist
-  '((id               . package-entries-by-keys)
-    (name             . package-entries-by-spec)
-    (regexp           . package-entries-by-regexp)
-    (all-available    . all-available-package-entries)
-    (newest-available . newest-available-package-entries)
-    (installed        . installed-package-entries)
-    (obsolete         . obsolete-package-entries))
-  "Alist of available search options.
-Each association has a form:
+(defvar guix-search-entries-config
+  '((package
+     (id               . package-entries-by-keys)
+     (name             . package-entries-by-spec)
+     (regexp           . package-entries-by-regexp)
+     (all-available    . all-available-package-entries)
+     (newest-available . newest-available-package-entries)
+     (installed        . installed-package-entries)
+     (obsolete         . obsolete-package-entries)))
+  "Available methods for getting information.
+Each element of the list has a form:
 
-  (TYPE . FUN)
+  (ENTRY-TYPE . ((SEARCH-TYPE . FUN) ...))
 
-TYPE is a search type.
+ENTRY-TYPE is a type of the searched entries.
+SEARCH-TYPE is a search type for defining FUN.
 FUN is a name of guile function used for searching.")
 
-(defun guix-get-packages (type vals)
-  "Search for Guix packages and return results.
+(defun guix-get-entries (entry-type search-type search-vals &optional params)
+  "Search for entries of ENTRY-TYPE.
 
-TYPE is a search type from `guix-search-type-alist'.
-It defines a search function which is called with VALS as
+ENTRY-TYPE and SEARCH-TYPE define a search function from
+`guix-search-entries-config' which is called with SEARCH-VALS as
 arguments.
 
-Returning value is a list of the form of `guix-packages'."
-  (let ((fun (guix-get-key-val type guix-search-type-alist)))
-    (or fun (error "Wrong search type '%S'" type))
-    (let ((packages (guix-eval-read
-                     (apply #'guix-make-guile-expression fun vals))))
-      (or packages (error "Packages not found")))))
+PARAMS is a list of parameters for receiving.  They are appended
+to SEARCH-VALS.  If nil, get information with all available
+parameters.
+
+Returning value is a list of the form of `guix-entries'."
+  (let ((fun (guix-get-key-val guix-search-entries-config
+                               entry-type search-type)))
+    (or fun (error "Wrong entry type '%S' or search type '%S'"
+                   entry-type search-type))
+    (guix-eval-read (apply #'guix-make-guile-expression
+                           fun (append search-vals params)))))
 
 (provide 'guix-backend)
 

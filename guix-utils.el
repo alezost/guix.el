@@ -124,18 +124,13 @@ split it into several short lines."
       (fill-region (point-min) (point-max)))
     (buffer-string)))
 
-(defsubst guix-get-key-val (key alist)
-  "Return value from ALIST by KEY.
-KEY should be a symbol."
-  (cdr (assq key alist)))
-
-(defun guix-get-string-by-key (key alist)
-  "Return string from ALIST of the form: ((KEY . STRING) ...)
-If STRING for KEY is not found, made a string from the KEY symbol."
-  (let ((str (guix-get-key-val key alist)))
-    (or str
-        (prog1 (symbol-name key)
-          (message "Couldn't find '%S' key." key)))))
+(defun guix-get-key-val (alist &rest keys)
+  "Return value from ALIST by KEYS.
+ALIST is alist of alists of alists ... which can be consecutively
+accessed with KEYS."
+  (let ((val alist))
+    (dolist (key keys val)
+      (setq val (cdr (assq key val))))))
 
 (provide 'guix-utils)
 

@@ -1,4 +1,4 @@
-;;; guix-info.el --- Major mode for displaying Guix packages
+;;; guix-info.el --- Info buffers for displaying entries
 
 ;; Copyright © 2014 Alex Kost
 
@@ -27,44 +27,14 @@
 (require 'guix-backend)
 (require 'guix-utils)
 
-(defvar guix-info-mode-map
-  (let ((map (make-sparse-keymap)))
-    (set-keymap-parent
-     map (make-composed-keymap button-buffer-map
-                               special-mode-map))
-    map)
-  "Keymap for `guix-info-mode'.")
-
-(guix-define-buffer-type info special-mode)
+(defgroup guix-info nil
+  "General settings for info buffers."
+  :prefix "guix-info-"
+  :group 'guix)
 
 (defface guix-info-param-title
   '((t :inherit font-lock-type-face))
-  "Face used for a title of a package parameter."
-  :group 'guix-info)
-
-(defface guix-info-name
-  '((t :inherit font-lock-keyword-face))
-  "Face used for a name of a package."
-  :group 'guix-info)
-
-(defface guix-info-version
-  '((t :inherit font-lock-builtin-face))
-  "Face used for a version of a package."
-  :group 'guix-info)
-
-(defface guix-info-synopsis
-  '((t :inherit font-lock-doc-face))
-  "Face used for a synopsis of a package."
-  :group 'guix-info)
-
-(defface guix-info-description
-  '((t))
-  "Face used for a description of a package."
-  :group 'guix-info)
-
-(defface guix-info-license
-  '((t :inherit font-lock-string-face))
-  "Face used for a license of a package."
+  "Face used for titles of parameters."
   :group 'guix-info)
 
 (defface guix-info-file-path
@@ -72,51 +42,9 @@
   "Face used for file paths."
   :group 'guix-info)
 
-(defface guix-info-location
-  '((t :inherit button))
-  "Face used for a location of a package."
-  :group 'guix-info)
-
 (defface guix-info-url
   '((t :inherit button))
   "Face used for URLs."
-  :group 'guix-info)
-
-(defface guix-info-inputs
-  '((t :inherit button))
-  "Face used for inputs of a package."
-  :group 'guix-info)
-
-(defface guix-info-native-inputs
-  '((t :inherit guix-info-inputs))
-  "Face used for native inputs of a package."
-  :group 'guix-info)
-
-(defface guix-info-propagated-inputs
-  '((t :inherit guix-info-inputs))
-  "Face used for propagated inputs of a package."
-  :group 'guix-info)
-
-(defface guix-info-installed-outputs
-  '((default :weight bold)
-    (((class color) (min-colors 88) (background light))
-     :foreground "ForestGreen")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "PaleGreen")
-    (((class color) (min-colors 8))
-     :foreground "green")
-    (t :underline t))
-  "Face used for installed outputs of a package."
-  :group 'guix-info)
-
-(defface guix-info-uninstalled-outputs
-  '((t :weight bold))
-  "Face used for uninstalled outputs of a package."
-  :group 'guix-info)
-
-(defface guix-info-obsolete
-  '((t :inherit error))
-  "Face used if a package is obsolete."
   :group 'guix-info)
 
 (defface guix-info-action-button
@@ -124,7 +52,7 @@
      :box (:line-width 2 :style released-button)
      :background "lightgrey" :foreground "black")
     (t :inherit button))
-  "Face used for \"Insert\"/\"Delete\"/\"Update\" buttons."
+  "Face used for action buttons."
   :group 'guix-info)
 
 (defface guix-info-action-button-mouse
@@ -132,7 +60,7 @@
      :box (:line-width 2 :style released-button)
      :background "grey90" :foreground "black")
     (t :inherit highlight))
-  "Mouse face used for \"Insert\"/\"Delete\"/\"Update\" buttons."
+  "Mouse face used for action buttons."
   :group 'guix-info)
 
 (defcustom guix-info-ignore-empty-vals nil
@@ -141,9 +69,10 @@
   :group 'guix-info)
 
 (defvar guix-info-param-title-format "%-18s: "
-  "String used to format a title of a package parameter.
+  "String used to format a title of a parameter.
 It should be a '%s'-sequence.  After inserting a title formatted
-with this string, a value of the parameter is inserted.")
+with this string, a value of the parameter is inserted.
+This string is used by `guix-info-insert-title-default'.")
 
 (defvar guix-info-multiline-prefix (make-string 20 ?\s)
   "String used to format multi-line parameter values.
@@ -151,8 +80,8 @@ If a value occupies more than one line, this string is inserted
 in the beginning of each line after the first one.
 This string is used by `guix-info-insert-val-default'.")
 
-(defvar guix-info-indent-string (make-string 2 ?\s)
-  "String used to indent various parts of inserted text.")
+(defvar guix-info-indent 2
+  "Number of spaces used to indent various parts of inserted text.")
 
 (defvar guix-info-fill-column 60
   "Column used for filling (word wrapping) parameters with long lines.
@@ -160,38 +89,38 @@ If a value is not multi-line and it occupies more than this
 number of characters, it will be split into several lines.")
 
 (defvar guix-info-delimiter "\n\f\n"
-  "String used to separate packages info.")
+  "String used to separate entries.")
 
 (defvar guix-info-insert-methods
-  '((general
-     (name              guix-info-name)
-     (version           guix-info-version)
-     (license           guix-info-license)
-     (synopsis          guix-info-synopsis)
-     (description       guix-info-insert-description
+  '((package
+     (name              guix-package-info-name)
+     (version           guix-package-info-version)
+     (license           guix-package-info-license)
+     (synopsis          guix-package-info-synopsis)
+     (description       guix-package-info-insert-description
                         guix-info-insert-title-simple)
-     (outputs           guix-info-insert-outputs
+     (outputs           guix-package-info-insert-outputs
                         guix-info-insert-title-simple)
      (home-url          guix-info-insert-url)
-     (inputs            guix-info-insert-inputs)
-     (native-inputs     guix-info-insert-native-inputs)
-     (propagated-inputs guix-info-insert-propagated-inputs)
-     (location          guix-info-insert-location))
+     (inputs            guix-package-info-insert-inputs)
+     (native-inputs     guix-package-info-insert-native-inputs)
+     (propagated-inputs guix-package-info-insert-propagated-inputs)
+     (location          guix-package-info-insert-location))
     (installed
-     (path              guix-info-insert-output-path
-                        guix-info-insert-title-installed)
-     (dependencies      guix-info-insert-output-dependencies
-                        guix-info-insert-title-installed)))
-  "List of methods for inserting values of package parameters.
+     (path              guix-package-info-insert-output-path
+                        guix-info-insert-title-simple)
+     (dependencies      guix-package-info-insert-output-dependencies
+                        guix-info-insert-title-simple)))
+  "Methods for inserting parameter values.
 Each element of the list should have a form:
 
-  (INFO-TYPE (PARAM INSERT-VALUE [INSERT-TITLE]) ...)
+  (ENTRY-TYPE . ((PARAM INSERT-VALUE [INSERT-TITLE]) ...))
 
 INSERT-VALUE may be either nil, a face name or a function.  If it
 is nil or a face, `guix-info-insert-val-default' function is
 called with parameter value and INSERT-VALUE as arguments.  If it
-is a function, this function is called with parameter value and a
-package info (alist of parameters and their values) as arguments.
+is a function, this function is called with parameter value and
+entry info (alist of parameters and their values) as arguments.
 
 INSERT-TITLE may be either nil, a face name or a function.  If it
 is nil or a face, `guix-info-insert-title-default' function is
@@ -200,78 +129,79 @@ is a function, this function is called with parameter title as
 argument.")
 
 (defvar guix-info-displayed-params
-  '((general name version synopsis outputs location home-url
+  '((package name version synopsis outputs location home-url
              license inputs native-inputs propagated-inputs description)
     (installed path dependencies))
-  "List of parameters displayed in the info buffer.
+  "List of displayed entry parameters.
 Each element of the list should have a form:
 
-  (INFO-TYPE PARAM ...)
+  (ENTRY-TYPE . (PARAM ...))
 
 The order of displayed parameters is the same as in this list.")
 
-(defalias 'guix-info-get-packages 'guix-get-packages)
-
-(defun guix-info-get-insert-methods (param &optional info-type)
-  "Return list of insert methods for parameter PARAM of INFO-TYPE.
+(defun guix-info-get-insert-methods (entry-type param)
+  "Return list of insert methods for parameter PARAM of ENTRY-TYPE.
 See `guix-info-insert-methods' for details."
-  (guix-get-key-val param
-                    (guix-get-key-val (or info-type 'general)
-                                      guix-info-insert-methods)))
+  (guix-get-key-val guix-info-insert-methods
+                    entry-type param))
 
-(defun guix-info-get-displayed-params (&optional info-type)
-  "Return parameters of INFO-TYPE that should be displayed."
-  (guix-get-key-val (or info-type 'general)
-                    guix-info-displayed-params))
+(defun guix-info-get-displayed-params (entry-type)
+  "Return parameters of ENTRY-TYPE that should be displayed."
+  (guix-get-key-val guix-info-displayed-params
+                    entry-type))
 
 (defun guix-info-get-indent (&optional level)
-  "Return `guix-info-indent-string' \"multiplied\" by LEVEL.
+  "Return `guix-info-indent' \"multiplied\" by LEVEL spaces.
 LEVEL is 1 by default."
-  (let (str)
-    (dotimes (i (or level 1) str)
-      (setq str (concat str guix-info-indent-string)))))
+  (make-string (* guix-info-indent (or level 1)) ?\s))
 
 (defun guix-info-insert-indent (&optional level)
-  "Insert `guix-info-indent-string' LEVEL times (1 by default)."
+  "Insert `guix-info-indent' spaces LEVEL times (1 by default)."
   (insert (guix-info-get-indent level)))
 
-(defun guix-info-insert-packages (packages)
-  "Display PACKAGES in the current info buffer.
-PACKAGES should have a form of `guix-packages'."
-  (guix-mapinsert (lambda (info)
-                    (guix-info-insert-info info))
-                  packages
+(defun guix-info-insert-entries (entries entry-type)
+  "Display ENTRIES of ENTRY-TYPE in the current info buffer.
+ENTRIES should have a form of `guix-entries'."
+  (guix-mapinsert (lambda (entry)
+                    (guix-info-insert-entry entry entry-type))
+                  entries
                   guix-info-delimiter))
 
-(defun guix-info-insert-info (info &optional info-type)
-  "Insert package INFO of INFO-TYPE into the current buffer."
-  (mapc (lambda (param)
-          (guix-info-insert-param param info info-type))
-        (guix-info-get-displayed-params info-type)))
+(defun guix-info-insert-entry (entry entry-type &optional indent-level)
+  "Insert ENTRY of ENTRY-TYPE into the current info buffer.
+If INDENT-LEVEL is non-nil, indent displayed information by this
+number of spaces."
+  (let ((region-beg (point)))
+    (mapc (lambda (param)
+            (guix-info-insert-param param entry entry-type))
+          (guix-info-get-displayed-params entry-type))
+    (if indent-level
+        (indent-rigidly region-beg (point) indent-level))))
 
-(defun guix-info-insert-param (param info &optional info-type)
-  "Insert title and value of a parameter PARAM of INFO-TYPE at point.
-INFO is alist with parameters and their values."
-  (let ((val (guix-get-key-val param info)))
+(defun guix-info-insert-param (param entry entry-type)
+  "Insert title and value of a PARAM at point.
+ENTRY is alist with parameters and their values.
+ENTRY-TYPE is a type of ENTRY."
+  (let ((val (guix-get-key-val entry param)))
     (unless (and guix-info-ignore-empty-vals (null val))
-      (let* ((title          (guix-get-param-title param info-type))
-             (insert-methods (guix-info-get-insert-methods param info-type))
+      (let* ((title          (guix-get-param-title entry-type param))
+             (insert-methods (guix-info-get-insert-methods entry-type param))
              (val-method     (car insert-methods))
              (title-method   (cadr insert-methods)))
         (guix-info-method-funcall title title-method
                                   #'guix-info-insert-title-default)
         (guix-info-method-funcall val val-method
                                   #'guix-info-insert-val-default
-                                  info)
+                                  entry)
         (insert "\n")))))
 
 (defun guix-info-method-funcall (val method default-fun &rest args)
   "Call METHOD or DEFAULT-FUN.
 
-If FACE-OR-FUN is a function and VAL is non-nil, call this
+If METHOD is a function and VAL is non-nil, call this
 function by applying it to VAL and ARGS.
 
-If FACE-OR-FUN is a face, propertize inserted VAL with this face."
+If METHOD is a face, propertize inserted VAL with this face."
   (cond ((or (null method)
              (facep method))
          (funcall default-fun val method))
@@ -304,7 +234,7 @@ If FACE is non-nil, propertize inserted line(s) with this FACE."
                      guix-info-fill-column
                      (concat "\n" guix-info-multiline-prefix)))
 
-(defun guix-info-insert-val-simple (val &optional face)
+(defun guix-info-insert-val-simple (val &optional face-or-fun)
   "Format and insert parameter value VAL at point.
 
 This function is intended to be called after
@@ -312,129 +242,224 @@ This function is intended to be called after
 
 If VAL is a one-line string longer than `guix-info-fill-column',
 split it into several short lines and indent each line with
-`guix-info-indent-string'.
+`guix-info-indent' spaces.
 
-If FACE is non-nil, propertize inserted line(s) with this FACE."
+If FACE-OR-FUN is a face, propertize inserted line(s) with this FACE.
+
+If FACE-OR-FUN is a function, call it with VAL as argument.  If
+VAL is a list, call the function on each element of this list."
   (if (null val)
       (progn (guix-info-insert-indent)
              (guix-format-insert nil))
     (let ((prefix (concat "\n" (guix-info-get-indent))))
       (insert prefix)
-      (guix-split-insert val face guix-info-fill-column prefix))))
+      (if (functionp face-or-fun)
+          (guix-mapinsert face-or-fun
+                          (if (listp val) val (list val))
+                          prefix)
+        (guix-split-insert val face-or-fun
+                           guix-info-fill-column prefix)))))
 
-(defun guix-info-insert-description (desc _)
-  "Insert description DESC at point."
-  (guix-info-insert-val-simple desc 'guix-info-description))
-
-(defun guix-info-insert-file-path (path _)
+(defun guix-info-insert-file-path (path &optional _)
   "Make button from file PATH and insert it at point."
   (guix-insert-button
    path 'guix-info-file-path
    (lambda (btn) (find-file (button-label btn)))
    "Find file"))
 
-(defun guix-info-insert-location (location _)
-  "Make button from file LOCATION and insert it at point."
-  (guix-insert-button
-   location 'guix-info-location
-   (lambda (btn) (guix-find-location (button-label btn)))
-   "Find location of this package"))
-
-(defun guix-info-insert-url (url _)
+(defun guix-info-insert-url (url &optional _)
   "Make button from URL and insert it at point."
   (guix-insert-button
    url 'guix-info-url
    (lambda (btn) (browse-url (button-label btn)))
    "Browse URL"))
 
-(defun guix-info-insert-inputs (inputs _)
-  "Make buttons from INPUTS and insert those at point."
-  (guix-info-insert-package-names inputs 'guix-info-inputs))
+(defun guix-info-insert-time (seconds &optional _)
+  "Insert formatted time string using SECONDS at point."
+  (insert (guix-get-time-string seconds)))
 
-(defun guix-info-insert-native-inputs (inputs _)
-  "Make buttons from native INPUTS and insert those at point."
-  (guix-info-insert-package-names inputs 'guix-info-native-inputs))
+
+(defvar guix-info-mode-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent
+     map (make-composed-keymap button-buffer-map
+                               special-mode-map))
+    map)
+  "Parent keymap for info buffers.")
 
-(defun guix-info-insert-propagated-inputs (inputs _)
-  "Make buttons from propagated INPUTS and insert those at point."
-  (guix-info-insert-package-names inputs 'guix-info-propagated-inputs))
+(define-derived-mode guix-info-mode special-mode "Guix-Info"
+  "Parent mode for displaying information in info buffers.")
 
-(defun guix-info-insert-package-names (names face)
-  "Make buttons from package NAMES and insert those at point.
+
+;;; Displaying packages
+
+(guix-define-buffer-type info package :required (id installed))
+
+(defface guix-package-info-name
+  '((t :inherit font-lock-keyword-face))
+  "Face used for a name of a package."
+  :group 'guix-package-info)
+
+(defface guix-package-info-version
+  '((t :inherit font-lock-builtin-face))
+  "Face used for a version of a package."
+  :group 'guix-package-info)
+
+(defface guix-package-info-synopsis
+  '((t :inherit font-lock-doc-face))
+  "Face used for a synopsis of a package."
+  :group 'guix-package-info)
+
+(defface guix-package-info-description
+  '((t))
+  "Face used for a description of a package."
+  :group 'guix-package-info)
+
+(defface guix-package-info-license
+  '((t :inherit font-lock-string-face))
+  "Face used for a license of a package."
+  :group 'guix-package-info)
+
+(defface guix-package-info-location
+  '((t :inherit button))
+  "Face used for a location of a package."
+  :group 'guix-package-info)
+
+(defface guix-package-info-installed-outputs
+  '((default :weight bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "ForestGreen")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "PaleGreen")
+    (((class color) (min-colors 8))
+     :foreground "green")
+    (t :underline t))
+  "Face used for installed outputs of a package."
+  :group 'guix-package-info)
+
+(defface guix-package-info-uninstalled-outputs
+  '((t :weight bold))
+  "Face used for uninstalled outputs of a package."
+  :group 'guix-package-info)
+
+(defface guix-package-info-obsolete
+  '((t :inherit error))
+  "Face used if a package is obsolete."
+  :group 'guix-package-info)
+
+(defun guix-package-info-insert-description (desc &optional _)
+  "Insert description DESC at point."
+  (guix-info-insert-val-simple desc 'guix-package-info-description))
+
+(defun guix-package-info-insert-location (location &optional _)
+  "Make button from file LOCATION and insert it at point."
+  (guix-insert-button
+   location 'guix-package-info-location
+   (lambda (btn) (guix-find-location (button-label btn)))
+   "Find location of this package"))
+
+(defmacro guix-package-info-define-insert-inputs (&optional type)
+  "Define a face and a function for inserting package inputs.
+TYPE is a type of inputs.
+Function name is `guix-package-info-insert-TYPE-inputs'.
+Face name is `guix-package-info-TYPE-inputs'."
+  (let* ((type-str (symbol-name type))
+         (type-name (and type (concat type-str "-")))
+         (type-desc (and type (concat type-str " ")))
+         (face (intern (concat "guix-package-info-" type-name "inputs")))
+         (fun  (intern (concat "guix-package-info-insert-" type-name "inputs"))))
+    `(progn
+       (defface ,face
+         '((t :inherit button))
+         ,(concat "Face used for " type-desc "inputs of a package.")
+         :group 'guix-package-info)
+
+       (defun ,fun (inputs &optional _)
+         ,(concat "Make buttons from " type-desc "INPUTS and insert them at point.")
+         (guix-package-info-insert-full-names inputs ',face)))))
+
+(guix-package-info-define-insert-inputs)
+(guix-package-info-define-insert-inputs native)
+(guix-package-info-define-insert-inputs propagated)
+
+(defun guix-package-info-insert-full-names (names face)
+  "Make buttons from package NAMES and insert them at point.
 NAMES is a list of strings.
 Propertize buttons with FACE."
   (if names
       (guix-info-insert-val-default
        (with-temp-buffer
          (guix-mapinsert (lambda (name)
-                           (guix-info-insert-package-name name face))
+                           (guix-package-info-insert-full-name
+                            name face))
                          names
                          guix-list-separator)
          (buffer-substring (point-min) (point-max))))
     (guix-format-insert nil)))
 
-(defun guix-info-insert-package-name (name face)
+(defun guix-package-info-insert-full-name (name face)
   "Make button and insert package NAME at point.
 Propertize package button with FACE."
   (guix-insert-button
    name face
-   (lambda (btn) (guix-info-get-show-packages 'name (button-label btn)))
+   (lambda (btn)
+     (guix-package-info-get-show 'name (button-label btn)))
    "Describe the package"))
 
 
-;;; Inserting outputs and installed params
+;;; Inserting outputs and installed parameters
 
-(defvar guix-info-output-format "%-10s"
+(defvar guix-package-info-output-format "%-10s"
   "String used to format output names of the packages.
 It should be a '%s'-sequence.  After inserting an output name
 formatted with this string, an action button is inserted.")
 
-(defvar guix-info-obsolete-string "(This package is obsolete)"
+(defvar guix-package-info-obsolete-string "(This package is obsolete)"
   "String used if a package is obsolete.")
 
-(defun guix-info-insert-outputs (outputs info)
-  "Insert OUTPUTS from INFO at point."
-  (let ((obsolete  (guix-get-key-val 'obsolete info)))
+(defun guix-package-info-insert-outputs (outputs entry)
+  "Insert OUTPUTS from package ENTRY at point."
+  (let ((obsolete (guix-get-key-val entry 'obsolete)))
     (when obsolete
       (guix-info-insert-indent)
-      (guix-format-insert guix-info-obsolete-string
-                          'guix-info-obsolete)))
+      (guix-format-insert guix-package-info-obsolete-string
+                          'guix-package-info-obsolete)))
   (insert "\n")
   (mapc (lambda (output)
-          (guix-info-insert-output output info))
+          (guix-package-info-insert-output output entry))
         outputs))
 
-(defun guix-info-insert-output (output info)
+(defun guix-package-info-insert-output (output entry)
   "Insert OUTPUT at point.
 Make some fancy text with buttons and additional stuff if the
 current OUTPUT is installed (if there is such output in
-`installed' parameter of a package INFO)."
-  (let* ((installed (guix-get-key-val 'installed info))
-         (obsolete  (guix-get-key-val 'obsolete info))
-         (full-name (guix-get-full-name info output))
-         (installed-info (cl-find-if
-                          (lambda (info)
-                            (string= (guix-get-key-val 'output info)
-                                     output))
-                          installed))
-         (action-type (if installed-info 'delete 'install)))
+`installed' parameter of a package ENTRY)."
+  (let* ((installed (guix-get-key-val entry 'installed))
+         (obsolete  (guix-get-key-val entry 'obsolete))
+         (full-name (guix-get-full-name entry output))
+         (installed-entry (cl-find-if
+                           (lambda (entry)
+                             (string= (guix-get-key-val entry 'output)
+                                      output))
+                           installed))
+         (action-type (if installed-entry 'delete 'install)))
     (guix-info-insert-indent)
     (guix-format-insert output
-                        (if installed-info
-                            'guix-info-installed-outputs
-                          'guix-info-uninstalled-outputs)
-                        guix-info-output-format)
-    (guix-info-insert-action-button action-type full-name)
+                        (if installed-entry
+                            'guix-package-info-installed-outputs
+                          'guix-package-info-uninstalled-outputs)
+                        guix-package-info-output-format)
+    (guix-package-info-insert-action-button action-type full-name)
     (when obsolete
       (guix-info-insert-indent)
-      (guix-info-insert-action-button 'update full-name))
+      (guix-package-info-insert-action-button 'upgrade full-name))
     (insert "\n")
-    (when installed-info
-      (guix-info-insert-info installed-info 'installed))))
+    (when installed-entry
+      (guix-info-insert-entry installed-entry 'installed 2))))
 
-(defun guix-info-insert-action-button (type name)
+(defun guix-package-info-insert-action-button (type name)
   "Insert action button at point.
-TYPE is one of the following symbols: `install', `delete', `update'.
+TYPE is one of the following symbols: `install', `delete', `upgrade'.
 NAME is a full name specification of the package."
   (let ((type-str (capitalize (symbol-name type))))
     (guix-insert-button
@@ -443,25 +468,15 @@ NAME is a full name specification of the package."
      (concat type-str " '" name "'")
      'mouse-face 'guix-info-action-button-mouse)))
 
-(defun guix-info-insert-title-installed (title &optional face)
-  "Insert TITLE of the installed package parameter at point."
-  (guix-info-insert-indent 2)
-  (guix-info-insert-title-simple title face))
-
-(defun guix-info-insert-output-path (path _)
+(defun guix-package-info-insert-output-path (path &optional _)
   "Insert PATH of the installed output."
-  (insert "\n")
-  (guix-info-insert-indent 3)
-  (guix-info-insert-file-path path nil))
+  (guix-info-insert-val-simple path #'guix-info-insert-file-path))
 
-(defun guix-info-insert-output-dependencies (deps _)
+(defun guix-package-info-insert-output-dependencies (deps &optional _)
   "Insert dependencies DEPS of the installed output."
-  (if deps
-      (mapc (lambda (dep)
-              (guix-info-insert-output-path (cadr dep) nil))
-            deps)
-    (guix-info-insert-indent)
-    (guix-format-insert nil)))
+  (guix-info-insert-val-simple
+   (mapcar #'cadr deps) ; cadr is a path of a dependency
+   #'guix-info-insert-file-path))
 
 (provide 'guix-info)
 

@@ -65,19 +65,23 @@ If nil, show a single package in the info buffer."
 (defun guix-get-show-packages (search-type &rest search-vals)
   "Search for packages and show results.
 
-See `guix-get-packages' for the meaning of SEARCH-TYPE and
+See `guix-get-entries' for the meaning of SEARCH-TYPE and
 SEARCH-VALS.
 
 Results are displayed in the list buffer, unless a single package
 is found and `guix-list-single-package' is nil."
-  (let ((packages (guix-list-get-packages search-type search-vals)))
+  (let* ((list-params (guix-package-list-get-params-for-receiving))
+         (packages (guix-get-entries 'package search-type
+                                     search-vals list-params)))
     (if (or guix-list-single-package
             (cdr packages))
-        (guix-list-set packages search-type search-vals)
-      (unless (equal guix-list-required-params 'all)
-        ;; If we don't have all info, we should receive it
-        (setq packages (guix-info-get-packages search-type search-vals)))
-      (guix-info-set packages search-type search-vals))))
+        (guix-package-list-set packages search-type search-vals)
+      (let ((info-params (guix-package-info-get-params-for-receiving)))
+        (unless (equal list-params info-params)
+          ;; If we don't have required info, we should receive it again
+          (setq packages (guix-get-entries 'package search-type
+                                           search-vals info-params))))
+      (guix-package-info-set packages search-type search-vals))))
 
 ;;;###autoload
 (defun guix-search-by-name (name)
