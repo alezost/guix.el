@@ -17,22 +17,29 @@
 
 ;;; Commentary:
 
-;; The following functions may be called by elisp part to get
-;; information about the packages:
+;; Information about packages and generations is passed to the elisp
+;; side in the form of alists of parameters (such as ‘name’ or
+;; ‘version’) and their values.  These alists are called "entries" in
+;; this program.  So to distinguish, just "package" in the name of a
+;; function means a guile object ("package" record) while
+;; "package entry" means alist of package parameters and values (see
+;; ‘package->package-entry’ and ‘package-param-alist’).
 ;;
-;; - packages-info-by-keys
-;; - packages-info-by-spec
-;; - packages-info-by-regexp
-;; - all-available-packages-info
-;; - newest-available-packages-info
-;; - installed-packages-info
-;; - obsolete-packages-info
+;; "Entry" is probably not the best name for such alists, because there
+;; already exists "manifest-entry" which has nothing to do with the
+;; "entry" described above.  Do not be confused :)
+
+;; The following functions may be called to get information about the
+;; packages (returning value is a list of package entries):
 ;;
-;; Returning value of the above functions is a list of "packages info".
-;; Each package info is alist of package paramers (such as ‘name’ or
-;; ‘version’) and their values (see `package-param-alist' and
-;; `package-info').
-;;
+;; - package-entries-by-keys
+;; - package-entries-by-spec
+;; - package-entries-by-regexp
+;; - all-available-package-entries
+;; - newest-available-package-entries
+;; - installed-package-entries
+;; - obsolete-package-entries
+
 ;; Since name/version pair is not necessarily unique, we use
 ;; `object-address' to identify a package (for ‘id’ parameter), if
 ;; possible.  However for the obsolete packages (that can be found in
@@ -43,15 +50,14 @@
 ;; part should take care about updating information after "Guix REPL" is
 ;; restarted (TODO!)
 ;;
-;; ‘installed’ parameter contains information on installed outputs.  It
-;; is a list of “installed info”.  Each installed info is alist of
-;; installed parameters and their values (see
-;; `package-installed-param-alist' and `package-installed-info').
+;; ‘installed’ parameter of a package entry contains information about
+;; installed outputs.  It is a list of "installed entries" (see
+;; ‘package-installed-param-alist’).
 
 ;; To speed-up the process of getting information, the following
 ;; variables are defined and set on start-up:
 ;;
-;; - `packages' - VHash of "package id"/"package record" pairs.
+;; - `packages' - VHash of "package id"/"package" pairs.
 ;;
 ;; - `packages-table' - Hash table of
 ;;   "name+version key"/"list of packages" pairs.
@@ -65,6 +71,7 @@
 
 (use-modules
  (ice-9 vlist)
+ (ice-9 match)
  (srfi srfi-1)
  (srfi srfi-11)
  (srfi srfi-26)
@@ -173,69 +180,55 @@ table, using INIT as the initial value of RESULT."
   (fold proc init
         (if (list? obj) obj (list obj))))
 
-(define (object-info object fields field-alist)
+(define* (object-info object param-alist #:optional (params '()))
   "Return info about the OBJECT.
 
-FIELD-ALIST is alist of fields (symbols) and functions.  Each function
-should accept OBJECT as a single argument.
+PARAM-ALIST is alist of available OBJECT parameters (symbols) and
+functions returning values of these parameters.  Each function is called
+with OBJECT as a single argument.
 
-FIELDS are fields from FIELD-ALIST.  If FIELDS are not specified, use
-all available fields.
+PARAMS is list of returned parameters from PARAM-ALIST.  If PARAMS is
+not specified or is an empty list, use all available parameters.
 
-For each field from FIELDS a corresponding function is called on OBJECT.
-Returning value is alist of FIELDS and the values of funcalls."
-  (let ((use-all-fields (null? fields)))
-    (fold (lambda (field-assoc res)
-            (let ((field (car field-assoc))
-                  (fun   (cdr field-assoc)))
-              (if (or use-all-fields
-                      (memq field fields))
-                  (cons (cons field (fun object)) res)
-                  res)))
-          '()
-          field-alist)))
+For each parameter from PARAMS a corresponding function is called on
+OBJECT.  Returning value is alist of PARAMS and the values of funcalls."
+  (let ((use-all-params (null? params)))
+    (filter-map (match-lambda
+                 ((param . fun)
+                  (and (or use-all-params
+                           (memq param params))
+                       (cons param (fun object))))
+                 (_ #f))
+                param-alist)))
 
 (define package-installed-param-alist
   (list
-   (cons 'output        manifest-entry-output)
-   (cons 'path          manifest-entry-item)
-   (cons 'dependencies  manifest-entry-dependencies)))
+   (cons 'output       manifest-entry-output)
+   (cons 'path         manifest-entry-item)
+   (cons 'dependencies manifest-entry-dependencies)))
 
-(define (installed-info-by-manifest-entries entries . params)
-  "Return installed info for manifest ENTRIES.
-
-PARAMS are parameter names from `package-installed-param-alist', if
-PARAMS are not specified, use all params.
-
-Return list of alists of names and values of installed parameters."
-  (map (cut object-info <> params package-installed-param-alist)
+(define (manifest-entries->installed-entries entries . params)
+  "Return list of installed entries for manifest ENTRIES."
+  (map (cut object-info <> package-installed-param-alist params)
        entries))
 
-(define (installed-info-by-name+version name version . params)
-  "Return installed info for packages with NAME and VERSION.
-For the meaning of PARAMS and returning value, see
-`installed-info-by-manifest-entries'"
-  (installed-info-by-manifest-entries
+(define (installed-entries-by-name+version name version . params)
+  "Return list of installed entries for packages with NAME and VERSION."
+  (manifest-entries->installed-entries
    (manifest-entries-by-name+version name version)))
 
-(define (installed-info-by-package package . params)
-  "Return installed info for the PACKAGE.
-For the meaning of PARAMS and returning value, see
-`installed-info-by-manifest-entries'."
-  (installed-info-by-name+version (package-name package)
-                                  (package-version package)))
-
-(define package-installed-info installed-info-by-package)
+(define (installed-entries-by-package package . params)
+  "Return list of installed entries for the PACKAGE."
+  (installed-entries-by-name+version (package-name package)
+                                     (package-version package)))
 
 (define (package-inputs-names inputs)
   "Return list of full names of the packages from package INPUTS."
-  (fold (lambda (input res)
-          (let ((pkg (cadr input)))
-            (if (package? pkg)
-                (cons (package-full-name pkg) res)
-                res)))
-        '()
-        inputs))
+  (filter-map (match-lambda
+               ((_ (? package? package))
+                (package-full-name package))
+               (_ #f))
+              inputs))
 
 (define (package-license-names package)
   "Return list of license names of the PACKAGE."
@@ -264,7 +257,7 @@ For the meaning of PARAMS and returning value, see
                                       (package-propagated-inputs pkg))))
    (cons 'location          (lambda (pkg) (location->string
                                       (package-location pkg))))
-   (cons 'installed         package-installed-info)))
+   (cons 'installed         installed-entries-by-package)))
 
 (define (package-param package param)
   "Return the value of a PACKAGE PARAM."
@@ -274,65 +267,61 @@ For the meaning of PARAMS and returning value, see
   (and=> (accessor param)
          (cut <> package)))
 
-(define (package-info package . params)
+(define (package->package-entry package . params)
   "Return info about the PACKAGE.
 
 PARAMS are parameter names from `package-param-alist', if PARAMS are not
 specified, use all parameters.
 
 Return alist of names and values of package parameters."
-  (object-info package params package-param-alist))
+  (object-info package package-param-alist params))
 
-(define (matching-packages-info predicate . params)
-  "Return list of packages info for the matching packages.
-PREDICATE is called on each package.
-For the meaning of PARAMS, see `package-info'."
+(define (matching-package-entries predicate . params)
+  "Return list of package entries for the matching packages.
+PREDICATE is called on each package."
   (fold-packages (lambda (pkg res)
                    (if (predicate pkg)
-                       (cons (apply package-info pkg params) res)
+                       (cons (apply package->package-entry pkg params)
+                             res)
                        res))
                  '()))
 
-(define (make-obsolete-info name version entries)
-  "Return packages info for obsolete package with NAME and VERSION.
+(define (make-obsolete-package-entry name version entries)
+  "Return package entry for an obsolete package with NAME and VERSION.
 ENTRIES is a list of manifest entries used to get installed info."
   `((id        . ,(name+version->full-name name version))
     (name      . ,name)
     (version   . ,version)
     (outputs   . ,(map manifest-entry-output entries))
     (obsolete  . #t)
-    (installed . ,(installed-info-by-manifest-entries
-                   entries))))
+    (installed . ,(manifest-entries->installed-entries entries))))
 
-(define (packages-info-by-name+version name version . params)
-  "Return list of packages info for packages with NAME and VERSION.
-For the meaning of PARAMS, see `package-info'."
+(define (package-entries-by-name+version name version . params)
+  "Return list of package entries for packages with NAME and VERSION."
   (let ((packages (packages-by-name+version name version)))
     (if (null? packages)
         (let ((entries (manifest-entries-by-name+version name version)))
           (if (null? entries)
               '()
-              (list (make-obsolete-info name version entries))))
-        (map (cut apply package-info <> params)
+              (list (make-obsolete-package-entry name version entries))))
+        (map (cut apply package->package-entry <> params)
              packages))))
 
-(define (packages-info-by-spec spec . params)
-  "Return list of packages info for packages with name specification SPEC.
-For the meaning of PARAMS, see `package-info'."
+(define (package-entries-by-spec spec . params)
+  "Return list of package entries for packages with name specification SPEC."
   (set-current-manifest-maybe!)
   (let-values (((name version)
                 (full-name->name+version spec)))
     (if version
-        (apply packages-info-by-name+version name version params)
-        (apply matching-packages-info
+        (apply package-entries-by-name+version name version params)
+        (apply matching-package-entries
                (lambda (pkg)
                  (string=? name (package-name pkg)))
                params))))
 
-(define (packages-info-by-regexp regexp match-params . ret-params)
-  "Return list of packages info for packages matching REGEXP string.
-MATCH-PARAMS is a list of parameters that REGEXP can match.
-For the meaning of RET-PARAMS, see `package-info'."
+(define (package-entries-by-regexp regexp match-params . ret-params)
+  "Return list of package entries for packages matching REGEXP string.
+MATCH-PARAMS is a list of parameters that REGEXP can match."
   (define (package-match? package regexp)
     (any (lambda (param)
            (let ((val (package-param package param)))
@@ -341,22 +330,24 @@ For the meaning of RET-PARAMS, see `package-info'."
 
   (set-current-manifest-maybe!)
   (let ((re (make-regexp regexp regexp/icase)))
-    (apply matching-packages-info (cut package-match? <> re) ret-params)))
+    (apply matching-package-entries
+           (cut package-match? <> re)
+           ret-params)))
 
-(define (packages-info-by-keys keys . params)
-  "Return list of packages info for packages matching KEYS.
-KEYS may be an ID, a full-name or a list of these elements."
+(define (package-entries-by-keys keys . params)
+  "Return list of package entries for packages matching KEYS.
+KEYS may be an ID, a full-name or a list of such elements."
   (set-current-manifest-maybe!)
   (fold-object
    (lambda (key res)
      (if (package-id? key)
          (let ((pkg (package-by-id key)))
            (if pkg
-               (cons (apply package-info pkg params) res)
+               (cons (apply package->package-entry pkg params) res)
                res))
          (let-values (((name version)
                        (full-name->name+version key)))
-           (let ((info (apply packages-info-by-name+version
+           (let ((info (apply package-entries-by-name+version
                               name version params)))
              (if (null? info)
                  res
@@ -364,42 +355,39 @@ KEYS may be an ID, a full-name or a list of these elements."
    '()
    keys))
 
-(define (newest-available-packages-info . params)
-  "Return list of packages info for the newest available packages.
-For the meaning of PARAMS, see `package-info'."
+(define (newest-available-package-entries . params)
+  "Return list of package entries for the newest available packages."
   (set-current-manifest-maybe!)
   (vhash-fold (lambda (key val res)
-                (cons (apply package-info (cadr val) params) res))
+                (cons (apply package->package-entry (cadr val) params)
+                      res))
               '()
               (find-newest-available-packages)))
 
-(define (all-available-packages-info . params)
-  "Return list of packages info for all available packages.
-For the meaning of PARAMS, see `package-info'."
+(define (all-available-package-entries . params)
+  "Return list of package entries for all available packages."
   (set-current-manifest-maybe!)
-  (apply matching-packages-info (lambda (pkg) #t) params))
+  (apply matching-package-entries (lambda (pkg) #t) params))
 
-(define (installed-packages-info . params)
-  "Return list of packages info for all installed packages (including obsolete).
-For the meaning of PARAMS, see `package-info'."
+(define (installed-package-entries . params)
+  "Return list of package entries for all installed packages."
   (set-current-manifest-maybe!)
   (fold-manifest-entries
    (lambda (name version entries res)
      ;; We don't care about duplicates for the list of
      ;; installed packages, so just take any package (car)
      ;; matching name+version
-     (cons (car (packages-info-by-name+version name version)) res))
+     (cons (car (package-entries-by-name+version name version)) res))
    '()))
 
-(define (obsolete-packages-info . params)
-  "Return list of packages info for obsolete packages.
-For the meaning of PARAMS, see `package-info'."
+(define (obsolete-package-entries . params)
+  "Return list of package entries for obsolete packages."
   (set-current-manifest-maybe!)
   (fold-manifest-entries
    (lambda (name version entries res)
      (let ((packages (packages-by-name+version name version)))
        (if (null? packages)
-           (cons (make-obsolete-info name version entries) res)
+           (cons (make-obsolete-package-entry name version entries) res)
            res)))
    '()))
 
