@@ -49,7 +49,13 @@
     (installed
      (path              . "Installed path")
      (dependencies      . "Dependencies")
-     (output            . "Output")))
+     (output            . "Output"))
+    (generation
+     (id                . "ID")
+     (number            . "Number")
+     (prev-number       . "Previous number")
+     (path              . "Path")
+     (time              . "Time")))
   "List for defining titles of entry parameters.
 Titles are used for displaying information about entries.
 Each element of the list has a form:

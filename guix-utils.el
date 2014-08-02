@@ -25,6 +25,10 @@
 (defvar guix-false-string "–")
 (defvar guix-list-separator ", ")
 
+(defvar guix-time-format "%F %T"
+  "String used to format time values.
+For possible formats, see `format-time-string'.")
+
 (defun guix-get-string (val &optional face)
   "Convert VAL into a string and return it.
 
@@ -46,6 +50,11 @@ If FACE is non-nil, propertize returned string with this FACE."
     (if (and val face)
         (propertize str 'face face)
       str)))
+
+(defun guix-get-time-string (seconds)
+  "Return formatted time string from SECONDS.
+Use `guix-time-format'."
+  (format-time-string guix-time-format (seconds-to-time seconds)))
 
 (defun guix-get-one-line (str)
   "Return one-line string from a multi-line STR."

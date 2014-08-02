@@ -74,6 +74,7 @@
  (ice-9 match)
  (srfi srfi-1)
  (srfi srfi-11)
+ (srfi srfi-19)
  (srfi srfi-26)
  (guix)
  (guix config)
@@ -390,4 +391,71 @@ KEYS may be an ID, a full-name or a list of such elements."
            (cons (make-obsolete-package-entry name version entries) res)
            res)))
    '()))
+
+
+;;; Generation entries
+
+(define* (profile-generations #:optional (profile %current-profile))
+  "Return list of generations for PROFILE."
+  (let ((generations (generation-numbers profile)))
+    (if (equal? generations '(0))
+        '()
+        generations)))
+
+(define* (generation-param-alist #:optional (profile %current-profile))
+  "Return alist of generation parameters and functions for PROFILE."
+  (list
+   (cons 'id          identity)
+   (cons 'number      identity)
+   (cons 'prev-number (cut previous-generation-number profile <>))
+   (cons 'path        (cut generation-file-name profile <>))
+   (cons 'time        (lambda (gen)
+                        (time-second (generation-time profile gen))))))
+
+(define (generation->generation-entry generation . params)
+  "Return generation entry info for the GENERATION."
+  (object-info generation (generation-param-alist) params))
+
+(define (generations->generation-entries generations . params)
+  "Return list of generation entries for GENERATIONS."
+  (map (cut apply generation->generation-entry <> params)
+       generations))
+
+(define (matching-generation-entries predicate . params)
+  "Return list of generation entries for the matching generations.
+PREDICATE is called on each generation."
+  (fold (lambda (gen res)
+          (if (predicate gen)
+              (cons (apply generation->generation-entry gen params)
+                    res)
+              res))
+        '()
+        (profile-generations)))
+
+(define (all-generation-entries . params)
+  "Return list of all generation entries."
+  (set-current-manifest-maybe!)
+  (apply generations->generation-entries
+         (profile-generations)
+         params))
+
+(define (last-generation-entries number . params)
+  "Return list of last NUMBER generation entries.
+If NUMBER is 0 or less, return all generation entries."
+  (set-current-manifest-maybe!)
+  (let ((generations (profile-generations))
+        (number (if (<= number 0) +inf.0 number)))
+    (apply generations->generation-entries
+           (if (> (length generations) number)
+               (list-tail generations number)
+               generations)
+           params)))
+
+(define (generation-entries-by-ids ids . params)
+  "Return list of generation entries for generations matching IDS.
+IDS is a list of generation numbers."
+  (set-current-manifest-maybe!)
+  (apply matching-generation-entries
+         (cut memq <> ids)
+         params))
 

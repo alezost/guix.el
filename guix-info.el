@@ -18,7 +18,7 @@
 ;;; Commentary:
 
 ;; This file provides a help-like buffer for displaying information
-;; about Guix packages.
+;; about Guix packages and generations.
 
 ;;; Code:
 
@@ -110,7 +110,11 @@ number of characters, it will be split into several lines.")
      (path              guix-package-info-insert-output-path
                         guix-info-insert-title-simple)
      (dependencies      guix-package-info-insert-output-dependencies
-                        guix-info-insert-title-simple)))
+                        guix-info-insert-title-simple))
+    (generation
+     (number            guix-generation-info-number)
+     (path              guix-info-insert-file-path)
+     (time              guix-info-insert-time)))
   "Methods for inserting parameter values.
 Each element of the list should have a form:
 
@@ -131,7 +135,8 @@ argument.")
 (defvar guix-info-displayed-params
   '((package name version synopsis outputs location home-url
              license inputs native-inputs propagated-inputs description)
-    (installed path dependencies))
+    (installed path dependencies)
+    (generation number prev-number time path))
   "List of displayed entry parameters.
 Each element of the list should have a form:
 
@@ -478,6 +483,16 @@ NAME is a full name specification of the package."
   (guix-info-insert-val-simple
    (mapcar #'cadr deps) ; cadr is a path of a dependency
    #'guix-info-insert-file-path))
+
+
+;;; Displaying generations
+
+(guix-define-buffer-type info generation)
+
+(defface guix-generation-info-number
+  '((t :inherit font-lock-keyword-face))
+  "Face used for a number of a generation."
+  :group 'guix-generation-info)
 
 (provide 'guix-info)
 

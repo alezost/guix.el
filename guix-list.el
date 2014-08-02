@@ -18,7 +18,7 @@
 ;;; Commentary:
 
 ;; This file provides a list-like buffer for displaying information
-;; about Guix packages.
+;; about Guix packages and generations.
 
 ;;; Code:
 
@@ -53,7 +53,11 @@ entries, he will be prompted for confirmation."
      (version 10 nil)
      (outputs 13 t)
      (installed 13 t)
-     (synopsis 30 nil)))
+     (synopsis 30 nil))
+    (generation
+     (number 5 t)
+     (time 20 t)
+     (path 30 t)))
   "Columns displayed in list buffers.
 Each element of the list has a form:
 
@@ -63,7 +67,8 @@ PARAM is the name of an entry parameter of ENTRY-TYPE.  For the
 meaning of WIDTH, SORT and PROPS, see `tabulated-list-format'.")
 
 (defvar guix-list-column-titles
-  '()
+  '((generation
+     (number . "N.")))
   "Column titles for list buffers.
 Has the same structure as `guix-param-titles', but titles from
 this list have a priority.")
@@ -73,7 +78,10 @@ this list have a priority.")
      (name        . guix-package-list-get-name)
      (synopsis    . guix-list-get-one-line)
      (description . guix-list-get-one-line)
-     (installed   . guix-package-list-get-installed-outputs)))
+     (installed   . guix-package-list-get-installed-outputs))
+    (generation
+     (time . guix-list-get-time)
+     (path . guix-list-get-file-path)))
   "Methods for inserting parameter values in columns.
 Each element of the list has a form:
 
@@ -160,6 +168,18 @@ Parameters are taken from ENTRY of ENTRY-TYPE."
 (defun guix-list-get-one-line (str &optional _)
   "Return one-line string from a multi-line STR."
   (guix-get-one-line str))
+
+(defun guix-list-get-time (seconds &optional _)
+  "Return formatted time string from SECONDS."
+  (guix-get-time-string seconds))
+
+(defun guix-list-get-file-path (path &optional _)
+  "Return PATH button specification for `tabulated-list-entries'."
+  (list path
+        'face 'guix-list-file-path
+        'action (lambda (btn) (find-file (button-label btn)))
+        'follow-link t
+        'help-echo "Find file"))
 
 (defun guix-list-current-id ()
   "Return ID of the current entry."
@@ -379,6 +399,19 @@ Colorize it with `guix-package-list-obsolete' if needed."
    (mapcar (lambda (entry)
              (guix-get-key-val entry 'output))
            installed)))
+
+
+;;; Displaying generations
+
+(guix-define-buffer-type list generation)
+
+(guix-list-define-entry-type generation
+  :sort-key number
+  :marks ((delete  . ?D)))
+
+(let ((map guix-generation-list-mode-map))
+  (define-key map (kbd "RET") 'guix-generation-list-describe)
+  (define-key map (kbd "d")   'guix-generation-list-mark-delete))
 
 (provide 'guix-list)
 

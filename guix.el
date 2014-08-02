@@ -27,8 +27,8 @@
 ;; full-featured Emacs interface for Guix package manager
 ;; <http://www.gnu.org/software/guix/>.
 
-;; Currently the package provides an interface for searching, listing
-;; and getting information about Guix packages.
+;; Currently this package provides an interface for searching, listing
+;; and getting information about Guix packages and generations.
 
 ;; To install this package, add the following to your init-file:
 ;;
@@ -39,6 +39,7 @@
 ;;   (autoload 'guix-obsolete-packages "guix" nil t)
 ;;   (autoload 'guix-all-available-packages "guix" nil t)
 ;;   (autoload 'guix-newest-available-packages "guix" nil t)
+;;   (autoload 'guix-generations "guix" nil t)
 
 ;;; Code:
 
@@ -54,6 +55,12 @@
   "If non-nil, list a package even if it is the only matching result.
 If nil, show a single package in the info buffer."
   :type 'boolean
+  :group 'guix)
+
+(defcustom guix-show-generations-function 'guix-generation-list-get-show
+  "Default function used to display generations."
+  :type '(choice (function-item guix-generation-list-get-show)
+                 (function-item guix-generation-info-get-show))
   :group 'guix)
 
 (defvar guix-search-params '(name synopsis description)
@@ -82,6 +89,10 @@ is found and `guix-list-single-package' is nil."
           (setq packages (guix-get-entries 'package search-type
                                            search-vals info-params))))
       (guix-package-info-set packages search-type search-vals))))
+
+(defun guix-get-show-generations (search-type &rest search-vals)
+  "Search for generations and show results."
+  (apply guix-show-generations-function search-type search-vals))
 
 ;;;###autoload
 (defun guix-search-by-name (name)
@@ -125,6 +136,19 @@ If PARAMS are not specified, use `guix-search-params'."
   "Display information about the newest available Guix packages."
   (interactive)
   (guix-get-show-packages 'newest-available))
+
+;;;###autoload
+(defun guix-generations (&optional number)
+  "Display information about last NUMBER generations.
+If NUMBER is nil, display all generations.
+
+Generations can be displayed in a list or info buffers depending
+on `guix-show-generations-function'.
+
+Interactively, NUMBER is defined by a numeric prefix."
+  (interactive "P")
+  (guix-get-show-generations
+   'last (if (numberp number) number 0)))
 
 (provide 'guix)
 
