@@ -25,7 +25,7 @@
 
 ;;; Code:
 
-(require 'cl-macs)
+(require 'cl-lib)
 (require 'guix-backend)
 
 
@@ -296,13 +296,17 @@ See `revert-buffer' for the meaning of NOCONFIRM."
 This function will not update the information, use
 \"\\[revert-buffer]\" if you want the full update."
          (interactive)
-         (,show-fun guix-entries))
+         (,show-fun guix-entries)
+         (guix-result-message guix-entries ',entry-type
+                              guix-search-type guix-search-vals))
 
        (defun ,history-fun ()
          "Make and return a history item for the current buffer."
          (list (lambda (entries search-type search-vals)
                  (,show-fun entries)
-                 (guix-set-vars entries search-type search-vals))
+                 (guix-set-vars entries search-type search-vals)
+                 (guix-result-message entries ',entry-type
+                                      search-type search-vals))
                guix-entries guix-search-type guix-search-vals))
 
        (defun ,set-fun (entries search-type search-vals &optional history-replace)
@@ -324,7 +328,9 @@ This function will not update the information, use
                             #'guix-history-replace
                           #'guix-history-add)
                         (,history-fun)))
-             (pop-to-buffer-same-window buf))))
+             (pop-to-buffer-same-window buf)))
+         (guix-result-message entries ',entry-type
+                              search-type search-vals))
 
        (defun ,show-fun (entries)
          ,(concat "Display " entry-type-str " ENTRIES in the current " buf-str ".")
@@ -333,9 +339,7 @@ This function will not update the information, use
            (,mode)
            (,(intern (concat "guix-" buf-type-str "-insert-entries"))
             entries ',entry-type)
-           (goto-char (point-min)))
-         (when (cdr entries)
-           (message "%d entries." (length entries))))
+           (goto-char (point-min))))
 
        (defun ,get-show-fun (search-type &rest search-vals)
          ,(concat "Search for " entry-str " and show results in the " buf-str ".\n"
@@ -346,6 +350,72 @@ This function will not update the information, use
            (,set-fun entries search-type search-vals))))))
 
 (put 'guix-define-buffer-type 'lisp-indent-function 'defun)
+
+
+;;; Messages
+
+(defvar guix-messages
+  '((package
+     (id
+      (0 "Packages not found.")
+      (1 "")
+      (many "%d packages." count))
+     (name
+      (0 "The package '%s' not found." val)
+      (1 "A single package with name '%s'." val)
+      (many "%d packages with '%s' name." count val))
+     (regexp
+      (0 "No packages matching '%s'." val)
+      (1 "A single package matching '%s'." val)
+      (many "%d packages matching '%s'." count val))
+     (all-available
+      (0 "No packages are available for some reason.")
+      (1 "A single available package (that's strange).")
+      (many "%d available packages." count))
+     (newest-available
+      (0 "No packages are available for some reason.")
+      (1 "A single newest available package (that's strange).")
+      (many "%d newest available packages." count))
+     (installed
+      (0 "No installed packages.")
+      (1 "A single installed package.")
+      (many "%d installed packages." count))
+     (obsolete
+      (0 "No obsolete packages.")
+      (1 "A single obsolete package.")
+      (many "%d obsolete packages." count))
+     (generation
+      (0 "No packages installed in generation %d." val)
+      (1 "A single package installed in generation %d." val)
+      (many "%d packages installed in generation %d." count val)))
+    (generation
+     (id
+      (0 "Generations not found.")
+      (1 "")
+      (many "%d generations." count))
+     (last
+      (0 "No available generations.")
+      (1 "The last generation.")
+      (many "%d last generations." count))
+     (all
+      (0 "No available generations.")
+      (1 "A single available generation.")
+      (many "%d available generations." count)))))
+
+(defun guix-result-message (entries entry-type search-type search-vals)
+  "Display an appropriate message after displaying ENTRIES."
+  (let* ((val (car search-vals))
+         (count (length entries))
+         (count-key (if (> count 1) 'many count))
+         (msg-spec (guix-get-key-val guix-messages
+                                     entry-type search-type count-key))
+         (format (car msg-spec))
+         (args (cdr msg-spec)))
+    (mapc (lambda (subst)
+            (setq args (cl-substitute (car subst) (cdr subst) args)))
+          (list (cons count 'count)
+                (cons val 'val)))
+    (apply #'message format args)))
 
 (provide 'guix-base)
 
