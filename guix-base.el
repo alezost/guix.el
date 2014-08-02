@@ -339,6 +339,8 @@ This function will not update the information, use
                                           search-vals (,params-fun))))
            (,set-fun entries search-type search-vals))))))
 
+(put 'guix-define-buffer-type 'lisp-indent-function 'defun)
+
 (provide 'guix-base)
 
 ;;; guix-base.el ends here

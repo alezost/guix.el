@@ -293,7 +293,8 @@ VAL is a list, call the function on each element of this list."
 
 ;;; Displaying packages
 
-(guix-define-buffer-type info package :required (id installed))
+(guix-define-buffer-type info package
+  :required (id installed))
 
 (defface guix-package-info-name
   '((t :inherit font-lock-keyword-face))
