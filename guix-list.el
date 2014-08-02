@@ -270,49 +270,101 @@ Interactively, put a general mark on all lines."
   "Parent mode for displaying information in list buffers."
   (setq tabulated-list-padding 2))
 
+(defmacro guix-list-define-entry-type (entry-type &rest args)
+  "Define common stuff for displaying ENTRY-TYPE entries in list buffers.
+
+Remaining argument (ARGS) should have a form [KEYWORD VALUE] ...  The
+following keywords are available:
+
+  - `:sort-key' - default sort key for the tabulated list buffer.
+
+  - `:marks' - default value for the defined
+    `guix-ENTRY-TYPE-mark-alist' variable.
+
+This macro defines the following functions:
+
+  - `guix-ENTRY-TYPE-describe' - display marked entries in info buffer.
+
+  - `guix-ENTRY-TYPE-mark-MARK-NAME' functions for each mark
+    specified in `:marks' argument."
+  (let* ((entry-type-str (symbol-name entry-type))
+         (entry-str      (concat entry-type-str " entries"))
+         (prefix         (concat "guix-" entry-type-str "-list"))
+         (mode-str       (concat prefix "-mode"))
+         (init-fun       (intern (concat prefix "-mode-initialize")))
+         (describe-fun   (intern (concat prefix "-describe")))
+         (marks-var      (intern (concat prefix "-mark-alist")))
+         (marks-val      nil)
+         (sort-key       nil))
+
+    ;; Process the keyword args.
+    (while (keywordp (car args))
+      (pcase (pop args)
+        (`:sort-key (setq sort-key (pop args)))
+	(`:marks    (setq marks-val (pop args)))
+	(_ (pop args))))
+
+    `(progn
+       (defvar ,marks-var ',marks-val
+         ,(concat "Alist of additional marks for `" mode-str "'.\n"
+                  "Marks from this list are added to `guix-list-mark-alist'."))
+
+       ,@(mapcar (lambda (mark-spec)
+                   (let* ((mark-name (car mark-spec))
+                          (mark-name-str (symbol-name mark-name)))
+                     `(defun ,(intern (concat prefix "-mark-" mark-name-str)) ()
+                        ,(concat "Put '" mark-name-str "' mark and move to the next line.")
+                        (interactive)
+                        (guix-list-mark ',mark-name t))))
+                 marks-val)
+
+       (defun ,describe-fun (&optional arg)
+         ,(concat "Describe " entry-str " marked with a general mark.\n"
+                  "If no entry is marked, describe the current " entry-type-str ".\n"
+                  "With prefix (if ARG is non-nil), describe the " entry-str "\n"
+                  "marked with any mark.")
+         (interactive "P")
+         (let* ((ids (or (apply #'guix-list-get-marked-id-list
+                                (unless arg '(general)))
+                         (list (guix-list-current-id))))
+                (count (length ids)))
+           (when (or (<= count guix-list-describe-warning-count)
+                     (y-or-n-p (format "Do you really want to describe %d entries? "
+                                       count)))
+             (,(intern (concat "guix-" entry-type-str "-info-get-show"))
+              'id ids))))
+
+       (defun ,init-fun ()
+         ,(concat "Initial settings for `" mode-str "'.")
+         ,(when sort-key
+            `(setq tabulated-list-sort-key (guix-list-get-sort-key
+                                            ',entry-type ',sort-key)))
+         (setq tabulated-list-format (guix-list-get-list-format ',entry-type))
+         (setq-local guix-list-mark-alist
+                     (append guix-list-mark-alist ,marks-var))
+         (tabulated-list-init-header)))))
+
+(put 'guix-list-define-entry-type 'lisp-indent-function 'defun)
+
 
 ;;; Displaying packages
 
 (guix-define-buffer-type list package)
+
+(guix-list-define-entry-type package
+  :sort-key name
+  :marks ((install . ?I)
+          (delete  . ?D)))
 
 (defface guix-package-list-obsolete
   '((t :inherit guix-package-info-obsolete))
   "Face used if a package is obsolete."
   :group 'guix-package-list)
 
-(defvar guix-package-list-mark-alist
-  '((install . ?I)
-    (delete  . ?D))
-  "Alist of additional marks for `guix-package-list-mode'.
-Marks from this list are added to `guix-list-mark-alist'.")
-
 (let ((map guix-package-list-mode-map))
   (define-key map (kbd "RET") 'guix-package-list-describe)
   (define-key map (kbd "i")   'guix-package-list-mark-install)
   (define-key map (kbd "d")   'guix-package-list-mark-delete))
-
-(defun guix-package-list-mode-initialize ()
-  "Initial settings for `guix-package-list-mode'."
-  (setq tabulated-list-format (guix-list-get-list-format 'package)
-        tabulated-list-sort-key (guix-list-get-sort-key
-                                 'package 'name))
-  (setq-local guix-list-mark-alist
-              (append guix-list-mark-alist
-                      guix-package-list-mark-alist))
-  (tabulated-list-init-header))
-
-(defun guix-package-list-describe (&optional arg)
-  "Describe packages marked with a general mark or the current package.
-With ARG (interactively with prefix), describe the packages
-marked with any mark."
-  (interactive "P")
-  (let* ((ids (or (guix-list-get-marked-id-list (unless arg 'general))
-                  (list (guix-list-current-id))))
-         (count (length ids)))
-    (when (or (<= count guix-list-describe-warning-count)
-              (y-or-n-p (format "Do you really want to describe %d packages? "
-                                count)))
-      (guix-package-info-get-show 'id ids))))
 
 (defun guix-package-list-get-name (name entry)
   "Return NAME of the package ENTRY.
@@ -327,16 +379,6 @@ Colorize it with `guix-package-list-obsolete' if needed."
    (mapcar (lambda (entry)
              (guix-get-key-val entry 'output))
            installed)))
-
-(defun guix-package-list-mark-install ()
-  "Mark the current package for installation and move to the next line."
-  (interactive)
-  (guix-list-mark 'install t))
-
-(defun guix-package-list-mark-delete ()
-  "Mark the current package for deletion and move to the next line."
-  (interactive)
-  (guix-list-mark 'delete t))
 
 (provide 'guix-list)
 
