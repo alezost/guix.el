@@ -4,7 +4,7 @@
 
 Well, actually that's not true yet, because this package is under
 developement.  Currently it is possible to search for packages and to
-display information about the packages.
+display information about the packages and generations.
 
 * Requirements
 
@@ -36,6 +36,7 @@ For the manual installation, clone the repo, add the directory to the
 (autoload 'guix-obsolete-packages "guix" nil t)
 (autoload 'guix-all-available-packages "guix" nil t)
 (autoload 'guix-newest-available-packages "guix" nil t)
+(autoload 'guix-generations "guix" nil t)
 #+END_SRC
 
 * Usage
@@ -55,6 +56,12 @@ following setting (it is not necessary):
   : M-x guix-installed-packages
   : M-x guix-obsolete-packages
 
+- To list generations, use:
+
+  : M-x guix-generations
+
+  With numeric prefix, show so many last generations.
+
 - To search for packages, use:
 
   : M-x guix-search-by-regexp
@@ -67,9 +74,9 @@ following setting (it is not necessary):
 
   : M-x guix-search-by-name
 
-Information about the packages may be displayed in 2 types of buffers:
-"_list_" and "_info_".  The following keys are available in the both
-buffer types by default:
+Information about the packages and generations may be displayed in 2
+types of buffers: "_list_" and "_info_". The following keys are
+available in the both buffer types by default:
 
 - =l= / =r= – go backward/forward by the history of the displayed
   results (this history is similar to the history of the Emacs =help= or
@@ -78,8 +85,9 @@ buffer types by default:
 - =C-c C-z= – go to the Guix REPL;
 - =h= or =?= – describe current mode to see all available bindings.
 
-Also you can press =RET= in the list buffer to get more information
-about the package (you can mark several packages for describing).
+Also you can press =RET= in a list buffer to get more information about
+the current package (you can mark several packages for describing) or to
+list packages for the current generation.
 
 "Info" buffer contains some buttons (as usual you may use =TAB= /
 =S-TAB= to move between buttons) which can be used to:
