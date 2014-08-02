@@ -467,7 +467,7 @@ If NUMBER is 0 or less, return all generation entries."
         (number (if (<= number 0) +inf.0 number)))
     (apply generations->generation-entries
            (if (> (length generations) number)
-               (list-tail generations number)
+               (list-head  (reverse generations) number)
                generations)
            params)))
 
