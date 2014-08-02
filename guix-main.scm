@@ -116,7 +116,7 @@
   (and=> (vhash-assq id packages)
          cdr))
 
-(define (set-current-manifest-maybe!)
+(define* (set-current-manifest-maybe! #:optional manifest)
   (define (manifest-entries->hash-table entries)
     (let ((entries-table (make-hash-table (length entries))))
       (map (lambda (entry)
@@ -129,7 +129,7 @@
            entries)
       entries-table))
 
-  (let ((manifest (profile-manifest %user-profile)))
+  (let ((manifest (or manifest (profile-manifest %user-profile))))
     (unless (and (manifest? %current-manifest)
                  (equal? manifest %current-manifest))
       (set! %current-manifest manifest)
@@ -377,16 +377,29 @@ KEYS may be an ID, a full-name or a list of such elements."
   (set-current-manifest-maybe!)
   (apply matching-package-entries (lambda (pkg) #t) params))
 
-(define (installed-package-entries . params)
-  "Return list of package entries for all installed packages."
-  (set-current-manifest-maybe!)
+(define (manifest-package-entries . params)
+  "Return list of package entries for the current manifest."
   (fold-manifest-entries
    (lambda (name version entries res)
      ;; We don't care about duplicates for the list of
      ;; installed packages, so just take any package (car)
      ;; matching name+version
-     (cons (car (package-entries-by-name+version name version)) res))
+     (cons (car (apply package-entries-by-name+version
+                       name version params))
+           res))
    '()))
+
+(define (installed-package-entries . params)
+  "Return list of package entries for all installed packages."
+  (set-current-manifest-maybe!)
+  (apply manifest-package-entries params))
+
+(define (generation-package-entries generation . params)
+  "Return list of package entries for packages from GENERATION."
+  (set-current-manifest-maybe!
+   (profile-manifest
+    (generation-file-name %current-profile generation)))
+  (apply manifest-package-entries params))
 
 (define (obsolete-package-entries . params)
   "Return list of package entries for obsolete packages."

@@ -169,7 +169,8 @@ Return elisp expression of the first result value of evaluation."
      (all-available    . all-available-package-entries)
      (newest-available . newest-available-package-entries)
      (installed        . installed-package-entries)
-     (obsolete         . obsolete-package-entries))
+     (obsolete         . obsolete-package-entries)
+     (generation       . generation-package-entries))
     (generation
      (id               . generation-entries-by-ids)
      (last             . last-generation-entries)

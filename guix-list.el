@@ -407,11 +407,17 @@ Colorize it with `guix-package-list-obsolete' if needed."
 
 (guix-list-define-entry-type generation
   :sort-key number
-  :marks ((delete  . ?D)))
+  :marks ((delete . ?D)))
 
 (let ((map guix-generation-list-mode-map))
-  (define-key map (kbd "RET") 'guix-generation-list-describe)
+  (define-key map (kbd "RET") 'guix-generation-list-show-packages)
+  (define-key map (kbd "i")   'guix-generation-list-describe)
   (define-key map (kbd "d")   'guix-generation-list-mark-delete))
+
+(defun guix-generation-list-show-packages ()
+  "List installed packages for the generation at point."
+  (interactive)
+  (guix-package-list-get-show 'generation (guix-list-current-id)))
 
 (provide 'guix-list)
 
