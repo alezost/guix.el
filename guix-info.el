@@ -47,6 +47,11 @@
   "Face used for URLs."
   :group 'guix-info)
 
+(defface guix-info-time
+  '((t :inherit font-lock-constant-face))
+  "Face used for timestamps."
+  :group 'guix-info)
+
 (defface guix-info-action-button
   '((((type x w32 ns) (class color))
      :box (:line-width 2 :style released-button)
@@ -281,7 +286,8 @@ VAL is a list, call the function on each element of this list."
 
 (defun guix-info-insert-time (seconds &optional _)
   "Insert formatted time string using SECONDS at point."
-  (insert (guix-get-time-string seconds)))
+  (guix-info-insert-val-default (guix-get-time-string seconds)
+                                'guix-info-time))
 
 
 (defvar guix-info-mode-map
