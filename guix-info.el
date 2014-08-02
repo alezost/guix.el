@@ -270,6 +270,16 @@ VAL is a list, call the function on each element of this list."
         (guix-split-insert val face-or-fun
                            guix-info-fill-column prefix)))))
 
+(defun guix-info-insert-action-button (label action &optional message
+                                             &rest properties)
+  "Make action button with LABEL and insert it at point.
+For the meaning of ACTION, MESSAGE and PROPERTIES, see
+`guix-insert-button'."
+  (apply #'guix-insert-button
+         label 'guix-info-action-button action message
+         'mouse-face 'guix-info-action-button-mouse
+         properties))
+
 (defun guix-info-insert-file-path (path &optional _)
   "Make button from file PATH and insert it at point."
   (guix-insert-button
@@ -474,11 +484,10 @@ current OUTPUT is installed (if there is such output in
 TYPE is one of the following symbols: `install', `delete', `upgrade'.
 NAME is a full name specification of the package."
   (let ((type-str (capitalize (symbol-name type))))
-    (guix-insert-button
-     type-str 'guix-info-action-button
+    (guix-info-insert-action-button
+     type-str
      (lambda (btn) (error "Sorry, not implemented yet"))
-     (concat type-str " '" name "'")
-     'mouse-face 'guix-info-action-button-mouse)))
+     (concat type-str " '" name "'"))))
 
 (defun guix-package-info-insert-output-path (path &optional _)
   "Insert PATH of the installed output."
