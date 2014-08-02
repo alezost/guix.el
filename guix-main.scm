@@ -208,20 +208,27 @@ OBJECT.  Returning value is alist of PARAMS and the values of funcalls."
    (cons 'path         manifest-entry-item)
    (cons 'dependencies manifest-entry-dependencies)))
 
+(define (manifest-entry->installed-entry entry . params)
+  "Return installed entry info for manifest ENTRY."
+  (object-info entry package-installed-param-alist params))
+
 (define (manifest-entries->installed-entries entries . params)
   "Return list of installed entries for manifest ENTRIES."
-  (map (cut object-info <> package-installed-param-alist params)
+  (map (cut apply manifest-entry->installed-entry <> params)
        entries))
 
 (define (installed-entries-by-name+version name version . params)
   "Return list of installed entries for packages with NAME and VERSION."
-  (manifest-entries->installed-entries
-   (manifest-entries-by-name+version name version)))
+  (apply manifest-entries->installed-entries
+         (manifest-entries-by-name+version name version)
+         params))
 
 (define (installed-entries-by-package package . params)
   "Return list of installed entries for the PACKAGE."
-  (installed-entries-by-name+version (package-name package)
-                                     (package-version package)))
+  (apply installed-entries-by-name+version
+         (package-name package)
+         (package-version package)
+         params))
 
 (define (package-inputs-names inputs)
   "Return list of full names of the packages from package INPUTS."
