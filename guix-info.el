@@ -117,7 +117,7 @@ number of characters, it will be split into several lines.")
      (dependencies      guix-package-info-insert-output-dependencies
                         guix-info-insert-title-simple))
     (generation
-     (number            guix-generation-info-number)
+     (number            guix-generation-info-insert-number)
      (path              guix-info-insert-file-path)
      (time              guix-info-insert-time)))
   "Methods for inserting parameter values.
@@ -508,6 +508,25 @@ NAME is a full name specification of the package."
   '((t :inherit font-lock-keyword-face))
   "Face used for a number of a generation."
   :group 'guix-generation-info)
+
+(declare-function guix-package-list-get-show "guix-list" t t)
+
+(defun guix-generation-info-insert-number (number &optional _)
+  "Insert generation NUMBER and action buttons."
+  (guix-info-insert-val-default number 'guix-generation-info-number)
+  (guix-info-insert-indent)
+  (guix-info-insert-action-button
+   "Packages"
+   (lambda (btn)
+     (guix-package-list-get-show 'generation
+                                 (button-get btn 'number)))
+   "Show installed packages for this generation"
+   'number number)
+  (guix-info-insert-indent)
+  (guix-info-insert-action-button
+   "Delete"
+   (lambda (btn) (error "Sorry, not implemented yet"))
+   "Delete this generation"))
 
 (provide 'guix-info)
 
