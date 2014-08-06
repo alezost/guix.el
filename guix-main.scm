@@ -44,7 +44,8 @@
 ;; `object-address' to identify a package (for ‘id’ parameter), if
 ;; possible.  However for the obsolete packages (that can be found in
 ;; installed manifest but not in a package directory), ‘id’ parameter is
-;; still "name-version" string.
+;; still "name-version" string.  So ‘id’ package parameter in the code
+;; below is either an object-address number or a full-name string.
 ;;
 ;; Important: as object addresses live only during guile session, elisp
 ;; part should take care about updating information after "Guix REPL" is
@@ -57,7 +58,7 @@
 ;; To speed-up the process of getting information, the following
 ;; variables are defined and set on start-up:
 ;;
-;; - `packages' - VHash of "package id"/"package" pairs.
+;; - `packages' - VHash of "package address"/"package" pairs.
 ;;
 ;; - `packages-table' - Hash table of
 ;;   "name+version key"/"list of packages" pairs.
@@ -110,12 +111,6 @@
 (define (key->name+version key)
   (values (car key) (cdr key)))
 
-(define package-id object-address)
-(define package-id? integer?)
-(define (package-by-id id)
-  (and=> (vhash-assq id packages)
-         cdr))
-
 (define* (set-current-manifest-maybe! #:optional manifest)
   (define (manifest-entries->hash-table entries)
     (let ((entries-table (make-hash-table (length entries))))
@@ -142,7 +137,7 @@
     (set! packages
           (fold-packages (lambda (pkg res)
                            (set! count (+ 1 count))
-                           (vhash-consq (package-id pkg) pkg res))
+                           (vhash-consq (object-address pkg) pkg res))
                          vlist-null))
     (set! packages-table (make-hash-table count))
     (vlist-for-each (lambda (elem)
@@ -166,6 +161,21 @@
   (or (hash-ref packages-table
                 (name+version->key name version))
       '()))
+
+(define (packages-by-full-name full-name)
+  (call-with-values
+      (lambda () (full-name->name+version full-name))
+    packages-by-name+version))
+
+(define (package-by-address address)
+  (and=> (vhash-assq address packages)
+         cdr))
+
+(define (packages-by-id id)
+  (if (integer? id)
+      (let ((pkg (package-by-address id)))
+        (if pkg (list pkg) '()))
+      (packages-by-full-name id)))
 
 (define (fold-manifest-entries proc init)
   "Fold over `current-manifest-entries-table'.
@@ -249,7 +259,7 @@ OBJECT.  Returning value is alist of PARAMS and the values of funcalls."
 
 (define package-param-alist
   (list
-   (cons 'id                package-id)
+   (cons 'id                object-address)
    (cons 'name              package-name)
    (cons 'version           package-version)
    (cons 'license           package-license-names)
@@ -342,26 +352,23 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
            (cut package-match? <> re)
            ret-params)))
 
-(define (package-entries-by-keys keys . params)
+(define (package-entries-by-ids ids . params)
   "Return list of package entries for packages matching KEYS.
-KEYS may be an ID, a full-name or a list of such elements."
+IDS may be an object-address, a full-name or a list of such elements."
   (set-current-manifest-maybe!)
   (fold-object
-   (lambda (key res)
-     (if (package-id? key)
-         (let ((pkg (package-by-id key)))
+   (lambda (id res)
+     (if (integer? id)
+         (let ((pkg (package-by-address id)))
            (if pkg
                (cons (apply package->package-entry pkg params) res)
                res))
-         (let-values (((name version)
-                       (full-name->name+version key)))
-           (let ((info (apply package-entries-by-name+version
-                              name version params)))
-             (if (null? info)
-                 res
-                 (append res info))))))
+         (let ((entries (apply package-entries-by-spec id params)))
+           (if (null? entries)
+               res
+               (append res entries)))))
    '()
-   keys))
+   ids))
 
 (define (newest-available-package-entries . params)
   "Return list of package entries for the newest available packages."

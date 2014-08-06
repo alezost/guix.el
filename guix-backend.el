@@ -159,11 +159,11 @@ Return elisp expression of the first result value of evaluation."
           "#t" "t" (car (guix-eval str wrap))))))
 
 
-;;; Getting packages info
+;;; Getting info about packages and generations
 
 (defvar guix-search-entries-config
   '((package
-     (id               . package-entries-by-keys)
+     (id               . package-entries-by-ids)
      (name             . package-entries-by-spec)
      (regexp           . package-entries-by-regexp)
      (all-available    . all-available-package-entries)
