@@ -81,6 +81,12 @@ Each element of the list has a form:
                       (guix-get-key-val entry 'version)
                       output))
 
+(defun guix-get-installed-outputs (entry)
+  "Return list of installed outputs for the package ENTRY."
+  (mapcar (lambda (installed-entry)
+            (guix-get-key-val installed-entry 'output))
+          (guix-get-key-val entry 'installed)))
+
 
 ;;; Location of the packages
 
