@@ -21,6 +21,8 @@
 
 ;;; Code:
 
+;; (require 'cl-lib)
+
 (defvar guix-true-string "Yes")
 (defvar guix-false-string "–")
 (defvar guix-list-separator ", ")
@@ -132,6 +134,16 @@ split it into several short lines."
     (let ((fill-column col))
       (fill-region (point-min) (point-max)))
     (buffer-string)))
+
+(defun guix-completing-read-multiple (prompt table &optional predicate
+                                      require-match initial-input
+                                      hist def inherit-input-method)
+  "Same as `completing-read-multiple' but remove duplicates in result."
+  (cl-remove-duplicates
+   (completing-read-multiple prompt table predicate
+                             require-match initial-input
+                             hist def inherit-input-method)
+   :test #'string=))
 
 (defun guix-get-key-val (alist &rest keys)
   "Return value from ALIST by KEYS.
