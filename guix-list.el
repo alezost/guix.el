@@ -206,7 +206,17 @@ the initial value of RESULT.  Return the final result."
     res))
 
 
-;;; Marking
+;;; Marking and sorting
+
+(defvar-local guix-list-marked nil
+  "List of the marked entries.
+Each element of the list has a form:
+
+  (ID MARK-NAME . ARGS)
+
+ID is an entry ID.
+MARK-NAME is a symbol from `guix-list-mark-alist'.
+ARGS is a list of additional values.")
 
 (defvar guix-list-mark-alist
   '((empty   . ?\s)
@@ -226,36 +236,57 @@ the initial value of RESULT.  Return the final result."
   "Return mark character of the current line."
   (char-after (line-beginning-position)))
 
-(defun guix-list-get-marked-id-list (&rest mark-names)
-  "Return list of IDs of the lines marked with any mark from MARK-NAMES.
+(defun guix-list-get-marked (&rest mark-names)
+  "Return list of specs of entries marked with any mark from MARK-NAMES.
+Entry specs are elements from `guix-list-marked' list.
 If MARK-NAMES are not specified, use all marks from
 `guix-list-mark-alist' except the `empty' one."
-  (let ((marks (mapcar #'guix-list-get-mark
-                       (or mark-names
-                           (delq 'empty
-                                 (mapcar #'car guix-list-mark-alist))))))
-    (guix-list-fold-lines
-     (lambda (ids)
-       (if (memq (guix-list-current-mark) marks)
-           (cons (guix-list-current-id) ids)
-         ids))
-     '())))
+  (or mark-names
+      (setq mark-names
+            (delq 'empty
+                  (mapcar #'car guix-list-mark-alist))))
+  (cl-remove-if-not (lambda (assoc)
+                      (memq (cadr assoc) mark-names))
+                    guix-list-marked))
 
-(defun guix-list-mark (name &optional advance)
+(defun guix-list-get-marked-args (mark-name)
+  "Return list of (ID . ARGS) elements from lines marked with MARK-NAME.
+See `guix-list-marked' for the meaning of ARGS."
+  (mapcar (lambda (spec)
+            (let ((id (car spec))
+                  (args (cddr spec)))
+              (cons id args)))
+          (guix-list-get-marked mark-name)))
+
+(defun guix-list-get-marked-id-list (&rest mark-names)
+  "Return list of IDs of entries marked with any mark from MARK-NAMES.
+See `guix-list-get-marked' for details."
+  (mapcar #'car (apply #'guix-list-get-marked mark-names)))
+
+(defun guix-list-mark (mark-name &optional advance &rest args)
   "Put a mark on the current line.
-NAME is a mark name from `guix-list-mark-alist'.
+Also add the current entry to `guix-list-marked' using its ID and ARGS.
+MARK-NAME is a symbol from `guix-list-mark-alist'.
 If ADVANCE is non-nil, move forward by one line after marking.
 Interactively, put a general mark and move to the next line."
   (interactive '(general t))
-  (tabulated-list-put-tag (guix-list-get-mark-string name)
+  (let ((id (guix-list-current-id)))
+    (if (eq mark-name 'empty)
+        (setq guix-list-marked (assq-delete-all id guix-list-marked))
+      (let ((assoc (assq id guix-list-marked))
+            (val (cons mark-name args)))
+        (if assoc
+            (setcdr assoc val)
+          (push (cons id val) guix-list-marked)))))
+  (tabulated-list-put-tag (guix-list-get-mark-string mark-name)
                           advance))
 
-(defun guix-list-mark-all (name)
-  "Mark all lines with NAME mark.
-NAME is a mark name from `guix-list-mark-alist'.
+(defun guix-list-mark-all (mark-name)
+  "Mark all lines with MARK-NAME mark.
+MARK-NAME is a symbol from `guix-list-mark-alist'.
 Interactively, put a general mark on all lines."
   (interactive '(general))
-  (guix-list-for-each-line #'guix-list-mark name))
+  (guix-list-for-each-line #'guix-list-mark mark-name))
 
 (defun guix-list-unmark ()
   "Unmark the current line and move to the next line."
@@ -273,6 +304,23 @@ Interactively, put a general mark on all lines."
   (interactive)
   (guix-list-mark-all 'empty))
 
+(defun guix-list-restore-marks ()
+  "Put marks according to `guix-list-mark-alist'."
+  (guix-list-for-each-line
+   (lambda ()
+     (let ((mark-name (car (guix-get-key-val guix-list-marked
+                                             (guix-list-current-id)))))
+       (tabulated-list-put-tag
+        (guix-list-get-mark-string (or mark-name 'empty)))))))
+
+(defun guix-list-sort (&optional n)
+  "Sort guix list entries by the column at point.
+With a numeric prefix argument N, sort the Nth column.
+Same as `tabulated-list-sort', but also restore marks after sorting."
+  (interactive "P")
+  (tabulated-list-sort n)
+  (guix-list-restore-marks))
+
 
 (defvar guix-list-mode-map
   (let ((map (make-sparse-keymap)))
@@ -283,6 +331,7 @@ Interactively, put a general mark on all lines."
     (define-key map (kbd "u")   'guix-list-unmark)
     (define-key map (kbd "U")   'guix-list-unmark-all)
     (define-key map (kbd "DEL") 'guix-list-unmark-backward)
+    (define-key map [remap tabulated-list-sort] 'guix-list-sort)
     map)
   "Parent keymap for list buffers.")
 
