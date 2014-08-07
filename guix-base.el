@@ -87,6 +87,12 @@ Each element of the list has a form:
             (guix-get-key-val installed-entry 'output))
           (guix-get-key-val entry 'installed)))
 
+(defun guix-get-entry-by-id (id entries)
+  "Return entry from ENTRIES by entry ID."
+  (cl-find-if (lambda (entry)
+                (equal id (guix-get-key-val entry 'id)))
+              entries))
+
 
 ;;; Location of the packages
 
