@@ -127,12 +127,20 @@ If you have a slow system, try to increase this time."
 (defun guix-make-guile-expression (fun &rest args)
   "Return string containing a guile expression for calling FUN with ARGS."
   (format "(%S %s)" fun
-          (mapconcat (lambda (arg)
-                       (concat (and (or (symbolp arg) (listp arg))
-                                    "'")
-                               (prin1-to-string arg)))
-                     args
-                     " ")))
+          (mapconcat
+           (lambda (arg)
+             (cond
+              ((null arg) "'()")
+              ((or (eq arg t)
+                   ;; An ugly hack to separate 'false' from nil
+                   (equal arg 'f)
+                   (keywordp arg))
+               (concat "#" (prin1-to-string arg t)))
+              ((or (symbolp arg) (listp arg))
+               (concat "'" (prin1-to-string arg)))
+              (t (prin1-to-string arg))))
+           args
+           " ")))
 
 (defun guix-eval (str &optional wrap)
   "Evaluate guile expression STR.
