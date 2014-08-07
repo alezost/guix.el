@@ -334,7 +334,9 @@ This function will not update the information, use
                             #'guix-history-replace
                           #'guix-history-add)
                         (,history-fun)))
-             (pop-to-buffer-same-window buf)))
+             (pop-to-buffer buf
+                            '((display-buffer-reuse-window
+                               display-buffer-same-window)))))
          (guix-result-message entries ',entry-type
                               search-type search-vals))
 
