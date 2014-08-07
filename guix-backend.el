@@ -21,7 +21,6 @@
 
 ;;; Code:
 
-(require 'guix-utils)
 (require 'geiser-mode)
 
 (defvar guix-load-path
@@ -157,51 +156,6 @@ Return elisp expression of the first result value of evaluation."
          "#f\\|#<unspecified>" "nil"
          (replace-regexp-in-string
           "#t" "t" (car (guix-eval str wrap))))))
-
-
-;;; Getting info about packages and generations
-
-(defvar guix-search-entries-config
-  '((package
-     (id               . package-entries-by-ids)
-     (name             . package-entries-by-spec)
-     (regexp           . package-entries-by-regexp)
-     (all-available    . all-available-package-entries)
-     (newest-available . newest-available-package-entries)
-     (installed        . installed-package-entries)
-     (obsolete         . obsolete-package-entries)
-     (generation       . generation-package-entries))
-    (generation
-     (id               . generation-entries-by-ids)
-     (last             . last-generation-entries)
-     (all              . all-generation-entries)))
-  "Available methods for getting information.
-Each element of the list has a form:
-
-  (ENTRY-TYPE . ((SEARCH-TYPE . FUN) ...))
-
-ENTRY-TYPE is a type of the searched entries.
-SEARCH-TYPE is a search type for defining FUN.
-FUN is a name of guile function used for searching.")
-
-(defun guix-get-entries (entry-type search-type search-vals &optional params)
-  "Search for entries of ENTRY-TYPE.
-
-ENTRY-TYPE and SEARCH-TYPE define a search function from
-`guix-search-entries-config' which is called with SEARCH-VALS as
-arguments.
-
-PARAMS is a list of parameters for receiving.  They are appended
-to SEARCH-VALS.  If nil, get information with all available
-parameters.
-
-Returning value is a list of the form of `guix-entries'."
-  (let ((fun (guix-get-key-val guix-search-entries-config
-                               entry-type search-type)))
-    (or fun (error "Wrong entry type '%S' or search type '%S'"
-                   entry-type search-type))
-    (guix-eval-read (apply #'guix-make-guile-expression
-                           fun (append search-vals params)))))
 
 (provide 'guix-backend)
 

@@ -27,7 +27,6 @@
 (require 'guix-info)
 (require 'guix-history)
 (require 'guix-base)
-(require 'guix-backend)
 (require 'guix-utils)
 
 (defgroup guix-list nil
