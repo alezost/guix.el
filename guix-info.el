@@ -457,7 +457,6 @@ current OUTPUT is installed (if there is such output in
 `installed' parameter of a package ENTRY)."
   (let* ((installed (guix-get-key-val entry 'installed))
          (obsolete  (guix-get-key-val entry 'obsolete))
-         (full-name (guix-get-full-name entry output))
          (installed-entry (cl-find-if
                            (lambda (entry)
                              (string= (guix-get-key-val entry 'output)
@@ -470,23 +469,31 @@ current OUTPUT is installed (if there is such output in
                             'guix-package-info-installed-outputs
                           'guix-package-info-uninstalled-outputs)
                         guix-package-info-output-format)
-    (guix-package-info-insert-action-button action-type full-name)
+    (guix-package-info-insert-action-button action-type entry output)
     (when obsolete
       (guix-info-insert-indent)
-      (guix-package-info-insert-action-button 'upgrade full-name))
+      (guix-package-info-insert-action-button 'upgrade entry output))
     (insert "\n")
     (when installed-entry
       (guix-info-insert-entry installed-entry 'installed 2))))
 
-(defun guix-package-info-insert-action-button (type name)
-  "Insert action button at point.
+(defun guix-package-info-insert-action-button (type entry output)
+  "Insert button to process an action on a package OUTPUT at point.
 TYPE is one of the following symbols: `install', `delete', `upgrade'.
-NAME is a full name specification of the package."
-  (let ((type-str (capitalize (symbol-name type))))
+ENTRY is an alist with package info."
+  (let ((type-str (capitalize (symbol-name type)))
+        (full-name (guix-get-full-name entry output)))
     (guix-info-insert-action-button
      type-str
-     (lambda (btn) (error "Sorry, not implemented yet"))
-     (concat type-str " '" name "'"))))
+     (lambda (btn)
+       (guix-process-package-actions
+        (list (button-get btn 'action-type)
+              (list (button-get btn 'id)
+                    (button-get btn 'output)))))
+     (concat type-str " '" full-name "'")
+     'action-type type
+     'id (guix-get-key-val entry 'id)
+     'output output)))
 
 (defun guix-package-info-insert-output-path (path &optional _)
   "Insert PATH of the installed output."
