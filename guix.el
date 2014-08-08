@@ -147,8 +147,9 @@ on `guix-show-generations-function'.
 
 Interactively, NUMBER is defined by a numeric prefix."
   (interactive "P")
-  (guix-get-show-generations
-   'last (if (numberp number) number 0)))
+  (if (numberp number)
+      (guix-get-show-generations 'last number)
+    (guix-get-show-generations 'all)))
 
 (provide 'guix)
 
