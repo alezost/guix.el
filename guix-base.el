@@ -27,6 +27,7 @@
 
 (require 'cl-lib)
 (require 'guix-backend)
+(require 'guix-utils)
 
 
 ;;; Parameters of the entries
@@ -477,6 +478,11 @@ Returning value is a list of the form of `guix-entries'."
 
 ;;; Actions on packages and generations
 
+(defcustom guix-operation-confirm t
+  "If nil, do not prompt to confirm an operation."
+  :type 'boolean
+  :group 'guix)
+
 (defcustom guix-use-substitutes t
   "If non-nil, use substitutes for the Guix packages."
   :type 'boolean
@@ -484,6 +490,9 @@ Returning value is a list of the form of `guix-entries'."
 
 (defvar guix-dry-run nil
   "If non-nil, do not perform the real actions, just simulate.")
+
+(defvar guix-temp-buffer-name " *Guix temp*"
+  "Name of a buffer used for displaying info before executing operation.")
 
 (defun guix-process-package-actions (&rest actions)
   "Process package ACTIONS.
@@ -503,12 +512,77 @@ PACKAGE-SPEC should have the following form: (ID [OUTPUT] ...)."
                 (upgrade (setq upgrade (append upgrade specs)))
                 ((remove delete) (setq remove (append remove specs))))))
           actions)
-    (guix-eval-in-repl
-     (guix-make-guile-expression
-      'do-package-actions
-      :install install :upgrade upgrade :remove remove
-      :use-substitutes? (or guix-use-substitutes 'f)
-      :dry-run? (or guix-dry-run 'f)))))
+    (when (guix-continue-package-operation-p
+           :install install :upgrade upgrade :remove remove)
+      (guix-eval-in-repl
+       (guix-make-guile-expression
+        'do-package-actions
+        :install install :upgrade upgrade :remove remove
+        :use-substitutes? (or guix-use-substitutes 'f)
+        :dry-run? (or guix-dry-run 'f))))))
+
+(cl-defun guix-continue-package-operation-p (&key install upgrade remove)
+  "Return non-nil if a package operation should be continued.
+Ask a user if needed (see `guix-operation-confirm').
+INSTALL, UPGRADE, REMOVE are 'package action specifications'.
+See `guix-process-package-actions' for details."
+  (or (null guix-operation-confirm)
+      (let* ((entries (guix-get-entries
+                       'package 'id
+                       (list (append (mapcar #'car install)
+                                     (mapcar #'car upgrade)
+                                     (mapcar #'car remove)))
+                       '(id name version location)))
+             (install-strings (guix-get-package-strings install entries))
+             (upgrade-strings (guix-get-package-strings upgrade entries))
+             (remove-strings  (guix-get-package-strings remove entries)))
+        (if (or install-strings upgrade-strings remove-strings)
+            (let ((buf (get-buffer-create guix-temp-buffer-name)))
+              (with-current-buffer buf
+                (setq-local cursor-type nil)
+                (setq buffer-read-only nil)
+                (erase-buffer)
+                (guix-insert-package-strings install-strings "install")
+                (guix-insert-package-strings upgrade-strings "upgrade")
+                (guix-insert-package-strings remove-strings "remove")
+                (let ((win (temp-buffer-window-show
+                            buf
+                            '((display-buffer-reuse-window
+                               display-buffer-at-bottom)
+                              (window-height . fit-window-to-buffer)))))
+                  (prog1 (y-or-n-p "Continue operation? ")
+                    (quit-window nil win)))))
+          (message "Nothing to be done.  If the REPL was restarted, information is not up-to-date.")
+          nil))))
+
+(defun guix-get-package-strings (specs entries)
+  "Return short package descriptions for performing package actions.
+See `guix-process-package-actions' for the meaning of SPECS.
+ENTRIES is a list of package entries to get info about packages."
+  (delq nil
+        (mapcar
+         (lambda (spec)
+           (let* ((id (car spec))
+                  (outputs (cdr spec))
+                  (entry (guix-get-entry-by-id id entries)))
+             (when entry
+               (let ((location (guix-get-key-val entry 'location)))
+                 (concat (guix-get-full-name entry)
+                         (when outputs
+                           (concat ":"
+                                   (mapconcat #'identity outputs ",")))
+                         (when location
+                           (concat "\t(" location ")")))))))
+         specs)))
+
+(defun guix-insert-package-strings (strings action)
+  "Insert information STRINGS at point for performing package ACTION."
+  (when strings
+    (insert "Package(s) to " (guix-get-string action 'bold) ":\n")
+    (mapc (lambda (str)
+            (insert "  " str "\n"))
+          strings)
+    (insert "\n")))
 
 (provide 'guix-base)
 
