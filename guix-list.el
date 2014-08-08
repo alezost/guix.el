@@ -185,6 +185,10 @@ Parameters are taken from ENTRY of ENTRY-TYPE."
   (or (tabulated-list-get-id)
       (user-error "No entry here")))
 
+(defun guix-list-current-entry ()
+  "Return alist of the current entry info."
+  (guix-get-entry-by-id (guix-list-current-id) guix-entries))
+
 (defun guix-list-for-each-line (fun &rest args)
   "Call FUN with ARGS for each entry line."
   (or (derived-mode-p 'guix-list-mode)
@@ -380,8 +384,9 @@ This macro defines the following functions:
        ,@(mapcar (lambda (mark-spec)
                    (let* ((mark-name (car mark-spec))
                           (mark-name-str (symbol-name mark-name)))
-                     `(defun ,(intern (concat prefix "-mark-" mark-name-str)) ()
-                        ,(concat "Put '" mark-name-str "' mark and move to the next line.")
+                     `(defun ,(intern (concat prefix "-mark-" mark-name-str "-simple")) ()
+                        ,(concat "Put '" mark-name-str "' mark and move to the next line.\n"
+                                 "Also add the current entry to `guix-list-marked'.")
                         (interactive)
                         (guix-list-mark ',mark-name t))))
                  marks-val)
@@ -422,6 +427,7 @@ This macro defines the following functions:
 (guix-list-define-entry-type package
   :sort-key name
   :marks ((install . ?I)
+          (upgrade . ?U)
           (delete  . ?D)))
 
 (defface guix-package-list-obsolete
@@ -429,9 +435,26 @@ This macro defines the following functions:
   "Face used if a package is obsolete."
   :group 'guix-package-list)
 
+(defcustom guix-package-list-generation-marking-enabled nil
+  "If non-nil, allow putting marks in a list with 'generation packages'.
+
+By default this is disabled, because it may be confusing.  For
+example a package is installed in some generation, so a user can
+mark it for deletion in the list of packages from this
+generation, but the package may not be installed in the latest
+generation, so actually it cannot be deleted.
+
+If you managed to understand the explanation above or if you
+really know what you do or if you just don't care, you can set
+this variable to t.  It should not do much harm anyway (most
+likely)."
+  :type 'boolean
+  :group 'guix-package-list)
+
 (let ((map guix-package-list-mode-map))
   (define-key map (kbd "RET") 'guix-package-list-describe)
   (define-key map (kbd "i")   'guix-package-list-mark-install)
+  (define-key map (kbd "^")   'guix-package-list-mark-upgrade)
   (define-key map (kbd "d")   'guix-package-list-mark-delete))
 
 (defun guix-package-list-get-name (name entry)
@@ -448,6 +471,67 @@ Colorize it with `guix-package-list-obsolete' if needed."
              (guix-get-key-val entry 'output))
            installed)))
 
+(defun guix-package-list-marking-check ()
+  "Signal an error if marking is disabled for the current buffer."
+  (when (and (not guix-package-list-generation-marking-enabled)
+             (derived-mode-p 'guix-package-list-mode)
+             (eq guix-search-type 'generation))
+    (error "Action marks are disabled for lists of 'generation packages'")))
+
+(defun guix-package-list-mark-install (&optional arg)
+  "Mark the current package for installation and move to the next line.
+With ARG, prompt for the outputs to install (several outputs may
+be separated with \",\")."
+  (interactive "P")
+  (guix-package-list-marking-check)
+  (let* ((entry (guix-list-current-entry))
+         (available (guix-get-key-val entry 'outputs))
+         (installed (guix-get-installed-outputs entry))
+         (to-install (if arg
+                         (guix-completing-read-multiple
+                          "Output(s) to install: " available nil t)
+                       '("out")))
+         (to-install (cl-set-difference to-install installed
+                                        :test #'string=)))
+    (if to-install
+        (apply #'guix-list-mark 'install t to-install)
+      (user-error "This package is already installed"))))
+
+(defun guix-package-list-mark-delete (&optional arg)
+  "Mark the current package for deletion and move to the next line.
+With ARG, prompt for the outputs to delete (several outputs may
+be separated with \",\")."
+  (interactive "P")
+  (guix-package-list-marking-check)
+  (let* ((entry (guix-list-current-entry))
+         (installed (guix-get-installed-outputs entry)))
+    (or installed
+        (user-error "This package is not installed"))
+    (let ((to-delete (when arg
+                       (guix-completing-read-multiple
+                        "Output(s) to delete: " installed nil t))))
+      (if to-delete
+          (apply #'guix-list-mark 'delete t to-delete)
+        (guix-package-list-mark-delete-simple)))))
+
+(defun guix-package-list-mark-upgrade ()
+  "Mark the current package for upgrading and move to the next line."
+  (interactive)
+  (guix-package-list-marking-check)
+  (let ((entry (guix-list-current-entry)))
+    (or (guix-get-installed-outputs entry)
+        (user-error "This package is not installed"))
+    (when (or (guix-get-key-val entry 'obsolete)
+              (y-or-n-p "This package is not obsolete.  Try to upgrade it anyway? "))
+      (guix-package-list-mark-upgrade-simple))))
+
+(defun guix-package-list-make-action (action-type)
+  "Return action specification for the packages marked with ACTION-TYPE.
+Return nil, if there are no packages marked with ACTION-TYPE.
+The specification is suitable for `guix-process-package-actions'."
+  (let ((specs (guix-list-get-marked-args action-type)))
+    (and specs (cons action-type specs))))
+
 
 ;;; Displaying generations
 
@@ -460,7 +544,7 @@ Colorize it with `guix-package-list-obsolete' if needed."
 (let ((map guix-generation-list-mode-map))
   (define-key map (kbd "RET") 'guix-generation-list-show-packages)
   (define-key map (kbd "i")   'guix-generation-list-describe)
-  (define-key map (kbd "d")   'guix-generation-list-mark-delete))
+  (define-key map (kbd "d")   'guix-generation-list-mark-delete-simple))
 
 (defun guix-generation-list-show-packages ()
   "List installed packages for the generation at point."
