@@ -453,6 +453,7 @@ likely)."
 
 (let ((map guix-package-list-mode-map))
   (define-key map (kbd "RET") 'guix-package-list-describe)
+  (define-key map (kbd "x")   'guix-package-list-execute)
   (define-key map (kbd "i")   'guix-package-list-mark-install)
   (define-key map (kbd "^")   'guix-package-list-mark-upgrade)
   (define-key map (kbd "d")   'guix-package-list-mark-delete))
@@ -524,6 +525,16 @@ be separated with \",\")."
     (when (or (guix-get-key-val entry 'obsolete)
               (y-or-n-p "This package is not obsolete.  Try to upgrade it anyway? "))
       (guix-package-list-mark-upgrade-simple))))
+
+(defun guix-package-list-execute ()
+  "Perform actions on the marked packages."
+  (interactive)
+  (let ((actions (delq nil
+                       (mapcar #'guix-package-list-make-action
+                               '(install delete upgrade)))))
+    (if actions
+        (apply #'guix-process-package-actions actions)
+      (user-error "No operations specified"))))
 
 (defun guix-package-list-make-action (action-type)
   "Return action specification for the packages marked with ACTION-TYPE.
