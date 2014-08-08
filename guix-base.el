@@ -476,6 +476,42 @@ Returning value is a list of the form of `guix-entries'."
     (guix-eval-read (apply #'guix-make-guile-expression
                            fun (append search-vals params)))))
 
+
+;;; Actions on packages and generations
+
+(defcustom guix-use-substitutes t
+  "If non-nil, use substitutes for the Guix packages."
+  :type 'boolean
+  :group 'guix)
+
+(defvar guix-dry-run nil
+  "If non-nil, do not perform the real actions, just simulate.")
+
+(defun guix-process-package-actions (&rest actions)
+  "Process package ACTIONS.
+Each action is a list of the form:
+
+  (ACTION-TYPE PACKAGE-SPEC ...)
+
+ACTION-TYPE is one of the following symbols: `install',
+`upgrade', `remove'/`delete'.
+PACKAGE-SPEC should have the following form: (ID [OUTPUT] ...)."
+  (let (install upgrade remove)
+    (mapc (lambda (action)
+            (let ((action-type (car action))
+                  (specs (cdr action)))
+              (cl-case action-type
+                (install (setq install (append install specs)))
+                (upgrade (setq upgrade (append upgrade specs)))
+                ((remove delete) (setq remove (append remove specs))))))
+          actions)
+    (guix-eval-in-repl
+     (guix-make-guile-expression
+      'do-package-actions
+      :install install :upgrade upgrade :remove remove
+      :use-substitutes? (or guix-use-substitutes 'f)
+      :dry-run? (or guix-dry-run 'f)))))
+
 (provide 'guix-base)
 
 ;;; guix-base.el ends here

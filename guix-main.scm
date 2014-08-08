@@ -486,3 +486,19 @@ IDS is a list of generation numbers."
          (cut memq <> ids)
          params))
 
+
+;;; Actions
+
+(define* (do-package-actions #:key (install '()) (upgrade '()) (remove '())
+                             (use-substitutes? #t) dry-run?)
+  "Perform package actions.
+
+INSTALL, UPGRADE, REMOVE are lists of 'package action specifications'.
+Each specification should have the following form:
+
+  (ID . OUTPUTS)
+
+ID is an object address or a full-name of a package.
+OUTPUTS is a list of package outputs (may be an empty list)."
+  (format #t "Sorry, not implemented yet~%"))
+

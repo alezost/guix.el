@@ -165,6 +165,15 @@ Return elisp expression of the first result value of evaluation."
          (replace-regexp-in-string
           "#t" "t" (car (guix-eval str wrap))))))
 
+(defun guix-eval-in-repl (str)
+  "Switch to Guix REPL and evaluate STR with guile expression there."
+  (with-current-buffer (guix-get-repl-buffer)
+    (delete-region (geiser-repl--last-prompt-end) (point-max))
+    (goto-char (point-max))
+    (insert str)
+    (geiser-repl--send-input))
+  (guix-switch-to-repl))
+
 (provide 'guix-backend)
 
 ;;; guix-backend.el ends here
