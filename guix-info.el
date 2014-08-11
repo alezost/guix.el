@@ -315,7 +315,7 @@ For the meaning of ACTION, MESSAGE and PROPERTIES, see
 ;;; Displaying packages
 
 (guix-define-buffer-type info package
-  :required (id installed))
+  :required (id installed non-unique))
 
 (defface guix-package-info-name
   '((t :inherit font-lock-keyword-face))
@@ -441,15 +441,31 @@ formatted with this string, an action button is inserted.")
 
 (defun guix-package-info-insert-outputs (outputs entry)
   "Insert OUTPUTS from package ENTRY at point."
-  (let ((obsolete (guix-get-key-val entry 'obsolete)))
-    (when obsolete
-      (guix-info-insert-indent)
-      (guix-format-insert guix-package-info-obsolete-string
-                          'guix-package-info-obsolete)))
+  (and (guix-get-key-val entry 'obsolete)
+       (guix-package-info-insert-obsolete-text))
+  (and (guix-get-key-val entry 'non-unique)
+       (guix-get-key-val entry 'installed)
+       (guix-package-info-insert-non-unique-text
+        (guix-get-full-name entry)))
   (insert "\n")
   (mapc (lambda (output)
           (guix-package-info-insert-output output entry))
         outputs))
+
+(defun guix-package-info-insert-obsolete-text ()
+  "Insert a message about obsolete package at point."
+  (guix-info-insert-indent)
+  (guix-format-insert guix-package-info-obsolete-string
+                      'guix-package-info-obsolete))
+
+(defun guix-package-info-insert-non-unique-text (full-name)
+  "Insert a message about non-unique package with FULL-NAME at point."
+  (insert "\n")
+  (guix-info-insert-indent)
+  (insert "Installed outputs are displayed for a non-unique ")
+  (guix-package-info-insert-full-name full-name
+                                      'guix-package-info-inputs)
+  (insert " package."))
 
 (defun guix-package-info-insert-output (output entry)
   "Insert OUTPUT at point.

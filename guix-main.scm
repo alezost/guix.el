@@ -257,6 +257,11 @@ OBJECT.  Returning value is alist of PARAMS and the values of funcalls."
                '()
                (package-license package)))
 
+(define (package-unique? package)
+  "Return #t if PACKAGE is a single package with such name/version."
+  (null? (cdr (packages-by-name+version (package-name package)
+                                        (package-version package)))))
+
 (define package-param-alist
   (list
    (cons 'id                object-address)
@@ -267,6 +272,7 @@ OBJECT.  Returning value is alist of PARAMS and the values of funcalls."
    (cons 'description       package-description)
    (cons 'home-url          package-home-page)
    (cons 'outputs           package-outputs)
+   (cons 'non-unique        (negate package-unique?))
    (cons 'inputs            (lambda (pkg) (package-inputs-names
                                       (package-inputs pkg))))
    (cons 'native-inputs     (lambda (pkg) (package-inputs-names
