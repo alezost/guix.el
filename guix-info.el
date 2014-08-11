@@ -502,9 +502,7 @@ ENTRY is an alist with package info."
 
 (defun guix-package-info-insert-output-dependencies (deps &optional _)
   "Insert dependencies DEPS of the installed output."
-  (guix-info-insert-val-simple
-   (mapcar #'cadr deps) ; cadr is a path of a dependency
-   #'guix-info-insert-file-path))
+  (guix-info-insert-val-simple deps #'guix-info-insert-file-path))
 
 
 ;;; Displaying generations
