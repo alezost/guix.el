@@ -388,7 +388,7 @@ IDS may be an object-address, a full-name or a list of such elements."
 (define (all-available-package-entries . params)
   "Return list of package entries for all available packages."
   (set-current-manifest-maybe!)
-  (apply matching-package-entries (lambda (pkg) #t) params))
+  (apply matching-package-entries (const #t) params))
 
 (define (manifest-package-entries . params)
   "Return list of package entries for the current manifest."
