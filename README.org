@@ -6,6 +6,8 @@ Well, actually that's not true yet, because this package is under
 developement.  Currently it is possible to search for packages and to
 display information about the packages and generations.
 
+Screenshot: [[http://i.imgur.com/gRcu14n.png]] ([[https://github.com/alezost/alect-themes][alect-light]] theme is used).
+
 * Requirements
 
 - Guix: if you didn't =guix pull= after <2014-07-26 Sat>, do it before
