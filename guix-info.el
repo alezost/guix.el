@@ -37,12 +37,12 @@
   :group 'guix-info)
 
 (defface guix-info-file-path
-  '((t :inherit button))
+  '((t :inherit link))
   "Face used for file paths."
   :group 'guix-info)
 
 (defface guix-info-url
-  '((t :inherit button))
+  '((t :inherit link))
   "Face used for URLs."
   :group 'guix-info)
 
@@ -342,7 +342,7 @@ For the meaning of ACTION, MESSAGE and PROPERTIES, see
   :group 'guix-package-info)
 
 (defface guix-package-info-location
-  '((t :inherit button))
+  '((t :inherit link))
   "Face used for a location of a package."
   :group 'guix-package-info)
 
@@ -425,7 +425,7 @@ Propertize package button with FACE."
    name face
    (lambda (btn)
      (guix-package-info-get-show 'name (button-label btn)))
-   "Describe the package"))
+   "Describe this package"))
 
 
 ;;; Inserting outputs and installed parameters
