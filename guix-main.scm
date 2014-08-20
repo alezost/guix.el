@@ -103,9 +103,21 @@
 (define packages)
 (define packages-table)
 
+(define-syntax-rule (first-or-false lst)
+  (and (not (null? lst))
+       (first lst)))
+
 (define full-name->name+version package-name->name+version)
 (define (name+version->full-name name version)
   (string-append name "-" version))
+
+(define* (make-package-specification name #:optional version output)
+  (let ((full-name (if version
+                       (name+version->full-name name version)
+                       name)))
+    (if output
+        (string-append full-name ":" output)
+        full-name)))
 
 (define name+version->key cons)
 (define (key->name+version key)
@@ -176,6 +188,22 @@
       (let ((pkg (package-by-address id)))
         (if pkg (list pkg) '()))
       (packages-by-full-name id)))
+
+(define (package-by-id id)
+  (first-or-false (packages-by-id id)))
+
+(define (newest-package-by-id id)
+  (and=> (id->name+version id)
+         (lambda (name)
+           (first-or-false (find-best-packages-by-name name #f)))))
+
+(define (id->name+version id)
+  (if (integer? id)
+      (and=> (package-by-address id)
+             (lambda (pkg)
+               (values (package-name pkg)
+                       (package-version pkg))))
+      (full-name->name+version id)))
 
 (define (fold-manifest-entries proc init)
   "Fold over `current-manifest-entries-table'.
@@ -495,16 +523,91 @@ IDS is a list of generation numbers."
 
 ;;; Actions
 
-(define* (do-package-actions #:key (install '()) (upgrade '()) (remove '())
-                             (use-substitutes? #t) dry-run?)
+(define* (package->manifest-entry* package #:optional output)
+  (and package
+       (begin
+         (check-package-freshness package)
+         (package->manifest-entry package output))))
+
+(define* (make-install-manifest-entries id #:optional output)
+  (package->manifest-entry* (package-by-id id) output))
+
+(define* (make-upgrade-manifest-entries id #:optional output)
+  (package->manifest-entry* (newest-package-by-id id) output))
+
+(define* (make-manifest-pattern id #:optional output)
+  "Make manifest pattern from a package ID and OUTPUT."
+  (let-values (((name version)
+                (id->name+version id)))
+    (and name version
+         (manifest-pattern
+          (name name)
+          (version version)
+          (output output)))))
+
+(define (convert-action-pattern pattern proc)
+  "Convert action PATTERN into a list of objects returned by PROC.
+PROC is called: (PROC ID) or (PROC ID OUTPUT)."
+  (match pattern
+    ((id . outputs)
+     (if (null? outputs)
+         (let ((obj (proc id)))
+           (if obj (list obj) '()))
+         (filter-map (cut proc id <>)
+                     outputs)))
+    (_ '())))
+
+(define (convert-action-patterns patterns proc)
+  (append-map (cut convert-action-pattern <> proc)
+              patterns))
+
+(define* (process-package-actions #:key (install '()) (upgrade '()) (remove '())
+                                  (use-substitutes? #t) dry-run?)
   "Perform package actions.
 
-INSTALL, UPGRADE, REMOVE are lists of 'package action specifications'.
-Each specification should have the following form:
+INSTALL, UPGRADE, REMOVE are lists of 'package action patterns'.
+Each pattern should have the following form:
 
   (ID . OUTPUTS)
 
 ID is an object address or a full-name of a package.
 OUTPUTS is a list of package outputs (may be an empty list)."
-  (format #t "Sorry, not implemented yet~%"))
+  (format #t "The process begins ...~%")
+  (set-current-manifest-maybe!)
+  (let* ((install (append
+                   (convert-action-patterns
+                    install make-install-manifest-entries)
+                   (convert-action-patterns
+                    upgrade make-upgrade-manifest-entries)))
+         (remove (convert-action-patterns remove make-manifest-pattern))
+         (transaction (manifest-transaction (install install)
+                                            (remove remove)))
+         (new-manifest (manifest-perform-transaction
+                        %current-manifest transaction)))
+    (unless (and (null? install) (null? remove))
+      (let* ((store (open-connection))
+             (derivation (run-with-store
+                          store (profile-derivation new-manifest)))
+             (derivations (list derivation))
+             (new-profile (derivation->output-path derivation)))
+        (set-build-options store
+                           #:use-substitutes? use-substitutes?)
+        (manifest-show-transaction store %current-manifest transaction
+                                   #:dry-run? dry-run?)
+        (show-what-to-build store derivations
+                            #:use-substitutes? use-substitutes?
+                            #:dry-run? dry-run?)
+        (unless dry-run?
+          (let ((name (generation-file-name
+                       %current-profile
+                       (+ 1 (generation-number %current-profile)))))
+            (and (build-derivations store derivations)
+                 (let* ((entries (manifest-entries new-manifest))
+                        (count   (length entries)))
+                   (switch-symlinks name new-profile)
+                   (switch-symlinks %current-profile name)
+                   (format #t (N_ "~a package in profile~%"
+                                  "~a packages in profile~%"
+                                  count)
+                           count)))))))))
 

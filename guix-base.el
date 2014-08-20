@@ -516,7 +516,7 @@ PACKAGE-SPEC should have the following form: (ID [OUTPUT] ...)."
            :install install :upgrade upgrade :remove remove)
       (guix-eval-in-repl
        (guix-make-guile-expression
-        'do-package-actions
+        'process-package-actions
         :install install :upgrade upgrade :remove remove
         :use-substitutes? (or guix-use-substitutes 'f)
         :dry-run? (or guix-dry-run 'f))))))
