@@ -2,16 +2,16 @@
 
 *guix.el* provides Emacs interface for [[http://www.gnu.org/software/guix/][Guix package manager]].
 
-Well, actually that's not true yet, because this package is under
-developement.  Currently it is possible to search for packages and to
-display information about the packages and generations.
+It is possible to search for, install, upgrade and remove Guix packages.
+Also you can get information about generations.
 
 Screenshot: [[http://i.imgur.com/gRcu14n.png]] ([[https://github.com/alezost/alect-themes][alect-light]] theme is used).
 
 * Requirements
 
-- Guix: if you didn't =guix pull= after <2014-07-26 Sat>, do it before
-  installing "guix.el", because the earlier snapshots are not supported;
+- Guix: if you didn't =guix pull= after <2014-08-20 Wed>, do it before
+  using "guix.el", because the earlier snapshots are not fully
+  supported;
 - Emacs 24.3 or above;
 - [[https://github.com/jaor/geiser][Geiser]] as this package use it for interacting with guile process.
 
@@ -87,17 +87,6 @@ available in the both buffer types by default:
 - =C-c C-z= – go to the Guix REPL;
 - =h= or =?= – describe current mode to see all available bindings.
 
-Also you can press =RET= in a list buffer to get more information about
-the current package (you can mark several packages for describing) or to
-list packages for the current generation.
-
-"Info" buffer contains some buttons (as usual you may use =TAB= /
-=S-TAB= to move between buttons) which can be used to:
-
-- jump to a package location;
-- browse home page of the package;
-- describe packages from "Inputs" and "Native inputs" fields.
-
 /Hint:/ If you need several "list" or "info" buffers, you can simlpy
 =M-x clone-buffer= them, and each buffer will have its own history.
 
@@ -105,3 +94,47 @@ list packages for the current generation.
 (because a name is not necessarily unique), so =guix.el= uses special
 identifiers that live only during a guile session, so if the Guix REPL
 was restarted, you may want to revert "list" buffer (by pressing =g=).
+
+** "List" buffer
+
+Default key bindings available for both "package-list" and
+"generation-list" buffers:
+
+- =m= – mark the current entry;
+- =M= – mark all entries;
+- =u= – unmark the current entry;
+- =DEL= – unmark backward;
+- =U= – unmark all entries;
+- =S= – sort entries by a specified column.
+
+A "package-list" buffer additionally provides the following bindings:
+
+- =RET= – "describe" marked packages (display available information in a
+  "package-info" buffer);
+- =i= – mark a package for installation (with prefix, prompt for
+  output(s) to install);
+- =d= – mark a package for deletion;
+- =^= – mark a package for upgrading;
+- =x= – execute actions on marked packages.
+
+A "generation-list" buffer additionally provides the following bindings:
+
+- =RET= – list packages installed in the current generation;
+- =i= – "describe" marked generations (display available information in
+  a "generation-info" buffer).
+
+** "Info" buffer
+
+"Info" buffer contains some buttons (as usual you may use =TAB= /
+=S-TAB= to move between buttons) which can be used to:
+
+- (in a "package-info" buffer)
+  + install/remove a package;
+  + jump to a package location;
+  + browse home page of a package;
+  + describe packages from "Inputs" fields.
+
+- (in a "generation-info" buffer)
+  + remove a generation;
+  + list packages installed in a generation;
+  + jump to a generation directory.
