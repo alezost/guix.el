@@ -1,3 +1,5 @@
+This repository is dead: "guix.el" is a part of GNU Guix now (since Guix 0.8).
+
 * About
 
 *guix.el* provides Emacs interface for [[http://www.gnu.org/software/guix/][Guix package manager]].
