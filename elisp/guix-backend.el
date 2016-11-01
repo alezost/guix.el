@@ -67,9 +67,9 @@
 It should be a directory where Guile modules are placed, i.e. a
 directory with 'emacs-guix' sub-directory.")
 
-(defvar guix-helper-file
-  (expand-file-name "guix-helper.scm" guix-scheme-directory)
-  "Auxiliary scheme file for loading.")
+(defun guix-helper-file ()
+  "Return full file name of the 'helper.scm' file."
+  (expand-file-name "emacs-guix/helper.scm" guix-scheme-directory))
 
 
 ;;; REPL
@@ -227,7 +227,7 @@ display messages."
       (let ((geiser-guile-binary (guix-get-guile-program
                                   (unless internal
                                     guix-repl-current-socket)))
-            (geiser-guile-init-file (unless internal guix-helper-file))
+            (geiser-guile-init-file (unless internal (guix-helper-file)))
             (repl (get-buffer-create
                    (guix-get-repl-buffer-name internal))))
         (guix-start-repl repl (and internal guix-repl-current-socket))
