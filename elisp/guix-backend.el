@@ -56,8 +56,16 @@
 (require 'guix-emacs)
 (require 'guix-profiles)
 
-(defvar guix-scheme-directory guix-config-scheme-directory
-  "Directory with scheme files for \"guix.el\" package.")
+(defvar guix-scheme-directory
+  ;; If `guix-config-scheme-directory' is nil, then Emacs-Guix is used
+  ;; from source without building (i.e., from MELPA), so find Scheme
+  ;; files in a relative directory.
+  (or guix-config-scheme-directory
+      (expand-file-name "../scheme"
+                        (file-name-directory load-file-name)))
+  "Directory with Scheme files for Emacs-Guix package.
+It should be a directory where Guile modules are placed, i.e. a
+directory with 'emacs-guix' sub-directory.")
 
 (defvar guix-helper-file
   (expand-file-name "guix-helper.scm" guix-scheme-directory)
