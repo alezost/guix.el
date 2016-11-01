@@ -42,9 +42,7 @@ Where ARGS is a list of arguments to the guile program."
   :group 'guix-external)
 
 (defcustom guix-dot-program
-  (if (file-name-absolute-p guix-config-dot-program)
-      guix-config-dot-program
-    (executable-find "dot"))
+  (executable-find "dot")
   "Name of the 'dot' executable."
   :type 'string
   :group 'guix-external)

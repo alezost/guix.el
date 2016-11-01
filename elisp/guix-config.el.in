@@ -43,9 +43,6 @@
 (defconst guix-config-guile-program "@GUILE@"
   "Name of the 'guile' executable defined at configure time.")
 
-(defconst guix-config-dot-program "@DOT_USER_PROGRAM@"
-  "Name of the 'dot' executable defined at configure time.")
-
 (provide 'guix-config)
 
 ;;; guix-config.el ends here
