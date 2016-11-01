@@ -26,8 +26,15 @@
 (defconst guix-config-version "@PACKAGE_VERSION@"
   "Emacs-Guix version.")
 
-(defconst guix-config-emacs-interface-directory
-  (replace-regexp-in-string "${prefix}" "@prefix@" "@emacsuidir@"))
+(defconst guix-config-scheme-directory
+  (let ((dir (replace-regexp-in-string "${prefix}" "@prefix@"
+                                       "@guilemoduledir@")))
+    ;; If dir does not exist, it means Emacs-Guix is not installed, so
+    ;; it is used directly from source.
+    (if (file-exists-p dir)
+        dir
+      (expand-file-name "scheme" "@abs_top_srcdir@")))
+  "Directory with Scheme files for Emacs-Guix.")
 
 (defconst guix-config-state-directory
   ;; This must match `NIX_STATE_DIR' as defined in `nix/local.mk'.
