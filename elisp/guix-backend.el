@@ -56,11 +56,11 @@
 (require 'guix-emacs)
 (require 'guix-profiles)
 
-(defvar guix-load-path guix-config-scheme-directory
+(defvar guix-scheme-directory guix-config-scheme-directory
   "Directory with scheme files for \"guix.el\" package.")
 
 (defvar guix-helper-file
-  (expand-file-name "guix-helper.scm" guix-load-path)
+  (expand-file-name "guix-helper.scm" guix-scheme-directory)
   "Auxiliary scheme file for loading.")
 
 
@@ -236,7 +236,7 @@ this address (it should be defined by
   ;; A mix of the code from `geiser-repl--start-repl' and
   ;; `geiser-repl--to-repl-buffer'.
   (let ((impl 'guile)
-        (geiser-guile-load-path (cons (expand-file-name guix-load-path)
+        (geiser-guile-load-path (cons (expand-file-name guix-scheme-directory)
                                       geiser-guile-load-path))
         (geiser-repl-startup-time guix-repl-startup-time))
     (with-current-buffer buffer
