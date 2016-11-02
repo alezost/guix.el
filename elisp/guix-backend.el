@@ -44,7 +44,7 @@
 ;; Scheme files of Emacs-Guix.  It is possible: you can just use
 ;; `geiser-connect-local' command with `guix-repl-current-socket' to
 ;; have a usual Geiser REPL with all stuff defined by Emacs-Guix
-;; package.
+;; package (it is placed in (emacs-guix) module).
 
 ;;; Code:
 
@@ -227,14 +227,13 @@ display messages."
                    (or guix-repl-current-socket
                        (funcall guix-repl-socket-file-name-function)))))
       (let ((geiser-guile-binary (guix-repl-guile-program internal))
-            (geiser-guile-init-file
-             (unless internal
-               (expand-file-name "emacs-guix/main.scm"
-                                 guix-scheme-directory)))
             (repl (get-buffer-create
                    (guix-get-repl-buffer-name internal))))
         (guix-start-repl repl (and internal guix-repl-current-socket))
         (set repl-var repl)
+        ;; Wait until switching to (emacs-guix) module finishes.
+        (guix-geiser-eval-in-repl-synchronously
+         ",m (emacs-guix)" repl t t)
         (and end-msg (message end-msg))
         (unless internal
           (run-hooks 'guix-after-start-repl-hook))))))

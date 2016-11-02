@@ -1,4 +1,4 @@
-;;; main.scm --- Scheme side of Emacs-Guix
+;;; emacs-guix.scm --- Scheme side of Emacs-Guix
 
 ;; Copyright © 2014-2016 Alex Kost <alezost@gmail.com>
 
@@ -35,28 +35,28 @@
 
 ;;; Code:
 
-(use-modules
- (ice-9 vlist)
- (ice-9 match)
- (ice-9 popen)
- (srfi srfi-1)
- (srfi srfi-2)
- (srfi srfi-11)
- (srfi srfi-19)
- (srfi srfi-26)
- (guix)
- (guix combinators)
- (guix git-download)
- (guix grafts)
- (guix packages)
- (guix profiles)
- (guix licenses)
- (guix utils)
- (guix ui)
- (guix scripts)
- (guix scripts package)
- (gnu packages)
- (gnu system))
+(define-module (emacs-guix)
+  #:use-module (ice-9 vlist)
+  #:use-module (ice-9 match)
+  #:use-module (ice-9 popen)
+  #:use-module (srfi srfi-1)
+  #:use-module (srfi srfi-2)
+  #:use-module (srfi srfi-11)
+  #:use-module (srfi srfi-19)
+  #:use-module (srfi srfi-26)
+  #:use-module (guix)
+  #:use-module (guix combinators)
+  #:use-module (guix git-download)
+  #:use-module (guix grafts)
+  #:use-module (guix packages)
+  #:use-module (guix profiles)
+  #:use-module (guix licenses)
+  #:use-module (guix utils)
+  #:use-module (guix ui)
+  #:use-module (guix scripts)
+  #:use-module (guix scripts package)
+  #:use-module (gnu packages)
+  #:use-module (gnu system))
 
 (define-syntax-rule (first-or-false lst)
   (and (not (null? lst))
@@ -1163,4 +1163,4 @@ Return #t if the shell command was executed successfully."
 (define (package-location-entries)
   (map package-location->sexp (package-location-files)))
 
-;;; main.scm ends here
+;;; emacs-guix.scm ends here
