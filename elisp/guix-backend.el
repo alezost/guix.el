@@ -67,10 +67,6 @@
 It should be a directory where Guile modules are placed, i.e. a
 directory with 'emacs-guix' sub-directory.")
 
-(defun guix-helper-file ()
-  "Return full file name of the 'helper.scm' file."
-  (expand-file-name "emacs-guix/helper.scm" guix-scheme-directory))
-
 
 ;;; REPL
 
@@ -91,7 +87,7 @@ If you have a slow system, try to increase this time."
   :type 'string
   :group 'guix-repl)
 
-(defcustom guix-after-start-repl-hook '(guix-set-directory)
+(defcustom guix-after-start-repl-hook nil
   "Hook called after Guix REPL is started."
   :type 'hook
   :group 'guix-repl)
@@ -168,14 +164,20 @@ See `guix-emacs-activate-after-operation' for details."
   "Message telling about successful Guix operation."
   (message "Guix operation has been performed."))
 
-(defun guix-get-guile-program (&optional socket)
-  "Return a value suitable for `geiser-guile-binary'."
-  (if (null socket)
+(defun guix-repl-guile-program (&optional internal)
+  "Return a value suitable for `geiser-guile-binary' to start Guix REPL.
+If INTERNAL is non-nil, return the value for the internal Guix REPL."
+  (if internal
       guix-guile-program
-    (append (if (listp guix-guile-program)
-                guix-guile-program
-              (list guix-guile-program))
-            (list (concat "--listen=" socket)))))
+    (let* ((latest-dir (guix-latest-directory))
+           (args (list "-L" guix-scheme-directory
+                       "-L" latest-dir
+                       "-C" latest-dir
+                       (concat "--listen=" guix-repl-current-socket))))
+      (append (if (listp guix-guile-program)
+                  guix-guile-program
+                (list guix-guile-program))
+              args))))
 
 (defun guix-repl-socket-file-name ()
   "Return a name of a socket file used by Guix REPL."
@@ -224,10 +226,11 @@ display messages."
               (and guix-use-guile-server
                    (or guix-repl-current-socket
                        (funcall guix-repl-socket-file-name-function)))))
-      (let ((geiser-guile-binary (guix-get-guile-program
-                                  (unless internal
-                                    guix-repl-current-socket)))
-            (geiser-guile-init-file (unless internal (guix-helper-file)))
+      (let ((geiser-guile-binary (guix-repl-guile-program internal))
+            (geiser-guile-init-file
+             (unless internal
+               (expand-file-name "emacs-guix/main.scm"
+                                 guix-scheme-directory)))
             (repl (get-buffer-create
                    (guix-get-repl-buffer-name internal))))
         (guix-start-repl repl (and internal guix-repl-current-socket))
@@ -244,8 +247,6 @@ this address (it should be defined by
   ;; A mix of the code from `geiser-repl--start-repl' and
   ;; `geiser-repl--to-repl-buffer'.
   (let ((impl 'guile)
-        (geiser-guile-load-path (cons (expand-file-name guix-scheme-directory)
-                                      geiser-guile-load-path))
         (geiser-repl-startup-time guix-repl-startup-time))
     (with-current-buffer buffer
       (geiser-repl-mode)
@@ -361,11 +362,17 @@ This function is intended for using in `interactive' forms."
                            guix-directory)
     guix-directory))
 
-(defun guix-set-directory ()
-  "Set `guix-directory' if needed."
-  (or guix-directory
-      (setq guix-directory
-            (guix-eval-read "%guix-dir"))))
+(defun guix-latest-directory ()
+  "Return 'guix pull'-ed directory."
+  (let* ((config-dir (or (getenv "XDG_CONFIG_HOME")
+                         (expand-file-name "~/.config")))
+         (latest-dir (expand-file-name "guix/latest" config-dir)))
+    (if (file-exists-p latest-dir)
+        (or guix-directory
+            (setq guix-directory latest-dir))
+      (message "Directory '%s' does not exist.
+Consider running \"guix pull\"." latest-dir))
+    latest-dir))
 
 
 ;;; Evaluating expressions
