@@ -20,18 +20,20 @@
 
 ;;; Code:
 
-(require 'guix-config)
+(defvar guix-state-directory
+  ;; guix-daemon honors `NIX_STATE_DIR'.
+  (or (getenv "NIX_STATE_DIR") "/var/guix"))
 
 (defvar guix-user-profile
   (expand-file-name "~/.guix-profile")
   "User profile.")
 
 (defvar guix-system-profile
-  (concat guix-config-state-directory "/profiles/system")
+  (concat guix-state-directory "/profiles/system")
   "System profile.")
 
 (defvar guix-default-profile
-  (concat guix-config-state-directory
+  (concat guix-state-directory
           "/profiles/per-user/"
           (getenv "USER")
           "/guix-profile")

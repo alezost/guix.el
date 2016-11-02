@@ -36,10 +36,6 @@
       (expand-file-name "scheme" "@abs_top_srcdir@")))
   "Directory with Scheme files for Emacs-Guix.")
 
-(defconst guix-config-state-directory
-  ;; This must match `NIX_STATE_DIR' as defined in `nix/local.mk'.
-  (or (getenv "NIX_STATE_DIR") "@guix_localstatedir@/guix"))
-
 (defconst guix-config-guile-program "@GUILE@"
   "Name of the 'guile' executable defined at configure time.")
 
