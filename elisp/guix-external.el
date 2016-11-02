@@ -1,6 +1,6 @@
 ;;; guix-external.el --- External programs  -*- lexical-binding: t -*-
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -30,7 +30,9 @@
   "Settings for external programs."
   :group 'guix)
 
-(defcustom guix-guile-program guix-config-guile-program
+(defcustom guix-guile-program
+  (or guix-config-guile-program
+      (executable-find "guile"))
   "Name of the 'guile' executable used for Guix REPL.
 May be either a string (the name of the executable) or a list of
 strings of the form:
