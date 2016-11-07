@@ -1,4 +1,4 @@
-;;; guix-backend.el --- Making and using Guix REPL
+;;; guix-repl.el --- Making and using Guix REPL
 
 ;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
 
@@ -403,6 +403,6 @@ successful executing of the current operation,
         guix-operation-buffer operation-buffer)
   (guix-geiser-eval-in-repl str (guix-get-repl-buffer)))
 
-(provide 'guix-backend)
+(provide 'guix-repl)
 
-;;; guix-backend.el ends here
+;;; guix-repl.el ends here

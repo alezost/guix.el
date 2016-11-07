@@ -30,7 +30,7 @@
 (require 'guix-info)
 (require 'guix-ui)
 (require 'guix-base)
-(require 'guix-backend)
+(require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-entry)
 (require 'guix-utils)

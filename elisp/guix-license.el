@@ -24,7 +24,7 @@
 ;;; Code:
 
 (require 'guix-read)
-(require 'guix-backend)
+(require 'guix-repl)
 (require 'guix-guile)
 
 (defun guix-license-file (&optional directory)

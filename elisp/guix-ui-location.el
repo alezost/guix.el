@@ -27,7 +27,7 @@
 (require 'guix-buffer)
 (require 'guix-list)
 (require 'guix-location)
-(require 'guix-backend)
+(require 'guix-repl)
 
 (guix-define-entry-type location)
 

@@ -26,7 +26,7 @@
 
 (require 'guix-help-vars)
 (require 'guix-utils)
-(require 'guix-backend)
+(require 'guix-repl)
 (require 'guix-guile)
 
 

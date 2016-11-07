@@ -27,7 +27,7 @@
 (require 'guix-buffer)
 (require 'guix-list)
 (require 'guix-info)
-(require 'guix-backend)
+(require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-license)
 

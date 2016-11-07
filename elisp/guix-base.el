@@ -24,7 +24,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'guix-backend)
+(require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-read)
 (require 'guix-utils)
