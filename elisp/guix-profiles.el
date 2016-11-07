@@ -54,23 +54,23 @@
   "Prompt for profile and return it.
 Use DEFAULT as a start directory.  If it is nil, use
 `guix-current-profile'."
-  (let* ((path (read-file-name "Profile: "
-                               (file-name-directory
-                                (or default guix-current-profile))))
-         (path (directory-file-name (expand-file-name path))))
-    (if (string= path guix-user-profile)
+  (let* ((dir (read-file-name "Profile: "
+                              (file-name-directory
+                               (or default guix-current-profile))))
+         (dir (directory-file-name (expand-file-name dir))))
+    (if (string= dir guix-user-profile)
         guix-default-profile
-      path)))
+      dir)))
 
-(defun guix-set-current-profile (path)
-  "Set `guix-current-profile' to PATH.
-Interactively, prompt for PATH.  With prefix, use
+(defun guix-set-current-profile (file-name)
+  "Set `guix-current-profile' to FILE-NAME.
+Interactively, prompt for FILE-NAME.  With prefix, use
 `guix-default-profile'."
   (interactive
    (list (if current-prefix-arg
              guix-default-profile
            (guix-profile-prompt))))
-  (setq guix-current-profile path)
+  (setq guix-current-profile file-name)
   (message "Current profile has been set to '%s'."
            guix-current-profile))
 
