@@ -92,10 +92,14 @@ If you have a slow system, try to increase this time."
   :type 'hook
   :group 'guix-repl)
 
-(defcustom guix-use-guile-server t
+(define-obsolete-variable-alias 'guix-use-guile-server
+  'guix-repl-use-server "0.2")
+
+(defcustom guix-repl-use-server t
   "If non-nil, start guile with '--listen' argument.
-This allows to receive information about packages using an additional
-REPL while some packages are being installed/removed in the main REPL."
+This allows to receive information about packages using an
+additional (so called 'internal') REPL while some packages are
+being installed/removed in the main Guix REPL."
   :type 'boolean
   :group 'guix-repl)
 
@@ -126,12 +130,12 @@ they are successfully installed."
 (defvar guix-repl-buffer nil
   "Main Geiser REPL buffer used for communicating with Guix.
 This REPL is used for processing package actions and for
-receiving information if `guix-use-guile-server' is nil.")
+receiving information if `guix-repl-use-server' is nil.")
 
 (defvar guix-internal-repl-buffer nil
   "Additional Geiser REPL buffer used for communicating with Guix.
 This REPL is used for receiving information only if
-`guix-use-guile-server' is non-nil.")
+`guix-repl-use-server' is non-nil.")
 
 (defvar guix-internal-repl-buffer-name "*Guix Internal REPL*"
   "Default name of an internal Guix REPL buffer.")
@@ -183,7 +187,7 @@ See `guix-emacs-activate-after-operation' for details."
            (list "-L" guix-config-guix-scheme-directory
                  "-C" (or guix-config-guix-scheme-compiled-directory
                           guix-config-guix-scheme-directory)))
-    ,@(and guix-use-guile-server
+    ,@(and guix-repl-use-server
            (list (concat "--listen=" guix-repl-current-socket)))))
 
 (defun guix-repl-guile-program (&optional internal)
@@ -218,7 +222,7 @@ display default messages."
   (guix-start-repl-maybe nil
                          (or start-msg "Starting Guix REPL ...")
                          (or end-msg "Guix REPL has been started."))
-  (if guix-use-guile-server
+  (if guix-repl-use-server
       (guix-start-repl-maybe 'internal)
     (setq guix-internal-repl-buffer guix-repl-buffer)))
 
@@ -240,7 +244,7 @@ display messages."
         ;; exists (after the REPL restart).
         (guix-repl-delete-socket-maybe)
         (setq guix-repl-current-socket
-              (and guix-use-guile-server
+              (and guix-repl-use-server
                    (or guix-repl-current-socket
                        (funcall guix-repl-socket-file-name-function)))))
       (let ((geiser-guile-binary (guix-repl-guile-program internal))
