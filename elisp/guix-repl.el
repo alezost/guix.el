@@ -183,7 +183,8 @@ See `guix-emacs-activate-after-operation' for details."
            (list "-L" guix-config-guix-scheme-directory
                  "-C" (or guix-config-guix-scheme-compiled-directory
                           guix-config-guix-scheme-directory)))
-    ,(concat "--listen=" guix-repl-current-socket)))
+    ,@(and guix-use-guile-server
+           (list (concat "--listen=" guix-repl-current-socket)))))
 
 (defun guix-repl-guile-program (&optional internal)
   "Return a value suitable for `geiser-guile-binary' to start Guix REPL.
