@@ -87,7 +87,7 @@ If you have a slow system, try to increase this time."
   :type 'string
   :group 'guix-repl)
 
-(defcustom guix-after-start-repl-hook nil
+(defcustom guix-repl-after-start-hook nil
   "Hook called after Guix REPL is started."
   :type 'hook
   :group 'guix-repl)
@@ -257,7 +257,7 @@ display messages."
          ",m (emacs-guix)" repl t t)
         (and end-msg (message end-msg))
         (unless internal
-          (run-hooks 'guix-after-start-repl-hook))))))
+          (run-hooks 'guix-repl-after-start-hook))))))
 
 (defun guix-start-repl (buffer &optional address)
   "Start Guix REPL in BUFFER.
