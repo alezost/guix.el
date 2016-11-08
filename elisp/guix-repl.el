@@ -175,6 +175,10 @@ If INTERNAL is non-nil, return the value for the internal Guix REPL."
                           (list "-C" guix-config-scheme-compiled-directory))
                    "-L" ,latest-dir
                    "-C" ,latest-dir
+                   ,@(and guix-config-guix-scheme-directory
+                          (list "-L" guix-config-guix-scheme-directory
+                                "-C" (or guix-config-guix-scheme-compiled-directory
+                                         guix-config-guix-scheme-directory)))
                    ,(concat "--listen=" guix-repl-current-socket))))
       (append (if (listp guix-guile-program)
                   guix-guile-program
