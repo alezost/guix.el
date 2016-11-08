@@ -170,10 +170,12 @@ If INTERNAL is non-nil, return the value for the internal Guix REPL."
   (if internal
       guix-guile-program
     (let* ((latest-dir (guix-latest-directory))
-           (args (list "-L" guix-scheme-directory
-                       "-L" latest-dir
-                       "-C" latest-dir
-                       (concat "--listen=" guix-repl-current-socket))))
+           (args `("-L" ,guix-scheme-directory
+                   ,@(and guix-config-scheme-compiled-directory
+                          (list "-C" guix-config-scheme-compiled-directory))
+                   "-L" ,latest-dir
+                   "-C" ,latest-dir
+                   ,(concat "--listen=" guix-repl-current-socket))))
       (append (if (listp guix-guile-program)
                   guix-guile-program
                 (list guix-guile-program))

@@ -36,6 +36,14 @@
       (expand-file-name "scheme" "@abs_top_srcdir@")))
   "Directory with Scheme files for Emacs-Guix.")
 
+(defconst guix-config-scheme-compiled-directory
+  (let ((dir (replace-regexp-in-string "${exec_prefix}" "@prefix@"
+                                       "@guileccachedir@")))
+    (if (file-exists-p dir)
+        dir
+      (expand-file-name "scheme" "@abs_top_builddir@")))
+  "Directory with compiled Scheme (*.go) files for Emacs-Guix.")
+
 (defconst guix-config-guile-program "@GUILE@"
   "Name of the 'guile' executable defined at configure time.")
 

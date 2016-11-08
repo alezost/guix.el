@@ -35,6 +35,9 @@
 (defconst guix-config-scheme-directory nil
   "Directory with Scheme files for Emacs-Guix.")
 
+(defconst guix-config-scheme-compiled-directory nil
+  "Directory with compiled Scheme (*.go) files for Emacs-Guix.")
+
 (defconst guix-config-guile-program nil
   "Name of the 'guile' executable defined at configure time.")
 
