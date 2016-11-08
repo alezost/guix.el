@@ -140,10 +140,10 @@ This REPL is used for receiving information only if
 (defvar guix-internal-repl-buffer-name "*Guix Internal REPL*"
   "Default name of an internal Guix REPL buffer.")
 
-(defvar guix-before-repl-operation-hook nil
+(defvar guix-repl-before-operation-hook nil
   "Hook run before executing an operation in Guix REPL.")
 
-(defvar guix-after-repl-operation-hook
+(defvar guix-repl-after-operation-hook
   '(guix-repl-autoload-emacs-packages-maybe
     guix-repl-operation-success-message)
   "Hook run after executing successful operation in Guix REPL.")
@@ -305,7 +305,7 @@ This is a replacement for `geiser-repl--output-filter'."
     (geiser-autodoc--disinhibit-autodoc)
     (when guix-repl-operation-p
       (setq guix-repl-operation-p nil)
-      (run-hooks 'guix-after-repl-operation-hook)
+      (run-hooks 'guix-repl-after-operation-hook)
       ;; Run hooks specific to the current operation type.
       (when guix-repl-operation-type
         (let ((type-hook (intern
@@ -418,7 +418,7 @@ the current operation was performed.
 If OPERATION-TYPE is non-nil, it should be a symbol.  After
 successful executing of the current operation,
 `guix-after-OPERATION-TYPE-hook' is called."
-  (run-hooks 'guix-before-repl-operation-hook)
+  (run-hooks 'guix-repl-before-operation-hook)
   (setq guix-repl-operation-p t
         guix-repl-operation-type operation-type
         guix-operation-buffer operation-buffer)

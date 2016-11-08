@@ -166,7 +166,7 @@ See `guix-ui-update-after-operation' for details."
     (setq guix-operation-buffer nil)
     (mapc #'guix-ui-update-buffer to-update)))
 
-(add-hook 'guix-after-repl-operation-hook
+(add-hook 'guix-repl-after-operation-hook
           'guix-ui-update-buffers-after-operation)
 
 
