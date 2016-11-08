@@ -99,6 +99,12 @@ REPL while some packages are being installed/removed in the main REPL."
   :type 'boolean
   :group 'guix-repl)
 
+(defcustom guix-repl-use-latest t
+  "If non-nil, use \"~/.config/guix/latest\" directory.
+It contains the latest Guix code populated after running \"guix pull\"."
+  :type 'boolean
+  :group 'guix-repl)
+
 (defcustom guix-repl-socket-file-name-function
   #'guix-repl-socket-file-name
   "Function used to define a socket file name used by Guix REPL.
@@ -164,26 +170,30 @@ See `guix-emacs-activate-after-operation' for details."
   "Message telling about successful Guix operation."
   (message "Guix operation has been performed."))
 
+(defun guix-repl-guile-args ()
+  "Return a list of Guile's arguments to start Guix REPL."
+  `("-L" ,guix-scheme-directory
+    ,@(and guix-config-scheme-compiled-directory
+           (list "-C" guix-config-scheme-compiled-directory))
+    ,@(and guix-repl-use-latest
+           (let ((latest-dir (guix-latest-directory)))
+             (list "-L" latest-dir
+                   "-C" latest-dir)))
+    ,@(and guix-config-guix-scheme-directory
+           (list "-L" guix-config-guix-scheme-directory
+                 "-C" (or guix-config-guix-scheme-compiled-directory
+                          guix-config-guix-scheme-directory)))
+    ,(concat "--listen=" guix-repl-current-socket)))
+
 (defun guix-repl-guile-program (&optional internal)
   "Return a value suitable for `geiser-guile-binary' to start Guix REPL.
 If INTERNAL is non-nil, return the value for the internal Guix REPL."
   (if internal
       guix-guile-program
-    (let* ((latest-dir (guix-latest-directory))
-           (args `("-L" ,guix-scheme-directory
-                   ,@(and guix-config-scheme-compiled-directory
-                          (list "-C" guix-config-scheme-compiled-directory))
-                   "-L" ,latest-dir
-                   "-C" ,latest-dir
-                   ,@(and guix-config-guix-scheme-directory
-                          (list "-L" guix-config-guix-scheme-directory
-                                "-C" (or guix-config-guix-scheme-compiled-directory
-                                         guix-config-guix-scheme-directory)))
-                   ,(concat "--listen=" guix-repl-current-socket))))
-      (append (if (listp guix-guile-program)
-                  guix-guile-program
-                (list guix-guile-program))
-              args))))
+    (append (if (listp guix-guile-program)
+                guix-guile-program
+              (list guix-guile-program))
+            (guix-repl-guile-args))))
 
 (defun guix-repl-socket-file-name ()
   "Return a name of a socket file used by Guix REPL."
