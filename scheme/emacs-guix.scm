@@ -1069,10 +1069,6 @@ Return #t if the shell command was executed successfully."
                     (cons (package-name pkg) res))
                   '())))
 
-;; See the comment to 'guix-package-names' function in "guix-popup.el".
-(define (package-names-lists)
-  (map list (package-names)))
-
 
 ;;; Licenses
 

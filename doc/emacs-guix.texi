@@ -38,7 +38,7 @@ packages:
 later;
 
 @item
-@uref{http://nongnu.org/geiser/, Geiser}, version 0.3 or later: it is
+@uref{http://nongnu.org/geiser/, Geiser}, version 0.8 or later: it is
 used for interacting with the Guile process.
 
 @item

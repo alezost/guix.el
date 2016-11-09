@@ -46,17 +46,8 @@
 
 (guix-memoized-defun guix-package-names ()
   "Return a list of names of available packages."
-  (sort
-   ;; Work around <https://github.com/jaor/geiser/issues/64>:
-   ;; list of strings is parsed much slower than list of lists,
-   ;; so we use 'package-names-lists' instead of 'package-names'.
-
-   ;; (guix-eval-read (guix-make-guile-expression 'package-names))
-
-   (mapcar #'car
-           (guix-eval-read (guix-make-guile-expression
-                            'package-names-lists)))
-   #'string<))
+  (sort (guix-eval-read (guix-make-guile-expression 'package-names))
+        #'string<))
 
 (guix-memoized-defun guix-license-names ()
   "Return a list of names of available licenses."

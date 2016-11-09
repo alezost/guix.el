@@ -64,31 +64,13 @@ Return elisp expression of the first result value of evaluation."
               nil nil 1)
              nil nil 1))))))
 
-(defun guix-repl-send (cmd &optional save-history)
-  "Send CMD input string to the current REPL buffer.
-This is the same as `geiser-repl--send', but with SAVE-HISTORY
-argument.  If SAVE-HISTORY is non-nil, save CMD in the REPL
-history."
-  (when (and cmd (eq major-mode 'geiser-repl-mode))
-    (geiser-repl--prepare-send)
-    (goto-char (point-max))
-    (comint-kill-input)
-    (insert cmd)
-    (let ((comint-input-filter (if save-history
-                                   comint-input-filter
-                                 'ignore)))
-      (comint-send-input nil t))))
-
 (defun guix-geiser-eval-in-repl (str &optional repl no-history no-display)
   "Switch to Geiser REPL and evaluate STR with guile expression there.
 If NO-HISTORY is non-nil, do not save STR in the REPL history.
 If NO-DISPLAY is non-nil, do not switch to the REPL buffer."
   (let ((repl (or repl (guix-geiser-repl))))
     (with-current-buffer repl
-      ;; XXX Since Geiser 0.8, `geiser-repl--send' has SAVE-HISTORY
-      ;; argument, so use this function eventually and remove
-      ;; `guix-repl-send'.
-      (guix-repl-send str (not no-history)))
+      (geiser-repl--send str (not no-history)))
     (unless no-display
       (geiser-repl--switch-to-buffer repl))))
 
