@@ -35,15 +35,15 @@
             lookup-license-uri
             license-entries))
 
-(define %licenses
-  (delay
-    (filter license?
-            (module-map (lambda (_ var)
-                          (variable-ref var))
-                        (resolve-interface '(guix licenses))))))
-
-(define (licenses)
-  (force %licenses))
+(define licenses
+  (let ((ls (delay
+              (filter license?
+                      (module-map (lambda (_ var)
+                                    (variable-ref var))
+                                  (resolve-interface '(guix licenses)))))))
+    (lambda ()
+      "Return a list of available licenses."
+      (force ls))))
 
 (define (license-names)
   "Return a list of names of available licenses."
