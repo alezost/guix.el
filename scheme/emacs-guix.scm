@@ -27,7 +27,6 @@
 ;;; Code:
 
 (define-module (emacs-guix)
-  #:autoload (guix scripts) (build-package)
   #:autoload (guix ui) (switch-to-generation*)
   #:autoload (emacs-guix commands) (guix-command
                                     guix-command-output
@@ -43,6 +42,7 @@
                                      package-location-files
                                      package-location-entries)
   #:autoload (emacs-guix actions) (process-package-actions
+                                   build-package*
                                    delete-generations*
                                    package-store-path
                                    package-source-path

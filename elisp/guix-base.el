@@ -236,8 +236,7 @@ Ask a user with PROMPT for continuing the build operation."
   (when (or (not guix-operation-confirm)
             (guix-operation-prompt (or prompt "Build package?")))
     (guix-eval-in-repl
-     (format (concat ",run-in-store "
-                     "(build-package (package-by-id %d)"
+     (format (concat "(build-package* (package-by-id %d)"
                      " #:use-substitutes? %s"
                      " #:dry-run? %s)")
              package-id

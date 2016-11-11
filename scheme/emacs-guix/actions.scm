@@ -37,11 +37,13 @@
   #:use-module (guix store)
   #:use-module (guix derivations)
   #:use-module (guix ui)
+  #:autoload   (guix scripts) (build-package)
   #:autoload   (guix scripts package) (build-and-use-profile
                                        delete-generations)
   #:use-module (emacs-guix utils)
   #:use-module (emacs-guix packages)
   #:export (process-package-actions
+            build-package*
             delete-generations*
             package-store-path
             package-source-path
@@ -118,6 +120,13 @@ OUTPUTS is a list of package outputs (may be an empty list)."
           (build-and-use-profile store profile new-manifest
                                  #:use-substitutes? use-substitutes?
                                  #:dry-run? dry-run?))))))
+
+(define (build-package* package . build-options)
+  "Build PACKAGE using BUILD-OPTIONS acceptable by 'set-build-options'.
+Show what and how will/would be built."
+  (with-store store
+    (run-with-store store
+      (apply build-package package build-options))))
 
 (define (delete-generations* profile generations)
   "Delete GENERATIONS from PROFILE.
