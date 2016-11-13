@@ -50,7 +50,10 @@
 See Info node `(guix) G-Expressions'."
   :group 'guix-devel-faces)
 
-(defcustom guix-devel-activate-mode t
+(define-obsolete-variable-alias 'guix-devel-activate-mode
+  'guix-devel-mode-activate "0.2")
+
+(defcustom guix-devel-mode-activate t
   "If non-nil, then `guix-devel-mode' is automatically activated
 in Scheme buffers."
   :type 'boolean
@@ -360,14 +363,14 @@ bindings:
     (font-lock-fontify-buffer)))
 
 ;;;###autoload
-(defun guix-devel-activate-mode-maybe ()
+(defun guix-devel-mode-activate-maybe ()
   "Activate `guix-devel-mode' depending on
-`guix-devel-activate-mode' variable."
-  (when guix-devel-activate-mode
+`guix-devel-mode-activate' variable."
+  (when guix-devel-mode-activate
     (guix-devel-mode)))
 
 ;;;###autoload
-(add-hook 'scheme-mode-hook 'guix-devel-activate-mode-maybe)
+(add-hook 'scheme-mode-hook 'guix-devel-mode-activate-maybe)
 
 
 (defvar guix-devel-emacs-font-lock-keywords
