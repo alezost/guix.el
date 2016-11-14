@@ -34,13 +34,13 @@
                                     pipe-guix-output)
   #:autoload (emacs-guix licenses) (license-names
                                     lookup-license-uri
-                                    license-entries)
+                                    license-sexps)
   #:autoload (emacs-guix packages) (profile->specifications+paths
-                                    entries
+                                    sexps
                                     package-names)
   #:autoload (emacs-guix locations) (package-location-string
                                      package-location-files
-                                     package-location-entries)
+                                     package-location-sexps)
   #:autoload (emacs-guix actions) (process-package-actions
                                    build-package*
                                    delete-generations*

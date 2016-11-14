@@ -75,7 +75,7 @@ PARAMS is a list of parameters for receiving.  If nil, get data
 with all available parameters."
   (guix-eval-read
    (guix-make-guile-expression
-    'entries
+    'sexps
     profile params entry-type search-type search-values)))
 
 (defun guix-ui-list-describe (ids)

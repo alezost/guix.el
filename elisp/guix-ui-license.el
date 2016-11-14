@@ -38,7 +38,7 @@
 SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
   (guix-eval-read
    (apply #'guix-make-guile-expression
-          'license-entries search-type args)))
+          'license-sexps search-type args)))
 
 (defun guix-license-get-display (search-type &rest args)
   "Search for licenses and show results."

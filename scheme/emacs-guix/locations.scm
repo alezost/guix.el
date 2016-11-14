@@ -35,7 +35,7 @@
   #:export (packages-by-location-file
             package-location-string
             package-location-files
-            package-location-entries))
+            package-location-sexps))
 
 (define (package-location-string id-or-name)
   "Return a location string of a package with ID-OR-NAME."
@@ -77,7 +77,7 @@
 (define package-location->sexp
   (object-transformer %package-location-param-alist))
 
-(define (package-location-entries)
+(define (package-location-sexps)
   (map package-location->sexp (package-location-files)))
 
 ;;; locations.scm ends here

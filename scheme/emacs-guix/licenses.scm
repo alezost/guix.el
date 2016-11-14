@@ -33,7 +33,7 @@
             license-names
             lookup-license
             lookup-license-uri
-            license-entries))
+            license-sexps))
 
 (define licenses
   (let ((ls (delay
@@ -80,7 +80,7 @@
     ((all)
      (licenses))))
 
-(define (license-entries search-type . search-values)
+(define (license-sexps search-type . search-values)
   (map license->sexp
        (apply find-licenses search-type search-values)))
 

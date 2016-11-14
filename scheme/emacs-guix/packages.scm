@@ -25,7 +25,7 @@
 ;; side in the form of alists of parameters (such as 'name' or
 ;; 'version') and their values.
 
-;; 'entries' procedure is the "entry point" for the elisp side to get
+;; 'sexps' procedure is the "entry point" for the elisp side to get
 ;; information about packages and generations.
 
 ;; Since name/version pair is not necessarily unique, we use
@@ -76,7 +76,7 @@
             packages-from-file
             matching-packages
             matching-generations
-            entries))
+            sexps))
 
 (define (full-name->name+version spec)
   "Given package specification SPEC with or without output,
@@ -788,10 +788,10 @@ PROFILE."
     (map ->sexp generations)))
 
 
-;;; Getting package/output/generation entries (alists).
+;;; Getting package/output/generation sexps.
 
-(define (entries profile params entry-type search-type search-vals)
-  "Return information about entries.
+(define (sexps profile params entry-type search-type search-vals)
+  "Return information about packages or generations.
 
 ENTRY-TYPE is a symbol defining a type of returning information.  Should
 be: 'package', 'output' or 'generation'.
