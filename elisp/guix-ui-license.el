@@ -1,4 +1,4 @@
-;;; guix-ui-license.el --- Interface for displaying licenses
+;;; guix-ui-license.el --- Interface for displaying licenses  -*- lexical-binding: t -*-
 
 ;; Copyright © 2016 Alex Kost <alezost@gmail.com>
 
@@ -24,14 +24,18 @@
 
 ;;; Code:
 
-(require 'guix-buffer)
-(require 'guix-list)
-(require 'guix-info)
+(require 'bui)
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-license)
 
-(guix-define-entry-type license)
+(bui-define-groups guix-license
+  :parent-group guix
+  :parent-faces-group guix-faces)
+
+(bui-define-entry-type guix-license
+  :message-function 'guix-license-message
+  :titles '((url . "URL")))
 
 (defun guix-license-get-entries (search-type &rest args)
   "Receive 'license' entries.
@@ -42,10 +46,10 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
 
 (defun guix-license-get-display (search-type &rest args)
   "Search for licenses and show results."
-  (apply #'guix-list-get-display-entries
-         'license search-type args))
+  (apply #'bui-list-get-display-entries
+         'guix-license search-type args))
 
-(defun guix-license-message (entries search-type &rest args)
+(defun guix-license-message (entries _search-type &rest args)
   "Display a message after showing license ENTRIES."
   ;; Some objects in (guix licenses) module are procedures (e.g.,
   ;; 'non-copyleft' or 'x11-style').  Such licenses cannot be "described".
@@ -57,61 +61,61 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
 
 ;;; License 'info'
 
-(guix-info-define-interface license
+(bui-define-interface guix-license info
   :buffer-name "*Guix License Info*"
   :get-entries-function 'guix-license-get-entries
-  :message-function 'guix-license-message
-  :format '((name ignore (simple guix-info-heading))
-            ignore
+  :format '((name nil (simple bui-info-heading))
+            nil
             guix-license-insert-packages-button
-            (url ignore (simple guix-url))
+            (url nil (simple bui-url))
             guix-license-insert-comment
-            ignore
-            guix-license-insert-file)
-  :titles '((url . "URL")))
+            nil
+            guix-license-insert-file))
 
 (declare-function guix-packages-by-license "guix-ui-package")
 
 (defun guix-license-insert-packages-button (entry)
   "Insert button to display packages by license ENTRY."
-  (let ((license (guix-entry-value entry 'name)))
-    (guix-info-insert-action-button
+  (let ((license (bui-entry-value entry 'name)))
+    (bui-insert-action-button
      "Packages"
      (lambda (btn)
        (guix-packages-by-license (button-get btn 'license)))
      (format "Display packages with license '%s'" license)
-     'license license)))
+     'license license))
+  (bui-newline))
 
 (defun guix-license-insert-comment (entry)
   "Insert 'comment' of a license ENTRY."
-  (let ((comment (guix-entry-value entry 'comment)))
+  (let ((comment (bui-entry-value entry 'comment)))
     (if (and comment
              (string-match-p "^http" comment))
-        (guix-info-insert-value-simple comment 'guix-url)
-      (guix-info-insert-title-simple
-       (guix-info-param-title 'license 'comment))
-      (guix-info-insert-value-indent comment))))
+        (bui-info-insert-value-simple comment 'bui-url)
+      (bui-info-insert-title-simple
+       (bui-info-param-title 'guix-license 'comment))
+      (bui-info-insert-value-indent comment)))
+  (bui-newline))
 
 (defun guix-license-insert-file (entry)
   "Insert button to open license definition."
-  (let ((license (guix-entry-value entry 'name)))
-    (guix-insert-button
-     (guix-license-file) 'guix-file
+  (let ((license (bui-entry-value entry 'name)))
+    (bui-insert-button
+     (guix-license-file) 'bui-file
      'help-echo (format "Open definition of license '%s'" license)
      'action (lambda (btn)
                (guix-find-license-definition (button-get btn 'license)))
-     'license license)))
+     'license license))
+  (bui-newline))
 
 
 ;;; License 'list'
 
-(guix-list-define-interface license
+(bui-define-interface guix-license list
   :buffer-name "*Guix Licenses*"
   :get-entries-function 'guix-license-get-entries
   :describe-function 'guix-license-list-describe
-  :message-function 'guix-license-message
   :format '((name nil 40 t)
-            (url guix-list-get-url 50 t))
+            (url bui-list-get-url 50 t))
   :titles '((name . "License"))
   :sort-key '(name))
 
@@ -119,22 +123,22 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
   (define-key map (kbd "e")   'guix-license-list-edit)
   (define-key map (kbd "RET") 'guix-license-list-show-packages))
 
-(defun guix-license-list-describe (ids)
+(defun guix-license-list-describe (&rest ids)
   "Describe licenses with IDS (list of identifiers)."
-  (guix-buffer-display-entries
-   (guix-entries-by-ids ids (guix-buffer-current-entries))
-   'info 'license (cl-list* 'id ids) 'add))
+  (bui-display-entries
+   (bui-entries-by-ids (bui-current-entries) ids)
+   'guix-license 'info (cl-list* 'id ids)))
 
 (defun guix-license-list-show-packages ()
   "Display packages with the license at point."
   (interactive)
-  (guix-packages-by-license (guix-list-current-id)))
+  (guix-packages-by-license (bui-list-current-id)))
 
 (defun guix-license-list-edit (&optional directory)
   "Go to the location of the current license definition.
 See `guix-license-file' for the meaning of DIRECTORY."
   (interactive (list (guix-read-directory)))
-  (guix-find-license-definition (guix-list-current-id) directory))
+  (guix-find-license-definition (bui-list-current-id) directory))
 
 
 ;;; Interactive commands
