@@ -111,7 +111,12 @@ features as without Guix, plus shell completions
 (@pxref{Completions}).
 
 @item
-@uref{https://github.com/magit/magit/, magit-popup library}.  You
+@uref{https://github.com/alezost/bui.el, BUI library}, version 1.0.1
+or later.  It is used to define various ``list''/``info'' interfaces
+(to display packages, generations, licenses, etc.).
+
+@item
+@uref{https://github.com/magit/magit, magit-popup library}.  You
 already have this library if you use Magit 2.1.0 or later.  This
 library is required only for @kbd{M-x@tie{}guix} command (@pxref{Popup
 Interface}).

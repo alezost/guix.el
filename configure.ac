@@ -84,6 +84,13 @@ AC_ARG_WITH([geiser-lispdir],
   [geiserlispdir="no"])
 AC_SUBST([geiserlispdir])
 
+AC_ARG_WITH([bui-lispdir],
+  [AS_HELP_STRING([--with-bui-lispdir],
+    [directory with BUI *.el files])],
+  [builispdir="$withval"],
+  [builispdir="no"])
+AC_SUBST([builispdir])
+
 AC_ARG_WITH([popup-lispdir],
   [AS_HELP_STRING([--with-popup-lispdir],
     [directory with magit-popup.el file])],
@@ -92,6 +99,7 @@ AC_ARG_WITH([popup-lispdir],
 AC_SUBST([popuplispdir])
 
 AM_CONDITIONAL([GEISER_DIR], [test "x$geiserlispdir" != "xno"])
+AM_CONDITIONAL([BUI_DIR], [test "x$builispdir" != "xno"])
 AM_CONDITIONAL([POPUP_DIR], [test "x$popuplispdir" != "xno"])
 
 dnl If all elisp dependencies are specified, we can use "emacs -Q" for
@@ -99,6 +107,7 @@ dnl byte-compilation.  Otherwise, "emacs" will be used, and it will
 dnl hopefully find these packages in its 'load-path'.
 AM_CONDITIONAL([EMACS_Q],
   [test "x$geiserlispdir" != "xno" -a \
+        "x$builispdir" != "xno" -a \
         "x$popuplispdir" != "xno"])
 
 dnl ----------------------------------------------------------------

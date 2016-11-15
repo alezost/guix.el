@@ -24,6 +24,10 @@ if GEISER_DIR
   AM_ELCFLAGS += -L "$(geiserlispdir)"
 endif
 
+if BUI_DIR
+  AM_ELCFLAGS += -L "$(builispdir)"
+endif
+
 if POPUP_DIR
   AM_ELCFLAGS += -L "$(popuplispdir)"
 endif
