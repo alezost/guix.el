@@ -96,6 +96,7 @@ current profile's GENERATION."
 
 (guix-ui-info-define-interface generation
   :buffer-name "*Guix Generation Info*"
+  :get-entries-function 'guix-generation-info-get-entries
   :format '((number format guix-generation-info-insert-number)
             (prev-number format (format))
             (current format guix-generation-info-insert-current)
@@ -118,6 +119,17 @@ current profile's GENERATION."
   '((t nil))
   "Face used if a generation is not the current one."
   :group 'guix-generation-info-faces)
+
+(defun guix-generation-info-get-entries (profile search-type
+                                                 &rest search-values)
+  "Return 'generation' entries for displaying them in 'info' buffer."
+  (guix-eval-read
+   (guix-make-guile-expression
+    'sexps
+    profile
+    (cl-union guix-generation-info-required-params
+              (guix-info-displayed-params 'generation))
+    'generation search-type search-values)))
 
 (defun guix-generation-info-insert-number (number &optional _)
   "Insert generation NUMBER and action buttons."
@@ -164,6 +176,7 @@ current profile's GENERATION."
 
 (guix-ui-list-define-interface generation
   :buffer-name "*Guix Generation List*"
+  :get-entries-function 'guix-generation-list-get-entries
   :format '((number nil 5 guix-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
             (time guix-list-get-time 20 t)
@@ -183,6 +196,17 @@ current profile's GENERATION."
   (define-key map (kbd "s")   'guix-generation-list-switch)
   (define-key map (kbd "c")   'guix-generation-list-switch)
   (define-key map (kbd "d")   'guix-generation-list-mark-delete))
+
+(defun guix-generation-list-get-entries (profile search-type
+                                                 &rest search-values)
+  "Return 'generation' entries for displaying them in 'list' buffer."
+  (guix-eval-read
+   (guix-make-guile-expression
+    'sexps
+    profile
+    (cl-union guix-generation-list-required-params
+              (guix-list-displayed-params 'generation))
+    'generation search-type search-values)))
 
 (defun guix-generation-list-get-current (val &optional _)
   "Return string from VAL showing whether this generation is current.

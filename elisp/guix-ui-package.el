@@ -228,6 +228,7 @@ ENTRIES is a list of package entries to get info about packages."
 
 (guix-ui-info-define-interface package
   :buffer-name "*Guix Package Info*"
+  :get-entries-function 'guix-package-info-get-entries
   :format '(guix-package-info-insert-heading
             ignore
             (synopsis ignore (simple guix-package-info-synopsis))
@@ -406,6 +407,17 @@ formatted with this string, an action button is inserted.")
             ;; As a source may not be a real URL (e.g., "mirror://..."),
             ;; no action is bound to a source button.
             (message "Yes, this is the source URL. What did you expect?")))
+
+(defun guix-package-info-get-entries (profile search-type
+                                              &rest search-values)
+  "Return 'package' entries for displaying them in 'info' buffer."
+  (guix-eval-read
+   (guix-make-guile-expression
+    'sexps
+    profile
+    (cl-union guix-package-info-required-params
+              (guix-info-displayed-params 'package))
+    'package search-type search-values)))
 
 (defun guix-package-info-insert-heading (entry)
   "Insert package ENTRY heading (name and version) at point."
@@ -697,6 +709,7 @@ This function is used to hide a \"Download\" button if needed."
 
 (guix-ui-list-define-interface package
   :buffer-name "*Guix Package List*"
+  :get-entries-function 'guix-package-list-get-entries
   :format '((name guix-package-list-get-name 20 t)
             (version nil 10 nil)
             (outputs nil 13 t)
@@ -741,6 +754,17 @@ this variable to t.  It should not do much harm anyway (most
 likely)."
   :type 'boolean
   :group 'guix-package-list)
+
+(defun guix-package-list-get-entries (profile search-type
+                                              &rest search-values)
+  "Return 'package' entries for displaying them in 'list' buffer."
+  (guix-eval-read
+   (guix-make-guile-expression
+    'sexps
+    profile
+    (cl-union guix-package-list-required-params
+              (guix-list-displayed-params 'package))
+    'package search-type search-values)))
 
 (defun guix-package-list-get-name (name entry)
   "Return NAME of the package ENTRY.
@@ -913,6 +937,7 @@ for all ARGS."
 
 (guix-ui-info-define-interface output
   :buffer-name "*Guix Package Info*"
+  :get-entries-function 'guix-output-info-get-entries
   :format '((name format (format guix-package-info-name))
             (version format guix-output-info-insert-version)
             (output format guix-output-info-insert-output)
@@ -932,6 +957,17 @@ for all ARGS."
             (description simple (indent guix-package-info-description)))
   :titles guix-package-info-titles
   :required '(id package-id installed non-unique))
+
+(defun guix-output-info-get-entries (profile search-type
+                                             &rest search-values)
+  "Return 'output' entries for displaying them in 'info' buffer."
+  (guix-eval-read
+   (guix-make-guile-expression
+    'sexps
+    profile
+    (cl-union guix-output-info-required-params
+              (guix-info-displayed-params 'output))
+    'output search-type search-values)))
 
 (defun guix-output-info-insert-version (version entry)
   "Insert output VERSION and obsolete text if needed at point."
@@ -961,6 +997,7 @@ for all ARGS."
 
 (guix-ui-list-define-interface output
   :buffer-name "*Guix Package List*"
+  :get-entries-function 'guix-output-list-get-entries
   :describe-function 'guix-output-list-describe
   :format '((name guix-package-list-get-name 20 t)
             (version nil 10 nil)
@@ -981,6 +1018,17 @@ for all ARGS."
   (define-key map (kbd "d")   'guix-output-list-mark-delete)
   (define-key map (kbd "U")   'guix-output-list-mark-upgrade)
   (define-key map (kbd "^")   'guix-output-list-mark-upgrades))
+
+(defun guix-output-list-get-entries (profile search-type
+                                             &rest search-values)
+  "Return 'output' entries for displaying them in 'list' buffer."
+  (guix-eval-read
+   (guix-make-guile-expression
+    'sexps
+    profile
+    (cl-union guix-output-list-required-params
+              (guix-list-displayed-params 'output))
+    'output search-type search-values)))
 
 (defun guix-output-list-mark-install ()
   "Mark the current output for installation and move to the next line."

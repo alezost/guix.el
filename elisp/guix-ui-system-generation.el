@@ -46,6 +46,7 @@ SEARCH-VALUES."
 
 (guix-ui-info-define-interface system-generation
   :buffer-name "*Guix Generation Info*"
+  :get-entries-function 'guix-system-generation-info-get-entries
   :format '((number format guix-generation-info-insert-number)
             (label format (format))
             (prev-number format (format))
@@ -55,6 +56,17 @@ SEARCH-VALUES."
             (root-device format (format))
             (kernel format (format guix-file)))
   :titles guix-generation-info-titles)
+
+(defun guix-system-generation-info-get-entries (profile search-type
+                                                        &rest search-values)
+  "Return 'system-generation' entries for displaying them in 'info' buffer."
+  (guix-eval-read
+   (guix-make-guile-expression
+    'sexps
+    profile
+    (cl-union guix-system-generation-info-required-params
+              (guix-info-displayed-params 'system-generation))
+    'system-generation search-type search-values)))
 
 
 ;;; System generation 'list'
@@ -67,6 +79,7 @@ SEARCH-VALUES."
 
 (guix-ui-list-define-interface system-generation
   :buffer-name "*Guix Generation List*"
+  :get-entries-function 'guix-system-generation-list-get-entries
   :format '((number nil 5 guix-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
             (label nil 40 t)
@@ -75,6 +88,17 @@ SEARCH-VALUES."
   :titles guix-generation-list-titles
   :sort-key '(number . t)
   :marks '((delete . ?D)))
+
+(defun guix-system-generation-list-get-entries (profile search-type
+                                                        &rest search-values)
+  "Return 'system-generation' entries for displaying them in 'list' buffer."
+  (guix-eval-read
+   (guix-make-guile-expression
+    'sexps
+    profile
+    (cl-union guix-system-generation-list-required-params
+              (guix-list-displayed-params 'system-generation))
+    'system-generation search-type search-values)))
 
 
 ;;; Interactive commands

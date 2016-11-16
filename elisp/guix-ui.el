@@ -208,8 +208,6 @@ Along with the mentioned definitions, this macro also defines:
   - `guix-TYPE-mode-map' - keymap based on `guix-ui-map' and
     `guix-BUFFER-TYPE-mode-map'.
 
-  - `guix-TYPE-get-entries' - a wrapper around `guix-ui-get-entries'.
-
   - `guix-TYPE-message' - a wrapper around `guix-result-message'."
   (declare (indent 2))
   (let* ((entry-type-str  (symbol-name entry-type))
@@ -222,10 +220,7 @@ Along with the mentioned definitions, this macro also defines:
                                           buffer-type-str)))
          (required-var    (intern (concat prefix "-required-params")))
          (buffer-name-fun (intern (concat prefix "-buffer-name")))
-         (get-fun         (intern (concat prefix "-get-entries")))
          (message-fun     (intern (concat prefix "-message")))
-         (displayed-fun   (intern (format "guix-%s-displayed-params"
-                                          buffer-type-str)))
          (definer         (intern (format "guix-%s-define-interface"
                                           buffer-type-str))))
     (guix-keyword-args-let args
@@ -242,12 +237,12 @@ Along with the mentioned definitions, this macro also defines:
          (defvar ,required-var ,required-val
            ,(format "\
 List of the required '%s' parameters.
-These parameters are received by `%S'
+These parameters are received from the Scheme side
 along with the displayed parameters.
 
 Do not remove `id' from this list as it is required for
 identifying an entry."
-                    entry-type-str get-fun))
+                    entry-type-str))
 
          (defun ,buffer-name-fun (profile &rest _)
            ,(format "\
@@ -255,16 +250,6 @@ Return a name of '%s' buffer for displaying '%s' entries.
 See `guix-ui-buffer-name' for details."
                     buffer-type-str entry-type-str)
            (guix-ui-buffer-name ,buffer-name-val profile))
-
-         (defun ,get-fun (profile search-type &rest search-values)
-           ,(format "\
-Receive '%s' entries for displaying them in '%s' buffer.
-See `guix-ui-get-entries' for details."
-                    entry-type-str buffer-type-str)
-           (guix-ui-get-entries
-            profile ',entry-type search-type search-values
-            (cl-union ,required-var
-                      (,displayed-fun ',entry-type))))
 
          (defun ,message-fun (entries profile search-type
                                       &rest search-values)
@@ -275,7 +260,6 @@ Display a message after showing '%s' entries."
             profile entries ',entry-type search-type search-values))
 
          (,definer ,entry-type
-           :get-entries-function ',get-fun
            :message-function ',message-fun
            :buffer-name ',buffer-name-fun
            ,@%foreign-args)))))
