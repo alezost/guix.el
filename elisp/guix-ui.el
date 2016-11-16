@@ -60,23 +60,19 @@ This function is intended for using in `interactive' forms."
   "Receive ENTRY-TYPE entries for PROFILE.
 Call an appropriate scheme procedure and return a list of entries.
 
-ENTRY-TYPE should be one of the following symbols: `package',
-`output' or `generation'.
+ENTRY-TYPE should be one of the following symbols: `package' or
+`output'.
 
-SEARCH-TYPE may be one of the following symbols:
-
-- If ENTRY-TYPE is `package' or `output': `id', `name', `regexp',
-  `all-available', `newest-available', `installed', `obsolete',
-  `generation'.
-
-- If ENTRY-TYPE is `generation': `id', `last', `all', `time'.
+SEARCH-TYPE may be one of the following symbols: `id', `name',
+`regexp', `all-available', `newest-available', `installed',
+`obsolete', `generation'.
 
 PARAMS is a list of parameters for receiving.  If nil, get data
 with all available parameters."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile params entry-type search-type search-values)))
+    'package/output-sexps
+    profile entry-type search-type search-values params)))
 
 (defun guix-ui-list-describe (ids)
   "Describe 'ui' entries with IDS (list of identifiers)."

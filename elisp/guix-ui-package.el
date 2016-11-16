@@ -413,11 +413,10 @@ formatted with this string, an action button is inserted.")
   "Return 'package' entries for displaying them in 'info' buffer."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile
+    'package/output-sexps
+    profile 'package search-type search-values
     (cl-union guix-package-info-required-params
-              (guix-info-displayed-params 'package))
-    'package search-type search-values)))
+              (guix-info-displayed-params 'package)))))
 
 (defun guix-package-info-insert-heading (entry)
   "Insert package ENTRY heading (name and version) at point."
@@ -760,11 +759,10 @@ likely)."
   "Return 'package' entries for displaying them in 'list' buffer."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile
+    'package/output-sexps
+    profile 'package search-type search-values
     (cl-union guix-package-list-required-params
-              (guix-list-displayed-params 'package))
-    'package search-type search-values)))
+              (guix-list-displayed-params 'package)))))
 
 (defun guix-package-list-get-name (name entry)
   "Return NAME of the package ENTRY.
@@ -963,11 +961,10 @@ for all ARGS."
   "Return 'output' entries for displaying them in 'info' buffer."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile
+    'package/output-sexps
+    profile 'output search-type search-values
     (cl-union guix-output-info-required-params
-              (guix-info-displayed-params 'output))
-    'output search-type search-values)))
+              (guix-info-displayed-params 'output)))))
 
 (defun guix-output-info-insert-version (version entry)
   "Insert output VERSION and obsolete text if needed at point."
@@ -1024,11 +1021,10 @@ for all ARGS."
   "Return 'output' entries for displaying them in 'list' buffer."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile
+    'package/output-sexps
+    profile 'output search-type search-values
     (cl-union guix-output-list-required-params
-              (guix-list-displayed-params 'output))
-    'output search-type search-values)))
+              (guix-list-displayed-params 'output)))))
 
 (defun guix-output-list-mark-install ()
   "Mark the current output for installation and move to the next line."

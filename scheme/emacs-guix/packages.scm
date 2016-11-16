@@ -42,14 +42,8 @@
   #:use-module (ice-9 vlist)
   #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-11)
-  #:use-module (srfi srfi-19)
   #:use-module (srfi srfi-26)
   #:use-module (gnu packages)
-  #:autoload   (gnu system) (read-boot-parameters
-                             boot-parameters-label
-                             boot-parameters-root-device
-                             boot-parameters-kernel)
-  #:use-module (guix combinators)
   #:use-module (guix packages)
   #:use-module (guix profiles)
   #:use-module (guix ui)
@@ -76,7 +70,7 @@
             packages-from-file
             matching-packages
             matching-generations
-            sexps))
+            package/output-sexps))
 
 (define (full-name->name+version spec)
   "Given package specification SPEC with or without output,
@@ -635,7 +629,7 @@ ENTRIES is a list of installed manifest entries."
 (define (pattern-transformer entry-type)
   (assq-ref %pattern-transformers entry-type))
 
-;; All procedures from inner alists are called with (MANIFEST . SEARCH-VALS)
+;; All procedures from inner alists are called with (MANIFEST . SEARCH-VALUES)
 ;; as arguments; see `package/output-sexps'.
 (define %patterns-makers
   (let* ((apply-to-rest         (lambda (proc)
@@ -683,158 +677,32 @@ ENTRIES is a list of installed manifest entries."
              (cut assq-ref <> search-type))
       (search-type-error entry-type search-type)))
 
-(define (package/output-sexps profile params entry-type
-                              search-type search-vals)
+(define (package/output-sexps profile entry-type
+                              search-type search-values params)
   "Return information about packages or package outputs.
-See 'entry-sexps' for details."
+
+SEARCH-TYPE and SEARCH-VALUES define how to get the information.
+SEARCH-TYPE should be one of the following symbols: 'id', 'name',
+'regexp', 'all-available', 'newest-available', 'installed', 'obsolete',
+'generation'.
+
+PARAMS is a list of parameters for receiving.  If it is an empty list,
+get information with all available parameters, which are: 'id', 'name',
+'version', 'outputs', 'license', 'synopsis', 'description', 'home-url',
+'inputs', 'native-inputs', 'propagated-inputs', 'location',
+'installed'."
   (let* ((manifest (profile-manifest profile))
          (patterns (if (and (eq? entry-type 'output)
                             (eq? search-type 'profile-diff))
-                       (match search-vals
+                       (match search-values
                          ((p1 p2)
                           (map specification->output-pattern
                                (profile-difference p1 p2)))
                          (_ '()))
                        (apply (patterns-maker entry-type search-type)
-                              manifest search-vals)))
+                              manifest search-values)))
          (->sexps ((pattern-transformer entry-type) manifest params)))
     (append-map ->sexps patterns)))
-
-
-;;; Getting information about generations.
-
-(define (generation-param-alist profile)
-  "Return an alist of generation parameters and procedures for PROFILE."
-  (let ((current (generation-number profile)))
-    `((id          . ,identity)
-      (number      . ,identity)
-      (prev-number . ,(cut previous-generation-number profile <>))
-      (current     . ,(cut = current <>))
-      (path        . ,(cut generation-file-name profile <>))
-      (time        . ,(lambda (gen)
-                        (time-second (generation-time profile gen)))))))
-
-(define (matching-generations profile predicate)
-  "Return a list of PROFILE generations matching PREDICATE."
-  (filter predicate (profile-generations profile)))
-
-(define (last-generations profile number)
-  "Return a list of last NUMBER generations.
-If NUMBER is 0 or less, return all generations."
-  (let ((generations (profile-generations profile))
-        (number (if (<= number 0) +inf.0 number)))
-    (if (> (length generations) number)
-        (list-head  (reverse generations) number)
-        generations)))
-
-(define (find-generations profile search-type search-vals)
-  "Find PROFILE's generations matching SEARCH-TYPE and SEARCH-VALS."
-  (case search-type
-    ((id)
-     (matching-generations profile (cut memq <> search-vals)))
-    ((last)
-     (last-generations profile (car search-vals)))
-    ((all)
-     (last-generations profile +inf.0))
-    ((time)
-     (match search-vals
-       ((from to)
-        (matching-generations
-         profile
-         (lambda (gen)
-           (let ((time (time-second (generation-time profile gen))))
-             (< from time to)))))
-       (_ '())))
-    (else (search-type-error "generation" search-type))))
-
-(define (generation-sexps profile params search-type search-vals)
-  "Return information about generations.
-See 'entry-sexps' for details."
-  (let ((generations (find-generations profile search-type search-vals))
-        (->sexp (object-transformer (generation-param-alist profile)
-                                    params)))
-    (map ->sexp generations)))
-
-(define system-generation-boot-parameters
-  (memoize
-   (lambda (profile generation)
-     "Return boot parameters for PROFILE's system GENERATION."
-     (let* ((gen-file   (generation-file-name profile generation))
-            (param-file (string-append gen-file "/parameters")))
-       (call-with-input-file param-file read-boot-parameters)))))
-
-(define (system-generation-param-alist profile)
-  "Return an alist of system generation parameters and procedures for
-PROFILE."
-  (append (generation-param-alist profile)
-          `((label       . ,(lambda (gen)
-                              (boot-parameters-label
-                               (system-generation-boot-parameters
-                                profile gen))))
-            (root-device . ,(lambda (gen)
-                              (boot-parameters-root-device
-                               (system-generation-boot-parameters
-                                profile gen))))
-            (kernel      . ,(lambda (gen)
-                              (boot-parameters-kernel
-                               (system-generation-boot-parameters
-                                profile gen)))))))
-
-(define (system-generation-sexps profile params search-type search-vals)
-  "Return an alist with information about system generations."
-  (let ((generations (find-generations profile search-type search-vals))
-        (->sexp (object-transformer (system-generation-param-alist profile)
-                                    params)))
-    (map ->sexp generations)))
-
-
-;;; Getting package/output/generation sexps.
-
-(define (sexps profile params entry-type search-type search-vals)
-  "Return information about packages or generations.
-
-ENTRY-TYPE is a symbol defining a type of returning information.  Should
-be: 'package', 'output' or 'generation'.
-
-SEARCH-TYPE and SEARCH-VALS define how to get the information.
-SEARCH-TYPE should be one of the following symbols:
-
-- If ENTRY-TYPE is 'package' or 'output':
-  'id', 'name', 'regexp', 'all-available', 'newest-available',
-  'installed', 'obsolete', 'generation'.
-
-- If ENTRY-TYPE is 'generation':
-  'id', 'last', 'all', 'time'.
-
-PARAMS is a list of parameters for receiving.  If it is an empty list,
-get information with all available parameters, which are:
-
-- If ENTRY-TYPE is 'package':
-  'id', 'name', 'version', 'outputs', 'license', 'synopsis',
-  'description', 'home-url', 'inputs', 'native-inputs',
-  'propagated-inputs', 'location', 'installed'.
-
-- If ENTRY-TYPE is 'output':
-  'id', 'package-id', 'name', 'version', 'output', 'license',
-  'synopsis', 'description', 'home-url', 'inputs', 'native-inputs',
-  'propagated-inputs', 'location', 'installed', 'path', 'dependencies'.
-
-- If ENTRY-TYPE is 'generation':
-  'id', 'number', 'prev-number', 'path', 'time'.
-
-Returning value is a list of alists.  Each alist consists of
-parameter/value pairs."
-  (case entry-type
-    ((package output)
-     (package/output-sexps profile params entry-type
-                           search-type search-vals))
-    ((generation)
-     (generation-sexps profile params
-                       search-type search-vals))
-    ((system-generation)
-     (system-generation-sexps profile params
-                              search-type search-vals))
-    (else (entry-type-error entry-type))))
 
 (define (package-names)
   "Return a list of names of available packages."

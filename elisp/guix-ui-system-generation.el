@@ -62,11 +62,10 @@ SEARCH-VALUES."
   "Return 'system-generation' entries for displaying them in 'info' buffer."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile
+    'system-generation-sexps
+    profile search-type search-values
     (cl-union guix-system-generation-info-required-params
-              (guix-info-displayed-params 'system-generation))
-    'system-generation search-type search-values)))
+              (guix-info-displayed-params 'system-generation)))))
 
 
 ;;; System generation 'list'
@@ -94,11 +93,10 @@ SEARCH-VALUES."
   "Return 'system-generation' entries for displaying them in 'list' buffer."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile
+    'system-generation-sexps
+    profile search-type search-values
     (cl-union guix-system-generation-list-required-params
-              (guix-list-displayed-params 'system-generation))
-    'system-generation search-type search-values)))
+              (guix-list-displayed-params 'system-generation)))))
 
 
 ;;; Interactive commands

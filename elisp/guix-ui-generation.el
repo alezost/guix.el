@@ -125,11 +125,10 @@ current profile's GENERATION."
   "Return 'generation' entries for displaying them in 'info' buffer."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile
+    'generation-sexps
+    profile search-type search-values
     (cl-union guix-generation-info-required-params
-              (guix-info-displayed-params 'generation))
-    'generation search-type search-values)))
+              (guix-info-displayed-params 'generation)))))
 
 (defun guix-generation-info-insert-number (number &optional _)
   "Insert generation NUMBER and action buttons."
@@ -202,11 +201,10 @@ current profile's GENERATION."
   "Return 'generation' entries for displaying them in 'list' buffer."
   (guix-eval-read
    (guix-make-guile-expression
-    'sexps
-    profile
+    'generation-sexps
+    profile search-type search-values
     (cl-union guix-generation-list-required-params
-              (guix-list-displayed-params 'generation))
-    'generation search-type search-values)))
+              (guix-list-displayed-params 'generation)))))
 
 (defun guix-generation-list-get-current (val &optional _)
   "Return string from VAL showing whether this generation is current.
