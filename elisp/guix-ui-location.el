@@ -1,4 +1,4 @@
-;;; guix-ui-location.el --- Interface for displaying package locations
+;;; guix-ui-location.el --- Interface for displaying package locations  -*- lexical-binding: t -*-
 
 ;; Copyright © 2016 Alex Kost <alezost@gmail.com>
 
@@ -24,12 +24,13 @@
 
 ;;; Code:
 
-(require 'guix-buffer)
-(require 'guix-list)
+(require 'bui)
 (require 'guix-location)
 (require 'guix-repl)
 
-(guix-define-entry-type location)
+(bui-define-groups guix-location
+  :parent-group guix
+  :parent-faces-group guix-faces)
 
 (defun guix-location-get-entries ()
   "Receive 'package location' entries."
@@ -38,11 +39,11 @@
 
 ;;; Location 'list'
 
-(guix-list-define-interface location
+(bui-define-interface guix-location list
   :buffer-name "*Guix Package Locations*"
   :get-entries-function 'guix-location-get-entries
   :format '((location guix-location-list-file-name-specification 50 t)
-            (number-of-packages nil 10 guix-list-sort-numerically-1
+            (number-of-packages nil 10 bui-list-sort-numerically-1
                                 :right-align t))
   :sort-key '(location))
 
@@ -54,20 +55,20 @@
 
 (defun guix-location-list-file-name-specification (location &optional _)
   "Return LOCATION button specification for `tabulated-list-entries'."
-  (list location
-        'face 'guix-list-file-name
-        'action (lambda (btn)
-                  (guix-find-location (button-get btn 'location)))
-        'follow-link t
-        'help-echo (concat "Find location: " location)
-        'location location))
+  (bui-get-non-nil location
+    (list location
+          :type 'bui-file
+          'action (lambda (btn)
+                    (guix-find-location (button-get btn 'location)))
+          'help-echo (concat "Find location: " location)
+          'location location)))
 
 (declare-function guix-packages-by-location "guix-ui-package")
 
 (defun guix-location-list-show-packages ()
   "Display packages placed in the location at point."
   (interactive)
-  (guix-packages-by-location (guix-list-current-id)))
+  (guix-packages-by-location (bui-list-current-id)))
 
 
 ;;; Interactive commands
@@ -76,7 +77,7 @@
 (defun guix-locations ()
   "Display locations of the Guix packages."
   (interactive)
-  (guix-list-get-display-entries 'location))
+  (bui-list-get-display-entries 'guix-location))
 
 (provide 'guix-ui-location)
 
