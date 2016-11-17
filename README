@@ -1,0 +1,108 @@
+-*- mode: org -*-
+
+* About
+
+=Emacs-Guix= (aka =guix.el=) provides various features and tools
+for [[http://www.gnu.org/software/guix/][GNU Guix]] package manager.
+
+It allows you to manage your Guix profile(s) from Emacs: to install,
+upgrade and remove packages, to switch and remove profile generations,
+to display all available info about packages and to do many other
+things.
+
+This README provides only a basic overview on Emacs-Guix, for a full and
+detailed description, see the info manual that comes with it.
+
+In short, Emacs-Guix provides the following features:
+
+- Interface for:
+
+  + packages
+
+  + generations (and system generations for GuixSD)
+
+  + package licenses
+
+  + package locations
+
+  + [[https://hydra.gnu.org][Hydra build farm]]
+
+- Magit-like popup interface for all guix shell commands (=M-x guix=).
+
+- Modes to view logs of package builds (=guix-build-log-mode= and
+  =guix-build-log-minor-mode=).
+
+- Minor mode to "prettify" store file names (to replace hash parts with
+  "…").
+
+- Shell completions for all guix commands and options (for =M-x shell=
+  and =M-x eshell=).
+
+- Minor mode with additional functionality for =scheme-mode= to work
+  with Guix .scm files, particularly with package modules
+  (=guix-devel-mode=).
+
+On the following screenshot you can see one of the mentioned features,
+namely: "list" and "info" interface for Guix packages (this screenshot
+was made for an early version of Emacs-Guix, the interface has slightly
+changed since then).
+
+[[http://i.imgur.com/gRcu14n.png]]
+
+([[https://github.com/alezost/alect-themes][alect-light]] theme is used there).
+
+* Usage
+
+A summary of the available commands (not all):
+
+- To show packages:
+
+  : M-x guix-all-available-packages
+  : M-x guix-newest-available-packages
+  : M-x guix-installed-user-packages
+  : M-x guix-installed-system-packages
+  : M-x guix-obsolete-packages
+  : M-x guix-packages-by-name
+  : M-x guix-packages-by-license
+  : M-x guix-packages-by-location
+  : M-x guix-package-from-file
+  : M-x guix-search-by-name
+  : M-x guix-search-by-regexp
+
+- To show profile generations:
+
+  : M-x guix-generations
+  : M-x guix-last-generations
+  : M-x guix-generations-by-time
+  : M-x guix-system-generations
+  : M-x guix-last-system-generations
+  : M-x guix-system-generations-by-time
+
+- To show/browse package licenses:
+
+  : M-x guix-licenses
+  : M-x guix-browse-license-url
+  : M-x guix-find-license-definition
+
+- To show/find package locations:
+
+  : M-x guix-locations
+  : M-x guix-find-location
+  : M-x guix-edit
+
+- Magit-like interface:
+
+  : M-x guix
+
+- To show Hydra builds and jobsets:
+
+  : M-x guix-hydra-latest-builds
+  : M-x guix-hydra-queued-builds
+  : M-x guix-hydra-jobsets
+
+- Miscellaneous commands:
+
+  : M-x guix-pull
+  : M-x guix-prettify-mode
+  : M-x guix-build-log-mode
+  : M-x guix-devel-mode
