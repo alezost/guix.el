@@ -137,12 +137,10 @@ current profile's GENERATION."
   (guix-info-insert-action-button
    "Packages"
    (lambda (btn)
-     (guix-buffer-get-display-entries
-      'list guix-package-list-type
-      (list (guix-generation-current-packages-profile
-             (button-get btn 'number))
-            'installed)
-      'add))
+     (guix-package-get-display
+      (guix-generation-current-packages-profile
+       (button-get btn 'number))
+      'installed))
    "Show installed packages for this generation"
    'number number)
   (guix-info-insert-indent)
