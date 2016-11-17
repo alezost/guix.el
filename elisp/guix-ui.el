@@ -126,10 +126,15 @@ See `guix-ui-buffer-name-function' for details."
 (defun guix-ui-buffer? (&optional buffer modes)
   "Return non-nil if BUFFER mode is derived from any of the MODES.
 If BUFFER is nil, check current buffer.
-If MODES is nil, use `guix-list-mode' and `guix-info-mode'."
+If MODES is nil, use package/generation modes."
   (with-current-buffer (or buffer (current-buffer))
     (apply #'derived-mode-p
-           (or modes '(guix-list-mode guix-info-mode)))))
+           (or modes '(guix-package-list-mode
+                       guix-package-info-mode
+                       guix-output-list-mode
+                       guix-output-info-mode
+                       guix-generation-list-mode
+                       guix-generation-info-mode)))))
 
 (defun guix-ui-buffers (&optional modes)
   "Return a list of all buffers with major modes derived from MODES.
