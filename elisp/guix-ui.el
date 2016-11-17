@@ -32,12 +32,6 @@
 (require 'guix-messages)
 (require 'guix-profiles)
 
-(guix-define-groups ui
-  :group-doc "\
-Settings for 'ui' (Guix package management) buffers.
-This group includes settings for displaying packages, outputs and
-generations in 'list' and 'info' buffers.")
-
 (defvar guix-ui-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "M") 'guix-apply-manifest)
@@ -98,7 +92,7 @@ If `all', update all Guix buffers (not recommended)."
   :type '(choice (const :tag "Do nothing" nil)
                  (const :tag "Update operation buffer" current)
                  (const :tag "Update all Guix buffers" all))
-  :group 'guix-ui)
+  :group 'guix)
 
 (defcustom guix-ui-buffer-name-function
   #'guix-ui-buffer-name-full
@@ -108,7 +102,7 @@ The function is called with 2 arguments: BASE-NAME and PROFILE."
                  (function-item guix-ui-buffer-name-short)
                  (function-item guix-ui-buffer-name-simple)
                  (function :tag "Other function"))
-  :group 'guix-ui)
+  :group 'guix)
 
 (defun guix-ui-buffer-name-simple (base-name &rest _)
   "Return BASE-NAME."
@@ -176,8 +170,8 @@ The rest keyword arguments are passed to
 `guix-define-entry-type' macro."
   (declare (indent 1))
   `(guix-define-entry-type ,entry-type
-     :parent-group guix-ui
-     :parent-faces-group guix-ui-faces
+     :parent-group guix
+     :parent-faces-group guix-faces
      ,@args))
 
 (defmacro guix-ui-define-interface (entry-type buffer-type &rest args)
