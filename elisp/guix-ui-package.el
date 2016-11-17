@@ -226,7 +226,7 @@ ENTRIES is a list of package entries to get info about packages."
 
 ;;; Package 'info'
 
-(guix-ui-info-define-interface package
+(guix-ui-define-interface package info
   :buffer-name "*Guix Package Info*"
   :get-entries-function 'guix-package-info-get-entries
   :format '(guix-package-info-insert-heading
@@ -706,9 +706,10 @@ This function is used to hide a \"Download\" button if needed."
 
 ;;; Package 'list'
 
-(guix-ui-list-define-interface package
+(guix-ui-define-interface package list
   :buffer-name "*Guix Package List*"
   :get-entries-function 'guix-package-list-get-entries
+  :describe-function 'guix-ui-list-describe
   :format '((name guix-package-list-get-name 20 t)
             (version nil 10 nil)
             (outputs nil 13 t)
@@ -933,7 +934,7 @@ for all ARGS."
 
 ;;; Output 'info'
 
-(guix-ui-info-define-interface output
+(guix-ui-define-interface output info
   :buffer-name "*Guix Package Info*"
   :get-entries-function 'guix-output-info-get-entries
   :format '((name format (format guix-package-info-name))
@@ -992,7 +993,7 @@ for all ARGS."
 
 ;;; Output 'list'
 
-(guix-ui-list-define-interface output
+(guix-ui-define-interface output list
   :buffer-name "*Guix Package List*"
   :get-entries-function 'guix-output-list-get-entries
   :describe-function 'guix-output-list-describe

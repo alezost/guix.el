@@ -180,7 +180,7 @@ The rest keyword arguments are passed to
      :parent-faces-group guix-ui-faces
      ,@args))
 
-(defmacro guix-ui-define-interface (buffer-type entry-type &rest args)
+(defmacro guix-ui-define-interface (entry-type buffer-type &rest args)
   "Define BUFFER-TYPE interface for displaying ENTRY-TYPE entries.
 Remaining arguments (ARGS) should have a form [KEYWORD VALUE] ...
 In the following description TYPE means ENTRY-TYPE-BUFFER-TYPE.
@@ -260,39 +260,11 @@ Display a message after showing '%s' entries."
            :buffer-name ',buffer-name-fun
            ,@%foreign-args)))))
 
-(defmacro guix-ui-info-define-interface (entry-type &rest args)
-  "Define 'info' interface for displaying ENTRY-TYPE entries.
-See `guix-ui-define-interface'."
-  (declare (indent 1))
-  `(guix-ui-define-interface info ,entry-type
-     ,@args))
-
-(defmacro guix-ui-list-define-interface (entry-type &rest args)
-  "Define 'list' interface for displaying ENTRY-TYPE entries.
-Remaining arguments (ARGS) should have a form [KEYWORD VALUE] ...
-
-Optional keywords:
-
-  - `:describe-function' - default value of the generated
-    `guix-ENTRY-TYPE-list-describe-function' variable (if not
-    specified, use `guix-ui-list-describe').
-
-The rest keyword arguments are passed to
-`guix-ui-define-interface' macro."
-  (declare (indent 1))
-  (guix-keyword-args-let args
-      ((describe-val :describe-function))
-    `(guix-ui-define-interface list ,entry-type
-       :describe-function ,(or describe-val ''guix-ui-list-describe)
-       ,@args)))
-
 
 (defvar guix-ui-font-lock-keywords
   (eval-when-compile
     `((,(rx "(" (group (or "guix-ui-define-entry-type"
-                           "guix-ui-define-interface"
-                           "guix-ui-info-define-interface"
-                           "guix-ui-list-define-interface"))
+                           "guix-ui-define-interface"))
             symbol-end)
        . 1))))
 

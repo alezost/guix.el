@@ -94,7 +94,7 @@ current profile's GENERATION."
 
 ;;; Generation 'info'
 
-(guix-ui-info-define-interface generation
+(guix-ui-define-interface generation info
   :buffer-name "*Guix Generation Info*"
   :get-entries-function 'guix-generation-info-get-entries
   :format '((number format guix-generation-info-insert-number)
@@ -173,9 +173,10 @@ current profile's GENERATION."
 
 ;;; Generation 'list'
 
-(guix-ui-list-define-interface generation
+(guix-ui-define-interface generation list
   :buffer-name "*Guix Generation List*"
   :get-entries-function 'guix-generation-list-get-entries
+  :describe-function 'guix-ui-list-describe
   :format '((number nil 5 guix-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
             (time guix-list-get-time 20 t)

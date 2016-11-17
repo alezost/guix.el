@@ -44,7 +44,7 @@ SEARCH-VALUES."
 
 ;;; System generation 'info'
 
-(guix-ui-info-define-interface system-generation
+(guix-ui-define-interface system-generation info
   :buffer-name "*Guix Generation Info*"
   :get-entries-function 'guix-system-generation-info-get-entries
   :format '((number format guix-generation-info-insert-number)
@@ -76,9 +76,10 @@ SEARCH-VALUES."
   (copy-keymap guix-generation-list-mode-map)
   "Keymap for `guix-system-generation-list-mode' buffers.")
 
-(guix-ui-list-define-interface system-generation
+(guix-ui-define-interface system-generation list
   :buffer-name "*Guix Generation List*"
   :get-entries-function 'guix-system-generation-list-get-entries
+  :describe-function 'guix-ui-list-describe
   :format '((number nil 5 guix-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
             (label nil 40 t)
