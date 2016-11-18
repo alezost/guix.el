@@ -1,6 +1,6 @@
 ;;; guix-hydra-build.el --- Interface for Hydra builds  -*- lexical-binding: t -*-
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -305,7 +305,7 @@ Show latest builds for this %s (with prefix, prompt for all parameters)"
 (guix-hydra-define-interface hydra-build list
   :describe-function 'guix-hydra-list-describe
   :mode-name "Hydra-Build-List"
-  :buffer-name "*Guix Hydra Build List*"
+  :buffer-name "*Guix Hydra Builds*"
   :format '((name nil 30 t)
             (system nil 16 t)
             (status guix-hydra-build-list-get-status 20 t)

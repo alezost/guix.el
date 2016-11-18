@@ -77,7 +77,7 @@ SEARCH-VALUES."
   "Keymap for `guix-system-generation-list-mode' buffers.")
 
 (guix-ui-define-interface system-generation list
-  :buffer-name "*Guix Generation List*"
+  :buffer-name "*Guix Generations*"
   :get-entries-function 'guix-system-generation-list-get-entries
   :describe-function 'guix-ui-list-describe
   :format '((number nil 5 guix-list-sort-numerically-0 :right-align t)

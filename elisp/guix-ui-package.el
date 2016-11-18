@@ -707,7 +707,7 @@ This function is used to hide a \"Download\" button if needed."
 ;;; Package 'list'
 
 (guix-ui-define-interface package list
-  :buffer-name "*Guix Package List*"
+  :buffer-name "*Guix Packages*"
   :get-entries-function 'guix-package-list-get-entries
   :describe-function 'guix-ui-list-describe
   :format '((name guix-package-list-get-name 20 t)
@@ -994,7 +994,7 @@ for all ARGS."
 ;;; Output 'list'
 
 (guix-ui-define-interface output list
-  :buffer-name "*Guix Package List*"
+  :buffer-name "*Guix Packages*"
   :get-entries-function 'guix-output-list-get-entries
   :describe-function 'guix-output-list-describe
   :format '((name guix-package-list-get-name 20 t)

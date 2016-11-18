@@ -172,7 +172,7 @@ current profile's GENERATION."
 ;;; Generation 'list'
 
 (guix-ui-define-interface generation list
-  :buffer-name "*Guix Generation List*"
+  :buffer-name "*Guix Generations*"
   :get-entries-function 'guix-generation-list-get-entries
   :describe-function 'guix-ui-list-describe
   :format '((number nil 5 guix-list-sort-numerically-0 :right-align t)

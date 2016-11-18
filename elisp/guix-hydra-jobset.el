@@ -1,6 +1,6 @@
 ;;; guix-hydra-jobset.el --- Interface for Hydra jobsets  -*- lexical-binding: t -*-
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -127,7 +127,7 @@
 (guix-hydra-define-interface hydra-jobset list
   :describe-function 'guix-hydra-list-describe
   :mode-name "Hydra-Jobset-List"
-  :buffer-name "*Guix Hydra Jobset List*"
+  :buffer-name "*Guix Hydra Jobsets*"
   :format '((name nil 25 t)
             (project nil 10 t)
             (scheduled nil 12 t)
