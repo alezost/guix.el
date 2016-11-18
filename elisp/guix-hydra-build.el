@@ -225,7 +225,7 @@ See `guix-hydra-build-status-alist'."
 
 ;;; Hydra build 'info'
 
-(guix-hydra-info-define-interface hydra-build
+(guix-hydra-define-interface hydra-build info
   :mode-name "Hydra-Build-Info"
   :buffer-name "*Guix Hydra Build Info*"
   :format '((name ignore (simple guix-info-heading))
@@ -302,7 +302,8 @@ Show latest builds for this %s (with prefix, prompt for all parameters)"
 
 ;;; Hydra build 'list'
 
-(guix-hydra-list-define-interface hydra-build
+(guix-hydra-define-interface hydra-build list
+  :describe-function 'guix-hydra-list-describe
   :mode-name "Hydra-Build-List"
   :buffer-name "*Guix Hydra Build List*"
   :format '((name nil 30 t)

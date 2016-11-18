@@ -68,7 +68,7 @@
 
 ;;; Hydra jobset 'info'
 
-(guix-hydra-info-define-interface hydra-jobset
+(guix-hydra-define-interface hydra-jobset info
   :mode-name "Hydra-Jobset-Info"
   :buffer-name "*Guix Hydra Jobset Info*"
   :format '((name ignore (simple guix-info-heading))
@@ -124,7 +124,8 @@
 
 ;;; Hydra jobset 'list'
 
-(guix-hydra-list-define-interface hydra-jobset
+(guix-hydra-define-interface hydra-jobset list
+  :describe-function 'guix-hydra-list-describe
   :mode-name "Hydra-Jobset-List"
   :buffer-name "*Guix Hydra Jobset List*"
   :format '((name nil 25 t)

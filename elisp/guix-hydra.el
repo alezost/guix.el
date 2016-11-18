@@ -1,6 +1,6 @@
 ;;; guix-hydra.el --- Common code for interacting with Hydra  -*- lexical-binding: t -*-
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -305,7 +305,7 @@ See `guix-hydra-get-entries' for details."
            :parent-faces-group guix-hydra-faces
            ,@%foreign-args)))))
 
-(defmacro guix-hydra-define-interface (buffer-type entry-type &rest args)
+(defmacro guix-hydra-define-interface (entry-type buffer-type &rest args)
   "Define BUFFER-TYPE interface for displaying ENTRY-TYPE entries.
 
 This macro should be called after calling
@@ -324,39 +324,11 @@ ARGS are passed to `guix-BUFFER-TYPE-define-interface' macro."
        :message-function 'guix-hydra-message
        ,@args)))
 
-(defmacro guix-hydra-info-define-interface (entry-type &rest args)
-  "Define 'info' interface for displaying ENTRY-TYPE entries.
-See `guix-hydra-define-interface'."
-  (declare (indent 1))
-  `(guix-hydra-define-interface info ,entry-type
-     ,@args))
-
-(defmacro guix-hydra-list-define-interface (entry-type &rest args)
-  "Define 'list' interface for displaying ENTRY-TYPE entries.
-Remaining arguments (ARGS) should have a form [KEYWORD VALUE] ...
-
-Optional keywords:
-
-  - `:describe-function' - default value of the generated
-    `guix-ENTRY-TYPE-list-describe-function' variable (if not
-    specified, use `guix-hydra-list-describe').
-
-The rest keyword arguments are passed to
-`guix-hydra-define-interface' macro."
-  (declare (indent 1))
-  (guix-keyword-args-let args
-      ((describe-val :describe-function))
-    `(guix-hydra-define-interface list ,entry-type
-       :describe-function ,(or describe-val ''guix-hydra-list-describe)
-       ,@args)))
-
 
 (defvar guix-hydra-font-lock-keywords
   (eval-when-compile
     `((,(rx "(" (group (or "guix-hydra-define-entry-type"
-                           "guix-hydra-define-interface"
-                           "guix-hydra-info-define-interface"
-                           "guix-hydra-list-define-interface"))
+                           "guix-hydra-define-interface"))
             symbol-end)
        . 1))))
 
