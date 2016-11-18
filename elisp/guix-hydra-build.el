@@ -29,7 +29,6 @@
 (require 'guix-list)
 (require 'guix-info)
 (require 'guix-hydra)
-(require 'guix-build-log)
 (require 'guix-utils)
 
 (guix-hydra-define-entry-type hydra-build
@@ -81,8 +80,11 @@
           :job     job
           :system  system)))
 
+(declare-function guix-build-log-find-file "guix-build-log" (file))
+
 (defun guix-hydra-build-view-log (id)
   "View build log of a hydra build ID."
+  (require 'guix-build-log)
   (guix-build-log-find-file (guix-hydra-build-log-url id)))
 
 
