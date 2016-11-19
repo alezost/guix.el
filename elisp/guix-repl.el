@@ -53,7 +53,6 @@
 (require 'guix-geiser)
 (require 'guix-config)
 (require 'guix-external)
-(require 'guix-emacs)
 (require 'guix-profiles)
 
 (defvar guix-scheme-directory
@@ -159,10 +158,13 @@ This internal variable is used to define what actions should be
 executed after the current operation succeeds.
 See `guix-eval-in-repl' for details.")
 
+(declare-function guix-emacs-autoload-packages "guix-emacs" t)
+
 (defun guix-repl-autoload-emacs-packages-maybe ()
   "Load autoloads for Emacs packages if needed.
 See `guix-emacs-activate-after-operation' for details."
   (and guix-emacs-activate-after-operation
+       (require 'guix-emacs nil t)
        ;; FIXME Since a user can work with a non-current profile (using
        ;; C-u before `guix-search-by-name' and other commands), emacs
        ;; packages can be installed to another profile, and the

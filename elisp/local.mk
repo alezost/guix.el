@@ -46,7 +46,6 @@ ELFILES =					\
   %D%/guix-command.el				\
   %D%/guix-config.el				\
   %D%/guix-devel.el				\
-  %D%/guix-emacs.el				\
   %D%/guix-entry.el				\
   %D%/guix-external.el				\
   %D%/guix-geiser.el				\
