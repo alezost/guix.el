@@ -25,15 +25,12 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'guix-buffer)
-(require 'guix-list)
-(require 'guix-info)
+(require 'bui)
 (require 'guix-ui)
 (require 'guix-ui-package)
 (require 'guix-base)
 (require 'guix-repl)
 (require 'guix-guile)
-(require 'guix-entry)
 (require 'guix-utils)
 (require 'guix-profiles)
 
@@ -46,8 +43,8 @@ If PROFILE is nil, use `guix-current-profile'.
 
 See `guix-ui-get-entries' for the meaning of SEARCH-TYPE and
 SEARCH-VALUES."
-  (apply #'guix-list-get-display-entries
-         'generation
+  (apply #'bui-list-get-display-entries
+         'guix-generation
          (or profile guix-current-profile)
          search-type search-values))
 
@@ -81,8 +78,8 @@ Each element from GENERATIONS is a generation number."
 
 (defun guix-system-generation? ()
   "Return non-nil, if current generation is a system one."
-  (eq (guix-buffer-current-entry-type)
-      'system-generation))
+  (eq (bui-current-entry-type)
+      'guix-system-generation))
 
 (defun guix-generation-current-packages-profile (&optional generation)
   "Return a directory where packages are installed for the
@@ -100,7 +97,7 @@ current profile's GENERATION."
   :format '((number format guix-generation-info-insert-number)
             (prev-number format (format))
             (current format guix-generation-info-insert-current)
-            (path simple (indent guix-file))
+            (path simple (indent bui-file))
             (time format (time)))
   :titles '((path . "File name")
             (prev-number . "Previous number")))
@@ -128,13 +125,13 @@ current profile's GENERATION."
     'generation-sexps
     profile search-type search-values
     (cl-union guix-generation-info-required-params
-              (guix-info-displayed-params 'generation)))))
+              (bui-info-displayed-params 'guix-generation)))))
 
 (defun guix-generation-info-insert-number (number &optional _)
   "Insert generation NUMBER and action buttons."
-  (guix-info-insert-value-format number 'guix-generation-info-number)
-  (guix-info-insert-indent)
-  (guix-info-insert-action-button
+  (bui-info-insert-value-format number 'guix-generation-info-number)
+  (bui-insert-indent)
+  (bui-insert-action-button
    "Packages"
    (lambda (btn)
      (guix-package-get-display
@@ -143,8 +140,8 @@ current profile's GENERATION."
       'installed))
    "Show installed packages for this generation"
    'number number)
-  (guix-info-insert-indent)
-  (guix-info-insert-action-button
+  (bui-insert-indent)
+  (bui-insert-action-button
    "Delete"
    (lambda (btn)
      (guix-delete-generations (guix-ui-current-profile)
@@ -156,17 +153,17 @@ current profile's GENERATION."
 (defun guix-generation-info-insert-current (val entry)
   "Insert boolean value VAL showing whether this generation is current."
   (if val
-      (guix-info-insert-value-format "Yes" 'guix-generation-info-current)
-    (guix-info-insert-value-format "No" 'guix-generation-info-not-current)
-    (guix-info-insert-indent)
-    (guix-info-insert-action-button
+      (bui-info-insert-value-format "Yes" 'guix-generation-info-current)
+    (bui-info-insert-value-format "No" 'guix-generation-info-not-current)
+    (bui-insert-indent)
+    (bui-insert-action-button
      "Switch"
      (lambda (btn)
        (guix-switch-to-generation (guix-ui-current-profile)
                                   (button-get btn 'number)
                                   (current-buffer)))
      "Switch to this generation (make it the current one)"
-     'number (guix-entry-value entry 'number))))
+     'number (bui-entry-non-void-value entry 'number))))
 
 
 ;;; Generation 'list'
@@ -175,10 +172,10 @@ current profile's GENERATION."
   :buffer-name "*Guix Generations*"
   :get-entries-function 'guix-generation-list-get-entries
   :describe-function 'guix-ui-list-describe
-  :format '((number nil 5 guix-list-sort-numerically-0 :right-align t)
+  :format '((number nil 5 bui-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
-            (time guix-list-get-time 20 t)
-            (path guix-list-get-file-name 30 t))
+            (time bui-list-get-time 20 t)
+            (path bui-list-get-file-name 30 t))
   :titles '((number . "N."))
   :sort-key '(number . t)
   :marks '((delete . ?D)))
@@ -203,7 +200,7 @@ current profile's GENERATION."
     'generation-sexps
     profile search-type search-values
     (cl-union guix-generation-list-required-params
-              (guix-list-displayed-params 'generation)))))
+              (bui-list-displayed-params 'guix-generation)))))
 
 (defun guix-generation-list-get-current (val &optional _)
   "Return string from VAL showing whether this generation is current.
@@ -213,9 +210,9 @@ VAL is a boolean value."
 (defun guix-generation-list-switch ()
   "Switch current profile to the generation at point."
   (interactive)
-  (let* ((entry   (guix-list-current-entry))
-         (current (guix-entry-value entry 'current))
-         (number  (guix-entry-value entry 'number)))
+  (let* ((entry   (bui-list-current-entry))
+         (current (bui-entry-non-void-value entry 'current))
+         (number  (bui-entry-non-void-value entry 'number)))
     (if current
         (user-error "This generation is already the current one")
       (guix-switch-to-generation (guix-ui-current-profile)
@@ -225,12 +222,12 @@ VAL is a boolean value."
   "List installed packages for the generation at point."
   (interactive)
   (guix-package-get-display
-   (guix-generation-current-packages-profile (guix-list-current-id))
+   (guix-generation-current-packages-profile (bui-list-current-id))
    'installed))
 
 (defun guix-generation-list-generations-to-compare ()
   "Return a sorted list of 2 marked generations for comparing."
-  (let ((numbers (guix-list-get-marked-id-list 'general)))
+  (let ((numbers (bui-list-get-marked-id-list 'general)))
     (if (/= (length numbers) 2)
         (user-error "2 generations should be marked for comparing")
       (sort numbers #'<))))
@@ -246,8 +243,8 @@ If 2 generations are marked with \\[guix-list-mark], display
 outputs installed in the latest marked generation that were not
 installed in the other one."
   (interactive)
-  (guix-buffer-get-display-entries
-   'list 'output
+  (bui-get-display-entries
+   'guix-output 'list
    (cl-list* (guix-ui-current-profile)
              'profile-diff
              (reverse (guix-generation-list-profiles-to-compare)))
@@ -259,8 +256,8 @@ If 2 generations are marked with \\[guix-list-mark], display
 outputs not installed in the latest marked generation that were
 installed in the other one."
   (interactive)
-  (guix-buffer-get-display-entries
-   'list 'output
+  (bui-get-display-entries
+   'guix-output 'list
    (cl-list* (guix-ui-current-profile)
              'profile-diff
              (guix-generation-list-profiles-to-compare))
@@ -323,13 +320,13 @@ With ARG, run Diff on manifests of the marked generations."
 With ARG, mark all generations for deletion."
   (interactive "P")
   (if arg
-      (guix-list-mark-all 'delete)
-    (guix-list--mark 'delete t)))
+      (bui-list-mark-all 'delete)
+    (bui-list--mark 'delete t)))
 
 (defun guix-generation-list-execute ()
   "Delete marked generations."
   (interactive)
-  (let ((marked (guix-list-get-marked-id-list 'delete)))
+  (let ((marked (bui-list-get-marked-id-list 'delete)))
     (or marked
         (user-error "No generations marked for deletion"))
     (guix-delete-generations (guix-ui-current-profile)

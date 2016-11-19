@@ -25,8 +25,8 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'bui)
 (require 'guix-repl)
-(require 'guix-buffer)
 (require 'guix-guile)
 (require 'guix-utils)
 (require 'guix-messages)
@@ -39,8 +39,8 @@
     map)
   "Parent keymap for Guix package/generation buffers.")
 
-(guix-buffer-define-current-args-accessors
- "guix-ui-current" "profile" "search-type" "search-values")
+(bui-define-current-args-accessors
+ guix-ui-current profile search-type search-values)
 
 (defun guix-ui-read-profile ()
   "Return `guix-current-profile' or prompt for it.
@@ -68,10 +68,10 @@ with all available parameters."
     'package/output-sexps
     profile entry-type search-type search-values params)))
 
-(defun guix-ui-list-describe (ids)
+(defun guix-ui-list-describe (&rest ids)
   "Describe 'ui' entries with IDS (list of identifiers)."
-  (guix-buffer-get-display-entries
-   'info (guix-buffer-current-entry-type)
+  (bui-get-display-entries
+   (bui-current-entry-type) 'info
    (cl-list* (guix-ui-current-profile) 'id ids)
    'add))
 
@@ -146,7 +146,7 @@ If MODES is nil, return list of all Guix 'list' and 'info' buffers."
 (defun guix-ui-update-buffer (buffer)
   "Update data in a 'list' or 'info' BUFFER."
   (with-current-buffer buffer
-    (guix-buffer-revert nil t)))
+    (bui-revert nil t)))
 
 (defun guix-ui-update-buffers-after-operation ()
   "Update buffers after Guix operation if needed.
@@ -192,13 +192,13 @@ Optional keywords:
   - `:required' - default value of the generated
     `guix-TYPE-required-params' variable.
 
-The rest keyword arguments are passed to
-`guix-BUFFER-TYPE-define-interface' macro.
+The rest keyword arguments are passed to `bui-define-interface'
+macro.
 
 Along with the mentioned definitions, this macro also defines:
 
   - `guix-TYPE-mode-map' - keymap based on `guix-ui-map' and
-    `guix-BUFFER-TYPE-mode-map'.
+    `bui-BUFFER-TYPE-mode-map'.
 
   - `guix-TYPE-message' - a wrapper around `guix-result-message'."
   (declare (indent 2))
@@ -208,14 +208,12 @@ Along with the mentioned definitions, this macro also defines:
                                   buffer-type-str))
          (mode-str        (concat prefix "-mode"))
          (mode-map        (intern (concat mode-str "-map")))
-         (parent-map      (intern (format "guix-%s-mode-map"
+         (parent-map      (intern (format "bui-%s-mode-map"
                                           buffer-type-str)))
          (required-var    (intern (concat prefix "-required-params")))
          (buffer-name-fun (intern (concat prefix "-buffer-name")))
-         (message-fun     (intern (concat prefix "-message")))
-         (definer         (intern (format "guix-%s-define-interface"
-                                          buffer-type-str))))
-    (guix-keyword-args-let args
+         (message-fun     (intern (concat prefix "-message"))))
+    (bui-plist-let args
         ((buffer-name-val :buffer-name)
          (required-val    :required ''(id)))
       `(progn
@@ -251,7 +249,7 @@ Display a message after showing '%s' entries."
            (guix-result-message
             profile entries ',entry-type search-type search-values))
 
-         (,definer ,entry-type
+         (bui-define-interface ,(guix-make-symbol entry-type) ,buffer-type
            :message-function ',message-fun
            :buffer-name ',buffer-name-fun
            ,@%foreign-args)))))

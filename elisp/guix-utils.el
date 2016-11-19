@@ -404,6 +404,10 @@ Example:
             (setq ,args-var rest-args))))
        ,@body)))
 
+(defun guix-make-symbol (&rest symbols)
+  "Return `guix-SYMBOLS-...' symbol."
+  (apply #'bui-make-symbol 'guix symbols))
+
 (defmacro guix-define-groups (name &rest args)
   "Define `guix-NAME' and `guix-NAME-faces' customization groups.
 See `bui-define-groups' for details."

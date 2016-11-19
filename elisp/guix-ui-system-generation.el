@@ -25,7 +25,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'guix-list)
+(require 'bui)
 (require 'guix-ui)
 (require 'guix-ui-generation)
 (require 'guix-profiles)
@@ -36,8 +36,8 @@
   "Search for system generations and show results.
 See `guix-ui-get-entries' for the meaning of SEARCH-TYPE and
 SEARCH-VALUES."
-  (apply #'guix-list-get-display-entries
-         'system-generation
+  (apply #'bui-list-get-display-entries
+         'guix-system-generation
          guix-system-profile
          search-type search-values))
 
@@ -51,10 +51,10 @@ SEARCH-VALUES."
             (label format (format))
             (prev-number format (format))
             (current format guix-generation-info-insert-current)
-            (path format (format guix-file))
+            (path format (format bui-file))
             (time format (time))
             (root-device format (format))
-            (kernel format (format guix-file)))
+            (kernel format (format bui-file)))
   :titles guix-generation-info-titles)
 
 (defun guix-system-generation-info-get-entries (profile search-type
@@ -65,7 +65,7 @@ SEARCH-VALUES."
     'system-generation-sexps
     profile search-type search-values
     (cl-union guix-system-generation-info-required-params
-              (guix-info-displayed-params 'system-generation)))))
+              (bui-info-displayed-params 'guix-system-generation)))))
 
 
 ;;; System generation 'list'
@@ -80,11 +80,11 @@ SEARCH-VALUES."
   :buffer-name "*Guix Generations*"
   :get-entries-function 'guix-system-generation-list-get-entries
   :describe-function 'guix-ui-list-describe
-  :format '((number nil 5 guix-list-sort-numerically-0 :right-align t)
+  :format '((number nil 5 bui-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
             (label nil 40 t)
-            (time guix-list-get-time 20 t)
-            (path guix-list-get-file-name 30 t))
+            (time bui-list-get-time 20 t)
+            (path bui-list-get-file-name 30 t))
   :titles guix-generation-list-titles
   :sort-key '(number . t)
   :marks '((delete . ?D)))
@@ -97,7 +97,7 @@ SEARCH-VALUES."
     'system-generation-sexps
     profile search-type search-values
     (cl-union guix-system-generation-list-required-params
-              (guix-list-displayed-params 'system-generation)))))
+              (bui-list-displayed-params 'guix-system-generation)))))
 
 
 ;;; Interactive commands
