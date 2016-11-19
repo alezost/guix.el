@@ -27,10 +27,9 @@
 (require 'bui)
 (require 'guix-location)
 (require 'guix-repl)
+(require 'guix-utils)
 
-(bui-define-groups guix-location
-  :parent-group guix
-  :parent-faces-group guix-faces)
+(guix-define-groups location)
 
 (defun guix-location-get-entries ()
   "Receive 'package location' entries."

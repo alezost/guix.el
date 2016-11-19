@@ -174,10 +174,7 @@ Remaining arguments (ARGS) should have a form [KEYWORD VALUE] ...
 The rest keyword arguments are passed to
 `guix-define-entry-type' macro."
   (declare (indent 1))
-  `(guix-define-entry-type ,entry-type
-     :parent-group guix
-     :parent-faces-group guix-faces
-     ,@args))
+  `(guix-define-groups ,entry-type ,@args))
 
 (defmacro guix-ui-define-interface (entry-type buffer-type &rest args)
   "Define BUFFER-TYPE interface for displaying ENTRY-TYPE entries.

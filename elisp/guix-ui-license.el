@@ -28,10 +28,9 @@
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-license)
+(require 'guix-utils)
 
-(bui-define-groups guix-license
-  :parent-group guix
-  :parent-faces-group guix-faces)
+(guix-define-groups license)
 
 (bui-define-entry-type guix-license
   :message-function 'guix-license-message

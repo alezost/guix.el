@@ -24,6 +24,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'bui-utils)
 
 (defvar guix-true-string "Yes")
 (defvar guix-false-string "–")
@@ -403,6 +404,15 @@ Example:
             (setq ,args-var rest-args))))
        ,@body)))
 
+(defmacro guix-define-groups (name &rest args)
+  "Define `guix-NAME' and `guix-NAME-faces' customization groups.
+See `bui-define-groups' for details."
+  (declare (indent 1))
+  `(bui-define-groups ,(bui-make-symbol 'guix name)
+     :parent-group guix
+     :parent-faces-group guix-faces
+     ,@args))
+
 
 ;;; Alist procedures
 
@@ -587,6 +597,7 @@ See `defun' for the meaning of arguments."
   (eval-when-compile
     `((,(rx "(" (group (or "guix-define-reader"
                            "guix-define-readers"
+                           "guix-define-groups"
                            "guix-keyword-args-let"
                            "guix-while-null"
                            "guix-while-search"
