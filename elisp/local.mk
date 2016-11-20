@@ -39,18 +39,22 @@ endif
 AUTOLOADS = %D%/guix-autoloads.el
 
 ELFILES =					\
+  %D%/guix-config.el				\
+  %D%/guix-utils.el				\
+  %D%/guix-profiles.el				\
+  %D%/guix-guile.el				\
+  %D%/guix-geiser.el				\
+  %D%/guix-repl.el				\
+  %D%/guix-help-vars.el				\
+  %D%/guix-read.el				\
   %D%/guix-about.el				\
   %D%/guix-base.el				\
   %D%/guix-build-log.el				\
   %D%/guix-buffer.el				\
   %D%/guix-command.el				\
-  %D%/guix-config.el				\
   %D%/guix-devel.el				\
   %D%/guix-entry.el				\
   %D%/guix-external.el				\
-  %D%/guix-geiser.el				\
-  %D%/guix-guile.el				\
-  %D%/guix-help-vars.el				\
   %D%/guix-history.el				\
   %D%/guix-hydra.el				\
   %D%/guix-hydra-build.el			\
@@ -64,16 +68,12 @@ ELFILES =					\
   %D%/guix-pcomplete.el				\
   %D%/guix-popup.el				\
   %D%/guix-prettify.el				\
-  %D%/guix-profiles.el				\
-  %D%/guix-read.el				\
-  %D%/guix-repl.el				\
   %D%/guix-ui.el				\
   %D%/guix-ui-license.el			\
   %D%/guix-ui-location.el			\
   %D%/guix-ui-package.el			\
   %D%/guix-ui-generation.el			\
-  %D%/guix-ui-system-generation.el		\
-  %D%/guix-utils.el
+  %D%/guix-ui-system-generation.el
 
 dist_lisp_LISP = $(ELFILES)
 
