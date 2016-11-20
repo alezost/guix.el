@@ -25,8 +25,7 @@
 ;;; Code:
 
 (require 'json)
-(require 'guix-buffer)
-(require 'guix-entry)
+(require 'bui)
 (require 'guix-utils)
 (require 'guix-help-vars)
 
@@ -48,11 +47,11 @@
         (message "The update is impossible due to lack of Hydra API.")
       (message "Hydra has returned no results."))))
 
-(defun guix-hydra-list-describe (ids)
+(defun guix-hydra-list-describe (&rest ids)
   "Describe 'hydra' entries with IDS (list of identifiers)."
-  (guix-buffer-display-entries
-   (guix-entries-by-ids ids (guix-buffer-current-entries))
-   'info (guix-buffer-current-entry-type)
+  (bui-display-entries
+   (bui-entries-by-ids (bui-current-entries) ids)
+   (bui-current-entry-type) 'info
    ;; Hydra does not provide an API to receive builds/jobsets by
    ;; IDs/names, so we use a 'fake' search type.
    '(fake)
@@ -153,7 +152,7 @@ Each element of NAME-ALIST is (OLD-NAME . NEW-NAME) pair."
   (mapcar (lambda (param)
             (pcase param
               (`(,name . ,val)
-               (let ((new-name (guix-assq-value name-alist name)))
+               (let ((new-name (bui-assq-value name-alist name)))
                  (if new-name
                      (cons new-name val)
                    param)))))
@@ -172,25 +171,24 @@ Each element of NAME-ALIST is (OLD-NAME . NEW-NAME) pair."
 
 ;;; Wrappers for defined variables
 
-(defvar guix-hydra-entry-type-data nil
-  "Alist with hydra entry type data.
-This alist is filled by `guix-hydra-define-entry-type' macro.")
+(defun guix-hydra-symbol (&rest symbols)
+  "Return `guix-SYMBOLS-...' symbol."
+  (apply #'guix-make-symbol 'hydra symbols))
 
-(defun guix-hydra-entry-type-value (entry-type symbol)
-  "Return SYMBOL's value for ENTRY-TYPE from `guix-hydra'."
-  (symbol-value (guix-assq-value guix-hydra-entry-type-data
-                                 entry-type symbol)))
+(defun guix-hydra-symbol-value (entry-type symbol)
+  "Return SYMBOL's value for ENTRY-TYPE."
+  (symbol-value (guix-hydra-symbol entry-type symbol)))
 
 (defun guix-hydra-search-url (entry-type search-type &rest args)
   "Return URL to receive ENTRY-TYPE entries from Hydra."
-  (apply (guix-assq-value (guix-hydra-entry-type-value
-                           entry-type 'search-types)
-                          search-type)
+  (apply (bui-assq-value (guix-hydra-symbol-value
+                          entry-type 'search-types)
+                         search-type)
          args))
 
 (defun guix-hydra-filters (entry-type)
   "Return a list of filters for ENTRY-TYPE."
-  (guix-hydra-entry-type-value entry-type 'filters))
+  (guix-hydra-symbol-value entry-type 'filters))
 
 
 ;;; Interface definers
@@ -202,30 +200,33 @@ Remaining arguments (ARGS) should have a form [KEYWORD VALUE] ...
 Required keywords:
 
   - `:search-types' - default value of the generated
-    `guix-ENTRY-TYPE-search-types' variable.
+    `guix-hydra-ENTRY-TYPE-search-types' variable.
 
 Optional keywords:
 
   - `:filters' - default value of the generated
-    `guix-ENTRY-TYPE-filters' variable.
+    `guix-hydra-ENTRY-TYPE-filters' variable.
 
   - `:filter-names' - if specified, a generated
-    `guix-ENTRY-TYPE-filter-names' function for filtering these
-    names will be added to `guix-ENTRY-TYPE-filters' variable.
+    `guix-hydra-ENTRY-TYPE-filter-names' function for filtering
+    these names will be added to `guix-hydra-ENTRY-TYPE-filters'
+    variable.
 
   - `:filter-boolean-params' - if specified, a generated
-    `guix-ENTRY-TYPE-filter-boolean' function for filtering these
-    names will be added to `guix-ENTRY-TYPE-filters' variable.
+    `guix-hydra-ENTRY-TYPE-filter-boolean' function for filtering
+    these names will be added to `guix-hydra-ENTRY-TYPE-filters'
+    variable.
 
 The rest keyword arguments are passed to
-`guix-define-entry-type' macro."
+`bui-define-entry-type' macro."
   (declare (indent 1))
   (let* ((entry-type-str     (symbol-name entry-type))
-         (prefix             (concat "guix-" entry-type-str))
+         (full-entry-type    (guix-hydra-symbol entry-type))
+         (prefix             (concat "guix-hydra-" entry-type-str))
          (search-types-var   (intern (concat prefix "-search-types")))
          (filters-var        (intern (concat prefix "-filters")))
          (get-fun            (intern (concat prefix "-get-entries"))))
-    (guix-keyword-args-let args
+    (bui-plist-let args
         ((search-types-val   :search-types)
          (filters-val        :filters)
          (filter-names-val   :filter-names)
@@ -295,34 +296,25 @@ See `guix-hydra-get-entries' for details."
            (apply #'guix-hydra-get-entries
                   ',entry-type search-type args))
 
-         (guix-alist-put!
-          '((search-types . ,search-types-var)
-            (filters      . ,filters-var))
-          'guix-hydra-entry-type-data ',entry-type)
-
-         (guix-define-entry-type ,entry-type
+         (bui-define-groups ,full-entry-type
            :parent-group guix-hydra
-           :parent-faces-group guix-hydra-faces
+           :parent-faces-group guix-hydra-faces)
+
+         (bui-define-entry-type ,full-entry-type
+           :message-function 'guix-hydra-message
            ,@%foreign-args)))))
 
 (defmacro guix-hydra-define-interface (entry-type buffer-type &rest args)
-  "Define BUFFER-TYPE interface for displaying ENTRY-TYPE entries.
+  "Define BUFFER-TYPE interface for displaying ENTRY-TYPE hydra entries.
 
 This macro should be called after calling
 `guix-hydra-define-entry-type' with the same ENTRY-TYPE.
 
-ARGS are passed to `guix-BUFFER-TYPE-define-interface' macro."
+ARGS are passed to `bui-define-interface' macro."
   (declare (indent 2))
-  (let* ((entry-type-str  (symbol-name entry-type))
-         (buffer-type-str (symbol-name buffer-type))
-         (get-fun         (intern (concat "guix-" entry-type-str
-                                          "-get-entries")))
-         (definer         (intern (concat "guix-" buffer-type-str
-                                          "-define-interface"))))
-    `(,definer ,entry-type
-       :get-entries-function ',get-fun
-       :message-function 'guix-hydra-message
-       ,@args)))
+  `(bui-define-interface ,(guix-hydra-symbol entry-type) ,buffer-type
+     :get-entries-function ',(guix-hydra-symbol entry-type 'get-entries)
+     ,@args))
 
 
 (defvar guix-hydra-font-lock-keywords

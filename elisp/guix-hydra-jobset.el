@@ -25,14 +25,11 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'guix-buffer)
-(require 'guix-list)
-(require 'guix-info)
+(require 'bui)
 (require 'guix-hydra)
 (require 'guix-hydra-build)
-(require 'guix-utils)
 
-(guix-hydra-define-entry-type hydra-jobset
+(guix-hydra-define-entry-type jobset
   :search-types '((project . guix-hydra-jobset-api-url))
   :filters '(guix-hydra-jobset-filter-id)
   :filter-names '((nrscheduled . scheduled)
@@ -42,8 +39,8 @@
 
 (defun guix-hydra-jobset-get-display (search-type &rest args)
   "Search for Hydra builds and show results."
-  (apply #'guix-list-get-display-entries
-         'hydra-jobset search-type args))
+  (apply #'bui-list-get-display-entries
+         'guix-hydra-jobset search-type args))
 
 
 ;;; Defining URLs
@@ -62,17 +59,17 @@
 
 (defun guix-hydra-jobset-filter-id (entry)
   "Add 'ID' parameter to 'hydra-jobset' ENTRY."
-  (cons `(id . ,(guix-entry-value entry 'name))
+  (cons `(id . ,(bui-entry-non-void-value entry 'name))
         entry))
 
 
 ;;; Hydra jobset 'info'
 
-(guix-hydra-define-interface hydra-jobset info
+(guix-hydra-define-interface jobset info
   :mode-name "Hydra-Jobset-Info"
   :buffer-name "*Guix Hydra Jobset Info*"
-  :format '((name ignore (simple guix-info-heading))
-            ignore
+  :format '((name nil (simple bui-info-heading))
+            nil
             guix-hydra-jobset-info-insert-url
             (project   format guix-hydra-jobset-info-insert-project)
             (scheduled format (format guix-hydra-jobset-info-scheduled))
@@ -102,8 +99,8 @@
 
 (defun guix-hydra-jobset-info-insert-project (project entry)
   "Insert PROJECT button for the jobset ENTRY."
-  (let ((jobset (guix-entry-value entry 'name)))
-    (guix-insert-button
+  (let ((jobset (bui-entry-non-void-value entry 'name)))
+    (bui-insert-button
      project 'guix-hydra-build-project
      'action (lambda (btn)
                (let ((args (guix-hydra-build-latest-prompt-args
@@ -116,15 +113,15 @@
 
 (defun guix-hydra-jobset-info-insert-url (entry)
   "Insert Hydra URL for the jobset ENTRY."
-  (guix-insert-button (guix-hydra-jobset-url
-                       (guix-entry-value entry 'project)
-                       (guix-entry-value entry 'name))
-                      'guix-url))
+  (bui-insert-button (guix-hydra-jobset-url
+                      (bui-entry-non-void-value entry 'project)
+                      (bui-entry-non-void-value entry 'name))
+                     'bui-url))
 
 
 ;;; Hydra jobset 'list'
 
-(guix-hydra-define-interface hydra-jobset list
+(guix-hydra-define-interface jobset list
   :describe-function 'guix-hydra-list-describe
   :mode-name "Hydra-Jobset-List"
   :buffer-name "*Guix Hydra Jobsets*"
@@ -143,10 +140,10 @@
 Interactively, prompt for NUMBER.  With prefix argument, prompt
 for all ARGS."
   (interactive
-   (let ((entry (guix-list-current-entry)))
+   (let ((entry (bui-list-current-entry)))
      (guix-hydra-build-latest-prompt-args
-      :project (guix-entry-value entry 'project)
-      :jobset  (guix-entry-value entry 'name))))
+      :project (bui-entry-non-void-value entry 'project)
+      :jobset  (bui-entry-non-void-value entry 'name))))
   (apply #'guix-hydra-latest-builds number args))
 
 

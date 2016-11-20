@@ -25,13 +25,11 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'guix-buffer)
-(require 'guix-list)
-(require 'guix-info)
+(require 'bui)
 (require 'guix-hydra)
 (require 'guix-utils)
 
-(guix-hydra-define-entry-type hydra-build
+(guix-hydra-define-entry-type build
   :search-types '((latest . guix-hydra-build-latest-api-url)
                   (queue  . guix-hydra-build-queue-api-url))
   :filters '(guix-hydra-build-filter-status)
@@ -42,8 +40,8 @@
 
 (defun guix-hydra-build-get-display (search-type &rest args)
   "Search for Hydra builds and show results."
-  (apply #'guix-list-get-display-entries
-         'hydra-build search-type args))
+  (apply #'bui-list-get-display-entries
+         'guix-hydra-build search-type args))
 
 (cl-defun guix-hydra-build-latest-prompt-args (&key project jobset
                                                     job system)
@@ -118,10 +116,10 @@
 
 (defun guix-hydra-build-filter-status (entry)
   "Add 'status' parameter to 'hydra-build' ENTRY."
-  (let ((status (if (guix-entry-value entry 'finished)
+  (let ((status (if (bui-entry-non-void-value entry 'finished)
                     (guix-hydra-build-status-number->name
-                     (guix-entry-value entry 'build-status))
-                  (if (guix-entry-value entry 'busy)
+                     (bui-entry-non-void-value entry 'build-status))
+                  (if (bui-entry-non-void-value entry 'busy)
                       'running
                     'scheduled))))
     (cons `(status . ,status)
@@ -168,19 +166,19 @@ used internally by the elisp code of this package.")
 (defun guix-hydra-build-status-number->name (number)
   "Convert build status number to a name.
 See `guix-hydra-build-status-alist'."
-  (guix-assq-value guix-hydra-build-status-alist number))
+  (bui-assq-value guix-hydra-build-status-alist number))
 
 (defun guix-hydra-build-status-string (status)
   "Return a human readable string for build STATUS."
   (cl-case status
     (scheduled
-     (guix-get-string "Scheduled" 'guix-hydra-build-status-scheduled))
+     (bui-get-string "Scheduled" 'guix-hydra-build-status-scheduled))
     (running
-     (guix-get-string "Running" 'guix-hydra-build-status-running))
+     (bui-get-string "Running" 'guix-hydra-build-status-running))
     (succeeded
-     (guix-get-string "Succeeded" 'guix-hydra-build-status-succeeded))
+     (bui-get-string "Succeeded" 'guix-hydra-build-status-succeeded))
     (cancelled
-     (guix-get-string "Cancelled" 'guix-hydra-build-status-cancelled))
+     (bui-get-string "Cancelled" 'guix-hydra-build-status-cancelled))
     (failed-build
      (guix-hydra-build-status-fail-string))
     (failed-dependency
@@ -190,48 +188,48 @@ See `guix-hydra-build-status-alist'."
 
 (defun guix-hydra-build-status-fail-string (&optional reason)
   "Return a string for a failed build."
-  (let ((base (guix-get-string "Failed" 'guix-hydra-build-status-failed)))
+  (let ((base (bui-get-string "Failed" 'guix-hydra-build-status-failed)))
     (if reason
         (concat base " (" reason ")")
       base)))
 
 (defun guix-hydra-build-finished? (entry)
   "Return non-nil, if hydra build was finished."
-  (guix-entry-value entry 'finished))
+  (bui-entry-non-void-value entry 'finished))
 
 (defun guix-hydra-build-running? (entry)
   "Return non-nil, if hydra build is running."
-  (eq (guix-entry-value entry 'status)
+  (eq (bui-entry-non-void-value entry 'status)
       'running))
 
 (defun guix-hydra-build-scheduled? (entry)
   "Return non-nil, if hydra build is scheduled."
-  (eq (guix-entry-value entry 'status)
+  (eq (bui-entry-non-void-value entry 'status)
       'scheduled))
 
 (defun guix-hydra-build-succeeded? (entry)
   "Return non-nil, if hydra build succeeded."
-  (eq (guix-entry-value entry 'status)
+  (eq (bui-entry-non-void-value entry 'status)
       'succeeded))
 
 (defun guix-hydra-build-cancelled? (entry)
   "Return non-nil, if hydra build was cancelled."
-  (eq (guix-entry-value entry 'status)
+  (eq (bui-entry-non-void-value entry 'status)
       'cancelled))
 
 (defun guix-hydra-build-failed? (entry)
   "Return non-nil, if hydra build failed."
-  (memq (guix-entry-value entry 'status)
+  (memq (bui-entry-non-void-value entry 'status)
         '(failed-build failed-dependency failed-other)))
 
 
 ;;; Hydra build 'info'
 
-(guix-hydra-define-interface hydra-build info
+(guix-hydra-define-interface build info
   :mode-name "Hydra-Build-Info"
   :buffer-name "*Guix Hydra Build Info*"
-  :format '((name ignore (simple guix-info-heading))
-            ignore
+  :format '((name nil (simple bui-info-heading))
+            nil
             guix-hydra-build-info-insert-url
             (time     format (time))
             (status   format guix-hydra-build-info-insert-status)
@@ -268,7 +266,7 @@ See `guix-hydra-build-status-alist'."
          (face-name   (intern (concat "guix-hydra-build-info-" name-str)))
          (keyword     (intern (concat ":" name-str))))
     `(define-button-type ',button-name
-       :supertype 'guix
+       :supertype 'bui
        'face ',face-name
        'help-echo ,(format "\
 Show latest builds for this %s (with prefix, prompt for all parameters)"
@@ -286,16 +284,17 @@ Show latest builds for this %s (with prefix, prompt for all parameters)"
 
 (defun guix-hydra-build-info-insert-url (entry)
   "Insert Hydra URL for the build ENTRY."
-  (guix-insert-button (guix-hydra-build-url (guix-entry-id entry))
-                      'guix-url)
+  (bui-insert-button (guix-hydra-build-url (bui-entry-id entry))
+                     'bui-url)
   (when (guix-hydra-build-finished? entry)
-    (guix-info-insert-indent)
-    (guix-info-insert-action-button
+    (bui-insert-indent)
+    (bui-insert-action-button
      "Build log"
      (lambda (btn)
        (guix-hydra-build-view-log (button-get btn 'id)))
      "View build log"
-     'id (guix-entry-id entry))))
+     'id (bui-entry-id entry)))
+  (bui-newline))
 
 (defun guix-hydra-build-info-insert-status (status &optional _)
   "Insert a string with build STATUS."
@@ -304,7 +303,7 @@ Show latest builds for this %s (with prefix, prompt for all parameters)"
 
 ;;; Hydra build 'list'
 
-(guix-hydra-define-interface hydra-build list
+(guix-hydra-define-interface build list
   :describe-function 'guix-hydra-list-describe
   :mode-name "Hydra-Build-List"
   :buffer-name "*Guix Hydra Builds*"
@@ -313,7 +312,7 @@ Show latest builds for this %s (with prefix, prompt for all parameters)"
             (status guix-hydra-build-list-get-status 20 t)
             (project nil 10 t)
             (jobset nil 17 t)
-            (time guix-list-get-time 20 t)))
+            (time bui-list-get-time 20 t)))
 
 (let ((map guix-hydra-build-list-mode-map))
   (define-key map (kbd "B") 'guix-hydra-build-list-latest-builds)
@@ -328,18 +327,18 @@ Show latest builds for this %s (with prefix, prompt for all parameters)"
 Interactively, prompt for NUMBER.  With prefix argument, prompt
 for all ARGS."
   (interactive
-   (let ((entry (guix-list-current-entry)))
+   (let ((entry (bui-list-current-entry)))
      (guix-hydra-build-latest-prompt-args
-      :project (guix-entry-value entry 'project)
-      :jobset  (guix-entry-value entry 'name)
-      :job     (guix-entry-value entry 'job)
-      :system  (guix-entry-value entry 'system))))
+      :project (bui-entry-non-void-value entry 'project)
+      :jobset  (bui-entry-non-void-value entry 'name)
+      :job     (bui-entry-non-void-value entry 'job)
+      :system  (bui-entry-non-void-value entry 'system))))
   (apply #'guix-hydra-latest-builds number args))
 
 (defun guix-hydra-build-list-view-log ()
   "View build log of the current Hydra build."
   (interactive)
-  (guix-hydra-build-view-log (guix-list-current-id)))
+  (guix-hydra-build-view-log (bui-list-current-id)))
 
 
 ;;; Interactive commands
