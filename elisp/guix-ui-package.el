@@ -64,6 +64,10 @@ package data)."
   (guix-make-symbol (symbol-value
                      (guix-make-symbol 'package buffer-type 'type))))
 
+;; To avoid compilation warning: this variable is actually defined later
+;; along with the rest "package-list" interface stuff.
+(defvar guix-package-list-show-single)
+
 (defun guix-package-get-display (profile search-type &rest search-values)
   "Search for packages/outputs and show results.
 
@@ -114,6 +118,8 @@ is found and `guix-package-list-single' is nil."
   "Return build log file name of a package defined by ID."
   (guix-eval-read
    (guix-make-guile-expression 'package-build-log-file id)))
+
+(declare-function guix-build-log-find-file "guix-build-log" (file))
 
 (defun guix-package-find-build-log (id)
   "Show build log of a package defined by ID."
