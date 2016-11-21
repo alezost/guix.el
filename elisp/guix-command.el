@@ -60,6 +60,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'bui-utils)
 (require 'guix-popup)
 (require 'guix-utils)
 (require 'guix-help-vars)
@@ -117,7 +118,7 @@ Each assoc from ALIST have a form (NAME . PLIST).  NAME is an
 argument name.  PLIST is a property list of argument parameters
 to be modified."
   (let* ((name  (guix-command-argument-name argument))
-         (plist (guix-assoc-value alist name)))
+         (plist (bui-assoc-value alist name)))
     (when plist
       (apply #'guix-command-modify-argument
              argument plist))))
@@ -326,7 +327,7 @@ to be modified."
 (defun guix-command-improve-arguments (arguments commands)
   "Return ARGUMENTS for 'guix COMMANDS ...' modified for popup interface."
   (let ((improvers (cons 'guix-command-improve-common-argument
-                         (guix-assoc-value guix-command-argument-improvers
+                         (bui-assoc-value guix-command-argument-improvers
                                            commands))))
     (mapcar (lambda (argument)
               (guix-command-improve-argument argument improvers))
@@ -411,7 +412,7 @@ commands.")
 (defun guix-command-additional-arguments (&optional commands)
   "Return additional arguments for COMMANDS."
   (let ((rest-arg (guix-command-rest-argument commands)))
-    (append (guix-assoc-value guix-command-additional-arguments
+    (append (bui-assoc-value guix-command-additional-arguments
                               commands)
             (and rest-arg (list rest-arg)))))
 
@@ -592,8 +593,8 @@ command."
   "Adjust popup ARGS for guix COMMANDS."
   (let* ((command (car commands))
          (processors
-          (append (guix-assoc-value guix-command-post-processors commands)
-                  (guix-assoc-value guix-command-post-processors command))))
+          (append (bui-assoc-value guix-command-post-processors commands)
+                  (bui-assoc-value guix-command-post-processors command))))
     (guix-modify args
                  (or processors
                      (list #'guix-command-post-process-rest-multiple)))))
@@ -633,7 +634,7 @@ command."
               :fun (guix-command-action-name
                     commands (guix-command-argument-name arg))))
           (append guix-command-default-execute-arguments
-                  (guix-assoc-value
+                  (bui-assoc-value
                    guix-command-additional-execute-arguments commands))))
 
 (defvar guix-command-special-executors
@@ -662,8 +663,8 @@ See also `guix-command-default-executors'.")
 
 (defun guix-command-executor (commands name)
   "Return function to run command line arguments for guix COMMANDS."
-  (or (guix-assoc-value guix-command-special-executors commands name)
-      (guix-assoc-value guix-command-default-executors name)))
+  (or (bui-assoc-value guix-command-special-executors commands name)
+      (bui-assoc-value guix-command-default-executors name)))
 
 (defun guix-run-environment-command-in-repl (args)
   "Run 'guix ARGS ...' environment command in Guix REPL."
@@ -704,7 +705,7 @@ open the log file(s)."
          (dot-args   (guix-dot-arguments graph-file)))
     (if (guix-eval-read (guix-make-guile-expression
                          'pipe-guix-output args dot-args))
-        (guix-find-file graph-file)
+        (bui-find-file graph-file)
       (error "Couldn't create a graph"))))
 
 (defun guix-run-view-size-map (args)
@@ -721,7 +722,7 @@ open the log file(s)."
                            (concat "--map-file=" map-file)
                            (cdr args)))))
     (guix-command-output args)
-    (guix-find-file map-file)))
+    (bui-find-file map-file)))
 
 
 ;;; Generating popups, actions, etc.

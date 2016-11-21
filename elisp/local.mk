@@ -50,19 +50,13 @@ ELFILES =					\
   %D%/guix-about.el				\
   %D%/guix-base.el				\
   %D%/guix-build-log.el				\
-  %D%/guix-buffer.el				\
   %D%/guix-command.el				\
   %D%/guix-devel.el				\
-  %D%/guix-entry.el				\
   %D%/guix-external.el				\
-  %D%/guix-history.el				\
   %D%/guix-hydra.el				\
   %D%/guix-hydra-build.el			\
   %D%/guix-hydra-jobset.el			\
-  %D%/guix-info.el				\
-  %D%/guix-init.el				\
   %D%/guix-license.el				\
-  %D%/guix-list.el				\
   %D%/guix-location.el				\
   %D%/guix-messages.el				\
   %D%/guix-pcomplete.el				\

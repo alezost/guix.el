@@ -1,6 +1,6 @@
 ;;; guix-devel.el --- Development tools  -*- lexical-binding: t -*-
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -25,9 +25,9 @@
 ;;; Code:
 
 (require 'lisp-mode)
+(require 'bui-utils)
 (require 'guix-guile)
 (require 'guix-geiser)
-(require 'guix-utils)
 (require 'guix-base)
 
 (defgroup guix-devel nil
@@ -74,7 +74,7 @@ Interactively, use the module defined by the current scheme file."
 (defun guix-devel-copy-module-as-kill ()
   "Put the name of the current guile module into `kill-ring'."
   (interactive)
-  (guix-copy-as-kill (guix-guile-current-module)))
+  (bui-copy-as-kill (guix-guile-current-module)))
 
 (defun guix-devel-setup-repl (&optional repl)
   "Setup REPL for using `guix-devel-...' commands."

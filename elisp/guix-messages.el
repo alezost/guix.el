@@ -1,6 +1,6 @@
 ;;; guix-messages.el --- Minibuffer messages
 
-;; Copyright © 2014, 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'guix-utils)
+(require 'bui-utils)
 
 (defvar guix-messages
   `((package
@@ -160,8 +160,8 @@
          (str-beg (guix-message-string-entries count entry-type))
          (str-end (if (> count 1)
                       (concat "with the following IDs: "
-                              (mapconcat #'guix-get-string ids ", "))
-                    (concat "with ID " (guix-get-string (car ids))))))
+                              (mapconcat #'bui-get-string ids ", "))
+                    (concat "with ID " (bui-get-string (car ids))))))
     (if (zerop count)
         (message "%s %s.
 Most likely, Guix REPL was restarted, so IDs are not actual
@@ -200,8 +200,8 @@ Try \"M-x guix-search-by-name\"."
   "Display a message for generations searched by TIMES."
   (let* ((count (length entries))
          (str-beg (guix-message-string-entries count 'generation))
-         (time-beg (guix-get-time-string (car  times)))
-         (time-end (guix-get-time-string (cadr times))))
+         (time-beg (bui-get-time-string (car  times)))
+         (time-end (bui-get-time-string (cadr times))))
     (message (concat "%s of profile '%s'\n"
                      "matching time period '%s' - '%s'.")
              str-beg profile time-beg time-end)))
@@ -222,7 +222,7 @@ Try \"M-x guix-search-by-name\"."
 (defun guix-result-message (profile entries entry-type
                             search-type search-vals)
   "Display an appropriate message after displaying ENTRIES."
-  (let* ((type-spec (guix-assq-value guix-messages
+  (let* ((type-spec (bui-assq-value guix-messages
                                      (if (eq entry-type 'system-generation)
                                          'generation
                                        entry-type)
@@ -232,7 +232,7 @@ Try \"M-x guix-search-by-name\"."
         (funcall fun-or-count-spec profile entries search-vals)
       (let* ((count     (length entries))
              (count-key (if (> count 1) 'many count))
-             (msg-spec  (guix-assq-value type-spec count-key))
+             (msg-spec  (bui-assq-value type-spec count-key))
              (msg       (car msg-spec))
              (args      (cdr msg-spec)))
         (mapc (lambda (subst)
