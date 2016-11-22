@@ -121,13 +121,6 @@ break the existing highlighting.
 Modes from this list and all derived modes are exceptions
 \(`global-guix-prettify-mode' enables prettifying there).")
 
-(defvar guix-prettify-flush-function
-  (cond ((fboundp 'font-lock-flush) #'font-lock-flush)
-        ((fboundp 'jit-lock-refontify) #'jit-lock-refontify))
-  "Function used to refontify buffer.
-This function is called without arguments after
-enabling/disabling `guix-prettify-mode'.  If nil, do nothing.")
-
 (defun guix-prettify-compose ()
   "Compose matching region in the current buffer."
   (let ((beg (match-beginning guix-prettify-regexp-group))
@@ -183,8 +176,7 @@ Prettify mode for all modes that support font-locking."
       ;; Turn off.
       (font-lock-remove-keywords nil keywords)
       (guix-prettify-decompose-buffer))
-    (and guix-prettify-flush-function
-         (funcall guix-prettify-flush-function))))
+    (guix-font-lock-flush)))
 
 (defun guix-prettify-supported-p ()
   "Return non-nil, if the mode can be harmlessly enabled in current buffer."

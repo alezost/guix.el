@@ -26,6 +26,7 @@
 
 (require 'lisp-mode)
 (require 'bui-utils)
+(require 'guix-utils)
 (require 'guix-guile)
 (require 'guix-geiser)
 (require 'guix-base)
@@ -359,8 +360,7 @@ bindings:
         (font-lock-add-keywords nil guix-devel-font-lock-keywords))
     (setq-local font-lock-multiline nil)
     (font-lock-remove-keywords nil guix-devel-font-lock-keywords))
-  (when font-lock-mode
-    (font-lock-fontify-buffer)))
+  (guix-font-lock-flush))
 
 ;;;###autoload
 (defun guix-devel-mode-activate-maybe ()

@@ -188,6 +188,28 @@ See `bui-define-groups' for details."
      ,@args))
 
 
+;;; Fontification
+
+(defvar guix-font-lock-flush-function
+  (if (fboundp 'font-lock-flush)
+      #'font-lock-flush         ; appeared in Emacs 25.1
+    #'jit-lock-refontify)
+  "Function used to refontify a buffer.
+
+This function is called without arguments after
+enabling/disabling `guix-prettify-mode',
+`guix-build-log-minor-mode' and `guix-devel-mode'.
+
+If nil, do not perform refontifying.")
+
+(defun guix-font-lock-flush ()
+  "Refontify the current buffer using `guix-font-lock-flush-function'."
+  (when guix-font-lock-flush-function
+    (if (fboundp guix-font-lock-flush-function)
+        (funcall guix-font-lock-flush-function)
+      (message "Unknown function: %S" guix-font-lock-flush-function))))
+
+
 ;;; Diff
 
 (defvar guix-diff-switches "-u"

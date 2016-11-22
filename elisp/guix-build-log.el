@@ -351,8 +351,7 @@ programmatically using hooks:
   (if guix-build-log-minor-mode
       (font-lock-add-keywords nil guix-build-log-font-lock-keywords)
     (font-lock-remove-keywords nil guix-build-log-font-lock-keywords))
-  (when font-lock-mode
-    (font-lock-fontify-buffer)))
+  (guix-font-lock-flush))
 
 ;;;###autoload
 (defun guix-build-log-minor-mode-activate-maybe ()
