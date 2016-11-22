@@ -804,8 +804,12 @@ EXECUTOR function is called with the current command line arguments."
         :actions  ',(mapcar #'guix-command-action->popup-action actions)
         :max-action-columns 4))))
 
+(declare-function guix-popup "guix-command" t)
+
 ;;;###autoload (autoload 'guix "guix-command" "Popup window for 'guix'." t)
 (guix-command-define-popup-action guix)
+
+(declare-function guix-edit "guix-location" t)
 
 (defalias 'guix-edit-action #'guix-edit)
 
