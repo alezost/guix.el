@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'dash)
 (require 'bui)
 (require 'guix-repl)
 (require 'guix-guile)
@@ -139,9 +140,8 @@ If MODES is nil, use package/generation modes."
 (defun guix-ui-buffers (&optional modes)
   "Return a list of all buffers with major modes derived from MODES.
 If MODES is nil, return list of all Guix 'list' and 'info' buffers."
-  (cl-remove-if-not (lambda (buf)
-                      (guix-ui-buffer? buf modes))
-                    (buffer-list)))
+  (--filter (guix-ui-buffer? it modes)
+            (buffer-list)))
 
 (defun guix-ui-update-buffer (buffer)
   "Update data in a 'list' or 'info' BUFFER."
