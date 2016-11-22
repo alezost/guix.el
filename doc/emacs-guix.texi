@@ -93,8 +93,7 @@ Emacs-Guix depends on the following packages:
 
 @item
 @uref{http://www.gnu.org/software/emacs/, GNU Emacs}, version 24.3 or
-later.  Well, you cannot use any Emacs package without Emacs itself,
-and this is actually the only hard requirement.
+later.
 
 @item
 @uref{http://www.gnu.org/software/guix/, GNU Guix}, version 0.11.0 or
@@ -109,6 +108,10 @@ used to communicate with the Guix daemon, and to receive various info
 from the Guix Guile code.  So without Geiser, you can use the same
 features as without Guix, plus shell completions
 (@pxref{Completions}).
+
+@item
+@uref{https://github.com/magnars/dash.el, dash library}, version
+2.11.0 or later.
 
 @item
 @uref{https://github.com/alezost/bui.el, BUI library}, version 1.0.1

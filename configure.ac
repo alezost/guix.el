@@ -84,6 +84,13 @@ AC_ARG_WITH([geiser-lispdir],
   [geiserlispdir="no"])
 AC_SUBST([geiserlispdir])
 
+AC_ARG_WITH([dash-lispdir],
+  [AS_HELP_STRING([--with-dash-lispdir],
+    [directory with dash.el file])],
+  [dashlispdir="$withval"],
+  [dashlispdir="no"])
+AC_SUBST([dashlispdir])
+
 AC_ARG_WITH([bui-lispdir],
   [AS_HELP_STRING([--with-bui-lispdir],
     [directory with BUI *.el files])],
@@ -99,6 +106,7 @@ AC_ARG_WITH([popup-lispdir],
 AC_SUBST([popuplispdir])
 
 AM_CONDITIONAL([GEISER_DIR], [test "x$geiserlispdir" != "xno"])
+AM_CONDITIONAL([DASH_DIR], [test "x$dashlispdir" != "xno"])
 AM_CONDITIONAL([BUI_DIR], [test "x$builispdir" != "xno"])
 AM_CONDITIONAL([POPUP_DIR], [test "x$popuplispdir" != "xno"])
 
@@ -107,6 +115,7 @@ dnl byte-compilation.  Otherwise, "emacs" will be used, and it will
 dnl hopefully find these packages in its 'load-path'.
 AM_CONDITIONAL([EMACS_Q],
   [test "x$geiserlispdir" != "xno" -a \
+        "x$dashlispdir" != "xno" -a \
         "x$builispdir" != "xno" -a \
         "x$popuplispdir" != "xno"])
 
