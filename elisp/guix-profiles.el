@@ -62,6 +62,7 @@ Use DEFAULT as a start directory.  If it is nil, use
         guix-default-profile
       dir)))
 
+;;;###autoload
 (defun guix-set-current-profile (file-name)
   "Set `guix-current-profile' to FILE-NAME.
 Interactively, prompt for FILE-NAME.  With prefix, use
