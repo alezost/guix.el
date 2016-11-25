@@ -849,29 +849,33 @@ be separated with \",\")."
        (and arg "Output(s) to upgrade: ")
        installed))))
 
-(defun guix-package-mark-upgrades (fun)
+(defun guix-package-mark-upgrades (fun &optional all)
   "Mark all obsolete packages for upgrading.
 Use FUN to perform marking of the current line.  FUN should
-take an entry as argument."
+take an entry as argument.
+If ALL is non-nil, mark all installed (not only obsolete) packages."
   (guix-package-list-marking-check)
-  (let ((obsolete (--filter (bui-entry-non-void-value it 'obsolete)
-                            (bui-current-entries))))
+  (let ((entries (--filter (bui-entry-non-void-value
+                            it (if all 'installed 'obsolete))
+                           (bui-current-entries))))
     (bui-list-for-each-line
      (lambda ()
        (let* ((id (bui-list-current-id))
               (entry (--find (equal id (bui-entry-id it))
-                             obsolete)))
+                             entries)))
          (when entry
            (funcall fun entry)))))))
 
-(defun guix-package-list-mark-upgrades ()
-  "Mark all obsolete packages for upgrading."
-  (interactive)
+(defun guix-package-list-mark-upgrades (&optional arg)
+  "Mark all obsolete packages for upgrading.
+With ARG, mark all installed (including non-obsolete) packages."
+  (interactive "P")
   (guix-package-mark-upgrades
    (lambda (entry)
      (apply #'bui-list--mark
             'upgrade nil
-            (guix-package-installed-outputs entry)))))
+            (guix-package-installed-outputs entry)))
+   arg))
 
 (defun guix-package-assert-non-system-profile ()
   "Verify that the current profile is not a system one.
@@ -1053,11 +1057,13 @@ for all ARGS."
               (y-or-n-p "This output is not obsolete.  Try to upgrade it anyway? "))
       (bui-list--mark 'upgrade t))))
 
-(defun guix-output-list-mark-upgrades ()
-  "Mark all obsolete package outputs for upgrading."
-  (interactive)
+(defun guix-output-list-mark-upgrades (&optional arg)
+  "Mark all obsolete package outputs for upgrading.
+With ARG, mark all installed (including non-obsolete) packages."
+  (interactive "P")
   (guix-package-mark-upgrades
-   (lambda (_) (bui-list--mark 'upgrade))))
+   (lambda (_) (bui-list--mark 'upgrade))
+   arg))
 
 (defun guix-output-list-execute ()
   "Perform actions on the marked outputs."

@@ -376,7 +376,8 @@ Mark the current package for deletion.
 @item U
 Mark the current package for upgrading.
 @item ^
-Mark all obsolete packages for upgrading.
+Mark all obsolete packages for upgrading (with prefix, mark all
+installed packages for upgrading).
 @item e
 Edit the definition of the current package (go to its location).  This
 is similar to @command{guix edit} command (@pxref{Invoking guix
