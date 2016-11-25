@@ -178,6 +178,7 @@ to be modified."
     ("--no-build-hook"   :char ?h)
     ("--max-silent-time" :char ?x)
     ("--rounds"          :char ?R :fun read-number)
+    ("--with-graft"      :char ?g)
     ("--with-input"      :char ?W)))
 
 (defun guix-command-improve-common-build-argument (argument)
@@ -263,6 +264,8 @@ to be modified."
     guix-command-improve-system-argument
   '(("disk-image"  :char ?D)
     ("vm-image"    :char ?V)
+    ("roll-back"   :char ?R)
+    ("switch-generation" :char ?S)
     ("--on-error"  :char ?E)
     ("--no-grub"   :char ?g)
     ("--full-boot" :char ?b)))
