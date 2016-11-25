@@ -132,6 +132,10 @@ is found and `guix-package-list-single' is nil."
 
 ;;; Processing package actions
 
+(defvar guix-package-name-width 40
+  "Width of a package name \"column\".
+This variable is used in a buffer to confirm operation.")
+
 (defun guix-process-package-actions (profile actions
                                      &optional operation-buffer)
   "Process package ACTIONS on PROFILE.
@@ -184,7 +188,8 @@ See `guix-process-package-actions' for details."
                 (setq-local cursor-type nil)
                 (setq buffer-read-only nil)
                 (erase-buffer)
-                (insert "Profile: " profile "\n\n")
+                (insert (propertize "Profile" 'face 'bold)
+                        ": " profile "\n\n")
                 (guix-insert-package-strings install-strings "install")
                 (guix-insert-package-strings upgrade-strings "upgrade")
                 (guix-insert-package-strings remove-strings "remove")
@@ -206,22 +211,24 @@ ENTRIES is a list of package entries to get info about packages."
   (-non-nil
    (-map (-lambda ((id . outputs))
            (--when-let (bui-entry-by-id entries id)
-             (let ((location (bui-entry-non-void-value it 'location)))
-               (concat (guix-package-entry->name-specification it)
-                       (when outputs
-                         (concat ":"
-                                 (guix-concat-strings outputs ",")))
-                       (when location
-                         (concat "\t(" location ")"))))))
+             (let ((location (bui-entry-non-void-value it 'location))
+                   (name (guix-package-entry->name-specification it)))
+               (with-temp-buffer
+                 (insert name)
+                 (when outputs
+                   (insert ":" (guix-concat-strings outputs ",")))
+                 (when location
+                   (indent-to guix-package-name-width 2)
+                   (insert "(" location ")"))
+                 (buffer-string)))))
          specs)))
 
 (defun guix-insert-package-strings (strings action)
   "Insert information STRINGS at point for performing package ACTION."
   (when strings
     (insert "Package(s) to " (propertize action 'face 'bold) ":\n")
-    (mapc (lambda (str)
-            (insert "  " str "\n"))
-          strings)
+    (dolist (str strings)
+      (insert "  " str "\n"))
     (bui-newline)))
 
 
