@@ -679,7 +679,8 @@ See also `guix-command-default-executors'.")
                    (format "'%s' command will spawn an external process.
 Do you really want to execute this command in Geiser REPL? "
                            (guix-command-string args)))
-              (message "May \"M-x shell-mode\" be with you!")
+              (message (substitute-command-keys
+                        "May \"\\[shell-mode]\" be with you!"))
               t))
     (guix-run-command-in-repl args)))
 

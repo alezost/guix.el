@@ -163,10 +163,10 @@
                               (mapconcat #'bui-get-string ids ", "))
                     (concat "with ID " (bui-get-string (car ids))))))
     (if (zerop count)
-        (message "%s %s.
+        (message (substitute-command-keys "%s %s.
 Most likely, Guix REPL was restarted, so IDs are not actual
 anymore, because they live only during the REPL process.
-Try \"M-x guix-search-by-name\"."
+Try \"\\[guix-search-by-name]\".")
                  str-beg str-end)
       (message "%s %s." str-beg str-end))))
 
