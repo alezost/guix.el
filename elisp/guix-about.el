@@ -26,11 +26,18 @@
 
 (require 'guix-config)
 
+(declare-function guix-eval-read "guix-repl" (str))
+
 ;;;###autoload
 (defun guix-version ()
-  "Display Guix version in the echo area."
+  "Display Emacs-Guix and Guix versions in the echo area."
   (interactive)
-  (message "%s %s" guix-config-name guix-config-version))
+  (require 'guix-repl)
+  (message "%s %s\n%s %s"
+           (guix-eval-read "(@ (guix config) %guix-package-name)")
+           (guix-eval-read "(@ (guix config) %guix-version)")
+           guix-config-name
+           guix-config-version))
 
 (provide 'guix-about)
 
