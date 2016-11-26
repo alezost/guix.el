@@ -29,7 +29,7 @@
 (defconst guix-config-name "Emacs-Guix"
   "Emacs-Guix full name.")
 
-(defconst guix-config-version "unknown"
+(defconst guix-config-version "<unknown version>"
   "Emacs-Guix version.")
 
 (defconst guix-config-scheme-directory nil
