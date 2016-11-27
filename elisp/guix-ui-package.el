@@ -259,9 +259,9 @@ ENTRIES is a list of package entries to get info about packages."
   :required '(id name version installed non-unique))
 
 (bui-define-interface guix-installed-output info
-  :format '((path simple (indent bui-file))
+  :format '((file-name simple (indent bui-file))
             (dependencies simple (indent bui-file)))
-  :titles '((path . "Store directory"))
+  :titles '((file-name . "Store directory"))
   :reduced? t)
 
 (defface guix-package-info-heading
@@ -948,7 +948,7 @@ for all ARGS."
             (synopsis simple (indent guix-package-info-synopsis))
             guix-package-info-insert-misc
             (source simple guix-package-info-insert-source)
-            (path simple (indent bui-file))
+            (file-name simple (indent bui-file))
             (dependencies simple (indent bui-file))
             (location simple guix-package-info-insert-location)
             (home-url format (format bui-url))

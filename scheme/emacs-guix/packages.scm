@@ -185,7 +185,7 @@ of RESULT.  ENTRIES is a list of manifest entries with NAME/VERSION."
 
 (define %manifest-entry-param-alist
   `((output       . ,manifest-entry-output)
-    (path         . ,manifest-entry-item)
+    (file-name    . ,manifest-entry-item)
     (dependencies . ,manifest-entry-dependencies)))
 
 (define manifest-entry->sexp
