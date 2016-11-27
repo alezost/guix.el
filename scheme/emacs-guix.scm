@@ -35,7 +35,7 @@
   #:autoload (emacs-guix licenses) (license-names
                                     lookup-license-uri
                                     license-sexps)
-  #:autoload (emacs-guix packages) (profile->specifications+paths
+  #:autoload (emacs-guix packages) (profile->specifications+file-names
                                     package/output-sexps
                                     package-names)
   #:autoload (emacs-guix generations) (generation-sexps)

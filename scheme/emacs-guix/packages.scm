@@ -56,7 +56,7 @@
   #:autoload   (emacs-guix locations) (packages-by-location-file)
   #:use-module (emacs-guix utils)
   #:export (package-names
-            profile->specifications+paths
+            profile->specifications+file-names
             id->name+version
             package-by-id
             packages-by-id
@@ -111,9 +111,10 @@ return two values: name and version.  For example, for SPEC
     (manifest-entries->package-specifications
      (manifest-entries manifest))))
 
-(define (profile->specifications+paths profile)
-  "Return a list of package specifications and paths for PROFILE.
-Each element of the list is a list of the package specification and its path."
+(define (profile->specifications+file-names profile)
+  "Return a list of package specifications and file names for PROFILE.
+Each element of the list is a list of the package specification and its
+file name."
   (let ((manifest (profile-manifest profile)))
     (map (lambda (entry)
            (list (manifest-entry->package-specification entry)

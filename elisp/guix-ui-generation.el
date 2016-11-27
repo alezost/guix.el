@@ -365,13 +365,12 @@ This variable is used in auxiliary buffers for comparing generations.")
 (defun guix-generation-packages (profile)
   "Return a list of sorted packages installed in PROFILE.
 Each element of the list is a list of the package specification
-and its store path."
-  (let ((names+paths (guix-eval-read
-                      (guix-make-guile-expression
-                       'profile->specifications+paths profile))))
-    (sort names+paths
-          (lambda (a b)
-            (string< (car a) (car b))))))
+and its store file name."
+  (sort (guix-eval-read
+         (guix-make-guile-expression
+          'profile->specifications+file-names profile))
+        (lambda (a b)
+          (string< (car a) (car b)))))
 
 (defun guix-generation-packages-buffer-name-default (profile generation)
   "Return name of a buffer for displaying GENERATION's package outputs.
@@ -391,11 +390,11 @@ Use the full PROFILE file name."
   (funcall guix-generation-packages-buffer-name-function
            profile generation))
 
-(defun guix-generation-insert-package (name path)
-  "Insert package output NAME and store PATH at point."
+(defun guix-generation-insert-package (name file-name)
+  "Insert package output NAME and store FILE-NAME at point."
   (insert name)
   (indent-to guix-generation-output-name-width 2)
-  (insert path "\n"))
+  (insert file-name "\n"))
 
 (defun guix-generation-insert-packages (buffer profile)
   "Insert package outputs installed in PROFILE in BUFFER."
@@ -403,9 +402,9 @@ Use the full PROFILE file name."
     (setq buffer-read-only nil
           indent-tabs-mode nil)
     (erase-buffer)
-    (mapc (lambda (name+path)
+    (mapc (lambda (name+file-name)
             (guix-generation-insert-package
-             (car name+path) (cadr name+path)))
+             (car name+file-name) (cadr name+file-name)))
           (guix-generation-packages profile))))
 
 (defun guix-generation-packages-buffer (profile generation &optional system?)
