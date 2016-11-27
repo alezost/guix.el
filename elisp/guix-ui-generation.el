@@ -138,7 +138,7 @@ current profile's GENERATION."
       (guix-generation-current-packages-profile
        (button-get btn 'number))
       'installed))
-   "Show installed packages for this generation"
+   (format "Show packages installed in generation %d" number)
    'number number)
   (bui-insert-indent)
   (bui-insert-action-button
@@ -147,7 +147,7 @@ current profile's GENERATION."
      (guix-delete-generations (guix-ui-current-profile)
                               (list (button-get btn 'number))
                               (current-buffer)))
-   "Delete this generation"
+   (format "Delete generation %d" number)
    'number number))
 
 (defun guix-generation-info-insert-current (val entry)
@@ -156,14 +156,16 @@ current profile's GENERATION."
       (bui-info-insert-value-format "Yes" 'guix-generation-info-current)
     (bui-info-insert-value-format "No" 'guix-generation-info-not-current)
     (bui-insert-indent)
-    (bui-insert-action-button
-     "Switch"
-     (lambda (btn)
-       (guix-switch-to-generation (guix-ui-current-profile)
-                                  (button-get btn 'number)
-                                  (current-buffer)))
-     "Switch to this generation (make it the current one)"
-     'number (bui-entry-non-void-value entry 'number))))
+    (let ((number (bui-entry-non-void-value entry 'number)))
+      (bui-insert-action-button
+       "Switch"
+       (lambda (btn)
+         (guix-switch-to-generation (guix-ui-current-profile)
+                                    (button-get btn 'number)
+                                    (current-buffer)))
+       (format "Switch to generation %d (make it the current one)"
+               number)
+       'number number))))
 
 
 ;;; Generation 'list'
