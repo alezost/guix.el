@@ -199,12 +199,12 @@ Ask a user with PROMPT for continuing an operation."
                  guix-operation-option-separator)))
   (force-mode-line-update))
 
-(defun guix-package-source-path (package-id)
-  "Return a store file path to a source of a package PACKAGE-ID."
+(defun guix-package-source-file-name (package-id)
+  "Return a store file name to a source of a package PACKAGE-ID."
   (message "Calculating the source derivation ...")
   (guix-eval-read
    (guix-make-guile-expression
-    'package-source-path package-id)))
+    'package-source-file-name package-id)))
 
 (defun guix-package-store-path (package-id)
   "Return a list of store directories of outputs of package PACKAGE-ID."

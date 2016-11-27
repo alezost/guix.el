@@ -347,7 +347,7 @@ If nil, just display the source file name without finding."
 (defcustom guix-package-info-auto-download-source t
   "If nil, do not automatically download a source file if it doesn't exist.
 After pressing a \"Show\" button, a derivation of the package
-source is calculated and a store file path is displayed.  If this
+source is calculated and a store file name is displayed.  If this
 variable is non-nil and the source file does not exist in the
 store, it will be automatically downloaded (with a possible
 prompt depending on `guix-operation-confirm' variable)."
@@ -646,7 +646,7 @@ ENTRY-ID is an ID of the current entry (package or output).
 PACKAGE-ID is an ID of the package which source to show."
   (let* ((entries (bui-current-entries))
          (entry   (bui-entry-by-id entries entry-id))
-         (file    (guix-package-source-path package-id)))
+         (file    (guix-package-source-file-name package-id)))
     (or file
         (error "Couldn't define file name of the package source"))
     (let* ((new-entry (cons (cons 'source-file file)
@@ -658,7 +658,7 @@ PACKAGE-ID is an ID of the package which source to show."
       (if (file-exists-p file)
           (if guix-package-info-auto-find-source
               (bui-find-file file)
-            (message "The source store path is displayed."))
+            (message "The file name of the package source is displayed."))
         (if guix-package-info-auto-download-source
             (guix-package-info-download-source package-id)
           (message "The source does not exist in the store."))))))

@@ -47,7 +47,7 @@
                                    build-package*
                                    delete-generations*
                                    package-store-path
-                                   package-source-path
+                                   package-source-file-name
                                    package-build-log-file)
   #:autoload (emacs-guix graph) (graph-type-names)
   #:autoload (emacs-guix lint) (lint-checker-names)

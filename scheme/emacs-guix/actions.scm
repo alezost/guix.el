@@ -46,7 +46,7 @@
             build-package*
             delete-generations*
             package-store-path
-            package-source-path
+            package-source-file-name
             package-build-log-file))
 
 (define* (package->manifest-entry* package #:optional output)
@@ -145,20 +145,20 @@ GENERATIONS is a list of generation numbers."
                 (derivation-output-path drv)))
              (derivation-outputs (package-derivation store package)))))))
 
-(define (package-source-derivation->store-path derivation)
-  "Return a store path of the package source DERIVATION."
+(define (package-source-derivation->store-file-name derivation)
+  "Return a store file name of the package source DERIVATION."
   (match (derivation-outputs derivation)
     ;; Source derivation is always (("out" . derivation)).
     (((_ . output-drv))
      (derivation-output-path output-drv))
     (_ #f)))
 
-(define (package-source-path package-id)
-  "Return a store file path to a source of a package PACKAGE-ID."
+(define (package-source-file-name package-id)
+  "Return a store file name to a source of a package PACKAGE-ID."
   (and-let* ((package (package-by-id package-id))
              (source  (package-source package)))
     (with-store store
-      (package-source-derivation->store-path
+      (package-source-derivation->store-file-name
        (package-source-derivation store source)))))
 
 (define* (package-source-build-derivation package-id #:key dry-run?
@@ -177,8 +177,9 @@ GENERATIONS is a list of generation numbers."
                             #:dry-run? dry-run?)
         (unless dry-run?
           (build-derivations store derivations))
-        (format #t "The source store path: ~a~%"
-                (package-source-derivation->store-path derivation))))))
+        (format #t "The source store file name: ~a~%"
+                (package-source-derivation->store-file-name
+                 derivation))))))
 
 (define (package-build-log-file package-id)
   "Return the build log file of a package PACKAGE-ID.
