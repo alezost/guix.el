@@ -51,7 +51,7 @@ SEARCH-VALUES."
             (label format (format))
             (prev-number format (format))
             (current format guix-generation-info-insert-current)
-            (path format (format bui-file))
+            (file-name format (format bui-file))
             (time format (time))
             (root-device format (format))
             (kernel format (format bui-file)))
@@ -84,7 +84,7 @@ SEARCH-VALUES."
             (current guix-generation-list-get-current 10 t)
             (label nil 40 t)
             (time bui-list-get-time 20 t)
-            (path bui-list-get-file-name 30 t))
+            (file-name bui-list-get-file-name 30 t))
   :titles guix-generation-list-titles
   :sort-key '(number . t)
   :marks '((delete . ?D)))

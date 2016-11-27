@@ -43,7 +43,7 @@
       (number      . ,identity)
       (prev-number . ,(cut previous-generation-number profile <>))
       (current     . ,(cut = current <>))
-      (path        . ,(cut generation-file-name profile <>))
+      (file-name   . ,(cut generation-file-name profile <>))
       (time        . ,(lambda (gen)
                         (time-second (generation-time profile gen)))))))
 
@@ -91,7 +91,7 @@ SEARCH-TYPE should be one of the following symbols: 'id', 'last', 'all',
 
 PARAMS is a list of parameters for receiving.  If it is an empty list,
 get information with all available parameters, which are: 'id',
-'number', 'prev-number', 'path', 'time'."
+'number', 'prev-number', 'file-name', 'time'."
   (let ((generations (find-generations profile search-type search-values))
         (->sexp (object-transformer (generation-param-alist profile)
                                     params)))

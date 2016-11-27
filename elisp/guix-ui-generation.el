@@ -97,10 +97,9 @@ current profile's GENERATION."
   :format '((number format guix-generation-info-insert-number)
             (prev-number format (format))
             (current format guix-generation-info-insert-current)
-            (path simple (indent bui-file))
+            (file-name simple (indent bui-file))
             (time format (time)))
-  :titles '((path . "File name")
-            (prev-number . "Previous number")))
+  :titles '((prev-number . "Previous number")))
 
 (defface guix-generation-info-number
   '((t :inherit font-lock-keyword-face))
@@ -177,7 +176,7 @@ current profile's GENERATION."
   :format '((number nil 5 bui-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
             (time bui-list-get-time 20 t)
-            (path bui-list-get-file-name 30 t))
+            (file-name bui-list-get-file-name 30 t))
   :titles '((number . "N."))
   :sort-key '(number . t)
   :marks '((delete . ?D)))

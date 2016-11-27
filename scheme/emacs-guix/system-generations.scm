@@ -66,7 +66,7 @@ SEARCH-TYPE should be one of the following symbols: 'id', 'last', 'all',
 
 PARAMS is a list of parameters for receiving.  If it is an empty list,
 get information with all available parameters, which are: 'id',
-'number', 'prev-number', 'path', 'time', 'label', 'root-device',
+'number', 'prev-number', 'file-name', 'time', 'label', 'root-device',
 'kernel'."
   (let ((generations (find-generations profile search-type search-values))
         (->sexp (object-transformer (system-generation-param-alist profile)
