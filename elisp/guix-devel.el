@@ -19,7 +19,9 @@
 
 ;;; Commentary:
 
-;; This file provides commands useful for developing Guix (or even
+;; This file provides `guix-devel-mode' (minor mode for `scheme-mode'
+;; buffers) that provides highlighting and indentation rules for Guix
+;; Guile code, as well as some tools to work with Guix (or even an
 ;; arbitrary Guile code) with Geiser.
 
 ;;; Code:
@@ -157,8 +159,8 @@ See Info node `(guix) Invoking guix lint' for details."
 ;;; Font-lock
 
 (defvar guix-devel-modify-phases-keyword-regexp
-  (rx (+ word))
-  "Regexp for a 'modify-phases' keyword ('delete', 'replace', etc.).")
+  (rx (or "delete" "replace" "add-before" "add-after"))
+  "Regexp for a 'modify-phases' keyword.")
 
 (defun guix-devel-modify-phases-font-lock-matcher (limit)
   "Find a 'modify-phases' keyword.
