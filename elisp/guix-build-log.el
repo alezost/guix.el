@@ -104,12 +104,6 @@
   "Face for the number of seconds for a phase."
   :group 'guix-build-log-faces)
 
-(defcustom guix-build-log-minor-mode-activate t
-  "If non-nil, then `guix-build-log-minor-mode' is automatically
-activated in `shell-mode' buffers."
-  :type 'boolean
-  :group 'guix-build-log)
-
 (defcustom guix-build-log-mode-hook '()
   "Hook run after `guix-build-log-mode' is entered."
   :type 'hook
@@ -339,7 +333,7 @@ enable the mode if ARG is omitted or nil.
 
 When Guix Build Log minor mode is enabled, it highlights build
 log in the current buffer.  This mode can be enabled
-programmatically using hooks:
+programmatically using hooks, like this:
 
   (add-hook 'shell-mode-hook 'guix-build-log-minor-mode)
 
@@ -353,20 +347,10 @@ programmatically using hooks:
     (font-lock-remove-keywords nil guix-build-log-font-lock-keywords))
   (guix-font-lock-flush))
 
-;;;###autoload
-(defun guix-build-log-minor-mode-activate-maybe ()
-  "Activate `guix-build-log-minor-mode' depending on
-`guix-build-log-minor-mode-activate' variable."
-  (when guix-build-log-minor-mode-activate
-    (guix-build-log-minor-mode)))
-
 (defun guix-build-log-find-file (file-or-url)
   "Open FILE-OR-URL in `guix-build-log-mode'."
   (guix-find-file-or-url file-or-url)
   (guix-build-log-mode))
-
-;;;###autoload
-(add-hook 'shell-mode-hook 'guix-build-log-minor-mode-activate-maybe)
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist

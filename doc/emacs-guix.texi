@@ -817,10 +817,13 @@ Toggle (show/hide) the bodies of all build phases.
 
 There is also @kbd{M-x guix-build-log-minor-mode} which also provides
 the same highlighting and the same key bindings as the major mode, but
-prefixed with @kbd{C-c}.  By default, this minor mode is enabled in
+prefixed with @kbd{C-c}.  You may find this minor mode useful for
 shell buffers (@pxref{Interactive Shell,,, emacs, The GNU Emacs
-Manual}).  If you don't like it, set
-@code{guix-build-log-minor-mode-activate} to nil.
+Manual}).  It can be enabled there like this:
+
+@example
+(add-hook 'shell-mode-hook 'guix-build-log-minor-mode)
+@end example
 
 @c ----------------------------------------------------------------
 @node Completions
