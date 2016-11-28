@@ -53,15 +53,6 @@
 See Info node `(guix) G-Expressions'."
   :group 'guix-devel-faces)
 
-(define-obsolete-variable-alias 'guix-devel-activate-mode
-  'guix-devel-mode-activate "0.2")
-
-(defcustom guix-devel-mode-activate t
-  "If non-nil, then `guix-devel-mode' is automatically activated
-in Scheme buffers."
-  :type 'boolean
-  :group 'guix-devel)
-
 (defun guix-devel-use-modules (&rest modules)
   "Use guile MODULES."
   (apply #'guix-geiser-call "use-modules" modules))
@@ -349,8 +340,11 @@ With a prefix argument ARG, enable the mode if ARG is positive,
 and disable it otherwise.  If called from Lisp, enable the mode
 if ARG is omitted or nil.
 
-When Guix Devel mode is enabled, it provides the following key
-bindings:
+When Guix Devel mode is enabled, it highlights various Guix
+keywords.  This mode can be enabled programmatically using hooks,
+like this:
+
+  (add-hook 'scheme-mode-hook 'guix-devel-mode)
 
 \\{guix-devel-mode-map}"
   :init-value nil
@@ -363,16 +357,6 @@ bindings:
     (setq-local font-lock-multiline nil)
     (font-lock-remove-keywords nil guix-devel-font-lock-keywords))
   (guix-font-lock-flush))
-
-;;;###autoload
-(defun guix-devel-mode-activate-maybe ()
-  "Activate `guix-devel-mode' depending on
-`guix-devel-mode-activate' variable."
-  (when guix-devel-mode-activate
-    (guix-devel-mode)))
-
-;;;###autoload
-(add-hook 'scheme-mode-hook 'guix-devel-mode-activate-maybe)
 
 
 (defvar guix-devel-emacs-font-lock-keywords

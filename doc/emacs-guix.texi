@@ -856,9 +856,17 @@ something:
 @node Development
 @chapter Development
 
-By default, when you open a Scheme file, @code{guix-devel-mode} will be
-activated (if you don't want it, set @code{guix-devel-mode-activate} to
-nil).  This minor mode provides the following key bindings:
+If you often work with Guix package files, you may want to see some
+highlighting and to have some indentation rules specific for Guix
+keywords.  There is a minor mode to help you---@code{guix-devel-mode}.
+It can be enabled in Scheme buffers like this:
+
+@example
+(add-hook 'scheme-mode-hook 'guix-devel-mode)
+@end example
+
+Along with highlighting and indentation, this minor mode provides the
+following key bindings:
 
 @table @kbd
 
