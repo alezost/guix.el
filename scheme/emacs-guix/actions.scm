@@ -47,6 +47,7 @@
             delete-generations*
             package-store-path
             package-source-file-name
+            package-source-build-derivation
             package-build-log-file))
 
 (define* (package->manifest-entry* package #:optional output)
