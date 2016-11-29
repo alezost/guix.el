@@ -170,11 +170,31 @@ See `guix-ui-update-after-operation' for details."
 (defmacro guix-ui-define-entry-type (entry-type &rest args)
   "Define general code for ENTRY-TYPE.
 Remaining arguments (ARGS) should have a form [KEYWORD VALUE] ...
+They are passed to `bui-define-entry-type' macro.
 
-The rest keyword arguments are passed to
-`guix-define-entry-type' macro."
+This macro also defines:
+
+  - `guix-TYPE-message' - a wrapper around `guix-result-message'."
   (declare (indent 1))
-  `(guix-define-groups ,entry-type ,@args))
+  (let* ((entry-type-str  (symbol-name entry-type))
+         (full-entry-type (guix-make-symbol entry-type))
+         (prefix          (concat "guix-" entry-type-str))
+         (message-fun     (intern (concat prefix "-message"))))
+    `(progn
+       (defun ,message-fun (entries profile search-type
+                                    &rest search-values)
+         ,(format "\
+Display a message after showing '%s' entries.
+This is a wrapper for `guix-result-message'."
+                  entry-type-str)
+         (guix-result-message profile entries ',entry-type
+                              search-type search-values))
+
+       (guix-define-groups ,entry-type)
+
+       (bui-define-entry-type ,full-entry-type
+         :message-function ',message-fun
+         ,@args))))
 
 (defmacro guix-ui-define-interface (entry-type buffer-type &rest args)
   "Define BUFFER-TYPE interface for displaying ENTRY-TYPE entries.
@@ -198,9 +218,7 @@ macro.
 Along with the mentioned definitions, this macro also defines:
 
   - `guix-TYPE-mode-map' - keymap based on `guix-ui-map' and
-    `bui-BUFFER-TYPE-mode-map'.
-
-  - `guix-TYPE-message' - a wrapper around `guix-result-message'."
+    `bui-BUFFER-TYPE-mode-map'."
   (declare (indent 2))
   (let* ((entry-type-str  (symbol-name entry-type))
          (buffer-type-str (symbol-name buffer-type))
@@ -211,8 +229,7 @@ Along with the mentioned definitions, this macro also defines:
          (parent-map      (intern (format "bui-%s-mode-map"
                                           buffer-type-str)))
          (required-var    (intern (concat prefix "-required-params")))
-         (buffer-name-fun (intern (concat prefix "-buffer-name")))
-         (message-fun     (intern (concat prefix "-message"))))
+         (buffer-name-fun (intern (concat prefix "-buffer-name"))))
     (bui-plist-let args
         ((buffer-name-val :buffer-name)
          (required-val    :required ''(id)))
@@ -241,16 +258,7 @@ See `guix-ui-buffer-name' for details."
                     buffer-type-str entry-type-str)
            (guix-ui-buffer-name ,buffer-name-val profile))
 
-         (defun ,message-fun (entries profile search-type
-                                      &rest search-values)
-           ,(format "\
-Display a message after showing '%s' entries."
-                    entry-type-str)
-           (guix-result-message
-            profile entries ',entry-type search-type search-values))
-
          (bui-define-interface ,(guix-make-symbol entry-type) ,buffer-type
-           :message-function ',message-fun
            :buffer-name ',buffer-name-fun
            ,@%foreign-args)))))
 
