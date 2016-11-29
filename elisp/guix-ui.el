@@ -30,7 +30,7 @@
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-utils)
-(require 'guix-messages)
+(require 'guix-ui-messages)
 (require 'guix-profiles)
 
 (defvar guix-ui-map

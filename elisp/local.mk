@@ -62,10 +62,10 @@ ELFILES =					\
   %D%/guix-hydra-jobset.el			\
   %D%/guix-license.el				\
   %D%/guix-location.el				\
-  %D%/guix-messages.el				\
   %D%/guix-pcomplete.el				\
   %D%/guix-popup.el				\
   %D%/guix-prettify.el				\
+  %D%/guix-ui-messages.el			\
   %D%/guix-ui.el				\
   %D%/guix-ui-license.el			\
   %D%/guix-ui-location.el			\

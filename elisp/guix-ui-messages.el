@@ -1,4 +1,4 @@
-;;; guix-messages.el --- Minibuffer messages
+;;; guix-ui-messages.el --- Minibuffer messages for Guix package management interface
 
 ;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
 
@@ -242,6 +242,6 @@ Try \"\\[guix-search-by-name]\".")
                 (profile . ,profile)))
         (apply #'message msg args)))))
 
-(provide 'guix-messages)
+(provide 'guix-ui-messages)
 
-;;; guix-messages.el ends here
+;;; guix-ui-messages.el ends here
