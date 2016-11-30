@@ -78,7 +78,7 @@ See `guix-ui-get-entries' for the meaning of SEARCH-TYPE and
 SEARCH-VALUES.
 
 Results are displayed in the list buffer, unless a single package
-is found and `guix-package-list-single' is nil."
+is found and `guix-package-list-show-single' is nil."
   (let* ((args    (cl-list* (or profile guix-current-profile)
                             search-type search-values))
          (entries (bui-get-entries (guix-package-type 'list) 'list args)))
