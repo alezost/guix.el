@@ -507,7 +507,6 @@ changed with the following variables:
 @item guix-output-list-buffer-name
 @item guix-generation-list-buffer-name
 @item guix-package-info-buffer-name
-@item guix-output-info-buffer-name
 @item guix-generation-info-buffer-name
 @item guix-repl-buffer-name
 @item guix-internal-repl-buffer-name
@@ -528,7 +527,6 @@ extensively), you may do it like this:
    guix-output-list-buffer-name     name
    guix-generation-list-buffer-name name
    guix-package-info-buffer-name    name
-   guix-output-info-buffer-name     name
    guix-generation-info-buffer-name name))
 @end example
 
@@ -563,9 +561,6 @@ Parent keymap with general keys for ``info'' buffers.
 
 @item guix-package-info-mode-map
 Keymap with specific keys for ``package-info'' buffers.
-
-@item guix-output-info-mode-map
-Keymap with specific keys for ``output-info'' buffers.
 
 @item guix-generation-info-mode-map
 Keymap with specific keys for ``generation-info'' buffers.

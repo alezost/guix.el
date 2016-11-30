@@ -355,8 +355,7 @@ The function is called with a single argument - a command line string."
           ;; No need to update "generation" buffers.
           (guix-ui-buffers '(guix-package-list-mode
                              guix-package-info-mode
-                             guix-output-list-mode
-                             guix-output-info-mode)))
+                             guix-output-list-mode)))
     (message "Guix buffers have been updated.")))
 
 ;;;###autoload

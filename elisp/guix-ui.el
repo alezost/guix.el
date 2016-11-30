@@ -133,7 +133,6 @@ If MODES is nil, use package/generation modes."
            (or modes '(guix-package-list-mode
                        guix-package-info-mode
                        guix-output-list-mode
-                       guix-output-info-mode
                        guix-generation-list-mode
                        guix-generation-info-mode)))))
 

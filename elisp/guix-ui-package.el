@@ -51,19 +51,9 @@ a separate line)."
                  (const :tag "List of outputs" output))
   :group 'guix-package)
 
-(defcustom guix-package-info-type 'package
-  "Define how to display packages in 'info' buffer.
-Should be a symbol `package' or `output' (if `output', display
-each output separately; if `package', display outputs inside
-package data)."
-  :type '(choice (const :tag "Display packages" package)
-                 (const :tag "Display outputs" output))
-  :group 'guix-package)
-
-(defun guix-package-type (buffer-type)
-  "Return guix package BUI entry-type for BUFFER-TYPE."
-  (guix-make-symbol (symbol-value
-                     (guix-make-symbol 'package buffer-type 'type))))
+(defun guix-package-list-type ()
+  "Return BUI list entry-type by `guix-package-list-type' variable."
+  (guix-make-symbol guix-package-list-type))
 
 ;; To avoid compilation warning: this variable is actually defined later
 ;; along with the rest "package-list" interface stuff.
@@ -81,12 +71,12 @@ Results are displayed in the list buffer, unless a single package
 is found and `guix-package-list-show-single' is nil."
   (let* ((args    (cl-list* (or profile guix-current-profile)
                             search-type search-values))
-         (entries (bui-get-entries (guix-package-type 'list) 'list args)))
+         (entries (bui-get-entries (guix-package-list-type) 'list args)))
     (if (or guix-package-list-show-single
             (null entries)
             (cdr entries))
-        (bui-display-entries entries (guix-package-type 'list) 'list args)
-      (bui-get-display-entries (guix-package-type 'info) 'info args))))
+        (bui-display-entries entries (guix-package-list-type) 'list args)
+      (bui-get-display-entries 'guix-package 'info args))))
 
 (defun guix-package-entry->name-specification (entry &optional output)
   "Return name specification of the package ENTRY and OUTPUT."
@@ -269,14 +259,18 @@ ENTRIES is a list of package entries to get info about packages."
   "Face for package name and version headings."
   :group 'guix-package-info-faces)
 
-(defface guix-package-info-name
-  '((t :inherit font-lock-keyword-face))
-  "Face used for a name of a package."
-  :group 'guix-package-info-faces)
-
 (defface guix-package-info-name-button
   '((t :inherit button))
   "Face used for a full name that can be used to describe a package."
+  :group 'guix-package-info-faces)
+
+;; Currently, `guix-package-info-name' and `guix-package-info-version'
+;; faces are not used, but they were in the past and may be used in
+;; future, so they were not removed.
+
+(defface guix-package-info-name
+  '((t :inherit font-lock-keyword-face))
+  "Face used for a name of a package."
   :group 'guix-package-info-faces)
 
 (defface guix-package-info-version
@@ -397,7 +391,7 @@ formatted with this string, an action button is inserted.")
   'help-echo "Describe this package"
   'action (lambda (btn)
             (bui-get-display-entries-current
-             (guix-package-type 'info) 'info
+             'guix-package 'info
              (list (guix-ui-current-profile)
                    'name (or (button-get btn 'spec)
                              (button-label btn)))
@@ -937,65 +931,6 @@ for all ARGS."
   (apply #'guix-hydra-latest-builds number args))
 
 
-;;; Output 'info'
-
-(guix-ui-define-interface output info
-  :buffer-name "*Guix Package Info*"
-  :get-entries-function 'guix-output-info-get-entries
-  :format '((name format (format guix-package-info-name))
-            (version format guix-output-info-insert-version)
-            (output format guix-output-info-insert-output)
-            (synopsis simple (indent guix-package-info-synopsis))
-            guix-package-info-insert-misc
-            (source simple guix-package-info-insert-source)
-            (file-name simple (indent bui-file))
-            (dependencies simple (indent bui-file))
-            (location simple guix-package-info-insert-location)
-            (home-url format (format bui-url))
-            (license format (format guix-package-license))
-            (systems format guix-package-info-insert-systems)
-            (inputs format (format guix-package-input))
-            (native-inputs format (format guix-package-native-input))
-            (propagated-inputs format
-                               (format guix-package-propagated-input))
-            (description simple (indent guix-package-info-description)))
-  :titles guix-package-info-titles
-  :required '(id package-id installed non-unique))
-
-(defun guix-output-info-get-entries (profile search-type
-                                             &rest search-values)
-  "Return 'output' entries for displaying them in 'info' buffer."
-  (guix-eval-read
-   (guix-make-guile-expression
-    'package/output-sexps
-    profile 'output search-type search-values
-    (cl-union guix-output-info-required-params
-              (bui-info-displayed-params 'guix-output)))))
-
-(defun guix-output-info-insert-version (version entry)
-  "Insert output VERSION and obsolete text if needed at point."
-  (bui-info-insert-value-format version
-                                 'guix-package-info-version)
-  (and (bui-entry-non-void-value entry 'obsolete)
-       (guix-package-info-insert-obsolete-text)))
-
-(defun guix-output-info-insert-output (output entry)
-  "Insert OUTPUT and action buttons at point."
-  (let* ((installed   (bui-entry-non-void-value entry 'installed))
-         (obsolete    (bui-entry-non-void-value entry 'obsolete))
-         (action-type (if installed 'delete 'install)))
-    (bui-info-insert-value-format
-     output
-     (if installed
-         'guix-package-info-installed-outputs
-       'guix-package-info-uninstalled-outputs))
-    (bui-insert-indent)
-    (guix-package-info-insert-action-button action-type entry output)
-    (when obsolete
-      (bui-insert-indent)
-      (guix-package-info-insert-action-button 'upgrade entry output))))
-
-
 ;;; Output 'list'
 
 (guix-ui-define-interface output list
@@ -1087,20 +1022,14 @@ The specification is suitable for `guix-process-output-actions'."
                            ids)))))
 
 (defun guix-output-list-describe (&rest ids)
-  "Describe outputs with IDS (list of output identifiers).
-See `guix-package-info-type'."
-  (if (eq guix-package-info-type 'output)
-      (bui-get-display-entries
-       'guix-output 'info
-       (cl-list* (guix-ui-current-profile) 'id ids)
-       'add)
-    (let ((pids (--map (car (guix-package-id-and-output-by-output-id it))
-                       ids)))
-      (bui-get-display-entries
-       'guix-package 'info
-       (cl-list* (guix-ui-current-profile)
-                 'id (cl-remove-duplicates pids))
-       'add))))
+  "Describe outputs with IDS (list of output identifiers)."
+  (let ((pids (--map (car (guix-package-id-and-output-by-output-id it))
+                     ids)))
+    (bui-get-display-entries
+     'guix-package 'info
+     (cl-list* (guix-ui-current-profile)
+               'id (cl-remove-duplicates pids))
+     'add)))
 
 (defun guix-output-list-edit (&optional directory)
   "Go to the location of the current package.
