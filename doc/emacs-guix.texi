@@ -493,12 +493,14 @@ this variable, for example:
 @end example
 
 @item guix-use-substitutes
-Has the same meaning as @code{--no-substitutes} option (@pxref{Invoking
-guix build,,, guix, The GNU Guix Reference Manual}).
+Has the same meaning as @code{--no-substitutes} option
+(@pxref{Invoking guix build,,, guix, The GNU Guix Reference
+Manual})---i.e., when non-nil, substitutes are enabled.
 
 @item guix-dry-run
 Has the same meaning as @code{--dry-run} option (@pxref{Invoking guix
-build,,, guix, The GNU Guix Reference Manual}).
+build,,, guix, The GNU Guix Reference Manual})---i.e., when non-nil,
+do not build the derivations.
 
 @end table
 
