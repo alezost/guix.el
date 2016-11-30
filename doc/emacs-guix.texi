@@ -320,7 +320,8 @@ Redisplay current buffer (without updating information).
 Apply manifest to the current profile or to a specified profile, if
 prefix argument is used.  This has the same meaning as
 @code{--manifest} option (@pxref{Invoking guix package,,, guix, The
-GNU Guix Reference Manual}).
+GNU Guix Reference Manual}).  Also you can invoke @kbd{M-x
+guix-apply-manifest} manually from any buffer.
 
 @item C-c C-z
 @cindex REPL
