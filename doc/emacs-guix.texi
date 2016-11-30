@@ -465,16 +465,22 @@ There are many variables you can modify to change the appearance or
 behavior of the Emacs user interface.  Some of these variables are
 described in this section.  Also you can use Custom Interface
 (@pxref{Easy Customization,,, emacs, The GNU Emacs Manual}) to
-explore/set variables (not all) and faces.
+explore/set variables and faces---@kbd{M-x customize-group @key{RET}
+guix}.
+
+If you wish to change the appearance of ``list'' / ``info'' buffers,
+look at @code{guix-ENTRY-TYPE-BUFFER-TYPE-format} variables
+(@dfn{ENTRY-TYPE} is @code{package}, @code{output}, @code{generation}
+or @code{system-generation}; @dfn{BUFFER-TYPE} is either @code{list}
+or @code{info}).
 
 @menu
-* Guile and Build Options: Build Options.	Specifying how packages are built.
-* Buffer Names: Buffer Names.	Names of Guix buffers.
-* Keymaps: Keymaps.		Configuring key bindings.
-* Appearance: Appearance.		Settings for visual appearance.
+* Guile and Build Options::     Specifying how packages are built.
+* Buffer Names::                Names of Guix buffers.
+* Keymaps::                     Configuring key bindings.
 @end menu
 
-@node Build Options
+@node Guile and Build Options
 @subsection Guile and Build Options
 
 @table @code
@@ -567,31 +573,6 @@ Keymap with specific keys for ``generation-info'' buffers.
 
 @item guix-info-button-map
 Keymap with keys available when a point is placed on a button.
-
-@end table
-
-@node Appearance
-@subsection Appearance
-
-You can change almost any aspect of ``list'' / ``info'' buffers using
-the following variables (@dfn{ENTRY-TYPE} means @code{package},
-@code{output} or @code{generation}):
-
-@table @code
-@item guix-ENTRY-TYPE-list-format
-@itemx guix-ENTRY-TYPE-list-titles
-Specify the columns, their names, what and how is displayed in ``list''
-buffers.
-
-@item guix-ENTRY-TYPE-info-format
-@itemx guix-ENTRY-TYPE-info-titles
-@itemx guix-info-ignore-empty-values
-@itemx guix-info-param-title-format
-@itemx guix-info-multiline-prefix
-@itemx guix-info-indent
-@itemx guix-info-fill
-@itemx guix-info-delimiter
-Various settings for ``info'' buffers.
 
 @end table
 
