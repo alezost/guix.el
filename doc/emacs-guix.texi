@@ -48,7 +48,7 @@ A copy of the license is available at
 @menu
 * Installation::        Installing Emacs-Guix.
 * Package Management::  Managing packages and generations.
-* Licenses::            Interface for licenses of packages.
+* Package Licenses::    Interface for licenses of packages.
 * Package Locations::   Interface for locations of package source files.
 * Popup Interface::     Magit-like interface for guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
@@ -580,8 +580,8 @@ Keymap with keys available when a point is placed on a button.
 @end table
 
 @c ----------------------------------------------------------------
-@node Licenses
-@chapter Licenses
+@node Package Licenses
+@chapter Package Licenses
 
 If you want to browse the URL of a particular license, or to look at a
 list of licenses, you may use the following commands:
