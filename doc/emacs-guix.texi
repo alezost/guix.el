@@ -56,12 +56,18 @@ A copy of the license is available at
 * Completions::         Completing @command{guix} shell command.
 * Development::         Tools for Guix developers.
 * Hydra::               Interface for the Guix build farm.
+
+Indexes
+* Concept Index::       Concepts.
+* Command Index::       Commands and functions.
+* Variable Index::      Variables.
 @end menu
 
 @c ----------------------------------------------------------------
 @node Installation
 @chapter Installation
 
+@cindex installation
 There are several ways to install Emacs-Guix:
 
 @itemize
@@ -194,6 +200,7 @@ makes it easy to:
 @node Commands
 @section Commands
 
+@findex guix-set-current-profile
 All commands for displaying packages and generations use the current
 profile, which can be changed with
 @kbd{M-x@tie{}guix-set-current-profile}.  Alternatively, if you call
@@ -204,12 +211,17 @@ Commands for displaying packages:
 
 @table @kbd
 
+@findex guix-all-available-packages
 @item M-x guix-all-available-packages
+@findex guix-newest-available-packages
 @itemx M-x guix-newest-available-packages
 Display all/newest available packages.
 
+@findex guix-installed-packages
 @item M-x guix-installed-packages
+@findex guix-installed-user-packages
 @itemx M-x guix-installed-user-packages
+@findex guix-installed-system-packages
 @itemx M-x guix-installed-system-packages
 Display installed packages.  As described above, @kbd{M-x
 guix-installed-packages} uses an arbitrary profile that you can specify,
@@ -217,32 +229,39 @@ while the other commands display packages installed in 2 special
 profiles: @file{~/.guix-profile} and @file{/run/current-system/profile}
 (only on GuixSD).
 
+@findex guix-obsolete-packages
 @item M-x guix-obsolete-packages
 Display obsolete packages (the packages that are installed in a profile
 but cannot be found among available packages).
 
+@findex guix-packages-by-name
 @item M-x guix-packages-by-name
 Display package(s) with the specified name.
 
+@findex guix-packages-by-license
 @item M-x guix-packages-by-license
 Display package(s) with the specified license.
 
+@findex guix-packages-by-location
 @item M-x guix-packages-by-location
 Display package(s) located in the specified file.  These files usually
 have the following form: @file{gnu/packages/emacs.scm}, but don't type
 them manually!  Press @key{TAB} to complete the file name.
 
+@findex guix-package-from-file
 @item M-x guix-package-from-file
 Display package that the code within the specified file evaluates to.
 @xref{Invoking guix package, @code{--install-from-file},, guix, The
 GNU Guix Reference Manual}, for an example of what such a file may
 look like.
 
+@findex guix-search-by-regexp
 @item M-x guix-search-by-regexp
 Search for packages by a specified regexp.  By default ``name'',
 ``synopsis'' and ``description'' of the packages will be searched.  This
 can be changed by modifying @code{guix-package-search-params} variable.
 
+@findex guix-search-by-name
 @item M-x guix-search-by-name
 Search for packages with names matching a specified regexp.  This
 command is the same as @code{guix-search-by-regexp}, except only a
@@ -250,6 +269,7 @@ package ``name'' is searched.
 
 @end table
 
+@vindex guix-package-list-type
 By default, these commands display each output on a separate line.  If
 you prefer to see a list of packages---i.e., a list with a package per
 line, use the following setting:
@@ -262,13 +282,16 @@ Commands for displaying generations:
 
 @table @kbd
 
+@findex guix-generations
 @item M-x guix-generations
 List all the generations.
 
+@findex guix-last-generations
 @item M-x guix-last-generations
 List the @var{N} last generations.  You will be prompted for the number
 of generations.
 
+@findex guix-generations-by-time
 @item M-x guix-generations-by-time
 List generations matching time period.  You will be prompted for the
 period using Org mode time prompt based on Emacs calendar (@pxref{The
@@ -279,11 +302,15 @@ date/time prompt,,, org, The Org Manual}).
 Analogously on GuixSD you can also display system generations:
 
 @table @kbd
+@findex guix-system-generations
 @item M-x guix-system-generations
+@findex guix-last-system-generations
 @item M-x guix-last-system-generations
+@findex guix-system-generations-by-time
 @item M-x guix-system-generations-by-time
 @end table
 
+@findex guix-pull
 You can also invoke the @command{guix pull} command (@pxref{Invoking
 guix pull,,, guix, The GNU Guix Reference Manual}) from Emacs using:
 
@@ -294,7 +321,6 @@ With @kbd{C-u}, make it verbose.
 
 Once @command{guix pull} has succeeded, the Guix REPL is restarted.  This
 allows you to keep using the Emacs interface with the updated Guix.
-
 
 @node General information
 @section General information
@@ -317,6 +343,7 @@ packages/generations and redisplay it.
 Redisplay current buffer (without updating information).
 
 @item M
+@findex guix-apply-manifest
 Apply manifest to the current profile or to a specified profile, if
 prefix argument is used.  This has the same meaning as
 @code{--manifest} option (@pxref{Invoking guix package,,, guix, The
@@ -324,8 +351,7 @@ GNU Guix Reference Manual}).  Also you can invoke @kbd{M-x
 guix-apply-manifest} manually from any buffer.
 
 @item C-c C-z
-@cindex REPL
-@cindex read-eval-print loop
+@cindex Guix REPL
 Go to the Guix REPL (@pxref{The REPL,,, geiser, Geiser User Manual}).
 
 @item h
@@ -364,6 +390,7 @@ Unmark backward.
 Sort entries by a specified column.
 @end table
 
+@cindex package list
 A ``package-list'' buffer additionally provides the following bindings:
 
 @table @kbd
@@ -390,6 +417,7 @@ Execute actions on the marked packages.
 Display latest builds of the current package (@pxref{Hydra}).
 @end table
 
+@cindex generation list
 A ``generation-list'' buffer additionally provides the following
 bindings:
 
@@ -434,6 +462,7 @@ The interface of an ``info'' buffer is similar to the interface of
 emacs, The GNU Emacs Manual}) which can be used to:
 
 @itemize @bullet
+@cindex package info
 @item (in a ``package-info'' buffer)
 
 @itemize @minus
@@ -444,6 +473,7 @@ emacs, The GNU Emacs Manual}) which can be used to:
 @item describe packages from ``Inputs'' fields.
 @end itemize
 
+@cindex generation info
 @item (in a ``generation-info'' buffer)
 
 @itemize @minus
@@ -455,13 +485,14 @@ emacs, The GNU Emacs Manual}) which can be used to:
 
 @end itemize
 
+@cindex buttons
 It is also possible to copy a button label (a link to an URL or a file)
 by pressing @kbd{c} on a button.
-
 
 @node Configuration
 @section Configuration
 
+@cindex customization group
 There are many variables you can modify to change the appearance or
 behavior of the Emacs user interface.  Some of these variables are
 described in this section.  Also you can use Custom Interface
@@ -485,6 +516,7 @@ or @code{info}).
 @subsection Guile and Build Options
 
 @table @code
+@vindex guix-guile-program
 @item guix-guile-program
 If you have some special needs for starting a Guile process, you may set
 this variable, for example:
@@ -493,11 +525,13 @@ this variable, for example:
 (setq guix-guile-program '("/bin/guile" "--no-auto-compile"))
 @end example
 
+@vindex guix-use-substitutes
 @item guix-use-substitutes
 Has the same meaning as @code{--no-substitutes} option
 (@pxref{Invoking guix build,,, guix, The GNU Guix Reference
 Manual})---i.e., when non-nil, substitutes are enabled.
 
+@vindex guix-dry-run
 @item guix-dry-run
 Has the same meaning as @code{--dry-run} option (@pxref{Invoking guix
 build,,, guix, The GNU Guix Reference Manual})---i.e., when non-nil,
@@ -512,15 +546,23 @@ Default names of Emacs-Guix buffers (``*Guix@tie{}@dots{}*'') may be
 changed with the following variables:
 
 @table @code
+@vindex guix-package-list-buffer-name
 @item guix-package-list-buffer-name
+@vindex guix-output-list-buffer-name
 @item guix-output-list-buffer-name
+@vindex guix-generation-list-buffer-name
 @item guix-generation-list-buffer-name
+@vindex guix-package-info-buffer-name
 @item guix-package-info-buffer-name
+@vindex guix-generation-info-buffer-name
 @item guix-generation-info-buffer-name
+@vindex guix-repl-buffer-name
 @item guix-repl-buffer-name
+@vindex guix-internal-repl-buffer-name
 @item guix-internal-repl-buffer-name
 @end table
 
+@vindex guix-ui-buffer-name-function
 By default, the name of a profile is also displayed in a ``list'' or
 ``info'' buffer name.  To change this behavior, use
 @code{guix-ui-buffer-name-function} variable.
@@ -546,34 +588,44 @@ If you want to change default key bindings, use the following keymaps
 (@pxref{Init Rebinding,,, emacs, The GNU Emacs Manual}):
 
 @table @code
+@vindex guix-buffer-map
 @item guix-buffer-map
 Parent keymap with general keys for any buffer type.
 
+@vindex guix-ui-map
 @item guix-ui-map
 Parent keymap with general keys for buffers used for Guix package
 management (for packages, outputs and generations).
 
+@vindex guix-list-mode-map
 @item guix-list-mode-map
 Parent keymap with general keys for ``list'' buffers.
 
+@vindex guix-package-list-mode-map
 @item guix-package-list-mode-map
 Keymap with specific keys for ``package-list'' buffers.
 
+@vindex guix-output-list-mode-map
 @item guix-output-list-mode-map
 Keymap with specific keys for ``output-list'' buffers.
 
+@vindex guix-generation-list-mode-map
 @item guix-generation-list-mode-map
 Keymap with specific keys for ``generation-list'' buffers.
 
+@vindex guix-info-mode-map
 @item guix-info-mode-map
 Parent keymap with general keys for ``info'' buffers.
 
+@vindex guix-package-info-mode-map
 @item guix-package-info-mode-map
 Keymap with specific keys for ``package-info'' buffers.
 
+@vindex guix-generation-info-mode-map
 @item guix-generation-info-mode-map
 Keymap with specific keys for ``generation-info'' buffers.
 
+@vindex guix-info-button-map
 @item guix-info-button-map
 Keymap with keys available when a point is placed on a button.
 
@@ -588,16 +640,19 @@ list of licenses, you may use the following commands:
 
 @table @kbd
 
+@findex guix-browse-license-url
 @item M-x guix-browse-license-url
 Choose a license from a completion list to browse its URL using
 @code{browse-url} function (@pxref{Browse-URL,,, emacs, The GNU Emacs
 Manual}).
 
+@findex guix-licenses
 @item M-x guix-licenses
 Display a list of available licenses.  You can press @kbd{@key{RET}}
 there to display packages with this license in the same way as @kbd{M-x
 guix-packages-by-license} would do (@pxref{Commands}).
 
+@findex guix-find-license-definition
 @item M-x guix-find-license-definition
 Open @file{@dots{}/guix/licenses.scm} and move to the specified license.
 
@@ -613,6 +668,7 @@ get lost in these locations:
 
 @table @kbd
 
+@findex guix-locations
 @item M-x guix-locations
 Display a list of package locations.  You can press @key{RET} there to
 display packages placed in the current location in the same way as
@@ -620,10 +676,12 @@ display packages placed in the current location in the same way as
 Note that when the point is on a location button, @key{RET} will open
 this location file.
 
+@findex guix-find-location
 @item M-x guix-find-location
 Open the given package definition source file (press @key{TAB} to choose
 a location from a completion list).
 
+@findex guix-edit
 @item M-x guix-edit
 Find location of a specified package.  This is an Emacs analog of
 @command{guix edit} command (@pxref{Invoking guix edit,,, guix, The
@@ -632,6 +690,7 @@ you can press @key{TAB} to complete a package name.
 
 @end table
 
+@vindex guix-directory
 If you are contributing to Guix, you may find it useful for @kbd{M-x
 guix-find-location} and @kbd{M-x guix-edit} to open locations from your
 Git checkout.  This can be done by setting @code{guix-directory}
@@ -657,6 +716,7 @@ If you ever used Magit, you know what ``popup interface'' is
 not acquainted with Magit, there should be no worries as it is very
 intuitive.
 
+@findex guix
 So @kbd{M-x@tie{}guix} command provides a top-level popup interface for
 all available guix commands.  When you select an option, you'll be
 prompted for a value in the minibuffer.  Many values have completions,
@@ -675,6 +735,7 @@ Run the command in the Guix REPL.  It is faster than running
 need to run another guile process and to load required modules there.
 
 @item
+@vindex guix-run-in-shell-function
 Run the command in a shell buffer.  You can set
 @code{guix-run-in-shell-function} variable to fine tune the shell buffer
 you want to use.
@@ -685,6 +746,7 @@ GNU Emacs Manual}).
 
 @end itemize
 
+@vindex guix-dot-program
 Several commands (@command{guix graph}, @command{guix system shepherd-graph}
 and @command{guix system extension-graph}) also have a ``View graph''
 action, which allows you to view a generated graph using @command{dot}
@@ -695,6 +757,7 @@ variables:
 
 @table @code
 
+@vindex guix-find-file-function
 @item guix-find-file-function
 Function used to open a generated graph.  If you want to open a graph in
 an external program, you can do it by modifying this variable---for
@@ -743,9 +806,11 @@ symbols with ``@dots{}'':
 
 @table @kbd
 
+@findex guix-prettify-mode
 @item M-x guix-prettify-mode
 Enable/disable prettifying for the current buffer.
 
+@findex global-guix-prettify-mode
 @item M-x global-guix-prettify-mode
 Enable/disable prettifying globally.
 
@@ -770,6 +835,7 @@ mode hooks (@pxref{Hooks,,, emacs, The GNU Emacs Manual}), for example:
 @node Build Log Mode
 @chapter Build Log Mode
 
+@findex guix-build-log-mode
 Emacs-Guix provides major and minor modes for highlighting build logs.
 So when you have a file with a package build output---for example, a
 file returned by @command{guix build --log-file @dots{}}  command
@@ -794,6 +860,7 @@ Toggle (show/hide) the bodies of all build phases.
 
 @end table
 
+@findex guix-build-log-minor-mode
 There is also @kbd{M-x guix-build-log-minor-mode} which also provides
 the same highlighting and the same key bindings as the major mode, but
 prefixed with @kbd{C-c}.  You may find this minor mode useful for
@@ -838,6 +905,7 @@ something:
 @node Development
 @chapter Development
 
+@findex guix-devel-mode
 If you often work with Guix package files, you may want to see some
 highlighting and to have some indentation rules specific for Guix
 keywords.  There is a minor mode to help you---@code{guix-devel-mode}.
@@ -878,7 +946,8 @@ Guix Reference Manual}) (@code{guix-devel-build-package-source}).
 
 @item C-c . l
 Lint (check) a package defined by the current variable definition
-(@pxref{Invoking guix lint,,, guix, The GNU Guix Reference Manual}) (@code{guix-devel-lint-package}).
+(@pxref{Invoking guix lint,,, guix, The GNU Guix Reference Manual})
+(@code{guix-devel-lint-package}).
 
 @end table
 
@@ -918,15 +987,18 @@ The following commands are available:
 
 @table @kbd
 
+@findex guix-hydra-latest-builds
 @item M-x guix-hydra-latest-builds
 Display latest failed or successful builds (you will be prompted for a
 number of builds).  With @kbd{C-u}, you will also be prompted for other
 parameters (project, jobset, job and system).
 
+@findex guix-hydra-queued-builds
 @item M-x guix-hydra-queued-builds
 Display scheduled or currently running builds (you will be prompted for
 a number of builds).
 
+@findex guix-hydra-jobsets
 @item M-x guix-hydra-jobsets
 Display available jobsets (you will be prompted for a project).
 
@@ -936,5 +1008,18 @@ In a list of builds you can press @kbd{L} key to display a build log of
 the current build.  Also both a list of builds and a list of jobsets
 provide @kbd{B} key to display latest builds of the current job or
 jobset (don't forget about @kbd{C-u}).
+
+@c ----------------------------------------------------------------
+@node Concept Index
+@unnumbered Concept Index
+@printindex cp
+
+@node Command Index
+@unnumbered Command Index
+@printindex fn
+
+@node Variable Index
+@unnumbered Variable Index
+@printindex vr
 
 @bye
