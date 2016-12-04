@@ -709,7 +709,7 @@ open the log file(s)."
          (dot-args   (guix-dot-arguments graph-file)))
     (if (guix-eval-read (guix-make-guile-expression
                          'pipe-guix-output args dot-args))
-        (bui-find-file graph-file)
+        (guix-find-file graph-file)
       (error "Couldn't create a graph"))))
 
 (defun guix-run-view-size-map (args)
@@ -726,7 +726,7 @@ open the log file(s)."
                            (concat "--map-file=" map-file)
                            (cdr args)))))
     (guix-command-output args)
-    (bui-find-file map-file)))
+    (guix-find-file map-file)))
 
 
 ;;; Generating popups, actions, etc.

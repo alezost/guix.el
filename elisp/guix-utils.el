@@ -136,6 +136,21 @@ expands the file name."
   (expand-file-name (read-file-name prompt dir default-filename
                                     mustmatch initial predicate)))
 
+(defcustom guix-find-file-function #'find-file
+  "Function used to find a file.
+This function is called by `guix-find-file' with a file name as a
+single argument."
+  :type '(choice (function-item find-file)
+                 (function-item org-open-file)
+                 (function :tag "Other function"))
+  :group 'guix)
+
+(defun guix-find-file (file)
+  "Find FILE (using `guix-find-file-function') if it exists."
+  (if (file-exists-p file)
+      (funcall guix-find-file-function file)
+    (message "File '%s' does not exist." file)))
+
 (defvar url-handler-regexp)
 
 (defun guix-find-file-or-url (file-or-url)

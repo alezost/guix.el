@@ -651,7 +651,7 @@ PACKAGE-ID is an ID of the package which source to show."
       (bui-redisplay-goto-button)
       (if (file-exists-p file)
           (if guix-package-info-auto-find-source
-              (bui-find-file file)
+              (guix-find-file file)
             (message "The file name of the package source is displayed."))
         (if guix-package-info-auto-download-source
             (guix-package-info-download-source package-id)
