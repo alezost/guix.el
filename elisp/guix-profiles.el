@@ -40,7 +40,8 @@
   "Default Guix profile.")
 
 (defvar guix-current-profile guix-default-profile
-  "Current profile.")
+  "Current Guix profile.
+It is used by various commands as the default working profile.")
 
 (defvar guix-system-profile-regexp
   (concat "\\`" (regexp-quote guix-system-profile))
