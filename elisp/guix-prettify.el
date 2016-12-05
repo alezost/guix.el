@@ -151,10 +151,14 @@ With a prefix argument ARG, enable Guix Prettify mode if ARG is
 positive, and disable it otherwise.  If called from Lisp, enable
 the mode if ARG is omitted or nil.
 
-When Guix Prettify mode is enabled, hash-parts of the Guix store
-file names (see `guix-prettify-regexp') are prettified,
-i.e. displayed as `guix-prettify-char' character.  This mode can
-be enabled programmatically using hooks:
+When Guix Prettify mode is enabled, hash parts of the Guix store
+file names (see `guix-prettify-regexp') are displayed as
+`guix-prettify-char' character, i.e.:
+
+  /gnu/store/…-foo-0.1  instead of:
+  /gnu/store/72f54nfp6g1hz873w8z3gfcah0h4nl9p-foo-0.1
+
+This mode can be enabled programmatically using hooks:
 
   (add-hook 'shell-mode-hook 'guix-prettify-mode)
 
