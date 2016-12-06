@@ -70,6 +70,9 @@ Indexes
 Emacs-Guix (also known as ``guix.el'') provides various interfaces and
 tools related to the GNU Guix package manager.
 
+@findex guix-help
+Call @kbd{M-x guix-help} to get a summary of all the available commands.
+
 In short, Emacs-Guix provides the following features:
 
 @itemize @bullet

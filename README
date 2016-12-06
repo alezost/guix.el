@@ -53,7 +53,8 @@ changed since then).
 
 * Usage
 
-A summary of the available commands (not all):
+Call =M-x guix-help= to get a summary of all available commands.
+Here is an incomplete list of them:
 
 - To show packages:
 
