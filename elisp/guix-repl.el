@@ -74,7 +74,7 @@ directory with 'emacs-guix' sub-directory.")
   :prefix "guix-repl-"
   :group 'guix)
 
-(defcustom guix-repl-startup-time 30000
+(defcustom guix-repl-startup-time geiser-repl-startup-time
   "Time, in milliseconds, to wait for Guix REPL to startup.
 Same as `geiser-repl-startup-time' but is used for Guix REPL.
 If you have a slow system, try to increase this time."
