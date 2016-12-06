@@ -5,9 +5,8 @@
 @settitle Emacs-Guix Reference Manual
 
 @copying
-This document describes Emacs-Guix (also known as ``guix.el''), the
-Emacs interface for the @uref{https://www.gnu.org/software/guix/, GNU
-Guix} package manager.
+This document describes Emacs-Guix, the Emacs interface for the
+@uref{https://www.gnu.org/software/guix/, GNU Guix} package manager.
 
 @quotation
 Copyright @copyright{} 2014-2016 Alex Kost
@@ -46,6 +45,7 @@ A copy of the license is available at
 @insertcopying
 
 @menu
+* Introduction::        Quick overview.
 * Installation::        Installing Emacs-Guix.
 * Package Management::  Managing packages and generations.
 * Package Licenses::    Interface for licenses of packages.
@@ -62,6 +62,50 @@ Indexes
 * Command Index::       Commands and functions.
 * Variable Index::      Variables.
 @end menu
+
+@c ----------------------------------------------------------------
+@node Introduction
+@chapter Introduction
+
+Emacs-Guix (also known as ``guix.el'') provides various interfaces and
+tools related to the GNU Guix package manager.
+
+In short, Emacs-Guix provides the following features:
+
+@itemize @bullet
+@item
+Interfaces for:
+
+@itemize @minus
+@item packages (@pxref{Package Management})
+
+@item profile generations (and system generations for GuixSD)
+
+@item package licenses (@pxref{Package Licenses})
+
+@item package locations (@pxref{Package Locations})
+
+@item @uref{https://hydra.gnu.org, Hydra build farm} (@pxref{Hydra})
+@end itemize
+
+@item
+Magit-like popup interface for all guix shell commands
+(@pxref{Popup Interface}).
+
+@item
+Modes to view logs of package builds (@pxref{Build Log Mode}).
+
+@item
+Minor mode to ``prettify'' store file names (@pxref{Prettify Mode}).
+
+@item
+Shell completions for all guix commands and options
+(@pxref{Completions}).
+
+@item
+Minor mode with additional functionality for @code{scheme-mode} to
+work with Guix Scheme files (@pxref{Development}).
+@end itemize
 
 @c ----------------------------------------------------------------
 @node Installation
