@@ -82,10 +82,10 @@ Each element from GENERATIONS is a generation number."
   (eq (bui-current-entry-type)
       'guix-system-generation))
 
-(defun guix-generation-current-packages-profile (&optional generation)
+(defun guix-generation-current-package-profile (&optional generation)
   "Return a directory where packages are installed for the
 current profile's GENERATION."
-  (guix-packages-profile (guix-ui-current-profile)
+  (guix-package-profile (guix-ui-current-profile)
                          generation
                          (guix-system-generation?)))
 
@@ -135,7 +135,7 @@ current profile's GENERATION."
    "Packages"
    (lambda (btn)
      (guix-package-get-display
-      (guix-generation-current-packages-profile
+      (guix-generation-current-package-profile
        (button-get btn 'number))
       'installed))
    (format "Show packages installed in generation %d" number)
@@ -224,7 +224,7 @@ VAL is a boolean value."
   "List installed packages for the generation at point."
   (interactive)
   (guix-package-get-display
-   (guix-generation-current-packages-profile (bui-list-current-id))
+   (guix-generation-current-package-profile (bui-list-current-id))
    'installed))
 
 (defun guix-generation-list-generations-to-compare ()
@@ -236,7 +236,7 @@ VAL is a boolean value."
 
 (defun guix-generation-list-profiles-to-compare ()
   "Return a sorted list of 2 marked generation profiles for comparing."
-  (mapcar #'guix-generation-current-packages-profile
+  (mapcar #'guix-generation-current-package-profile
           (guix-generation-list-generations-to-compare)))
 
 (defun guix-generation-list-show-added-packages ()
@@ -417,7 +417,7 @@ Create the buffer if needed."
         (let ((buf (get-buffer-create buf-name)))
           (guix-generation-insert-packages
            buf
-           (guix-packages-profile profile generation system?))
+           (guix-package-profile profile generation system?))
           buf))))
 
 (defun guix-profile-generation-manifest-file (generation)

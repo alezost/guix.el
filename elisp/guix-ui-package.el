@@ -1139,7 +1139,7 @@ Interactively with prefix, prompt for PROFILE."
   "Display information about Guix packages installed in a system profile."
   (interactive)
   (guix-installed-packages
-   (guix-packages-profile guix-system-profile nil t)))
+   (guix-package-profile guix-system-profile nil t)))
 
 ;;;###autoload
 (defun guix-obsolete-packages (&optional profile)

@@ -60,37 +60,41 @@ It is used by various commands as the default working profile.")
   "Return the file name of a PROFILE's GENERATION."
   (format "%s-%s-link" profile generation))
 
-(defun guix-packages-profile (profile &optional generation system?)
-  "Return a directory where packages are installed for the
-PROFILE's GENERATION.
+(defun guix-package-profile (profile &optional generation system?)
+  "Return normalized file name of PROFILE or its GENERATION.
+\"Normalized\" means the returned file name is expanded, does not
+have a trailing slash and it is `guix-default-profile' if PROFILE
+is `guix-user-profile'.  `guix-user-profile' is special because
+it is actually a symlink to a real user profile, and the HOME
+directory does not contain profile generations.
 
 If SYSTEM? is non-nil, then PROFILE is considered to be a system
 profile.  Unlike usual profiles, for a system profile, packages
 are placed in 'profile' subdirectory."
-  (let ((profile (if generation
-                     (guix-generation-file profile generation)
-                   profile)))
+  (let* ((profile (directory-file-name (expand-file-name profile)))
+         (profile (if (string= profile guix-user-profile)
+                      guix-default-profile
+                    profile))
+         (profile (if generation
+                      (guix-generation-file profile generation)
+                    profile)))
     (if system?
         (expand-file-name "profile" profile)
       profile)))
 
 (defun guix-manifest-file (profile &optional generation system?)
-  "Return the file name of a PROFILE's manifest.
-See `guix-packages-profile'."
+  "Return the file name of a PROFILE's manifest."
   (expand-file-name "manifest"
-                    (guix-packages-profile profile generation system?)))
+                    (guix-package-profile profile generation system?)))
 
 (defun guix-profile-prompt (&optional default)
   "Prompt for profile and return it.
 Use DEFAULT as a start directory.  If it is nil, use
 `guix-current-profile'."
-  (let* ((dir (read-file-name "Profile: "
-                              (file-name-directory
-                               (or default guix-current-profile))))
-         (dir (directory-file-name (expand-file-name dir))))
-    (if (string= dir guix-user-profile)
-        guix-default-profile
-      dir)))
+  (guix-package-profile
+   (read-file-name "Profile: "
+                   (file-name-directory
+                    (or default guix-current-profile)))))
 
 ;;;###autoload
 (defun guix-set-current-profile (file-name)
