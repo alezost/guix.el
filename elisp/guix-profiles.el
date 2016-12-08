@@ -49,7 +49,11 @@
 It is used by various commands as the default working profile.")
 
 (defvar guix-system-profile-regexp
-  (concat "\\`" (regexp-quote guix-system-profile))
+  (rx-to-string `(and string-start
+                      (or ,guix-system-profile
+                          "/run/booted-system"
+                          "/run/current-system"))
+                t)
   "Regexp matching system profiles.")
 
 (defun guix-system-profile? (profile)
@@ -60,7 +64,7 @@ It is used by various commands as the default working profile.")
   "Return the file name of a PROFILE's GENERATION."
   (format "%s-%s-link" profile generation))
 
-(defun guix-package-profile (profile &optional generation system?)
+(defun guix-package-profile (profile &optional generation)
   "Return normalized file name of PROFILE or its GENERATION.
 \"Normalized\" means the returned file name is expanded, does not
 have a trailing slash and it is `guix-default-profile' if PROFILE
@@ -68,13 +72,14 @@ is `guix-user-profile'.  `guix-user-profile' is special because
 it is actually a symlink to a real user profile, and the HOME
 directory does not contain profile generations.
 
-If SYSTEM? is non-nil, then PROFILE is considered to be a system
-profile.  Unlike usual profiles, for a system profile, packages
-are placed in 'profile' subdirectory."
+If PROFILE matches `guix-system-profile-regexp', then it is
+considered to be a system profile.  Unlike usual profiles, for a
+system profile, packages are placed in 'profile' sub-directory."
   (let* ((profile (directory-file-name (expand-file-name profile)))
          (profile (if (string= profile guix-user-profile)
                       guix-default-profile
                     profile))
+         (system? (guix-system-profile? profile))
          (profile (if generation
                       (guix-generation-file profile generation)
                     profile)))
@@ -82,10 +87,10 @@ are placed in 'profile' subdirectory."
         (expand-file-name "profile" profile)
       profile)))
 
-(defun guix-manifest-file (profile &optional generation system?)
+(defun guix-manifest-file (profile &optional generation)
   "Return the file name of a PROFILE's manifest."
   (expand-file-name "manifest"
-                    (guix-package-profile profile generation system?)))
+                    (guix-package-profile profile generation)))
 
 (defun guix-profile-prompt (&optional default)
   "Prompt for profile and return it.

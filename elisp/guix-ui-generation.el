@@ -77,17 +77,10 @@ Each element from GENERATIONS is a generation number."
       'switch-to-generation* profile generation)
      operation-buffer)))
 
-(defun guix-system-generation? ()
-  "Return non-nil, if current generation is a system one."
-  (eq (bui-current-entry-type)
-      'guix-system-generation))
-
 (defun guix-generation-current-package-profile (&optional generation)
   "Return a directory where packages are installed for the
 current profile's GENERATION."
-  (guix-package-profile (guix-ui-current-profile)
-                         generation
-                         (guix-system-generation?)))
+  (guix-package-profile (guix-ui-current-profile) generation))
 
 
 ;;; Generation 'info'
@@ -407,7 +400,7 @@ Use the full PROFILE file name."
             (guix-generation-insert-package name file-name))
           (guix-generation-packages profile))))
 
-(defun guix-generation-packages-buffer (profile generation &optional system?)
+(defun guix-generation-packages-buffer (profile generation)
   "Return buffer with package outputs installed in PROFILE's GENERATION.
 Create the buffer if needed."
   (let ((buf-name (guix-generation-packages-buffer-name
@@ -417,22 +410,19 @@ Create the buffer if needed."
         (let ((buf (get-buffer-create buf-name)))
           (guix-generation-insert-packages
            buf
-           (guix-package-profile profile generation system?))
+           (guix-package-profile profile generation))
           buf))))
 
 (defun guix-profile-generation-manifest-file (generation)
   "Return the file name of a GENERATION's manifest.
 GENERATION is a generation number of the current profile."
-  (guix-manifest-file (guix-ui-current-profile)
-                      generation
-                      (guix-system-generation?)))
+  (guix-manifest-file (guix-ui-current-profile) generation))
 
 (defun guix-profile-generation-packages-buffer (generation)
   "Insert GENERATION's package outputs in a buffer and return it.
 GENERATION is a generation number of the current profile."
   (guix-generation-packages-buffer (guix-ui-current-profile)
-                                   generation
-                                   (guix-system-generation?)))
+                                   generation))
 
 
 ;;; Interactive commands
