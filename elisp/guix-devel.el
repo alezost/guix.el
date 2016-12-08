@@ -31,7 +31,7 @@
 (require 'guix-utils)
 (require 'guix-guile)
 (require 'guix-geiser)
-(require 'guix-base)
+(require 'guix-misc)
 
 (defgroup guix-devel nil
   "Settings for Guix development utils."

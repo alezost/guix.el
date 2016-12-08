@@ -28,7 +28,7 @@
 (require 'dash)
 (require 'bui)
 (require 'guix-ui)
-(require 'guix-base)
+(require 'guix-misc)
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-utils)

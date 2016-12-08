@@ -29,7 +29,7 @@
 (require 'bui)
 (require 'guix-ui)
 (require 'guix-ui-package)
-(require 'guix-base)
+(require 'guix-misc)
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-utils)

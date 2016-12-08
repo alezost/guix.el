@@ -1,4 +1,4 @@
-;;; guix-base.el --- Common definitions  -*- lexical-binding: t -*-
+;;; guix-misc.el --- Miscellaneous definitions  -*- lexical-binding: t -*-
 
 ;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
 
@@ -19,7 +19,8 @@
 
 ;;; Commentary:
 
-;; This file provides some common definitions for Emacs-Guix package.
+;; This file provides some miscellaneous code that does not find its
+;; home in any other file (in a perfect world this file wouldn't exist).
 
 ;;; Code:
 
@@ -342,6 +343,6 @@ If VERBOSE is non-nil (with prefix argument), produce verbose output."
             'guix-command "pull" args)
      nil 'pull)))
 
-(provide 'guix-base)
+(provide 'guix-misc)
 
-;;; guix-base.el ends here
+;;; guix-misc.el ends here

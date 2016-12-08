@@ -52,7 +52,7 @@ ELFILES =					\
   %D%/guix-help-vars.el				\
   %D%/guix-read.el				\
   %D%/guix-about.el				\
-  %D%/guix-base.el				\
+  %D%/guix-misc.el				\
   %D%/guix-build-log.el				\
   %D%/guix-command.el				\
   %D%/guix-devel.el				\

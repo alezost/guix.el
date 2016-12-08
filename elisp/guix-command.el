@@ -65,7 +65,7 @@
 (require 'guix-utils)
 (require 'guix-help-vars)
 (require 'guix-read)
-(require 'guix-base)
+(require 'guix-misc)
 (require 'guix-build-log)
 (require 'guix-guile)
 (require 'guix-external)
