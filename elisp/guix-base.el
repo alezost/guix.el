@@ -47,33 +47,6 @@
           (when output (concat ":" output))))
 
 
-;;; Location of profiles and manifests
-
-(defun guix-generation-file (profile generation)
-  "Return the file name of a PROFILE's GENERATION."
-  (format "%s-%s-link" profile generation))
-
-(defun guix-packages-profile (profile &optional generation system?)
-  "Return a directory where packages are installed for the
-PROFILE's GENERATION.
-
-If SYSTEM? is non-nil, then PROFILE is considered to be a system
-profile.  Unlike usual profiles, for a system profile, packages
-are placed in 'profile' subdirectory."
-  (let ((profile (if generation
-                     (guix-generation-file profile generation)
-                   profile)))
-    (if system?
-        (expand-file-name "profile" profile)
-      profile)))
-
-(defun guix-manifest-file (profile &optional generation system?)
-  "Return the file name of a PROFILE's manifest.
-See `guix-packages-profile'."
-  (expand-file-name "manifest"
-                    (guix-packages-profile profile generation system?)))
-
-
 ;;; Actions on packages and generations
 
 (defface guix-operation-option-key

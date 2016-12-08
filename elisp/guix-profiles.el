@@ -18,6 +18,11 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with Emacs-Guix.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Commentary:
+
+;; This file provides a general code related to location and contents of
+;; Guix profiles.
+
 ;;; Code:
 
 (defvar guix-state-directory
@@ -50,6 +55,30 @@ It is used by various commands as the default working profile.")
 (defun guix-system-profile? (profile)
   "Return non-nil, if PROFILE is a system one."
   (string-match-p guix-system-profile-regexp profile))
+
+(defun guix-generation-file (profile generation)
+  "Return the file name of a PROFILE's GENERATION."
+  (format "%s-%s-link" profile generation))
+
+(defun guix-packages-profile (profile &optional generation system?)
+  "Return a directory where packages are installed for the
+PROFILE's GENERATION.
+
+If SYSTEM? is non-nil, then PROFILE is considered to be a system
+profile.  Unlike usual profiles, for a system profile, packages
+are placed in 'profile' subdirectory."
+  (let ((profile (if generation
+                     (guix-generation-file profile generation)
+                   profile)))
+    (if system?
+        (expand-file-name "profile" profile)
+      profile)))
+
+(defun guix-manifest-file (profile &optional generation system?)
+  "Return the file name of a PROFILE's manifest.
+See `guix-packages-profile'."
+  (expand-file-name "manifest"
+                    (guix-packages-profile profile generation system?)))
 
 (defun guix-profile-prompt (&optional default)
   "Prompt for profile and return it.
