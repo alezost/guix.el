@@ -1053,7 +1053,7 @@ If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (guix-read-package-name)
-         (guix-ui-read-profile)))
+         (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'name name))
 
 ;;;###autoload
@@ -1064,7 +1064,7 @@ If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (guix-read-license-name)
-         (guix-ui-read-profile)))
+         (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'license license))
 
 ;;;###autoload
@@ -1074,7 +1074,7 @@ If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (guix-read-package-location)
-         (guix-ui-read-profile)))
+         (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'location location))
 
 ;;;###autoload
@@ -1084,7 +1084,7 @@ If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (read-file-name "File with package: ")
-         (guix-ui-read-profile)))
+         (guix-ui-read-package-profile)))
   (bui-get-display-entries
    'guix-package 'info
    (list (or profile guix-current-profile) 'from-file file)
@@ -1100,7 +1100,7 @@ If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (read-regexp "Regexp: " nil 'guix-package-search-history)
-         nil (guix-ui-read-profile)))
+         nil (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'regexp regexp
                             (or params guix-package-search-params)))
 
@@ -1112,7 +1112,7 @@ Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (read-string "Package name by regexp: "
                       nil 'guix-package-search-history)
-         (guix-ui-read-profile)))
+         (guix-ui-read-package-profile)))
   (guix-search-by-regexp regexp '(name) profile))
 
 ;;;###autoload
@@ -1120,7 +1120,7 @@ Interactively with prefix, prompt for PROFILE."
   "Display information about installed Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
-  (interactive (list (guix-ui-read-profile)))
+  (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'installed))
 
 ;;;###autoload
@@ -1140,7 +1140,7 @@ Interactively with prefix, prompt for PROFILE."
   "Display information about obsolete Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
-  (interactive (list (guix-ui-read-profile)))
+  (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'obsolete))
 
 ;;;###autoload
@@ -1148,7 +1148,7 @@ Interactively with prefix, prompt for PROFILE."
   "Display information about all available Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
-  (interactive (list (guix-ui-read-profile)))
+  (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'all-available))
 
 ;;;###autoload
@@ -1156,7 +1156,7 @@ Interactively with prefix, prompt for PROFILE."
   "Display information about the newest available Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
-  (interactive (list (guix-ui-read-profile)))
+  (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'newest-available))
 
 (provide 'guix-ui-package)

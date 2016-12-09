@@ -228,7 +228,7 @@ FILE.  With a prefix argument, also prompt for PROFILE."
   (interactive
    (let* ((current-profile (guix-ui-current-profile))
           (profile (if current-prefix-arg
-                       (guix-profile-prompt)
+                       (guix-read-package-profile)
                      (or current-profile guix-current-profile)))
           (file (read-file-name "File with manifest: "))
           (buffer (and current-profile (current-buffer))))

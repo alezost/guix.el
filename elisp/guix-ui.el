@@ -43,11 +43,18 @@
 (bui-define-current-args-accessors
  guix-ui-current profile search-type search-values)
 
-(defun guix-ui-read-profile ()
+(defun guix-ui-read-package-profile ()
   "Return `guix-current-profile' or prompt for it.
 This function is intended for using in `interactive' forms."
   (if current-prefix-arg
-      (guix-profile-prompt)
+      (guix-read-package-profile)
+    guix-current-profile))
+
+(defun guix-ui-read-generation-profile ()
+  "Return `guix-current-profile' or prompt for it.
+This function is intended for using in `interactive' forms."
+  (if current-prefix-arg
+      (guix-read-generation-profile)
     guix-current-profile))
 
 (defun guix-ui-get-entries (profile entry-type search-type search-values

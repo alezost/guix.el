@@ -124,14 +124,25 @@ the returned file name ends with '/profile'."
   (expand-file-name "manifest"
                     (guix-package-profile profile generation)))
 
-(defun guix-profile-prompt (&optional default)
+(defun guix-read-profile (&optional default)
   "Prompt for profile and return it.
 Use DEFAULT as a start directory.  If it is nil, use
 `guix-current-profile'."
-  (guix-package-profile
-   (read-file-name "Profile: "
-                   (file-name-directory
-                    (or default guix-current-profile)))))
+  (read-file-name "Profile: "
+                  (file-name-directory
+                   (or default guix-current-profile))))
+
+(defun guix-read-package-profile (&optional default)
+  "Prompt for a package profile and return it.
+See `guix-read-profile' for the meaning of DEFAULT, and
+`guix-package-profile' for the meaning of package profile."
+  (guix-package-profile (guix-read-profile default)))
+
+(defun guix-read-generation-profile (&optional default)
+  "Prompt for a generation profile and return it.
+See `guix-read-profile' for the meaning of DEFAULT, and
+`guix-generation-profile' for the meaning of generation profile."
+  (guix-generation-profile (guix-read-profile default)))
 
 ;;;###autoload
 (defun guix-set-current-profile (file-name)
@@ -141,7 +152,7 @@ Interactively, prompt for FILE-NAME.  With prefix, use
   (interactive
    (list (if current-prefix-arg
              guix-default-profile
-           (guix-profile-prompt))))
+           (guix-read-package-profile))))
   (setq guix-current-profile file-name)
   (message "Current profile has been set to '%s'."
            guix-current-profile))

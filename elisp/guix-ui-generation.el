@@ -432,7 +432,7 @@ GENERATION is a generation number of the current profile."
   "Display information about all generations.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
-  (interactive (list (guix-ui-read-profile)))
+  (interactive (list (guix-ui-read-generation-profile)))
   (guix-generation-get-display profile 'all))
 
 ;;;###autoload
@@ -442,7 +442,7 @@ If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (read-number "The number of last generations: ")
-         (guix-ui-read-profile)))
+         (guix-ui-read-generation-profile)))
   (guix-generation-get-display profile 'last number))
 
 ;;;###autoload
@@ -454,7 +454,7 @@ Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (guix-read-date "Find generations (from): ")
          (guix-read-date "Find generations (to): ")
-         (guix-ui-read-profile)))
+         (guix-ui-read-generation-profile)))
   (guix-generation-get-display profile 'time
                                (float-time from)
                                (float-time to)))
