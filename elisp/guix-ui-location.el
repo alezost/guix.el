@@ -62,7 +62,7 @@
           'help-echo (concat "Find location: " location)
           'location location)))
 
-(declare-function guix-packages-by-location "guix-ui-package")
+(declare-function guix-packages-by-location "guix-ui-package" t)
 
 (defun guix-location-list-show-packages ()
   "Display packages placed in the location at point."

@@ -71,7 +71,7 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
             nil
             guix-license-insert-file))
 
-(declare-function guix-packages-by-license "guix-ui-package")
+(declare-function guix-packages-by-license "guix-ui-package" t)
 
 (defun guix-license-insert-packages-button (entry)
   "Insert button to display packages by license ENTRY."
