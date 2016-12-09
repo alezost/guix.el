@@ -64,26 +64,50 @@ It is used by various commands as the default working profile.")
   "Return the file name of a PROFILE's GENERATION."
   (format "%s-%s-link" profile generation))
 
-(defun guix-package-profile (profile &optional generation)
-  "Return normalized file name of PROFILE or its GENERATION.
+(defun guix-profile (profile)
+  "Return normalized file name of PROFILE.
 \"Normalized\" means the returned file name is expanded, does not
 have a trailing slash and it is `guix-default-profile' if PROFILE
 is `guix-user-profile'.  `guix-user-profile' is special because
 it is actually a symlink to a real user profile, and the HOME
-directory does not contain profile generations.
+directory does not contain profile generations."
+  (let ((profile (directory-file-name (expand-file-name profile))))
+    (if (string= profile guix-user-profile)
+        guix-default-profile
+      profile)))
+
+(defun guix-generation-profile (profile &optional generation)
+  "Return file name of PROFILE or its GENERATION.
+The returned file name is the one that have generations in the
+same parent directory.
 
 If PROFILE matches `guix-system-profile-regexp', then it is
 considered to be a system profile.  Unlike usual profiles, for a
-system profile, packages are placed in 'profile' sub-directory."
-  (let* ((profile (directory-file-name (expand-file-name profile)))
-         (profile (if (string= profile guix-user-profile)
-                      guix-default-profile
-                    profile))
-         (system? (guix-system-profile? profile))
+system profile, packages are placed in 'profile' sub-directory,
+so the returned file name does not contain this potential
+trailing '/profile'."
+  (let* ((profile (guix-profile profile))
+         (profile (if (and (guix-system-profile? profile)
+                           (string-match (rx (group (* any))
+                                             "/profile" string-end)
+                                         profile))
+                      (match-string 1 profile)
+                    profile)))
+    (if generation
+        (guix-generation-file profile generation)
+      profile)))
+
+(defun guix-package-profile (profile &optional generation)
+  "Return file name of PROFILE or its GENERATION.
+The returned file name is the one where packages are installed.
+
+If PROFILE is a system one (see `guix-generation-profile'), then
+the returned file name ends with '/profile'."
+  (let* ((profile (guix-generation-profile profile))
          (profile (if generation
                       (guix-generation-file profile generation)
                     profile)))
-    (if system?
+    (if (guix-system-profile? profile)
         (expand-file-name "profile" profile)
       profile)))
 
