@@ -881,13 +881,8 @@ With ARG, mark all installed (including non-obsolete) packages."
 (defun guix-package-assert-non-system-profile ()
   "Verify that the current profile is not a system one.
 The current profile is the one used by the current buffer."
-  (let ((profile (guix-ui-current-profile)))
-    (and profile
-         (guix-system-profile? profile)
-         (user-error "Packages cannot be installed or removed to/from \
-profile '%s'.
-Use 'guix system reconfigure' shell command to modify a system profile."
-                     profile))))
+  (--when-let (guix-ui-current-profile)
+    (guix-assert-non-system-profile it)))
 
 (defun guix-package-execute-actions (fun)
   "Perform actions on the marked packages.

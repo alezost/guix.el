@@ -233,6 +233,7 @@ FILE.  With a prefix argument, also prompt for PROFILE."
           (file (read-file-name "File with manifest: "))
           (buffer (and current-profile (current-buffer))))
      (list profile file buffer)))
+  (guix-assert-non-system-profile profile)
   (when (or (not guix-operation-confirm)
             (y-or-n-p (format "Apply manifest from '%s' to profile '%s'? "
                               file profile)))

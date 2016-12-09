@@ -60,6 +60,14 @@ It is used by various commands as the default working profile.")
   "Return non-nil, if PROFILE is a system one."
   (string-match-p guix-system-profile-regexp profile))
 
+(defun guix-assert-non-system-profile (profile)
+  "Raise an error when PROFILE is a system one."
+  (when (guix-system-profile? profile)
+    (user-error "\
+Packages cannot be installed or removed to/from profile '%s'.
+Use 'guix system reconfigure' shell command to modify a system profile."
+                profile)))
+
 (defun guix-generation-file (profile generation)
   "Return the file name of a PROFILE's GENERATION."
   (format "%s-%s-link" profile generation))
