@@ -135,6 +135,19 @@ run BODY."
                                       guix-use-substitutes)
                 "#:dry-run?" (guix-guile-boolean guix-dry-run)))))))
 
+(defun guix-devel-download-package-source ()
+  "Download the source of the current package.
+Use this function to compute SHA256 hash of the package source."
+  (interactive)
+  (guix-devel-with-definition def
+    (guix-devel-use-modules "(guix packages)"
+                            "(guix scripts download)")
+    (when (or (not guix-operation-confirm)
+              (y-or-n-p (format "Download '%s' package source?" def)))
+      (guix-geiser-eval-in-repl
+       (format "(guix-download (origin-uri (package-source %s)))"
+               def)))))
+
 (defun guix-devel-lint-package ()
   "Check the current package.
 See Info node `(guix) Invoking guix lint' for details."
@@ -320,6 +333,7 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "b") 'guix-devel-build-package-definition)
     (define-key map (kbd "s") 'guix-devel-build-package-source)
+    (define-key map (kbd "d") 'guix-devel-download-package-source)
     (define-key map (kbd "l") 'guix-devel-lint-package)
     (define-key map (kbd "k") 'guix-devel-copy-module-as-kill)
     (define-key map (kbd "u") 'guix-devel-use-module)

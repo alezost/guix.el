@@ -991,6 +991,13 @@ variable definition.  This command has the same meaning as @code{guix
 build -S} shell command (@pxref{Invoking guix build,,, guix, The GNU
 Guix Reference Manual}) (@code{guix-devel-build-package-source}).
 
+@item C-c . d
+Download a source of the package defined by the current variable
+definition.  This command is the same as running @code{guix download}
+shell command on the package source (@pxref{Invoking guix download,,,
+guix, The GNU Guix Reference Manual})
+(@code{guix-devel-download-package-source}).
+
 @item C-c . l
 Lint (check) a package defined by the current variable definition
 (@pxref{Invoking guix lint,,, guix, The GNU Guix Reference Manual})
