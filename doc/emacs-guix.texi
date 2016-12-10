@@ -697,8 +697,9 @@ Manual}).
 @findex guix-licenses
 @item M-x guix-licenses
 Display a list of available licenses.  You can press @kbd{@key{RET}}
-there to display packages with this license in the same way as @kbd{M-x
-guix-packages-by-license} would do (@pxref{Commands}).
+there to display packages with this license in the same way as
+@kbd{M-x@tie{}guix-packages-by-license} would do (@pxref{Package
+Commands}).
 
 @findex guix-find-license-definition
 @item M-x guix-find-license-definition
@@ -721,9 +722,9 @@ get lost in these locations:
 @item M-x guix-locations
 Display a list of package locations.  You can press @key{RET} there to
 display packages placed in the current location in the same way as
-@kbd{M-x guix-packages-by-location} would do (@pxref{Commands}).
-Note that when the point is on a location button, @key{RET} will open
-this location file.
+@kbd{M-x@tie{}guix-packages-by-location} would do (@pxref{Package
+Commands}).  Note that when the point is on a location button,
+@key{RET} will open this location file.
 
 @findex guix-find-location
 @item M-x guix-find-location
@@ -734,16 +735,17 @@ a location from a completion list).
 @item M-x guix-edit
 Find location of a specified package.  This is an Emacs analog of
 @command{guix edit} command (@pxref{Invoking guix edit,,, guix, The
-GNU Guix Reference Manual}).  As with @kbd{M-x guix-packages-by-name},
-you can press @key{TAB} to complete a package name.
+GNU Guix Reference Manual}).  As with
+@kbd{M-x@tie{}guix-packages-by-name}, you can press @key{TAB} to
+complete a package name.
 
 @end table
 
 @vindex guix-directory
-If you are contributing to Guix, you may find it useful for @kbd{M-x
-guix-find-location} and @kbd{M-x guix-edit} to open locations from your
-Git checkout.  This can be done by setting @code{guix-directory}
-variable.  For example, after this:
+If you are contributing to Guix, you may find it useful for
+@kbd{M-x@tie{}guix-find-location} and @kbd{M-x@tie{}guix-edit} to open
+locations from your Git checkout.  This can be done by setting
+@code{guix-directory} variable.  For example, after this:
 
 @example
 (setq guix-directory "~/src/guix")
@@ -753,8 +755,8 @@ variable.  For example, after this:
 @file{~/src/guix/gnu/packages/package-management.scm} file.
 
 Also you can use @kbd{C-u} prefix argument to specify a directory just
-for the current @kbd{M-x guix-find-location} or @kbd{M-x guix-edit}
-command.
+for the current @kbd{M-x@tie{}guix-find-location} or
+@kbd{M-x@tie{}guix-edit} command.
 
 @c ----------------------------------------------------------------
 @node Popup Interface
@@ -890,9 +892,9 @@ Emacs-Guix provides major and minor modes for highlighting build logs.
 So when you have a file with a package build output---for example, a
 file returned by @command{guix build --log-file @dots{}}  command
 (@pxref{Invoking guix build,,, guix, The GNU Guix Reference Manual}),
-you may call @kbd{M-x guix-build-log-mode} command in the buffer with
-this file.  This major mode highlights some lines specific to build
-output and provides the following key bindings:
+you may call @kbd{M-x@tie{}guix-build-log-mode} command in the buffer
+with this file.  This major mode highlights some lines specific to
+build output and provides the following key bindings:
 
 @table @kbd
 
@@ -911,11 +913,11 @@ Toggle (show/hide) the bodies of all build phases.
 @end table
 
 @findex guix-build-log-minor-mode
-There is also @kbd{M-x guix-build-log-minor-mode} which also provides
-the same highlighting and the same key bindings as the major mode, but
-prefixed with @kbd{C-c}.  You may find this minor mode useful for
-shell buffers (@pxref{Interactive Shell,,, emacs, The GNU Emacs
-Manual}).  It can be enabled there like this:
+There is also @kbd{M-x@tie{}guix-build-log-minor-mode} which also
+provides the same highlighting and the same key bindings as the major
+mode, but prefixed with @kbd{C-c}.  You may find this minor mode
+useful for shell buffers (@pxref{Interactive Shell,,, emacs, The GNU
+Emacs Manual}).  It can be enabled there like this:
 
 @example
 (add-hook 'shell-mode-hook 'guix-build-log-minor-mode)
@@ -959,8 +961,9 @@ something:
 @findex guix-devel-mode
 If you often work with Guix package files, you may want to see some
 highlighting and to have some indentation rules specific for Guix
-keywords.  There is a minor mode to help you---@kbd{M-x
-guix-devel-mode}.  It can be enabled in Scheme buffers like this:
+keywords.  There is a minor mode to help
+you---@kbd{M-x@tie{}guix-devel-mode}.  It can be enabled in Scheme
+buffers like this:
 
 @example
 (add-hook 'scheme-mode-hook 'guix-devel-mode)
