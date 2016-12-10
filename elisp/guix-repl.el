@@ -223,7 +223,7 @@ the beginning and in the end of the starting process.  If nil,
 display default messages."
   (guix-start-repl-maybe nil
                          (or start-msg "Starting Guix REPL ...")
-                         (or end-msg "Guix REPL has been started."))
+                         end-msg)
   (if guix-repl-use-server
       (guix-start-repl-maybe 'internal)
     (setq guix-internal-repl-buffer guix-repl-buffer)))
