@@ -682,6 +682,7 @@ Keymap with keys available when a point is placed on a button.
 @node Package Licenses
 @chapter Package Licenses
 
+@cindex package licenses
 If you want to browse the URL of a particular license, or to look at a
 list of licenses, you may use the following commands:
 
@@ -709,6 +710,7 @@ Open @file{@dots{}/guix/licenses.scm} and move to the specified license.
 @node Package Locations
 @chapter Package Locations
 
+@cindex package locations
 As you know, package definitions are placed in Guile files, also known
 as @dfn{package locations}.  The following commands should help you not
 get lost in these locations:
@@ -882,6 +884,7 @@ mode hooks (@pxref{Hooks,,, emacs, The GNU Emacs Manual}), for example:
 @node Build Log Mode
 @chapter Build Log Mode
 
+@cindex build log
 @findex guix-build-log-mode
 Emacs-Guix provides major and minor modes for highlighting build logs.
 So when you have a file with a package build output---for example, a
@@ -922,6 +925,7 @@ Manual}).  It can be enabled there like this:
 @node Completions
 @chapter Shell Completions
 
+@cindex completions
 Another available feature is completing @command{guix} subcommands,
 options, packages and other things in @code{shell} (@pxref{Interactive
 Shell,,, emacs, The GNU Emacs Manual}) and @code{eshell}
@@ -1025,6 +1029,7 @@ can continue editing a scheme file with the help of the current one.
 @node Hydra
 @chapter Hydra
 
+@cindex hydra
 The continuous integration server at @code{hydra.gnu.org} builds all
 the distribution packages on the supported architectures and serves
 them as substitutes (@pxref{Substitutes,,, guix, The GNU Guix
