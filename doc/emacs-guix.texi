@@ -54,7 +54,7 @@ A copy of the license is available at
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
 * Build Log Mode::      Highlighting Guix build logs.
 * Completions::         Completing @command{guix} shell command.
-* Development::         Tools for Guix developers.
+* Development::         Highlighting and tools for Guix code.
 * Hydra::               Interface for the Guix build farm.
 
 Indexes
@@ -955,8 +955,8 @@ something:
 @findex guix-devel-mode
 If you often work with Guix package files, you may want to see some
 highlighting and to have some indentation rules specific for Guix
-keywords.  There is a minor mode to help you---@code{guix-devel-mode}.
-It can be enabled in Scheme buffers like this:
+keywords.  There is a minor mode to help you---@kbd{M-x
+guix-devel-mode}.  It can be enabled in Scheme buffers like this:
 
 @example
 (add-hook 'scheme-mode-hook 'guix-devel-mode)
