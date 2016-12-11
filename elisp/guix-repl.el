@@ -22,7 +22,7 @@
 ;; This file provides the code for interacting with Guile using Guix REPL
 ;; (Geiser REPL with some guix-specific additions).
 
-;; By default (if `guix-use-guile-server' is non-nil) 2 Guix REPLs are
+;; By default (if `guix-repl-use-server' is non-nil) 2 Guix REPLs are
 ;; started.  The main one (with "guile --listen" process) is used for
 ;; "interacting" with a user - for showing a progress of
 ;; installing/deleting Guix packages.  The second (internal) REPL is
