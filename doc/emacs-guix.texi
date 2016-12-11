@@ -47,7 +47,7 @@ A copy of the license is available at
 @menu
 * Introduction::        Quick overview.
 * Installation::        Installing Emacs-Guix.
-* Package Management::  Managing packages and generations.
+* Package Management::  Managing packages and profile generations.
 * Package Licenses::    Interface for licenses of packages.
 * Package Locations::   Interface for locations of package source files.
 * Popup Interface::     Magit-like interface for guix commands.
@@ -56,6 +56,8 @@ A copy of the license is available at
 * Completions::         Completing @command{guix} shell command.
 * Development::         Highlighting and tools for Guix code.
 * Hydra::               Interface for the Guix build farm.
+* List/Info Interface:: Describing ``list''/''info'' buffers.
+* Configuration::       Configuring Emacs-Guix.
 
 Indexes
 * Concept Index::       Concepts.
@@ -80,14 +82,10 @@ In short, Emacs-Guix provides the following features:
 Interfaces for:
 
 @itemize @minus
-@item packages (@pxref{Package Management})
-
-@item profile generations (and system generations for GuixSD)
-
+@item profile generations (@pxref{Generations})
+@item packages (@pxref{Packages})
 @item package licenses (@pxref{Package Licenses})
-
 @item package locations (@pxref{Package Locations})
-
 @item @uref{https://hydra.gnu.org, Hydra build farm} (@pxref{Hydra})
 @end itemize
 
@@ -223,11 +221,10 @@ become available.
 @node Package Management
 @chapter Package Management
 
-Once Emacs-Guix has been successfully configured, you should be able
-to use a visual interface for routine package management tasks, pretty
-much like the @command{guix package} command (@pxref{Invoking guix
-package,,, guix, The GNU Guix Reference Manual}).  Specifically, it
-makes it easy to:
+Emacs-Guix provides a visual interface for routine package management
+tasks, pretty much like the @command{guix package} command
+(@pxref{Invoking guix package,,, guix, The GNU Guix Reference
+Manual}).  Specifically, it makes it easy to:
 
 @itemize
 @item browse and display packages and generations;
@@ -237,24 +234,35 @@ makes it easy to:
 @end itemize
 
 @menu
-* Commands::                            @kbd{M-x guix-@dots{}}
-* General information::                 Common for both interfaces.
-* ``List'' buffer: List buffer.         List-like interface.
-* ``Info'' buffer: Info buffer.         Help-like interface.
-* Configuration::                       Configuring the interface.
+* Packages::                    Interface for packages.
+* Generations::                 Interface for profile generations.
+* Miscellaneous Commands::      Other related commands.
 @end menu
 
-@node Commands
-@section Commands
+@node Packages
+@section Packages
 
+@cindex packages
+There are multiple commands to display a list of Guix packages.  You
+can either perform some actions in such ``package-list'' buffer, or
+``describe'' package(s) with @key{RET} and do what you need in
+``info'' buffer.
+
+@menu
+* Package Commands::    @kbd{M-x guix-@dots{}} to show packages.
+* Package Keys::        Key bindings in ``package-list'' buffer.
+@end menu
+
+@node Package Commands
+@subsection Package Commands
+
+@vindex guix-current-profile
 @findex guix-set-current-profile
-All commands for displaying packages and generations use the current
-profile, which can be changed with
+All commands for displaying packages use the current profile
+(@code{guix-current-profile} variable), which can be changed with
 @kbd{M-x@tie{}guix-set-current-profile}.  Alternatively, if you call
 any of the following commands with a prefix argument (@kbd{C-u}), you
 will be prompted for a profile just for that command.
-
-Commands for displaying packages:
 
 @table @kbd
 
@@ -270,7 +278,7 @@ Display all/newest available packages.
 @itemx M-x guix-installed-user-packages
 @findex guix-installed-system-packages
 @itemx M-x guix-installed-system-packages
-Display installed packages.  As described above, @kbd{M-x
+Display installed packages.  As explained above, @kbd{M-x
 guix-installed-packages} uses an arbitrary profile that you can specify,
 while the other commands display packages installed in 2 special
 profiles: @file{~/.guix-profile} and @file{/run/current-system/profile}
@@ -317,133 +325,22 @@ package ``name'' is searched.
 @end table
 
 @vindex guix-package-list-type
-By default, these commands display each output on a separate line.  If
-you prefer to see a list of packages---i.e., a list with a package per
-line, use the following setting:
+By default, these commands display each package @strong{output} on a
+separate line.  If you prefer to see a list of packages---i.e., a list
+with a @strong{package} per line, use the following setting:
 
 @example
 (setq guix-package-list-type 'package)
 @end example
 
-Commands for displaying generations:
+@node Package Keys
+@subsection Package Keys
+
+Along with the general ``list'' keys (@pxref{List buffer}), a
+``package-list'' buffer additionally provides the following key
+bindings:
 
 @table @kbd
-
-@findex guix-generations
-@item M-x guix-generations
-List all the generations.
-
-@findex guix-last-generations
-@item M-x guix-last-generations
-List the @var{N} last generations.  You will be prompted for the number
-of generations.
-
-@findex guix-generations-by-time
-@item M-x guix-generations-by-time
-List generations matching time period.  You will be prompted for the
-period using Org mode time prompt based on Emacs calendar (@pxref{The
-date/time prompt,,, org, The Org Manual}).
-
-@end table
-
-Analogously on GuixSD you can also display system generations:
-
-@table @kbd
-@findex guix-system-generations
-@item M-x guix-system-generations
-@findex guix-last-system-generations
-@item M-x guix-last-system-generations
-@findex guix-system-generations-by-time
-@item M-x guix-system-generations-by-time
-@end table
-
-@findex guix-pull
-You can also invoke the @command{guix pull} command (@pxref{Invoking
-guix pull,,, guix, The GNU Guix Reference Manual}) from Emacs using:
-
-@table @kbd
-@item M-x guix-pull
-With @kbd{C-u}, make it verbose.
-@end table
-
-Once @command{guix pull} has succeeded, the Guix REPL is restarted.  This
-allows you to keep using the Emacs interface with the updated Guix.
-
-@node General information
-@section General information
-
-The following keys are available for both ``list'' and ``info'' types of
-buffers:
-
-@table @kbd
-@item l
-@itemx r
-Go backward/forward by the history of the displayed results (this
-history is similar to the history of the Emacs @code{help-mode} or
-@code{Info-mode}).
-
-@item g
-Revert current buffer: update information about the displayed
-packages/generations and redisplay it.
-
-@item R
-Redisplay current buffer (without updating information).
-
-@item M
-@findex guix-apply-manifest
-Apply manifest to the current profile or to a specified profile, if
-prefix argument is used.  This has the same meaning as
-@code{--manifest} option (@pxref{Invoking guix package,,, guix, The
-GNU Guix Reference Manual}).  Also you can invoke @kbd{M-x
-guix-apply-manifest} manually from any buffer.
-
-@item C-c C-z
-@cindex Guix REPL
-Go to the Guix REPL (@pxref{The REPL,,, geiser, Geiser User Manual}).
-
-@item h
-@itemx ?
-Describe current mode to see all available bindings.
-
-@end table
-
-@emph{Hint:} If you need several ``list'' or ``info'' buffers, you can
-simply @kbd{M-x clone-buffer} them, and each buffer will have its own
-history.
-
-@emph{Warning:} Name/version pairs cannot be used to identify packages
-(because a name is not necessarily unique), so Emacs-Guix uses special
-identifiers that live only during a guile session, so if the Guix REPL
-was restarted, you may want to revert ``list'' buffer (by pressing
-@kbd{g}).
-
-@node List buffer
-@section ``List'' buffer
-
-An interface of a ``list'' buffer is similar to the interface provided
-by ``package.el'' (@pxref{Package Menu,,, emacs, The GNU Emacs Manual}).
-
-Default key bindings available for both ``package-list'' and
-``generation-list'' buffers:
-
-@table @kbd
-@item m
-Mark the current entry (with prefix, mark all entries).
-@item u
-Unmark the current entry (with prefix, unmark all entries).
-@item @key{DEL}
-Unmark backward.
-@item S
-Sort entries by a specified column.
-@end table
-
-@cindex package list
-A ``package-list'' buffer additionally provides the following bindings:
-
-@table @kbd
-@item @key{RET}
-Describe marked packages (display available information in a
-``package-info'' buffer).
 @item i
 Mark the current package for installation.
 @item d
@@ -464,17 +361,69 @@ Execute actions on the marked packages.
 Display latest builds of the current package (@pxref{Hydra}).
 @end table
 
-@cindex generation list
-A ``generation-list'' buffer additionally provides the following
+@c ----------------------------------------------------------------
+@node Generations
+@section Generations
+
+@cindex generations
+Each Guix profile may have generations and Emacs-Guix allows you to
+display these generations, to switch to a particular generation, to
+look at the packages installed in it and to compare generations.
+
+@menu
+* Generation Commands::    @kbd{M-x guix-@dots{}} to show generations.
+* Generation Keys::        Key bindings in ``generation-list'' buffer.
+@end menu
+
+@node Generation Commands
+@subsection Generation Commands
+
+As with commands for displaying packages (@pxref{Package Commands}),
+commands for displaying generations use the current profile and can be
+called with a prefix argument.
+
+@table @kbd
+
+@findex guix-generations
+@item M-x guix-generations
+List all the generations.
+
+@findex guix-last-generations
+@item M-x guix-last-generations
+List the @var{N} last generations.  You will be prompted for the number
+of generations.
+
+@findex guix-generations-by-time
+@item M-x guix-generations-by-time
+List generations matching time period.  You will be prompted for the
+period using Org mode time prompt based on Emacs calendar (@pxref{The
+date/time prompt,,, org, The Org Manual}).
+
+@end table
+
+Analogously, on GuixSD you can also display system generations:
+
+@table @kbd
+@findex guix-system-generations
+@item M-x guix-system-generations
+@findex guix-last-system-generations
+@item M-x guix-last-system-generations
+@findex guix-system-generations-by-time
+@item M-x guix-system-generations-by-time
+@end table
+
+@node Generation Keys
+@subsection Generation Keys
+
+Along with the general ``list'' keys (@pxref{List buffer}), a
+``generation-list'' buffer additionally provides the following
 bindings:
 
 @table @kbd
 @item @key{RET}
 List packages installed in the current generation.
-@item i
-Describe marked generations (display available information in a
-``generation-info'' buffer).
 @item s
+@itemx c
 Switch profile to the current generation.
 @item d
 Mark the current generation for deletion (with prefix, mark all
@@ -498,183 +447,34 @@ List package outputs removed from the latest marked generation comparing
 with another marked generation.
 @end table
 
-@node Info buffer
-@section ``Info'' buffer
+@node Miscellaneous Commands
+@section Miscellaneous Commands
 
-The interface of an ``info'' buffer is similar to the interface of
-@code{help-mode} (@pxref{Help Mode,,, emacs, The GNU Emacs Manual}).
+And some more commands related to profiles and packages:
 
-``Info'' buffer contains some buttons (as usual you may use @key{TAB} /
-@kbd{S-@key{TAB}} to move between buttons---@pxref{Mouse References,,,
-emacs, The GNU Emacs Manual}) which can be used to:
+@table @kbd
 
-@itemize @bullet
-@cindex package info
-@item (in a ``package-info'' buffer)
+@findex guix-apply-manifest
+@item M-x guix-apply-manifest
+Apply manifest file to the current profile or to a specified profile,
+if prefix argument is used.  This has the same meaning as
+@code{--manifest} option (@pxref{Invoking guix package,,, guix, The
+GNU Guix Reference Manual}).
 
-@itemize @minus
-@item install/remove a package;
-@item jump to a package location;
-@item browse home page of a package;
-@item browse license URL;
-@item describe packages from ``Inputs'' fields.
-@end itemize
+@findex guix-pull
+@item M-x guix-pull
+It is the same as @command{guix pull} shell command (@pxref{Invoking
+guix pull,,, guix, The GNU Guix Reference Manual}).  With @kbd{C-u},
+make it verbose.
 
-@cindex generation info
-@item (in a ``generation-info'' buffer)
-
-@itemize @minus
-@item remove a generation;
-@item switch to a generation;
-@item list packages installed in a generation;
-@item jump to a generation directory.
-@end itemize
-
-@end itemize
-
-@cindex buttons
-It is also possible to copy a button label (a link to an URL or a file)
-by pressing @kbd{c} on a button.
-
-@node Configuration
-@section Configuration
-
-@cindex customization group
-There are many variables you can modify to change the appearance or
-behavior of the Emacs user interface.  Some of these variables are
-described in this section.  Also you can use Custom Interface
-(@pxref{Easy Customization,,, emacs, The GNU Emacs Manual}) to
-explore/set variables and faces---@kbd{M-x customize-group @key{RET}
-guix}.
-
-If you wish to change the appearance of ``list'' / ``info'' buffers,
-look at @code{guix-ENTRY-TYPE-BUFFER-TYPE-format} variables
-(@dfn{ENTRY-TYPE} is @code{package}, @code{output}, @code{generation}
-or @code{system-generation}; @dfn{BUFFER-TYPE} is either @code{list}
-or @code{info}).
-
-@menu
-* Guile and Build Options::     Specifying how packages are built.
-* Buffer Names::                Names of Guix buffers.
-* Keymaps::                     Configuring key bindings.
-@end menu
-
-@node Guile and Build Options
-@subsection Guile and Build Options
-
-@table @code
-@vindex guix-guile-program
-@item guix-guile-program
-If you have some special needs for starting a Guile process, you may set
-this variable, for example:
-
-@example
-(setq guix-guile-program '("/bin/guile" "--no-auto-compile"))
-@end example
-
-@vindex guix-use-substitutes
-@item guix-use-substitutes
-Has the same meaning as @code{--no-substitutes} option
-(@pxref{Invoking guix build,,, guix, The GNU Guix Reference
-Manual})---i.e., when non-nil, substitutes are enabled.
-
-@vindex guix-dry-run
-@item guix-dry-run
-Has the same meaning as @code{--dry-run} option (@pxref{Invoking guix
-build,,, guix, The GNU Guix Reference Manual})---i.e., when non-nil,
-do not build the derivations.
-
-@end table
-
-@node Buffer Names
-@subsection Buffer Names
-
-Default names of Emacs-Guix buffers (``*Guix@tie{}@dots{}*'') may be
-changed with the following variables:
-
-@table @code
-@vindex guix-package-list-buffer-name
-@item guix-package-list-buffer-name
-@vindex guix-output-list-buffer-name
-@item guix-output-list-buffer-name
-@vindex guix-generation-list-buffer-name
-@item guix-generation-list-buffer-name
-@vindex guix-package-info-buffer-name
-@item guix-package-info-buffer-name
-@vindex guix-generation-info-buffer-name
-@item guix-generation-info-buffer-name
-@vindex guix-repl-buffer-name
-@item guix-repl-buffer-name
-@vindex guix-internal-repl-buffer-name
-@item guix-internal-repl-buffer-name
-@end table
-
-@vindex guix-ui-buffer-name-function
-By default, the name of a profile is also displayed in a ``list'' or
-``info'' buffer name.  To change this behavior, use
-@code{guix-ui-buffer-name-function} variable.
-
-For example, if you want to display all types of results in a single
-buffer (in such case you will probably use a history (@kbd{l}/@kbd{r})
-extensively), you may do it like this:
-
-@example
-(let ((name "Guix Universal"))
-  (setq
-   guix-package-list-buffer-name    name
-   guix-output-list-buffer-name     name
-   guix-generation-list-buffer-name name
-   guix-package-info-buffer-name    name
-   guix-generation-info-buffer-name name))
-@end example
-
-@node Keymaps
-@subsection Keymaps
-
-If you want to change default key bindings, use the following keymaps
-(@pxref{Init Rebinding,,, emacs, The GNU Emacs Manual}):
-
-@table @code
-@vindex guix-buffer-map
-@item guix-buffer-map
-Parent keymap with general keys for any buffer type.
-
-@vindex guix-ui-map
-@item guix-ui-map
-Parent keymap with general keys for buffers used for Guix package
-management (for packages, outputs and generations).
-
-@vindex guix-list-mode-map
-@item guix-list-mode-map
-Parent keymap with general keys for ``list'' buffers.
-
-@vindex guix-package-list-mode-map
-@item guix-package-list-mode-map
-Keymap with specific keys for ``package-list'' buffers.
-
-@vindex guix-output-list-mode-map
-@item guix-output-list-mode-map
-Keymap with specific keys for ``output-list'' buffers.
-
-@vindex guix-generation-list-mode-map
-@item guix-generation-list-mode-map
-Keymap with specific keys for ``generation-list'' buffers.
-
-@vindex guix-info-mode-map
-@item guix-info-mode-map
-Parent keymap with general keys for ``info'' buffers.
-
-@vindex guix-package-info-mode-map
-@item guix-package-info-mode-map
-Keymap with specific keys for ``package-info'' buffers.
-
-@vindex guix-generation-info-mode-map
-@item guix-generation-info-mode-map
-Keymap with specific keys for ``generation-info'' buffers.
-
-@vindex guix-info-button-map
-@item guix-info-button-map
-Keymap with keys available when a point is placed on a button.
+@cindex Guix REPL
+Once @command{guix pull} has succeeded, the Guix REPL is
+restarted@footnote{Note that name/version pairs cannot be used to
+identify packages (because a name is not necessarily unique), so
+Emacs-Guix uses special identifiers that live only during a guile
+session, so if the Guix REPL was restarted, you may want to revert
+``list'' buffer (by pressing @kbd{g}).}.  This allows you to keep
+using the Emacs interface with the updated Guix code.
 
 @end table
 
@@ -1070,6 +870,247 @@ In a list of builds you can press @kbd{L} key to display a build log of
 the current build.  Also both a list of builds and a list of jobsets
 provide @kbd{B} key to display latest builds of the current job or
 jobset (don't forget about @kbd{C-u}).
+
+@c ----------------------------------------------------------------
+@node List/Info Interface
+@chapter List/Info Interface
+
+As you probably already know, there are multiple commands that display
+various lists (of packages, licenses, etc.).  This is so-called
+``list'' interface.  Also you can get the same data displayed in
+``info'' interface.  This chapter describes these interfaces.
+
+@menu
+* List/Info Keys::              Common keys for both interfaces.
+* ``List'' buffer: List buffer. List-like interface.
+* ``Info'' buffer: Info buffer. Help-like interface.
+@end menu
+
+@node List/Info Keys
+@section List/Info Keys
+
+The following keys are available for both ``list'' and ``info''
+interfaces:
+
+@table @kbd
+@item l
+@itemx r
+Go backward/forward by the history of the displayed results (this
+history is similar to the history of the Emacs @code{help-mode} or
+@code{Info-mode}).
+
+@item g
+Revert current buffer: update (receive it again) the currently
+displayed data and redisplay it.
+
+@item R
+Redisplay current buffer (without updating the data).
+
+@item h
+@itemx ?
+Describe current mode to see all available bindings.
+
+@end table
+
+Also some buffers provide the following keys:
+
+@table @kbd
+
+@item M
+Apply manifest file to the current profile (@pxref{Miscellaneous
+Commands, @code{guix-apply-manifest}}).
+
+@item C-c C-z
+@cindex Guix REPL
+Go to the Guix REPL (@pxref{The REPL,,, geiser, Geiser User Manual}).
+
+@end table
+
+@emph{Hint:} If you need several ``list'' or ``info'' buffers, you can
+simply @kbd{M-x@tie{}clone-buffer} them, and each buffer will have its
+own history.
+
+@node List buffer
+@section ``List'' buffer
+
+An interface of a ``list'' buffer is similar to the interface provided
+by ``package.el'' (@pxref{Package Menu,,, emacs, The GNU Emacs Manual}).
+
+And here are the default key bindings (some of them may be rebound
+to more specific commands):
+
+@table @kbd
+@item m
+Mark the current entry (with prefix, mark all entries).
+@item u
+Unmark the current entry (with prefix, unmark all entries).
+@item @key{DEL}
+Unmark backward.
+@item @key{RET}
+@itemx i
+Display ``info'' interface for the marked entries (or the current
+entry if nothing is marked).
+@item s
+Sort entries by column specified by the prefix argument (counting from
+0).
+@end table
+
+@node Info buffer
+@section ``Info'' buffer
+
+The interface of an ``info'' buffer is similar to the interface of
+@code{help-mode} (@pxref{Help Mode,,, emacs, The GNU Emacs Manual}),
+or rather @code{Custom-mode} (@pxref{Easy Customization,,, emacs, The
+GNU Emacs Manual}), as it is full of various buttons that can be used
+to open files, browse URLs, do some actions (like installing/removing
+packages), etc.
+
+@cindex buttons
+As always, you may use @key{TAB} / @kbd{S-@key{TAB}} to move between
+buttons and @key{RET} to press a button, or you can just use mouse
+(@pxref{Mouse References,,, emacs, The GNU Emacs Manual}).
+
+Finally, you can copy any button label (a link to an URL or a file) by
+pressing @kbd{c} on a button.
+
+@c ----------------------------------------------------------------
+@node Configuration
+@chapter Configuration
+
+@cindex customization group
+There are many variables you can modify to change the appearance or
+behavior of Emacs-Guix.  Some of these variables are described in this
+section.  Also you can use Custom Interface (@pxref{Easy
+Customization,,, emacs, The GNU Emacs Manual}) to explore/set
+variables and faces---@kbd{M-x@tie{}customize-group @key{RET} guix}.
+
+@vindex guix-ENTRY-TYPE-BUFFER-TYPE-format
+If you wish to change the appearance of ``list'' / ``info'' buffers,
+look at @code{guix-ENTRY-TYPE-BUFFER-TYPE-format} variables
+(@dfn{ENTRY-TYPE} can be @code{package}, @code{output},
+@code{generation} @code{system-generation}, @code{license},
+@code{location}, @code{hydra-build}, @code{hydra-jobset};
+@dfn{BUFFER-TYPE} is either @code{list} or @code{info}).
+
+@menu
+* Guile and Build Options::     Settings for Guix REPL, Guile, etc.
+* Buffer Names::                Names of Guix buffers.
+* Keymaps::                     Configuring key bindings.
+@end menu
+
+@node Guile and Build Options
+@section Guile and Build Options
+
+@table @code
+
+@vindex guix-guile-program
+@item guix-guile-program
+If you have some special needs for starting a Guile process, you may set
+this variable, for example:
+
+@example
+(setq guix-guile-program '("/bin/guile" "--no-auto-compile"))
+@end example
+
+@vindex guix-use-substitutes
+@item guix-use-substitutes
+Has the same meaning as @code{--no-substitutes} option
+(@pxref{Invoking guix build,,, guix, The GNU Guix Reference
+Manual})---i.e., when non-nil, substitutes are enabled.
+
+@vindex guix-dry-run
+@item guix-dry-run
+Has the same meaning as @code{--dry-run} option (@pxref{Invoking guix
+build,,, guix, The GNU Guix Reference Manual})---i.e., when non-nil,
+do not build the derivations.
+
+@cindex Guix REPL
+@vindex guix-repl-use-server
+@item guix-repl-use-server
+By default, along with the main Guix REPL, an additional (internal)
+REPL is started.  This allows you to display packages, generations and
+to receive other info from the Scheme side, while there is some active
+process in the main Guix REPL (e.g., while downloading or building
+packages).  If you don't want to have the second REPL, set this
+variable to nil.
+
+@vindex guix-repl-use-latest
+@item guix-repl-use-latest
+Set this variable to nil, if you don't want to use the latest Guix
+code received with @code{guix pull} command (@pxref{Invoking guix
+pull,,, guix, The GNU Guix Reference Manual}).
+
+@end table
+
+@node Buffer Names
+@section Buffer Names
+
+Default names of various Emacs-Guix buffers (``*Guix@tie{}@dots{}*'')
+may be changed with the following variables:
+
+@table @code
+
+@vindex guix-ENTRY-TYPE-BUFFER-TYPE-buffer-name
+@item guix-ENTRY-TYPE-BUFFER-TYPE-buffer-name
+@xref{Configuration}, for the meaning of @code{ENTRY-TYPE} and
+@code{BUFFER-TYPE}.
+
+@vindex guix-ui-buffer-name-function
+@item guix-ui-buffer-name-function
+By default, many Guix buffers contain profile name (e.g., @code{*Guix
+Packages: <profile>*}).  This variable allows you to control how this
+profile name is displayed.  If you want to remove profile name from
+the buffer names, you can do it like this:
+
+@example
+(setq guix-ui-buffer-name-function 'guix-ui-buffer-name-simple)
+@end example
+
+@vindex guix-repl-buffer-name
+@item guix-repl-buffer-name
+
+@vindex guix-internal-repl-buffer-name
+@item guix-internal-repl-buffer-name
+
+@vindex guix-help-buffer-name
+@item guix-help-buffer-name
+
+@end table
+
+@node Keymaps
+@section Keymaps
+
+If you want to change default key bindings, look at the following
+keymaps (@pxref{Init Rebinding,,, emacs, The GNU Emacs Manual}):
+
+@table @code
+
+@vindex guix-ui-map
+@item guix-ui-map
+Parent keymap with general keys for buffers used for Guix package
+management.
+
+@vindex guix-ENTRY-TYPE-BUFFER-TYPE-mode-map
+@item guix-ENTRY-TYPE-BUFFER-TYPE-mode-map
+@xref{Configuration}, for the meaning of @code{ENTRY-TYPE} and
+@code{BUFFER-TYPE}.
+
+@vindex guix-build-log-common-map
+@item guix-build-log-common-map
+
+@vindex guix-build-log-mode-map
+@item guix-build-log-mode-map
+
+@vindex guix-build-log-minor-mode-map
+@item guix-build-log-minor-mode-map
+
+@vindex guix-devel-keys-map
+@item guix-devel-keys-map
+
+@vindex guix-devel-mode-map
+@item guix-devel-mode-map
+
+@end table
 
 @c ----------------------------------------------------------------
 @node Concept Index
