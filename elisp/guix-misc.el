@@ -326,11 +326,13 @@ The function is called with a single argument - a command line string."
 (defun guix-update-buffers-maybe-after-pull ()
   "Update buffers depending on `guix-update-after-pull'."
   (when guix-update-after-pull
-    (mapc #'guix-ui-update-buffer
-          ;; No need to update "generation" buffers.
-          (guix-ui-buffers '(guix-package-list-mode
-                             guix-package-info-mode
-                             guix-output-list-mode)))
+    ;; No need to update "generation" buffers.
+    (dolist (buffer (guix-operation-buffers
+                     '(guix-package-list-mode
+                       guix-package-info-mode
+                       guix-output-list-mode)))
+      (with-current-buffer buffer
+        (revert-buffer nil t)))
     (message "Guix buffers have been updated.")))
 
 ;;;###autoload

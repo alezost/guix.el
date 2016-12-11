@@ -25,7 +25,6 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'dash)
 (require 'bui)
 (require 'guix-repl)
 (require 'guix-guile)
@@ -84,23 +83,7 @@ with all available parameters."
    'add))
 
 
-;;; Buffers and auto updating
-
-(defcustom guix-ui-update-after-operation 'current
-  "Define what kind of data to update after executing an operation.
-
-After successful executing an operation in the Guix REPL (for
-example after installing a package), the data in Guix buffers
-will or will not be automatically updated depending on a value of
-this variable.
-
-If nil, update nothing (do not revert any buffer).
-If `current', update the buffer from which an operation was performed.
-If `all', update all Guix buffers (not recommended)."
-  :type '(choice (const :tag "Do nothing" nil)
-                 (const :tag "Update operation buffer" current)
-                 (const :tag "Update all Guix buffers" all))
-  :group 'guix)
+;;; Buffers
 
 (defcustom guix-ui-buffer-name-function
   #'guix-ui-buffer-name-full
@@ -130,45 +113,6 @@ The function is called with 2 arguments: BASE-NAME and PROFILE."
 See `guix-ui-buffer-name-function' for details."
   (funcall guix-ui-buffer-name-function
            base-name profile))
-
-(defun guix-ui-buffer? (&optional buffer modes)
-  "Return non-nil if BUFFER mode is derived from any of the MODES.
-If BUFFER is nil, check current buffer.
-If MODES is nil, use package/generation modes."
-  (with-current-buffer (or buffer (current-buffer))
-    (apply #'derived-mode-p
-           (or modes '(guix-package-list-mode
-                       guix-package-info-mode
-                       guix-output-list-mode
-                       guix-generation-list-mode
-                       guix-generation-info-mode)))))
-
-(defun guix-ui-buffers (&optional modes)
-  "Return a list of all buffers with major modes derived from MODES.
-If MODES is nil, return list of all Guix 'list' and 'info' buffers."
-  (--filter (guix-ui-buffer? it modes)
-            (buffer-list)))
-
-(defun guix-ui-update-buffer (buffer)
-  "Update data in a 'list' or 'info' BUFFER."
-  (with-current-buffer buffer
-    (bui-revert nil t)))
-
-(defun guix-ui-update-buffers-after-operation ()
-  "Update buffers after Guix operation if needed.
-See `guix-ui-update-after-operation' for details."
-  (let ((to-update
-         (and guix-operation-buffer
-              (cl-case guix-ui-update-after-operation
-                (current (and (buffer-live-p guix-operation-buffer)
-                              (guix-ui-buffer? guix-operation-buffer)
-                              (list guix-operation-buffer)))
-                (all     (guix-ui-buffers))))))
-    (setq guix-operation-buffer nil)
-    (mapc #'guix-ui-update-buffer to-update)))
-
-(add-hook 'guix-repl-after-operation-hook
-          'guix-ui-update-buffers-after-operation)
 
 
 ;;; Interface definers

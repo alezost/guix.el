@@ -48,6 +48,7 @@
 
 ;;; Code:
 
+(require 'dash)
 (require 'geiser-mode)
 (require 'geiser-guile)
 (require 'guix-geiser)
@@ -143,7 +144,8 @@ This REPL is used for receiving information only if
   "Hook run before executing an operation in Guix REPL.")
 
 (defvar guix-repl-after-operation-hook
-  '(guix-repl-autoload-emacs-packages-maybe
+  '(guix-update-buffers-after-operation
+    guix-repl-autoload-emacs-packages-maybe
     guix-repl-operation-success-message)
   "Hook run after executing successful operation in Guix REPL.")
 
@@ -398,10 +400,66 @@ Consider running \"guix pull\"." latest-dir))
     latest-dir))
 
 
-;;; Evaluating expressions
+;;; Operation buffers
+
+(define-obsolete-variable-alias 'guix-ui-update-after-operation
+  'guix-update-buffers-after-operation "0.2")
+
+(defcustom guix-update-buffers-after-operation 'current
+  "Define what kind of data to update after executing an operation.
+
+After successful executing of some operation in the Guix
+REPL (for example after installing a package), the data in Guix
+buffers will or will not be automatically updated depending on a
+value of this variable.
+
+If nil, update nothing (do not revert any buffer).
+If `current', update the buffer from which an operation was performed.
+If `all', update all Guix buffers (not recommended)."
+  :type '(choice (const :tag "Do nothing" nil)
+                 (const :tag "Update operation buffer" current)
+                 (const :tag "Update all Guix buffers" all))
+  :group 'guix-repl)
 
 (defvar guix-operation-buffer nil
   "Buffer from which the latest Guix operation was performed.")
+
+(defun guix-operation-buffer? (&optional buffer modes)
+  "Return non-nil if BUFFER mode is derived from any of the MODES.
+If BUFFER is nil, check current buffer.
+If MODES is nil, use modes for Guix package management."
+  (with-current-buffer (or buffer (current-buffer))
+    (apply #'derived-mode-p
+           (or modes '(guix-package-list-mode
+                       guix-package-info-mode
+                       guix-output-list-mode
+                       guix-generation-list-mode
+                       guix-generation-info-mode)))))
+
+(defun guix-operation-buffers (&optional modes)
+  "Return a list of all buffers with major modes derived from MODES.
+If MODES is nil, return list of all Guix 'list' and 'info' buffers."
+  (--filter (guix-operation-buffer? it modes)
+            (buffer-list)))
+
+(defun guix-update-buffers-after-operation ()
+  "Update buffers after Guix operation if needed.
+See `guix-update-after-operation' for details."
+  (let ((to-update
+         (and guix-operation-buffer
+              (cl-case guix-update-buffers-after-operation
+                (current (and (buffer-live-p guix-operation-buffer)
+                              (guix-operation-buffer?
+                               guix-operation-buffer)
+                              (list guix-operation-buffer)))
+                (all     (guix-operation-buffers))))))
+    (setq guix-operation-buffer nil)
+    (dolist (buffer to-update)
+      (with-current-buffer buffer
+        (revert-buffer nil t)))))
+
+
+;;; Evaluating expressions
 
 (defun guix-eval (str)
   "Evaluate STR with guile expression using Guix REPL.
