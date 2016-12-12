@@ -28,9 +28,38 @@
 (require 'bui)
 (require 'guix-ui)
 (require 'guix-ui-generation)
+(require 'guix-utils)
 (require 'guix-profiles)
 
 (guix-ui-define-entry-type system-generation)
+
+(defun guix-system-generation-add-kernel-config (entry)
+  "Return ENTRY with 'kernel-config' parameter."
+  (let* ((kernel (bui-entry-value entry 'kernel))
+         (dir    (file-name-directory kernel))
+         ;; Nowadays kernel config has ".config" name, but before
+         ;; <http://git.savannah.gnu.org/cgit/guix.git/commit/?id=e4e9c0a083962a770ff4f56c69082cf4b7046a6c>
+         ;; it was "config" (without "."), so find the right name.
+         (config (car (directory-files dir 'full-name
+                                       "config\\'" 'no-sort))))
+    `((kernel-config . ,config)
+      ,@entry)))
+
+(defun guix-system-generation-get-entries (profile search-type
+                                                   search-values params)
+  "Return 'system-generation' entries."
+  (let* ((add-kernel-config? (or (null params)
+                                 (memq 'kernel-config params)))
+         (params (if (and add-kernel-config?
+                          (not (memq 'kernel params)))
+                     (cons 'kernel params)
+                   params)))
+    (apply #'guix-modify-objects
+           (guix-generation-get-entries
+            'system-generation-sexps
+            profile search-type search-values params)
+           (when add-kernel-config?
+             '(guix-system-generation-add-kernel-config)))))
 
 (defun guix-system-generation-get-display (search-type &rest search-values)
   "Search for system generations and show results.
@@ -59,15 +88,14 @@ SEARCH-VALUES."
             (store-device format (format))
             (store-mount-point format (format))
             (kernel-arguments format (format))
-            (kernel format (format bui-file)))
+            (kernel-config simple (indent bui-file)))
   :titles guix-generation-info-titles
   :required guix-generation-info-required-params)
 
 (defun guix-system-generation-info-get-entries (profile search-type
                                                         &rest search-values)
   "Return 'system-generation' entries for displaying them in 'info' buffer."
-  (guix-generation-get-entries
-   'system-generation-sexps
+  (guix-system-generation-get-entries
    profile search-type search-values
    (cl-union guix-system-generation-info-required-params
              (bui-info-displayed-params 'guix-system-generation))))
@@ -98,8 +126,7 @@ SEARCH-VALUES."
 (defun guix-system-generation-list-get-entries (profile search-type
                                                         &rest search-values)
   "Return 'system-generation' entries for displaying them in 'list' buffer."
-  (guix-generation-get-entries
-   'system-generation-sexps
+  (guix-system-generation-get-entries
    profile search-type search-values
    (cl-union guix-system-generation-list-required-params
              (bui-list-displayed-params 'guix-system-generation))))
