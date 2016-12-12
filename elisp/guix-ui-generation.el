@@ -37,6 +37,26 @@
 
 (guix-ui-define-entry-type generation)
 
+(defun guix-generation-get-entries (proc profile search-type
+                                         search-values params)
+  "Return 'generation' or 'system-generation' entries.
+PROC is the name of a Scheme procedure (either 'generation-sexps'
+or 'system-generation-sexps')."
+  (apply #'guix-modify-objects
+         (guix-eval-read (guix-make-guile-expression
+                          proc profile search-type search-values params))
+         (when (or (null params)
+                   (memq 'number-of-packages params))
+           (list
+            (lambda (entry)
+              (let ((generation (bui-entry-non-void-value entry 'number)))
+                (if generation
+                    `((number-of-packages
+                       . ,(guix-profile-number-of-packages
+                           profile generation))
+                      ,@entry)
+                  entry)))))))
+
 (defun guix-generation-get-display (profile search-type &rest search-values)
   "Search for generations and show results.
 
@@ -113,12 +133,11 @@ current profile's GENERATION."
 (defun guix-generation-info-get-entries (profile search-type
                                                  &rest search-values)
   "Return 'generation' entries for displaying them in 'info' buffer."
-  (guix-eval-read
-   (guix-make-guile-expression
-    'generation-sexps
-    profile search-type search-values
-    (cl-union guix-generation-info-required-params
-              (bui-info-displayed-params 'guix-generation)))))
+  (guix-generation-get-entries
+   'generation-sexps
+   profile search-type search-values
+   (cl-union guix-generation-info-required-params
+             (bui-info-displayed-params 'guix-generation))))
 
 (defun guix-generation-info-insert-number (number &optional _)
   "Insert generation NUMBER and action buttons."
@@ -169,9 +188,12 @@ current profile's GENERATION."
   :describe-function 'guix-ui-list-describe
   :format '((number nil 5 bui-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
+            (number-of-packages nil 11 bui-list-sort-numerically-2
+                                :right-align t)
             (time bui-list-get-time 20 t)
             (file-name bui-list-get-file-name 30 t))
-  :titles '((number . "N."))
+  :titles '((number . "N.")
+            (number-of-packages . "Packages"))
   :sort-key '(number . t)
   :marks '((delete . ?D)))
 
@@ -190,12 +212,11 @@ current profile's GENERATION."
 (defun guix-generation-list-get-entries (profile search-type
                                                  &rest search-values)
   "Return 'generation' entries for displaying them in 'list' buffer."
-  (guix-eval-read
-   (guix-make-guile-expression
-    'generation-sexps
-    profile search-type search-values
-    (cl-union guix-generation-list-required-params
-              (bui-list-displayed-params 'guix-generation)))))
+  (guix-generation-get-entries
+   'generation-sexps
+   profile search-type search-values
+   (cl-union guix-generation-list-required-params
+             (bui-list-displayed-params 'guix-generation))))
 
 (defun guix-generation-list-get-current (val &optional _)
   "Return string from VAL showing whether this generation is current.

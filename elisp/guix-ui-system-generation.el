@@ -60,12 +60,11 @@ SEARCH-VALUES."
 (defun guix-system-generation-info-get-entries (profile search-type
                                                         &rest search-values)
   "Return 'system-generation' entries for displaying them in 'info' buffer."
-  (guix-eval-read
-   (guix-make-guile-expression
-    'system-generation-sexps
-    profile search-type search-values
-    (cl-union guix-system-generation-info-required-params
-              (bui-info-displayed-params 'guix-system-generation)))))
+  (guix-generation-get-entries
+   'system-generation-sexps
+   profile search-type search-values
+   (cl-union guix-system-generation-info-required-params
+             (bui-info-displayed-params 'guix-system-generation))))
 
 
 ;;; System generation 'list'
@@ -82,9 +81,10 @@ SEARCH-VALUES."
   :describe-function 'guix-ui-list-describe
   :format '((number nil 5 bui-list-sort-numerically-0 :right-align t)
             (current guix-generation-list-get-current 10 t)
-            (label nil 40 t)
-            (time bui-list-get-time 20 t)
-            (file-name bui-list-get-file-name 30 t))
+            (label nil 35 t)
+            (number-of-packages nil 11 bui-list-sort-numerically-3
+                                :right-align t)
+            (time bui-list-get-time 20 t))
   :titles guix-generation-list-titles
   :sort-key '(number . t)
   :marks '((delete . ?D)))
@@ -92,12 +92,11 @@ SEARCH-VALUES."
 (defun guix-system-generation-list-get-entries (profile search-type
                                                         &rest search-values)
   "Return 'system-generation' entries for displaying them in 'list' buffer."
-  (guix-eval-read
-   (guix-make-guile-expression
-    'system-generation-sexps
-    profile search-type search-values
-    (cl-union guix-system-generation-list-required-params
-              (bui-list-displayed-params 'guix-system-generation)))))
+  (guix-generation-get-entries
+   'system-generation-sexps
+   profile search-type search-values
+   (cl-union guix-system-generation-list-required-params
+             (bui-list-displayed-params 'guix-system-generation))))
 
 
 ;;; Interactive commands

@@ -120,9 +120,32 @@ the returned file name ends with '/profile'."
       profile)))
 
 (defun guix-manifest-file (profile &optional generation)
-  "Return the file name of a PROFILE's manifest."
+  "Return manifest file name of PROFILE or its GENERATION."
   (expand-file-name "manifest"
                     (guix-package-profile profile generation)))
+
+(defun guix-profile-number-of-packages (profile &optional generation)
+  "Return the number of packages installed in PROFILE or its GENERATION."
+  (let ((manifest (guix-manifest-file profile generation)))
+    ;; Just count a number of sexps inside (packages ...) of manifest
+    ;; file.  It should be much faster than running the REPL and
+    ;; calculating manifest entries on the Scheme side.
+    (when (file-exists-p manifest)
+      (with-temp-buffer
+        (insert-file-contents-literally manifest)
+        (goto-char (point-min))
+        (re-search-forward "(packages" nil t)
+        (down-list)
+        (let ((num 0)
+              (pos (point)))
+          (while (setq pos (condition-case nil
+                               (scan-sexps pos 1)
+                             (error nil)))
+            (setq num (1+ num)))
+          num)))))
+
+
+;;; Minibuffer readers
 
 (defun guix-read-profile (&optional default)
   "Prompt for profile and return it.
@@ -144,6 +167,7 @@ See `guix-read-profile' for the meaning of DEFAULT, and
 `guix-generation-profile' for the meaning of generation profile."
   (guix-generation-profile (guix-read-profile default)))
 
+
 ;;;###autoload
 (defun guix-set-current-profile (file-name)
   "Set `guix-current-profile' to FILE-NAME.
