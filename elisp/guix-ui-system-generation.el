@@ -56,6 +56,9 @@ SEARCH-VALUES."
             (file-name format (format bui-file))
             (time format (time))
             (root-device format (format))
+            (store-device format (format))
+            (store-mount-point format (format))
+            (kernel-arguments format (format))
             (kernel format (format bui-file)))
   :titles guix-generation-info-titles
   :required guix-generation-info-required-params)

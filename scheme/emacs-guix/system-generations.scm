@@ -43,19 +43,19 @@
 (define (system-generation-param-alist profile)
   "Return an alist of system generation parameters and procedures for
 PROFILE."
-  (append (generation-param-alist profile)
-          `((label       . ,(lambda (gen)
-                              (boot-parameters-label
-                               (system-generation-boot-parameters
-                                profile gen))))
-            (root-device . ,(lambda (gen)
-                              (boot-parameters-root-device
-                               (system-generation-boot-parameters
-                                profile gen))))
-            (kernel      . ,(lambda (gen)
-                              (boot-parameters-kernel
-                               (system-generation-boot-parameters
-                                profile gen)))))))
+  (define (accessor proc)
+    (lambda (generation)
+      (proc (system-generation-boot-parameters profile generation))))
+
+  (append
+   (generation-param-alist profile)
+   `((label             . ,(accessor boot-parameters-label))
+     (root-device       . ,(accessor boot-parameters-root-device))
+     (store-device      . ,(accessor boot-parameters-store-device))
+     (store-mount-point . ,(accessor boot-parameters-store-mount-point))
+     (kernel            . ,(accessor boot-parameters-kernel))
+     (kernel-arguments  . ,(accessor boot-parameters-kernel-arguments))
+     (initrd            . ,(accessor boot-parameters-initrd)))))
 
 (define (system-generation-sexps profile search-type search-values params)
   "Return information (sexps) about system generations.
