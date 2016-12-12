@@ -86,8 +86,8 @@ SEARCH-VALUES."
                                 :right-align t)
             (time bui-list-get-time 20 t))
   :titles guix-generation-list-titles
-  :sort-key '(number . t)
-  :marks '((delete . ?D)))
+  :sort-key guix-generation-list-sort-key
+  :marks guix-generation-list-additional-marks)
 
 (defun guix-system-generation-list-get-entries (profile search-type
                                                         &rest search-values)
