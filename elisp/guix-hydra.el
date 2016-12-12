@@ -143,7 +143,7 @@ SEARCH-TYPE is one of the types defined by `guix-hydra-define-interface'."
   "Filter ENTRIES using FILTERS.
 Call `guix-modify' on each entry from ENTRIES."
   (mapcar (lambda (entry)
-            (guix-modify entry filters))
+            (apply #'guix-modify entry filters))
           entries))
 
 (defun guix-hydra-filter-names (entry name-alist)

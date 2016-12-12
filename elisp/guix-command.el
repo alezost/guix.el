@@ -598,9 +598,10 @@ command."
          (processors
           (append (bui-assoc-value guix-command-post-processors commands)
                   (bui-assoc-value guix-command-post-processors command))))
-    (guix-modify args
-                 (or processors
-                     (list #'guix-command-post-process-rest-multiple)))))
+    (apply #'guix-modify
+           args
+           (or processors
+               (list #'guix-command-post-process-rest-multiple)))))
 
 
 ;;; 'Execute' actions
