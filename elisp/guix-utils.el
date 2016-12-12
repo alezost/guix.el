@@ -24,6 +24,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'dash)
 (require 'bui-utils)
 
 (defun guix-concat-strings (strings separator &optional location)
@@ -189,6 +190,12 @@ modifier call."
     (apply #'guix-modify
            (funcall (car modifiers) object)
            (cdr modifiers))))
+
+(defun guix-modify-objects (objects &rest modifiers)
+  "Apply MODIFIERS to each object from a list of OBJECTS.
+See `guix-modify' for details."
+  (--map (apply #'guix-modify it modifiers)
+         objects))
 
 (defun guix-make-symbol (&rest symbols)
   "Return `guix-SYMBOLS-...' symbol."

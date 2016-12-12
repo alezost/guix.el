@@ -131,20 +131,13 @@ SEARCH-TYPE is one of the types defined by `guix-hydra-define-interface'."
     (let* ((url         (apply #'guix-hydra-search-url
                                entry-type search-type args))
            (raw-entries (guix-hydra-receive-data url))
-           (entries     (guix-hydra-filter-entries
-                         raw-entries
-                         (guix-hydra-filters entry-type))))
+           (entries     (apply #'guix-modify-objects
+                               raw-entries
+                               (guix-hydra-filters entry-type))))
       entries)))
 
 
 ;;; Filters for processing raw entries
-
-(defun guix-hydra-filter-entries (entries filters)
-  "Filter ENTRIES using FILTERS.
-Call `guix-modify' on each entry from ENTRIES."
-  (mapcar (lambda (entry)
-            (apply #'guix-modify entry filters))
-          entries))
 
 (defun guix-hydra-filter-names (entry name-alist)
   "Replace names of ENTRY parameters using NAME-ALIST.
