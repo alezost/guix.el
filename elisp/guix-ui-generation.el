@@ -151,15 +151,6 @@ current profile's GENERATION."
        (button-get btn 'number))
       'installed))
    (format "Show packages installed in generation %d" number)
-   'number number)
-  (bui-insert-indent)
-  (bui-insert-action-button
-   "Delete"
-   (lambda (btn)
-     (guix-delete-generations (guix-ui-current-profile)
-                              (list (button-get btn 'number))
-                              (current-buffer)))
-   (format "Delete generation %d" number)
    'number number))
 
 (defun guix-generation-info-insert-current (val entry)
@@ -177,6 +168,15 @@ current profile's GENERATION."
                                     (current-buffer)))
        (format "Switch to generation %d (make it the current one)"
                number)
+       'number number)
+      (bui-insert-indent)
+      (bui-insert-action-button
+       "Delete"
+       (lambda (btn)
+         (guix-delete-generations (guix-ui-current-profile)
+                                  (list (button-get btn 'number))
+                                  (current-buffer)))
+       (format "Delete generation %d" number)
        'number number))))
 
 
