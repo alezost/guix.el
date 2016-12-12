@@ -110,7 +110,7 @@ current profile's GENERATION."
   :get-entries-function 'guix-generation-info-get-entries
   :format '(guix-generation-info-insert-heading
             nil
-            (prev-number format (format))
+            (prev-number format guix-generation-info-insert-previous)
             (current format guix-generation-info-insert-current)
             (number-of-packages format guix-generation-info-insert-packages)
             (file-name simple (indent bui-file))
@@ -149,6 +149,25 @@ current profile's GENERATION."
            (number-to-string (bui-entry-value entry 'number)))
    'guix-generation-info-heading)
   (bui-newline))
+
+(defun guix-generation-info-insert-previous (prev-number entry)
+  "Insert PREV-NUMBER and button to compare generations."
+  (bui-format-insert prev-number)
+  (bui-insert-indent)
+  (when (> prev-number 0)
+    (let ((number (bui-entry-non-void-value entry 'number)))
+      (bui-insert-action-button
+       "Compare"
+       (lambda (btn)
+         (guix-diff
+          (guix-profile-generation-packages-buffer
+           (button-get btn 'prev-number))
+          (guix-profile-generation-packages-buffer
+           (button-get btn 'number))))
+       (format "Show Diff of packages installed in generations %d and %d"
+               prev-number number)
+       'prev-number prev-number
+       'number number))))
 
 (defun guix-generation-info-insert-packages (number entry)
   "Insert the NUMBER of packages and button to display packages."

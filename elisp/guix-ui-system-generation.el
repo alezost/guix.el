@@ -103,7 +103,7 @@ SEARCH-VALUES."
   :format '(guix-generation-info-insert-heading
             nil
             (label format (format))
-            (prev-number format (format))
+            (prev-number format guix-generation-info-insert-previous)
             (current format guix-generation-info-insert-current)
             (number-of-packages format guix-generation-info-insert-packages)
             (file-name format (format bui-file))
