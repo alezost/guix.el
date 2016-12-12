@@ -47,15 +47,18 @@ SEARCH-VALUES."
 (guix-ui-define-interface system-generation info
   :buffer-name "*Guix Generation Info*"
   :get-entries-function 'guix-system-generation-info-get-entries
-  :format '((number format guix-generation-info-insert-number)
+  :format '(guix-generation-info-insert-heading
+            nil
             (label format (format))
             (prev-number format (format))
             (current format guix-generation-info-insert-current)
+            (number-of-packages format guix-generation-info-insert-packages)
             (file-name format (format bui-file))
             (time format (time))
             (root-device format (format))
             (kernel format (format bui-file)))
-  :titles guix-generation-info-titles)
+  :titles guix-generation-info-titles
+  :required guix-generation-info-required-params)
 
 (defun guix-system-generation-info-get-entries (profile search-type
                                                         &rest search-values)

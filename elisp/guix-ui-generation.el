@@ -108,16 +108,19 @@ current profile's GENERATION."
 (guix-ui-define-interface generation info
   :buffer-name "*Guix Generation Info*"
   :get-entries-function 'guix-generation-info-get-entries
-  :format '((number format guix-generation-info-insert-number)
+  :format '(guix-generation-info-insert-heading
+            nil
             (prev-number format (format))
             (current format guix-generation-info-insert-current)
+            (number-of-packages format guix-generation-info-insert-packages)
             (file-name simple (indent bui-file))
             (time format (time)))
-  :titles '((prev-number . "Previous number")))
+  :titles '((prev-number . "Prev. generation"))
+  :required '(id number))
 
-(defface guix-generation-info-number
-  '((t :inherit font-lock-keyword-face))
-  "Face used for a number of a generation."
+(defface guix-generation-info-heading
+  '((t :inherit bui-info-heading))
+  "Face used for generation heading."
   :group 'guix-generation-info-faces)
 
 (defface guix-generation-info-current
@@ -139,19 +142,28 @@ current profile's GENERATION."
    (cl-union guix-generation-info-required-params
              (bui-info-displayed-params 'guix-generation))))
 
-(defun guix-generation-info-insert-number (number &optional _)
-  "Insert generation NUMBER and action buttons."
-  (bui-info-insert-value-format number 'guix-generation-info-number)
+(defun guix-generation-info-insert-heading (entry)
+  "Insert generation ENTRY heading at point."
+  (bui-format-insert
+   (concat "Generation "
+           (number-to-string (bui-entry-value entry 'number)))
+   'guix-generation-info-heading)
+  (bui-newline))
+
+(defun guix-generation-info-insert-packages (number entry)
+  "Insert the NUMBER of packages and button to display packages."
+  (bui-format-insert number)
   (bui-insert-indent)
-  (bui-insert-action-button
-   "Packages"
-   (lambda (btn)
-     (guix-package-get-display
-      (guix-generation-current-package-profile
-       (button-get btn 'number))
-      'installed))
-   (format "Show packages installed in generation %d" number)
-   'number number))
+  (let ((number (bui-entry-non-void-value entry 'number)))
+    (bui-insert-action-button
+     "Packages"
+     (lambda (btn)
+       (guix-package-get-display
+        (guix-generation-current-package-profile
+         (button-get btn 'number))
+        'installed))
+     (format "Show packages installed in generation %d" number)
+     'number number)))
 
 (defun guix-generation-info-insert-current (val entry)
   "Insert boolean value VAL showing whether this generation is current."
