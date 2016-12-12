@@ -45,21 +45,45 @@
     `((kernel-config . ,config)
       ,@entry)))
 
+(defun guix-system-generation-add-shepherd-config (entry)
+  "Return ENTRY with 'shepherd-config' parameter."
+  (let* ((file-name (bui-entry-value entry 'file-name))
+         (boot-file (expand-file-name "boot" file-name)))
+    (with-temp-buffer
+      (insert-file-contents-literally boot-file)
+      (goto-char (point-min))
+      (if (re-search-forward (rx "/gnu/store/" (+ alnum)
+                                 "-shepherd.conf")
+                             nil t)
+          `((shepherd-config . ,(match-string 0))
+            ,@entry)
+        entry))))
+
 (defun guix-system-generation-get-entries (profile search-type
                                                    search-values params)
   "Return 'system-generation' entries."
   (let* ((add-kernel-config? (or (null params)
                                  (memq 'kernel-config params)))
+         (add-shepherd-config? (or (null params)
+                                   (memq 'shepherd-config params)))
          (params (if (and add-kernel-config?
                           (not (memq 'kernel params)))
                      (cons 'kernel params)
+                   params))
+         (params (if (and add-shepherd-config?
+                          (not (memq 'file-name params)))
+                     (cons 'file-name params)
                    params)))
     (apply #'guix-modify-objects
            (guix-generation-get-entries
             'system-generation-sexps
             profile search-type search-values params)
-           (when add-kernel-config?
-             '(guix-system-generation-add-kernel-config)))))
+           (delq nil
+                 (list
+                  (and add-shepherd-config?
+                       #'guix-system-generation-add-shepherd-config)
+                  (and add-kernel-config?
+                       #'guix-system-generation-add-kernel-config))))))
 
 (defun guix-system-generation-get-display (search-type &rest search-values)
   "Search for system generations and show results.
@@ -88,7 +112,8 @@ SEARCH-VALUES."
             (store-device format (format))
             (store-mount-point format (format))
             (kernel-arguments format (format))
-            (kernel-config simple (indent bui-file)))
+            (kernel-config simple (indent bui-file))
+            (shepherd-config simple (indent bui-file)))
   :titles guix-generation-info-titles
   :required guix-generation-info-required-params)
 
