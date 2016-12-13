@@ -120,7 +120,7 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
 
 (let ((map guix-license-list-mode-map))
   (define-key map (kbd "e")   'guix-license-list-edit)
-  (define-key map (kbd "RET") 'guix-license-list-show-packages))
+  (define-key map (kbd "P")   'guix-license-list-show-packages))
 
 (defun guix-license-list-describe (&rest ids)
   "Describe licenses with IDS (list of identifiers)."

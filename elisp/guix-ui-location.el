@@ -48,6 +48,7 @@
 
 (let ((map guix-location-list-mode-map))
   (define-key map (kbd "RET") 'guix-location-list-show-packages)
+  (define-key map (kbd "P")   'guix-location-list-show-packages)
   ;; "Location Info" buffer is not defined (it would be useless), so
   ;; unbind "i" key (by default, it is used to display Info buffer).
   (define-key map (kbd "i") nil))

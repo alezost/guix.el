@@ -420,7 +420,7 @@ Along with the general ``list'' keys (@pxref{List buffer}), a
 bindings:
 
 @table @kbd
-@item @key{RET}
+@item P
 List packages installed in the current generation.
 @item s
 @itemx c
@@ -496,7 +496,7 @@ Manual}).
 
 @findex guix-licenses
 @item M-x guix-licenses
-Display a list of available licenses.  You can press @kbd{@key{RET}}
+Display a list of available licenses.  You can press @kbd{P} key
 there to display packages with this license in the same way as
 @kbd{M-x@tie{}guix-packages-by-license} would do (@pxref{Package
 Commands}).
@@ -520,11 +520,11 @@ get lost in these locations:
 
 @findex guix-locations
 @item M-x guix-locations
-Display a list of package locations.  You can press @key{RET} there to
-display packages placed in the current location in the same way as
-@kbd{M-x@tie{}guix-packages-by-location} would do (@pxref{Package
-Commands}).  Note that when the point is on a location button,
-@key{RET} will open this location file.
+Display a list of package locations.  You can press @kbd{P} or
+@kbd{@key{RET}} there to display packages placed in the current
+location in the same way as @kbd{M-x@tie{}guix-packages-by-location}
+would do (@pxref{Package Commands}).  Note that when the point is on a
+location button, @key{RET} will open this location file.
 
 @findex guix-find-location
 @item M-x guix-find-location

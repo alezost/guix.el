@@ -229,7 +229,7 @@ current profile's GENERATION."
   :marks '((delete . ?D)))
 
 (let ((map guix-generation-list-mode-map))
-  (define-key map (kbd "RET") 'guix-generation-list-show-packages)
+  (define-key map (kbd "P")   'guix-generation-list-show-packages)
   (define-key map (kbd "+")   'guix-generation-list-show-added-packages)
   (define-key map (kbd "-")   'guix-generation-list-show-removed-packages)
   (define-key map (kbd "=")   'guix-generation-list-diff)
