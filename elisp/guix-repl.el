@@ -55,6 +55,7 @@
 (require 'guix-config)
 (require 'guix-external)
 (require 'guix-profiles)
+(require 'guix-utils)
 
 (defvar guix-scheme-directory
   ;; If `guix-config-scheme-directory' is nil, then Emacs-Guix is used
@@ -199,9 +200,7 @@ See `guix-emacs-activate-after-operation' for details."
 If INTERNAL is non-nil, return the value for the internal Guix REPL."
   (if internal
       guix-guile-program
-    (append (if (listp guix-guile-program)
-                guix-guile-program
-              (list guix-guile-program))
+    (append (guix-list-maybe guix-guile-program)
             (guix-repl-guile-args))))
 
 (defun guix-repl-socket-file-name ()

@@ -52,6 +52,12 @@ add both to the end and to the beginning."
 Return nil, if NUMBER is 0; return t otherwise."
   (not (zerop number)))
 
+(defun guix-list-maybe (object)
+  "If OBJECT is list, return it; otherwise return (list OBJECT)."
+  (if (listp object)
+      object
+    (list object)))
+
 (defun guix-shell-quote-argument (argument)
   "Quote shell command ARGUMENT.
 This function is similar to `shell-quote-argument', but less strict."
