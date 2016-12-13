@@ -433,6 +433,7 @@ If MODES is nil, use modes for Guix package management."
            (or modes '(guix-package-list-mode
                        guix-package-info-mode
                        guix-output-list-mode
+                       guix-profile-list-mode
                        guix-generation-list-mode
                        guix-generation-info-mode)))))
 

@@ -17,9 +17,11 @@ In short, Emacs-Guix provides the following features:
 
 - Interface for:
 
-  + packages
+  + profiles
 
-  + generations (and system generations for GuixSD)
+  + profile generations (including system generations for GuixSD)
+
+  + packages
 
   + package licenses
 

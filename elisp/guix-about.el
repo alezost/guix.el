@@ -78,6 +78,9 @@
     guix-search-by-name
     guix-search-by-regexp
 
+    "Show profiles"
+    guix-profiles
+
     "Show profile generations"
     guix-generations
     guix-last-generations

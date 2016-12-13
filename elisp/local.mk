@@ -69,6 +69,7 @@ ELFILES =					\
   %D%/guix-ui.el				\
   %D%/guix-ui-license.el			\
   %D%/guix-ui-location.el			\
+  %D%/guix-ui-profile.el			\
   %D%/guix-ui-package.el			\
   %D%/guix-ui-generation.el			\
   %D%/guix-ui-system-generation.el

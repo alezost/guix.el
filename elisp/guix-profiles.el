@@ -144,6 +144,16 @@ the returned file name ends with '/profile'."
             (setq num (1+ num)))
           num)))))
 
+(defun guix-profile-number-of-generations (profile)
+  "Return the number of generations of PROFILE."
+  (let* ((profile   (guix-generation-profile profile))
+         (dir-name  (file-name-directory profile))
+         (base-name (file-name-nondirectory profile))
+         (regexp    (concat (regexp-quote base-name)
+                            "-[[:digit:]]+-link")))
+    (when (file-exists-p profile)
+      (length (directory-files dir-name nil regexp 'no-sort)))))
+
 
 ;;; Minibuffer readers
 

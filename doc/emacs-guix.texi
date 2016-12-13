@@ -82,6 +82,7 @@ In short, Emacs-Guix provides the following features:
 Interfaces for:
 
 @itemize @minus
+@item profiles (@pxref{Profiles})
 @item profile generations (@pxref{Generations})
 @item packages (@pxref{Packages})
 @item package licenses (@pxref{Package Licenses})
@@ -235,6 +236,7 @@ Manual}).  Specifically, it makes it easy to:
 
 @menu
 * Packages::                    Interface for packages.
+* Profiles::                    Interface for profiles.
 * Generations::                 Interface for profile generations.
 * Miscellaneous Commands::      Other related commands.
 @end menu
@@ -361,7 +363,40 @@ Execute actions on the marked packages.
 Display latest builds of the current package (@pxref{Hydra}).
 @end table
 
-@c ----------------------------------------------------------------
+@node Profiles
+@section Profiles
+
+@cindex profiles
+@findex guix-profiles
+@vindex guix-profiles
+You can keep track of your Guix profiles with @kbd{M-x guix-profiles}
+command.  By default, it displays only @file{~/.guix-profile} and a
+system profile (on GuixSD).  But if you manage multiple profiles, you
+can add them by setting @code{guix-profiles} variable, for example,
+like this:
+
+@example
+(with-eval-after-load 'guix-ui-profile
+  (setq guix-profiles
+        (append '("/path/to/my-profile1"
+                  "/path/to/my-profile2")
+                guix-profiles)))
+@end example
+
+Along with the general ``list'' keys (@pxref{List buffer}), a
+``profile-list'' buffer additionally provides the following
+bindings:
+
+@table @kbd
+@item P
+Display packages installed in profile at point.
+@item G
+Display generations of profile at point.
+@item c
+Make profile at point the current profile for the package commands
+(@pxref{Packages}).
+@end table
+
 @node Generations
 @section Generations
 
@@ -988,9 +1023,10 @@ variables and faces---@kbd{M-x@tie{}customize-group @key{RET} guix}.
 If you wish to change the appearance of ``list'' / ``info'' buffers,
 look at @code{guix-ENTRY-TYPE-BUFFER-TYPE-format} variables
 (@dfn{ENTRY-TYPE} can be @code{package}, @code{output},
-@code{generation} @code{system-generation}, @code{license},
-@code{location}, @code{hydra-build}, @code{hydra-jobset};
-@dfn{BUFFER-TYPE} is either @code{list} or @code{info}).
+@code{profile}, @code{generation} @code{system-generation},
+@code{license}, @code{location}, @code{hydra-build},
+@code{hydra-jobset}; @dfn{BUFFER-TYPE} is either @code{list} or
+@code{info}).
 
 @menu
 * Guile and Build Options::     Settings for Guix REPL, Guile, etc.
