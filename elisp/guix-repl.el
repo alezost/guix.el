@@ -68,6 +68,28 @@
 It should be a directory where Guile modules are placed, i.e. a
 directory with 'emacs-guix' sub-directory.")
 
+(defvar guix-load-path nil
+  "List of directories prepended to Guile's `%load-path' when
+Guix REPL is started.
+
+Most likely you don't need to set this variable, but if you
+really do, note that these directories take precedence over any
+other added directory (including Guile modules of Emacs-Guix and
+Guix itself).
+
+Directories are used as is, without expanding, so make sure they
+do not contain things like \"~\" or \"..\" (use
+`expand-file-name').
+
+These directories are also prepended to `%load-compiled-path'
+unless `guix-load-compiled-path' is specified.")
+
+(defvar guix-load-compiled-path nil
+  "List of directories prepended to Guile's `%load-compiled-path'
+when Guix REPL is started.
+
+See `guix-load-path' for details.")
+
 
 ;;; REPL
 
@@ -181,7 +203,14 @@ See `guix-emacs-activate-after-operation' for details."
 
 (defun guix-repl-guile-args ()
   "Return a list of Guile's arguments to start Guix REPL."
-  `("-L" ,guix-scheme-directory
+  `(,@(and guix-load-path
+           (let* ((lp  (guix-list-maybe guix-load-path))
+                  (lcp (if guix-load-compiled-path
+                           (guix-list-maybe guix-load-compiled-path)
+                         lp)))
+             (append (--mapcat (list "-L" it) lp)
+                     (--mapcat (list "-C" it) lcp))))
+    "-L" ,guix-scheme-directory
     ,@(and guix-config-scheme-compiled-directory
            (list "-C" guix-config-scheme-compiled-directory))
     ,@(and guix-repl-use-latest
