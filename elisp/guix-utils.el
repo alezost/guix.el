@@ -168,6 +168,17 @@ single argument."
                file-name-handler-alist)))
     (find-file file-or-url)))
 
+(cl-defun guix-show-pretty-print (file-name &optional (mode 'scheme-mode))
+  "Show FILE-NAME contents in MODE and pretty-print it."
+  (let* ((base-name (file-name-nondirectory file-name))
+         (buffer    (generate-new-buffer base-name)))
+    (with-current-buffer buffer
+      (insert-file-contents file-name)
+      (pp-buffer)
+      (funcall mode)
+      (toggle-truncate-lines -1))
+    (switch-to-buffer buffer)))
+
 (defmacro guix-while-search (regexp &rest body)
   "Evaluate BODY after each search for REGEXP in the current buffer."
   (declare (indent 1) (debug t))

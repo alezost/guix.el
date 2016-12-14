@@ -113,7 +113,8 @@ SEARCH-VALUES."
             (store-mount-point format (format))
             (kernel-arguments format (format))
             (kernel-config simple (indent bui-file))
-            (shepherd-config simple (indent bui-file)))
+            (shepherd-config simple
+                             guix-system-generation-info-insert-shepherd))
   :titles guix-generation-info-titles
   :required guix-generation-info-required-params)
 
@@ -124,6 +125,16 @@ SEARCH-VALUES."
    profile search-type search-values
    (cl-union guix-system-generation-info-required-params
              (bui-info-displayed-params 'guix-system-generation))))
+
+(defun guix-system-generation-info-insert-shepherd (config &optional _)
+  "Insert Shepherd CONFIG file name and 'Pretty print' button at point."
+  (bui-insert-action-button
+   "Pretty print"
+   (lambda (btn)
+     (guix-show-pretty-print (button-get btn 'config)))
+   "Show Shepherd config in a human-readable form"
+   'config config)
+  (bui-info-insert-value-indent config 'bui-file))
 
 
 ;;; System generation 'list'
