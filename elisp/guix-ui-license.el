@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'bui)
+(require 'guix)
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-license)

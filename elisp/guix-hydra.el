@@ -26,6 +26,7 @@
 
 (require 'json)
 (require 'bui)
+(require 'guix)
 (require 'guix-utils)
 (require 'guix-help-vars)
 

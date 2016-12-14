@@ -27,6 +27,7 @@
 (require 'cl-lib)
 (require 'dash)
 (require 'bui)
+(require 'guix)
 (require 'guix-ui)
 (require 'guix-ui-package)
 (require 'guix-misc)

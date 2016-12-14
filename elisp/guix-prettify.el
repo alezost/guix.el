@@ -47,6 +47,7 @@
 
 ;;; Code:
 
+(require 'guix)
 (require 'guix-utils)
 
 (defgroup guix-prettify nil

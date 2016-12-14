@@ -25,22 +25,13 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'guix)
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-read)
 (require 'guix-utils)
 (require 'guix-ui)
 (require 'guix-profiles)
-
-(defgroup guix nil
-  "Settings for Guix package manager and friends."
-  :prefix "guix-"
-  :group 'external)
-
-(defgroup guix-faces nil
-  "Guix faces."
-  :group 'guix
-  :group 'faces)
 
 (defun guix-package-name-specification (name version &optional output)
   "Return Guix package specification by its NAME, VERSION and OUTPUT."

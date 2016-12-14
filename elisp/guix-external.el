@@ -24,6 +24,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'guix)
 (require 'guix-config)
 
 (defgroup guix-external nil

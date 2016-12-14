@@ -27,6 +27,7 @@
 (require 'pcomplete)
 (require 'pcmpl-unix)
 (require 'cl-lib)
+(require 'guix)
 (require 'guix-utils)
 (require 'guix-help-vars)
 

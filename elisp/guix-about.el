@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'bui)
+(require 'guix)
 (require 'guix-utils)
 (require 'guix-config)
 

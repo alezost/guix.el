@@ -43,6 +43,7 @@ endif
 AUTOLOADS = %D%/guix-autoloads.el
 
 ELFILES =					\
+  %D%/guix.el					\
   %D%/guix-config.el				\
   %D%/guix-utils.el				\
   %D%/guix-profiles.el				\

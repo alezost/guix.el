@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'bui)
+(require 'guix)
 (require 'guix-location)
 (require 'guix-repl)
 (require 'guix-utils)

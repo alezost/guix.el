@@ -28,6 +28,7 @@
 
 (require 'dash)
 (require 'bui)
+(require 'guix)
 (require 'guix-profiles)
 (require 'guix-utils)
 

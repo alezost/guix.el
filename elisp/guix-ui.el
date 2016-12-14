@@ -26,6 +26,7 @@
 
 (require 'cl-lib)
 (require 'bui)
+(require 'guix)
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-utils)
