@@ -61,7 +61,7 @@
 
 (require 'cl-lib)
 (require 'bui-utils)
-(require 'guix)
+(require 'guix nil t)
 (require 'guix-popup)
 (require 'guix-utils)
 (require 'guix-help-vars)

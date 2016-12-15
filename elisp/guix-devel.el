@@ -28,7 +28,7 @@
 
 (require 'lisp-mode)
 (require 'bui-utils)
-(require 'guix)
+(require 'guix nil t)
 (require 'guix-utils)
 (require 'guix-guile)
 (require 'guix-geiser)

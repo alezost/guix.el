@@ -25,7 +25,7 @@
 ;;; Code:
 
 (require 'bui)
-(require 'guix)
+(require 'guix nil t)
 (require 'guix-location)
 (require 'guix-repl)
 (require 'guix-utils)

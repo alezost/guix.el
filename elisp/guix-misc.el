@@ -25,7 +25,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'guix)
+(require 'guix nil t)
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-read)

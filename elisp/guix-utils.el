@@ -26,7 +26,7 @@
 (require 'cl-lib)
 (require 'dash)
 (require 'bui-utils)
-(require 'guix)
+(require 'guix nil t)
 
 (defun guix-concat-strings (strings separator &optional location)
   "Return new string by concatenating STRINGS with SEPARATOR.

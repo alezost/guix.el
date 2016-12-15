@@ -51,7 +51,7 @@
 (require 'dash)
 (require 'geiser-mode)
 (require 'geiser-guile)
-(require 'guix)
+(require 'guix nil t)
 (require 'guix-geiser)
 (require 'guix-config)
 (require 'guix-external)

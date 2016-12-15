@@ -24,7 +24,7 @@
 
 ;;; Code:
 
-(require 'guix)
+(require 'guix nil t)
 (require 'guix-utils)
 
 (defgroup guix-build-log nil
