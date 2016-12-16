@@ -296,12 +296,12 @@ ENTRIES is a list of package entries to get info about packages."
   :group 'guix-package-info-faces)
 
 (defface guix-package-info-location
-  '((t :inherit link))
+  '((t :inherit bui-file-name))
   "Face used for a location of a package."
   :group 'guix-package-info-faces)
 
 (defface guix-package-info-source
-  '((t :inherit link :underline nil))
+  '((t :inherit bui-url :underline nil))
   "Face used for a source URL of a package."
   :group 'guix-package-info-faces)
 
