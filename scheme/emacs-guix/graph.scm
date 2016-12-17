@@ -1,6 +1,6 @@
 ;;; graph.scm --- Code related to Guix graphs
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -22,7 +22,12 @@
 (define-module (emacs-guix graph)
   #:use-module (guix graph)
   #:use-module (guix scripts graph)
-  #:export (graph-type-names))
+  #:export (graph-backend-names
+            graph-type-names))
+
+(define (graph-backend-names)
+  "Return a list of names of available graph backends."
+  (map graph-backend-name %graph-backends))
 
 (define (graph-type-names)
   "Return a list of names of available graph node types."

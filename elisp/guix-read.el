@@ -32,6 +32,10 @@
 
 ;;; Receivable lists of packages, lint checkers, etc.
 
+(guix-memoized-defun guix-graph-backend-names ()
+  "Return a list of names of available graph backends."
+  (guix-eval-read (guix-make-guile-expression 'graph-backend-names)))
+
 (guix-memoized-defun guix-graph-type-names ()
   "Return a list of names of available graph node types."
   (guix-eval-read (guix-make-guile-expression 'graph-type-names)))
@@ -103,6 +107,11 @@
  :multiple-reader guix-read-verify-options
  :multiple-prompt "Verify option,s: "
  :multiple-separator ",")
+
+(guix-define-readers
+ :completions-getter guix-graph-backend-names
+ :single-reader guix-read-graph-backend
+ :single-prompt "Graph backend type: ")
 
 (guix-define-readers
  :completions-getter guix-graph-type-names

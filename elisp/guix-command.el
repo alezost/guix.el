@@ -219,7 +219,10 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-graph-argument
-  '(("--type" :fun guix-read-graph-type)))
+  '(("--list-backends" :char ?b)
+    ("--list-types" :char ?t)
+    ("--backend" :fun guix-read-graph-backend)
+    ("--type" :fun guix-read-graph-type)))
 
 (guix-command-define-argument-improver
     guix-command-improve-import-argument
