@@ -110,15 +110,15 @@
 
     "Hide hash parts in \"/gnu/store/…-foo\" file names"
 
-    (guix-prettify-mode t)
+    (guix-prettify-mode nil)
     global-guix-prettify-mode
 
     "Highlighting for package build logs"
-    (guix-build-log-mode t)
-    (guix-build-log-minor-mode t)
+    (guix-build-log-mode nil)
+    (guix-build-log-minor-mode nil)
 
     "Highlighting for Guix .scm files"
-    (guix-devel-mode t)
+    (guix-devel-mode nil)
 
     "Miscellaneous commands"
     guix-emacs-autoload-packages ; available in Emacs installed with Guix
@@ -131,9 +131,9 @@ Each specification can have one of the following forms:
 
   TITLE
   COMMAND-NAME
-  (COMMAND-NAME NO-BUTTON?)
+  (COMMAND-NAME COMMAND-BUTTON?)
 
-TITLE is a string; COMMAND-NAME is a symbol; NO-BUTTON? is a
+TITLE is a string; COMMAND-NAME is a symbol; COMMAND-BUTTON? is a
 boolean value, that defines whether COMMAND-NAME is buttonized or
 not.")
 
@@ -170,17 +170,17 @@ INFO-NODE is the name passed to `info' function."
 See `guix-help-specifications' for the meaning of SPEC."
   (pcase spec
     ((pred symbolp)
-     (guix-help-insert-specification (list spec nil)))
+     (guix-help-insert-specification (list spec t)))
     ((pred stringp)
      (bui-newline)
      (bui-format-insert spec 'guix-help-heading)
      (bui-newline 2))
-    (`(,name ,no-command-button?)
+    (`(,name ,command-button?)
      (when (fboundp name)
        (bui-with-indent bui-indent
-         (if no-command-button?
-             (insert (symbol-name name))
-           (guix-insert-command-button name))
+         (if command-button?
+             (guix-insert-command-button name)
+           (insert (symbol-name name)))
          (indent-to guix-help-doc-column 2)
          (guix-insert-doc-button "doc" name))
        (bui-newline)))
