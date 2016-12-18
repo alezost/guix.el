@@ -110,32 +110,40 @@
 
     "Hide hash parts in \"/gnu/store/…-foo\" file names"
 
-    (guix-prettify-mode nil)
+    (guix-prettify-mode nil t)
     global-guix-prettify-mode
 
     "Highlighting for package build logs"
-    (guix-build-log-mode nil)
-    (guix-build-log-minor-mode nil)
+    (guix-build-log-mode nil t)
+    (guix-build-log-minor-mode nil t)
 
     "Highlighting for Guix .scm files"
-    (guix-devel-mode nil)
+    (guix-devel-mode nil t)
 
     "Miscellaneous commands"
-    guix-emacs-autoload-packages ; available in Emacs installed with Guix
+    ;; `guix-emacs-autoload-packages' is available in Emacs installed
+    ;; with Guix.
+    (guix-emacs-autoload-packages t nil)
     guix-set-current-profile
     guix-pull
     guix-apply-manifest
-    guix-version)
+    (guix-version t nil))
   "List of command specifications for '\\[guix-help]'.
 Each specification can have one of the following forms:
 
   TITLE
   COMMAND-NAME
-  (COMMAND-NAME COMMAND-BUTTON?)
+  (COMMAND-NAME COMMAND-BUTTON? INFO-BUTTON?)
 
-TITLE is a string; COMMAND-NAME is a symbol; COMMAND-BUTTON? is a
-boolean value, that defines whether COMMAND-NAME is buttonized or
-not.")
+TITLE is a string.
+
+COMMAND-NAME is a symbol.
+
+COMMAND-BUTTON? is a boolean value; it defines whether
+COMMAND-NAME is buttonized or not.
+
+INFO-BUTTON? is a boolean value; it defines whether 'info' button
+should be displayed or not.")
 
 (defun guix-insert-info-button (label info-node)
   "Insert button with LABEL to open texinfo manual.
@@ -145,6 +153,16 @@ INFO-NODE is the name passed to `info' function."
    'action (lambda (button)
              (info (button-get button 'node)))
    'node info-node))
+
+(defun guix-insert-info-command-button (label name)
+  "Insert button with LABEL to open texinfo manual for command NAME."
+  (bui-insert-button
+   label 'button
+   'help-echo (format "Display info manual for '%S'" name)
+   'action (lambda (button)
+             (guix-goto-command-index-topic
+              (symbol-name (button-get button 'name))))
+   'name name))
 
 (defun guix-insert-doc-button (label symbol)
   "Insert button with LABEL to open the docstring of SYMBOL."
@@ -165,24 +183,43 @@ INFO-NODE is the name passed to `info' function."
                (call-interactively (button-get button 'command)))
      'command command)))
 
+(declare-function Info-follow-nearest-node "info" t)
+
+(defun guix-goto-index-topic (index-node topic)
+  "Open TOPIC of INDEX-NODE in the Emacs-Guix manual."
+  (require 'info)
+  (info (concat "(emacs-guix)" index-node))
+  (goto-char (point-min))
+  (unless (re-search-forward (concat "\\* +" (regexp-quote topic))
+                             nil t)
+    (user-error "No such index topic: %s" topic))
+  (Info-follow-nearest-node))
+
+(defun guix-goto-command-index-topic (topic)
+  "Open TOPIC of Command index in the Emacs-Guix manual."
+  (guix-goto-index-topic "Command Index" topic))
+
 (defun guix-help-insert-specification (spec)
   "Insert command specification SPEC at point.
 See `guix-help-specifications' for the meaning of SPEC."
   (pcase spec
     ((pred symbolp)
-     (guix-help-insert-specification (list spec t)))
+     (guix-help-insert-specification (list spec t t)))
     ((pred stringp)
      (bui-newline)
      (bui-format-insert spec 'guix-help-heading)
      (bui-newline 2))
-    (`(,name ,command-button?)
+    (`(,name ,command-button? ,info-button?)
      (when (fboundp name)
        (bui-with-indent bui-indent
          (if command-button?
              (guix-insert-command-button name)
            (insert (symbol-name name)))
          (indent-to guix-help-doc-column 2)
-         (guix-insert-doc-button "doc" name))
+         (guix-insert-doc-button "doc" name)
+         (when info-button?
+           (insert " ")
+           (guix-insert-info-command-button "info" name)))
        (bui-newline)))
     (_
      (insert "<unknown specification>")
