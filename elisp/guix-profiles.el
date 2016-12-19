@@ -56,6 +56,11 @@ It is used by various commands as the default working profile.")
                 t)
   "Regexp matching system profiles.")
 
+(defun guix-current-profile? (profile)
+  "Return non-nil, if package PROFILE is `guix-current-profile'."
+  (string= (guix-package-profile profile)
+           guix-current-profile))
+
 (defun guix-system-profile? (profile)
   "Return non-nil, if PROFILE is a system one."
   (string-match-p guix-system-profile-regexp profile))

@@ -46,6 +46,7 @@
   "Return 'guix-profile' entry by PROFILE file-name."
   `((id                    . ,profile)
     (profile               . ,profile)
+    (current               . ,(guix-current-profile? profile))
     (number-of-packages    . ,(guix-profile-number-of-packages
                                profile))
     (number-of-generations . ,(guix-profile-number-of-generations
@@ -61,10 +62,11 @@
 (bui-define-interface guix-profile list
   :buffer-name "*Guix Profiles*"
   :get-entries-function 'guix-profile-get-entries
-  :format '((profile bui-list-get-file-name 40 t)
-            (number-of-packages nil 11 bui-list-sort-numerically-1
+  :format '((current guix-profile-list-get-current 10 t)
+            (profile bui-list-get-file-name 40 t)
+            (number-of-packages nil 11 bui-list-sort-numerically-2
                                 :right-align t)
-            (number-of-generations nil 14 bui-list-sort-numerically-2
+            (number-of-generations nil 14 bui-list-sort-numerically-3
                                    :right-align t))
   :titles '((number-of-packages    . "Packages")
             (number-of-generations . "Generations"))
@@ -120,10 +122,29 @@ Press '\\[guix-profile-list-show-generations]' to display generations.")))
                         (guix-profile-list-current-profile))
                        file (current-buffer)))
 
+(defun guix-profile-list-get-current (value &optional _)
+  "Return string from VALUE showing whether this profile is current."
+  (if value "(current)" ""))
+
 (defun guix-profile-list-set-current ()
   "Set `guix-current-profile' to the profile on the current line."
   (interactive)
-  (guix-set-current-profile (guix-profile-list-current-profile)))
+  (guix-set-current-profile (guix-profile-list-current-profile))
+  ;; Now updating "Current" column is needed.  It can be done simply by
+  ;; reverting the buffer, but it should be more effective to reset
+  ;; 'current' parameter for all entries and to redisplay the buffer
+  ;; instead.
+  (let* ((current-id  (bui-list-current-id))
+         (new-entries (mapcar
+                       (lambda (entry)
+                         (let ((id (bui-entry-id entry)))
+                           (cons `(current . ,(equal id current-id))
+                                 (--remove-first (eq (car it) 'current)
+                                                 entry))))
+                       (bui-current-entries))))
+    (setf (bui-item-entries bui-item)
+          new-entries))
+  (bui-redisplay))
 
 
 ;;; Interactive commands
