@@ -32,6 +32,9 @@
 (defconst guix-config-version "<unknown version>"
   "Emacs-Guix version.")
 
+(defconst guix-config-image-directory nil
+  "Directory with image files for Emacs-Guix.")
+
 (defconst guix-config-scheme-directory nil
   "Directory with Scheme files for Emacs-Guix.")
 

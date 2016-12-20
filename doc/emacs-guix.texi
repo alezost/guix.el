@@ -72,6 +72,10 @@ Indexes
 Emacs-Guix (also known as ``guix.el'') provides various interfaces and
 tools related to the GNU Guix package manager.
 
+@findex guix-about
+Call @kbd{M-x guix-about} to see a splash screen similar to
+@kbd{M-x@tie{}about-emacs}.
+
 @findex guix-help
 Call @kbd{M-x guix-help} to get a summary of all the available commands.
 

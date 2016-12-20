@@ -21,6 +21,9 @@ CLEANFILES =
 
 info_TEXINFOS = doc/emacs-guix.texi
 
+imagedir = $(pkgdatadir)/images
+dist_image_DATA = images/*.svg
+
 include elisp/local.mk
 
 SUBDIRS = scheme

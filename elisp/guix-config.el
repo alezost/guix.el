@@ -40,6 +40,7 @@
 
 ;; Avoid compilation warnings.
 (defvar guix-config-scheme-directory)
+(defvar guix-config-image-directory)
 
 (defvar guix-elisp-directory
   (file-name-directory load-file-name)
@@ -59,6 +60,16 @@
   "Directory with Scheme files for Emacs-Guix package.
 It should be a directory where Guile modules are placed, i.e. a
 directory with 'emacs-guix' sub-directory.")
+
+(defvar guix-image-directory
+  (or guix-config-image-directory
+      (guix-first-existing-file
+       (expand-file-name "images" guix-elisp-directory)
+       (expand-file-name "../images" guix-elisp-directory))
+      (progn
+        (message "WARNING: Can't define `guix-image-directory'!")
+        nil))
+  "Directory with image files for Emacs-Guix package.")
 
 (provide 'guix-config)
 

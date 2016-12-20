@@ -28,6 +28,10 @@
 (require 'bui-utils)
 (require 'guix nil t)
 
+(defun guix-guixsd? ()
+  "Return non-nil, if current system is GuixSD."
+  (file-exists-p "/run/current-system"))
+
 (defun guix-concat-strings (strings separator &optional location)
   "Return new string by concatenating STRINGS with SEPARATOR.
 If LOCATION is a symbol `head', add another SEPARATOR to the

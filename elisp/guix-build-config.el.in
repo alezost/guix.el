@@ -26,6 +26,14 @@
 (defconst guix-config-version "@PACKAGE_VERSION@"
   "Emacs-Guix version.")
 
+(defconst guix-config-image-directory
+  (let ((dir (replace-regexp-in-string "${prefix}" "@prefix@"
+                                       "@datarootdir@/emacs-guix/images")))
+    (if (file-exists-p dir)
+        dir
+      (expand-file-name "images" "@abs_top_srcdir@")))
+  "Directory with image files for Emacs-Guix.")
+
 (defconst guix-config-scheme-directory
   (let ((dir (replace-regexp-in-string "${prefix}" "@prefix@"
                                        "@guilemoduledir@")))

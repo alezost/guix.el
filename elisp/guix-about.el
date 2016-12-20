@@ -43,11 +43,11 @@
            guix-config-version))
 
 
-;;; "Guix Help" buffer
+;;; "Help" buffer
 
 (guix-define-groups help
-  :group-doc "Settings for '\\[guix-help]'."
-  :faces-group-doc "Faces for '\\[guix-help]'.")
+  :group-doc "Settings for '\\[guix-about]' and '\\[guix-help]'."
+  :faces-group-doc "Faces for '\\[guix-about]' and '\\[guix-help]'.")
 
 (defcustom guix-help-buffer-name "*Guix Help*"
   "Buffer name for '\\[guix-help]'."
@@ -127,6 +127,7 @@
     guix-set-current-profile
     guix-pull
     guix-apply-manifest
+    (guix-about t nil)
     (guix-version t nil))
   "List of command specifications for '\\[guix-help]'.
 Each specification can have one of the following forms:
@@ -251,6 +252,85 @@ See `guix-help-specifications' for the meaning of SPEC."
     (set-buffer guix-help-buffer-name)
     (setq-local revert-buffer-function 'guix-help-revert)
     (guix-help-insert-content)))
+
+
+;;; "About" buffer
+
+(defcustom guix-about-buffer-name "*Guix About*"
+  "Buffer name for '\\[guix-about]'."
+  :type 'string
+  :group 'guix-help)
+
+(defvar guix-about-specifications
+  `("GNU Guix:   "
+    :link ("https://www.gnu.org/software/guix/"
+           ,(lambda (button)
+              (browse-url (button-label button))))
+    "\nEmacs-Guix: "
+    :link ("https://github.com/alezost/guix.el"
+           ,(lambda (button)
+              (browse-url (button-label button))))
+    "\n\n"
+    :link ("GNU Guix Manual"
+           ,(lambda (_button) (info "(guix)")))
+    "\n"
+    :link ("Emacs Guix Manual"
+           ,(lambda (_button) (info "(emacs-guix)")))
+    "\n"
+    "\nAvailable commands: "
+    :link ("M-x guix-help"
+           ,(lambda (_button) (guix-help)))
+    "\nGuix and Emacs-Guix versions: "
+    :link ("M-x guix-version"
+           ,(lambda (_button) (guix-version)))
+
+    "\n")
+  "Text to show with '\\[guix-about]' command.
+This is not really a text, it is a list of arguments passed to
+`fancy-splash-insert'.")
+
+(defun guix-logo-file ()
+  "Return the file name of Guix(SD) logo image."
+  (expand-file-name (if (guix-guixsd?)
+                        "guixsd-logo.svg"
+                      "guix-logo.svg")
+                    guix-image-directory))
+
+(defun guix-insert-logo ()
+  "Insert Guix(SD) logo into the current buffer."
+  (when (display-images-p)
+    (let ((image (create-image (guix-logo-file))))
+      (when image
+        (let ((width (car (image-size image))))
+          (when (> (window-width) width)
+            ;; Center the image in the window.
+            (insert (propertize
+                     " " 'display
+                     `(space :align-to (+ center (-0.5 . ,image)))))
+            (insert-image image)
+            (bui-newline)))))))
+
+(defun guix-about-revert (_ignore-auto noconfirm)
+  "Revert function for `revert-buffer-function'."
+  (when (or noconfirm
+            (y-or-n-p (format "Revert %s buffer? " (buffer-name))))
+    (guix-about-insert-content)))
+
+(defun guix-about-insert-content ()
+  "Insert Emacs-Guix 'about' info into the current buffer."
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (guix-insert-logo)
+    (apply #'fancy-splash-insert guix-about-specifications)))
+
+;;;###autoload
+(defun guix-about ()
+  "Display 'About' buffer with fancy Guix logo if available."
+  (interactive)
+  (with-output-to-temp-buffer guix-about-buffer-name
+    (set-buffer guix-about-buffer-name)
+    (setq-local revert-buffer-function 'guix-about-revert)
+    (guix-about-insert-content)))
 
 (provide 'guix-about)
 
