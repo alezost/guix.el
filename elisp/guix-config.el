@@ -20,7 +20,7 @@
 ;;; Commentary:
 
 ;; This file provides configuration variables for Emacs-Guix package.
-;; It is actually just a wrapper for either `guix-build-config' or
+;; Mainly, it is a wrapper for either `guix-build-config' or
 ;; `guix-default-config'.  Why?  Well, when Emacs-Guix is built using
 ;; the GNU Build System (./configure and make), "guix-build-config.el"
 ;; file is generated, se we can use it.  But when Emacs-Guix is used
@@ -31,6 +31,27 @@
 
 (or (require 'guix-build-config nil t)
     (require 'guix-default-config))
+
+;; Avoid compilation warnings.
+(defvar guix-config-scheme-directory)
+
+(defvar guix-scheme-directory
+  ;; If `guix-config-scheme-directory' is nil, then Emacs-Guix is used
+  ;; from source without building (i.e., from MELPA), so find Scheme
+  ;; files in a relative directory.
+  (or guix-config-scheme-directory
+      (let* ((elisp-dir  (file-name-directory load-file-name))
+             (scheme-dir (expand-file-name "scheme" elisp-dir)))
+        (if (file-exists-p scheme-dir)
+            scheme-dir
+          (let ((scheme-dir (expand-file-name "../scheme" elisp-dir)))
+            (if (file-exists-p scheme-dir)
+                scheme-dir
+              (message "WARNING: Can't define `guix-scheme-directory'!")
+              nil)))))
+  "Directory with Scheme files for Emacs-Guix package.
+It should be a directory where Guile modules are placed, i.e. a
+directory with 'emacs-guix' sub-directory.")
 
 (provide 'guix-config)
 
