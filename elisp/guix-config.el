@@ -32,23 +32,30 @@
 (or (require 'guix-build-config nil t)
     (require 'guix-default-config))
 
+(require 'cl-lib)
+
+(defun guix-first-existing-file (&rest file-names)
+  "Return the first existing file from FILE-NAMES."
+  (cl-find-if #'file-exists-p file-names))
+
 ;; Avoid compilation warnings.
 (defvar guix-config-scheme-directory)
+
+(defvar guix-elisp-directory
+  (file-name-directory load-file-name)
+  "Directory with Elisp files for Emacs-Guix package.")
 
 (defvar guix-scheme-directory
   ;; If `guix-config-scheme-directory' is nil, then Emacs-Guix is used
   ;; from source without building (i.e., from MELPA), so find Scheme
   ;; files in a relative directory.
   (or guix-config-scheme-directory
-      (let* ((elisp-dir  (file-name-directory load-file-name))
-             (scheme-dir (expand-file-name "scheme" elisp-dir)))
-        (if (file-exists-p scheme-dir)
-            scheme-dir
-          (let ((scheme-dir (expand-file-name "../scheme" elisp-dir)))
-            (if (file-exists-p scheme-dir)
-                scheme-dir
-              (message "WARNING: Can't define `guix-scheme-directory'!")
-              nil)))))
+      (guix-first-existing-file
+       (expand-file-name "scheme" guix-elisp-directory)
+       (expand-file-name "../scheme" guix-elisp-directory))
+      (progn
+        (message "WARNING: Can't define `guix-scheme-directory'!")
+        nil))
   "Directory with Scheme files for Emacs-Guix package.
 It should be a directory where Guile modules are placed, i.e. a
 directory with 'emacs-guix' sub-directory.")
