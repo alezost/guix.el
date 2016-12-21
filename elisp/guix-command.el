@@ -179,6 +179,7 @@ to be modified."
     ("--no-build-hook"   :char ?h)
     ("--max-silent-time" :char ?x)
     ("--rounds"          :char ?R :fun read-number)
+    ("--no-grafts"       :char ?G)
     ("--with-graft"      :char ?g)
     ("--with-input"      :char ?W)))
 
@@ -195,8 +196,7 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-build-argument
-  '(("--no-grafts"   :char ?g)
-    ("--file"        :fun guix-read-file-name)
+  '(("--file"        :fun guix-read-file-name)
     ("--root"        :fun guix-read-file-name)
     ("--sources"     :char ?S :fun guix-read-source-type :switch? nil)
     ("--with-source" :fun guix-read-file-name)))
