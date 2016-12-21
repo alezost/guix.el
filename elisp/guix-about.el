@@ -1,4 +1,4 @@
-;;; guix-about.el --- Various info about Guix and Emacs-Guix
+;;; guix-about.el --- Various info about Guix and Emacs-Guix  -*- lexical-binding: t -*-
 
 ;; Copyright © 2016 Alex Kost <alezost@gmail.com>
 
@@ -226,32 +226,43 @@ See `guix-help-specifications' for the meaning of SPEC."
      (insert "<unknown specification>")
      (bui-newline))))
 
-(defun guix-help-revert (_ignore-auto noconfirm)
-  "Revert function for `revert-buffer-function'."
-  (when (or noconfirm
-            (y-or-n-p (format "Revert %s buffer? " (buffer-name))))
-    (guix-help-insert-content)))
-
-(defun guix-help-insert-content ()
-  "Insert Emacs-Guix help info into the current buffer."
+(defun guix-help-reinsert-content (content-function)
+  "Erase the current buffer and call CONTENT-FUNCTION to fill it."
   (let ((inhibit-read-only t))
     (erase-buffer)
-    (setq header-line-format
-          " Summary of the available M-x commands")
-    (mapc #'guix-help-insert-specification
-          guix-help-specifications)
-    ;; Remove an extra newline in the beginning of buffer.
-    (goto-char (point-min))
-    (delete-char 1)))
+    (funcall content-function)))
+
+(defun guix-help-make-revert-function (content-function)
+  "Return a revert function for `revert-buffer-function'."
+  (lambda (_ignore-auto noconfirm)
+    (when (or noconfirm
+              (y-or-n-p (format "Revert %s buffer? " (buffer-name))))
+      (guix-help-reinsert-content content-function))))
+
+(defun guix-help-display-buffer (buffer-name content-function)
+  "Display BUFFER-NAME buffer and call CONTENT-FUNCTION to fill it."
+  (with-output-to-temp-buffer buffer-name
+    (set-buffer buffer-name)
+    (setq-local revert-buffer-function
+                (guix-help-make-revert-function content-function))
+    (guix-help-reinsert-content content-function)))
+
+(defun guix-help-insert-content ()
+  "Insert summary of Emacs-Guix commands into the current buffer."
+  (setq header-line-format
+        " Summary of the available M-x commands")
+  (mapc #'guix-help-insert-specification
+        guix-help-specifications)
+  ;; Remove an extra newline in the beginning of buffer.
+  (goto-char (point-min))
+  (delete-char 1))
 
 ;;;###autoload
 (defun guix-help ()
   "Display a summary of the available Emacs-Guix commands."
   (interactive)
-  (with-output-to-temp-buffer guix-help-buffer-name
-    (set-buffer guix-help-buffer-name)
-    (setq-local revert-buffer-function 'guix-help-revert)
-    (guix-help-insert-content)))
+  (guix-help-display-buffer guix-help-buffer-name
+                            #'guix-help-insert-content))
 
 
 ;;; "About" buffer
@@ -310,27 +321,17 @@ This is not really a text, it is a list of arguments passed to
             (insert-image image)
             (bui-newline)))))))
 
-(defun guix-about-revert (_ignore-auto noconfirm)
-  "Revert function for `revert-buffer-function'."
-  (when (or noconfirm
-            (y-or-n-p (format "Revert %s buffer? " (buffer-name))))
-    (guix-about-insert-content)))
-
 (defun guix-about-insert-content ()
   "Insert Emacs-Guix 'about' info into the current buffer."
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (guix-insert-logo)
-    (apply #'fancy-splash-insert guix-about-specifications)))
+  (guix-insert-logo)
+  (apply #'fancy-splash-insert guix-about-specifications))
 
 ;;;###autoload
 (defun guix-about ()
   "Display 'About' buffer with fancy Guix logo if available."
   (interactive)
-  (with-output-to-temp-buffer guix-about-buffer-name
-    (set-buffer guix-about-buffer-name)
-    (setq-local revert-buffer-function 'guix-about-revert)
-    (guix-about-insert-content)))
+  (guix-help-display-buffer guix-about-buffer-name
+                            #'guix-about-insert-content))
 
 (provide 'guix-about)
 
