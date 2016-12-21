@@ -236,10 +236,6 @@ See `guix-help-specifications' for the meaning of SPEC."
   "Insert Emacs-Guix help info into the current buffer."
   (let ((inhibit-read-only t))
     (erase-buffer)
-    (guix-insert-info-button "GNU Guix Manual" "guix")
-    (bui-newline)
-    (guix-insert-info-button "Emacs-Guix Manual" "emacs-guix")
-    (bui-newline 2)
     (insert "Summary of the available M-x commands:\n")
     (mapc #'guix-help-insert-specification
           guix-help-specifications)))
