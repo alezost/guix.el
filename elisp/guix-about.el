@@ -236,9 +236,13 @@ See `guix-help-specifications' for the meaning of SPEC."
   "Insert Emacs-Guix help info into the current buffer."
   (let ((inhibit-read-only t))
     (erase-buffer)
-    (insert "Summary of the available M-x commands:\n")
+    (setq header-line-format
+          " Summary of the available M-x commands")
     (mapc #'guix-help-insert-specification
-          guix-help-specifications)))
+          guix-help-specifications)
+    ;; Remove an extra newline in the beginning of buffer.
+    (goto-char (point-min))
+    (delete-char 1)))
 
 ;;;###autoload
 (defun guix-help ()
