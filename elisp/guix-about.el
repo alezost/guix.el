@@ -313,16 +313,19 @@ This is not really a text, it is a list of arguments passed to
 `fancy-splash-insert'.")
 
 (defun guix-logo-file ()
-  "Return the file name of Guix(SD) logo image."
-  (expand-file-name (if (guix-guixsd?)
-                        "guixsd-logo.svg"
-                      "guix-logo.svg")
-                    guix-image-directory))
+  "Return the file name of Guix(SD) logo image.
+Return nil, if the image cannot be found."
+  (when guix-image-directory
+    (expand-file-name (if (guix-guixsd?)
+                          "guixsd-logo.svg"
+                        "guix-logo.svg")
+                      guix-image-directory)))
 
 (defun guix-insert-logo ()
   "Insert Guix(SD) logo into the current buffer."
   (when (display-images-p)
-    (let ((image (create-image (guix-logo-file))))
+    (let* ((file  (guix-logo-file))
+           (image (and file (create-image file))))
       (when image
         (let ((width (car (image-size image))))
           (when (> (window-width) width)
