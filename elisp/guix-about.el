@@ -336,7 +336,9 @@ This is not really a text, it is a list of arguments passed to
 (defun guix-about-insert-content ()
   "Insert Emacs-Guix 'about' info into the current buffer."
   (guix-insert-logo)
-  (apply #'fancy-splash-insert guix-about-specifications))
+  (apply #'fancy-splash-insert guix-about-specifications)
+  (goto-char (point-min))
+  (forward-line 3))
 
 ;;;###autoload
 (defun guix-about ()
