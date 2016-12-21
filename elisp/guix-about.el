@@ -146,6 +146,17 @@ COMMAND-NAME is buttonized or not.
 INFO-BUTTON? is a boolean value; it defines whether 'info' button
 should be displayed or not.")
 
+(defvar guix-help-mode-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map (make-composed-keymap button-buffer-map
+                                                 special-mode-map)))
+  "Keymap for Emacs-Guix Help and About buffers.")
+
+(define-derived-mode guix-help-mode special-mode "Help"
+  "Major mode for '\\[guix-about]' and '\\[guix-help]' buffers.
+
+\\{help-mode-map}")
+
 (defun guix-insert-info-button (label info-node)
   "Insert button with LABEL to open texinfo manual.
 INFO-NODE is the name passed to `info' function."
@@ -241,11 +252,12 @@ See `guix-help-specifications' for the meaning of SPEC."
 
 (defun guix-help-display-buffer (buffer-name content-function)
   "Display BUFFER-NAME buffer and call CONTENT-FUNCTION to fill it."
-  (with-output-to-temp-buffer buffer-name
-    (set-buffer buffer-name)
+  (with-current-buffer (get-buffer-create buffer-name)
+    (guix-help-mode)
     (setq-local revert-buffer-function
                 (guix-help-make-revert-function content-function))
-    (guix-help-reinsert-content content-function)))
+    (guix-help-reinsert-content content-function))
+  (switch-to-buffer buffer-name))
 
 (defun guix-help-insert-content ()
   "Insert summary of Emacs-Guix commands into the current buffer."
