@@ -40,6 +40,7 @@
 ;;; Location 'list'
 
 (bui-define-interface guix-location list
+  :mode-name "Location-List"
   :buffer-name "*Guix Package Locations*"
   :get-entries-function 'guix-location-get-entries
   :format '((location guix-location-list-file-name-specification 50 t)

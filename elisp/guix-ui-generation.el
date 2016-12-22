@@ -107,6 +107,7 @@ current profile's GENERATION."
 ;;; Generation 'info'
 
 (guix-ui-define-interface generation info
+  :mode-name "Generation-Info"
   :buffer-name "*Guix Generation Info*"
   :get-entries-function 'guix-generation-info-get-entries
   :format '(guix-generation-info-insert-heading
@@ -215,6 +216,7 @@ current profile's GENERATION."
 ;;; Generation 'list'
 
 (guix-ui-define-interface generation list
+  :mode-name "Generation-List"
   :buffer-name "*Guix Generations*"
   :get-entries-function 'guix-generation-list-get-entries
   :describe-function 'guix-ui-list-describe

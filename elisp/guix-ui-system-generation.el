@@ -99,6 +99,7 @@ SEARCH-VALUES."
 ;;; System generation 'info'
 
 (guix-ui-define-interface system-generation info
+  :mode-name "System-Generation-Info"
   :buffer-name "*Guix Generation Info*"
   :get-entries-function 'guix-system-generation-info-get-entries
   :format '(guix-generation-info-insert-heading
@@ -147,6 +148,7 @@ SEARCH-VALUES."
   "Keymap for `guix-system-generation-list-mode' buffers.")
 
 (guix-ui-define-interface system-generation list
+  :mode-name "System-Generation-List"
   :buffer-name "*Guix Generations*"
   :get-entries-function 'guix-system-generation-list-get-entries
   :describe-function 'guix-ui-list-describe

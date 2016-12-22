@@ -62,6 +62,7 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
 ;;; License 'info'
 
 (bui-define-interface guix-license info
+  :mode-name "License-Info"
   :buffer-name "*Guix License Info*"
   :get-entries-function 'guix-license-get-entries
   :format '((name nil (simple bui-info-heading))
@@ -111,6 +112,7 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
 ;;; License 'list'
 
 (bui-define-interface guix-license list
+  :mode-name "License-List"
   :buffer-name "*Guix Licenses*"
   :get-entries-function 'guix-license-get-entries
   :describe-function 'guix-license-list-describe

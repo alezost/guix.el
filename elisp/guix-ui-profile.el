@@ -60,6 +60,7 @@
 ;;; Profile 'list'
 
 (bui-define-interface guix-profile list
+  :mode-name "Profile-List"
   :buffer-name "*Guix Profiles*"
   :get-entries-function 'guix-profile-get-entries
   :format '((current guix-profile-list-get-current 10 t)
