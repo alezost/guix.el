@@ -192,7 +192,7 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-archive-argument
-  '(("--generate-key" :char ?k)))
+  '(("--generate-key" :char ?g)))
 
 (guix-command-define-argument-improver
     guix-command-improve-build-argument
