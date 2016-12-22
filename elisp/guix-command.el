@@ -252,9 +252,12 @@ to be modified."
     ("--install-from-file" :fun guix-read-file-name)
     ("--manifest"       :fun guix-read-file-name)
     ("--profile"        :fun guix-read-file-name)
-    ("--do-not-upgrade" :char ?U)
+    ;; Although it is documented that regexp is optional for --upgrade
+    ;; and --do-not-upgrade, use them only as options (not as switches).
+    ("--upgrade"        :switch? nil)
+    ("--do-not-upgrade" :char ?n :switch? nil)
     ("--roll-back"      :char ?R)
-    ("--show"           :char ?w :fun guix-read-package-name)))
+    ("--show"           :char ?h :fun guix-read-package-name)))
 
 (guix-command-define-argument-improver
     guix-command-improve-refresh-argument
