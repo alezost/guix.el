@@ -46,6 +46,7 @@ ELFILES =					\
   %D%/guix.el					\
   %D%/guix-config.el				\
   %D%/guix-utils.el				\
+  %D%/guix-external.el				\
   %D%/guix-profiles.el				\
   %D%/guix-guile.el				\
   %D%/guix-geiser.el				\
@@ -57,7 +58,6 @@ ELFILES =					\
   %D%/guix-build-log.el				\
   %D%/guix-command.el				\
   %D%/guix-devel.el				\
-  %D%/guix-external.el				\
   %D%/guix-hydra.el				\
   %D%/guix-hydra-build.el			\
   %D%/guix-hydra-jobset.el			\
