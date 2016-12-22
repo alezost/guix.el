@@ -226,7 +226,9 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-import-argument
-  '(("cran" :char ?r)))
+  '(("gem"   :char ?G)
+    ("crate" :char ?C)
+    ("cran"  :char ?r)))
 
 (guix-command-define-argument-improver
     guix-command-improve-import-elpa-argument
