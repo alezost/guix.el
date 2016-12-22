@@ -31,6 +31,7 @@
   #:autoload (emacs-guix commands) (guix-command
                                     guix-command-output
                                     help-string
+                                    guix-output-to-file
                                     pipe-guix-output)
   #:autoload (emacs-guix licenses) (license-names
                                     lookup-license-uri

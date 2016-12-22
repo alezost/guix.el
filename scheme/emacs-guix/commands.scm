@@ -30,6 +30,7 @@
   #:export (guix-command
             guix-command-output
             help-string
+            guix-output-to-file
             pipe-guix-output))
 
 (define (output+error thunk)
@@ -60,6 +61,11 @@
 (define (help-string . commands)
   "Return string with 'guix COMMANDS ... --help' output."
   (apply guix-command-output `(,@commands "--help")))
+
+(define (guix-output-to-file guix-args file-name)
+  "Run 'guix GUIX-ARGS ...' command and redirect its output to FILE-NAME."
+  (with-output-to-file file-name
+    (lambda () (apply guix-command guix-args))))
 
 (define (pipe-guix-output guix-args command-args)
   "Run 'guix GUIX-ARGS ...' command and pipe its output to a shell command
