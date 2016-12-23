@@ -29,7 +29,18 @@
 (defconst guix-config-name "Emacs-Guix"
   "Emacs-Guix full name.")
 
-(defconst guix-config-version "<unknown version>"
+(declare-function lm-header "lisp-mnt" (header))
+
+(defconst guix-config-version
+  ;; Find version in "guix.el".
+  (let ((guix.el (expand-file-name "guix.el"
+                                   (file-name-directory load-file-name))))
+    (or (and (file-exists-p guix.el)
+             (require 'lisp-mnt nil t)
+             (with-temp-buffer
+               (insert-file-contents-literally guix.el)
+               (lm-header "version")))
+        "<unknown version>"))
   "Emacs-Guix version.")
 
 (defconst guix-config-image-directory nil
