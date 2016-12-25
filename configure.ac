@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with Emacs-Guix.  If not, see <http://www.gnu.org/licenses/>.
 ]])
 
-AC_INIT([Emacs-Guix], [0.2], [alezost@gmail.com], [emacs-guix],
+AC_INIT([Emacs-Guix], [0.2.1], [alezost@gmail.com], [emacs-guix],
         [https://github.com/alezost/guix.el])
 
 AC_COPYRIGHT(EMACS_GUIX_CONFIGURE_COPYRIGHT)
