@@ -1,5 +1,26 @@
 -*- mode: org -*-
 
+* Changes in 0.2.1 (since 0.2)
+
+** User visible changes
+
+*** New commands
+
+**** M-x guix-about
+
+*** Profile List
+
+"Current" column is added (current profile for package commands).
+
+*** M-x guix-help
+
+"info" buttons (for the commands) are added.
+
+*** M-x guix
+
+"G" (graph) completes =--backend= option, and "v" (View graph) opens
+html graph if the backend is "d3js".
+
 * Changes in 0.2 (since Emacs-Guix was a part of Guix)
 
 ** User visible changes
