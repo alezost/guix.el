@@ -51,6 +51,7 @@
 (let ((map guix-location-list-mode-map))
   (define-key map (kbd "RET") 'guix-location-list-show-packages)
   (define-key map (kbd "P")   'guix-location-list-show-packages)
+  (define-key map (kbd "e")   'guix-location-list-edit)
   ;; "Location Info" buffer is not defined (it would be useless), so
   ;; unbind "i" key (by default, it is used to display Info buffer).
   (define-key map (kbd "i") nil))
@@ -64,6 +65,11 @@
                     (guix-find-location (button-get btn 'location)))
           'help-echo (concat "Find location: " location)
           'location location)))
+
+(defun guix-location-list-edit ()
+  "Go to the package location file at point."
+  (interactive)
+  (guix-find-location (bui-list-current-id)))
 
 (declare-function guix-packages-by-location "guix-ui-package" t)
 
