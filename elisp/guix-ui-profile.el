@@ -75,13 +75,13 @@
 
 (let ((map guix-profile-list-mode-map))
   (define-key map [remap self-insert-command] 'guix-profile-list-hint)
+  (define-key map (kbd "RET") 'guix-profile-list-show-packages)
   (define-key map (kbd "P") 'guix-profile-list-show-packages)
   (define-key map (kbd "G") 'guix-profile-list-show-generations)
   (define-key map (kbd "M") 'guix-profile-list-apply-manifest)
   (define-key map (kbd "c") 'guix-profile-list-set-current)
-  ;; Unbind "i" and "RET" as "Profile Info" interface is not defined.
-  (define-key map (kbd "i") nil)
-  (define-key map (kbd "RET") 'guix-profile-list-hint))
+  ;; Unbind "i" as "Profile Info" interface is not defined.
+  (define-key map (kbd "i") nil))
 
 (defun guix-profile-list-hint ()
   "Display a message with useful key bindings."
