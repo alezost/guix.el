@@ -1,6 +1,6 @@
 ;;; guix-command.el --- Popup interface for guix commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -135,6 +135,7 @@ to be modified."
 (guix-command-define-argument-improver
     guix-command-improve-action-argument
   '(("container"   :char ?C)
+    ("copy"        :char ?y)
     ("graph"       :char ?G)
     ("environment" :char ?E)
     ("publish"     :char ?u)
@@ -200,6 +201,10 @@ to be modified."
     ("--root"        :fun guix-read-file-name)
     ("--sources"     :char ?S :fun guix-read-source-type :switch? nil)
     ("--with-source" :fun guix-read-file-name)))
+
+(guix-command-define-argument-improver
+    guix-command-improve-copy-argument
+  '(("--to" :char ?T)))
 
 (guix-command-define-argument-improver
     guix-command-improve-environment-argument
@@ -292,6 +297,9 @@ to be modified."
      guix-command-improve-target-argument
      guix-command-improve-system-type-argument
      guix-command-improve-build-argument)
+    (("copy")
+     guix-command-improve-common-build-argument
+     guix-command-improve-copy-argument)
     (("download")
      guix-command-improve-hash-argument)
     (("hash")
