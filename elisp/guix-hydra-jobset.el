@@ -116,7 +116,8 @@
   (bui-insert-button (guix-hydra-jobset-url
                       (bui-entry-non-void-value entry 'project)
                       (bui-entry-non-void-value entry 'name))
-                     'bui-url))
+                     'bui-url)
+  (bui-newline))
 
 
 ;;; Hydra jobset 'list'
