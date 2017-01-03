@@ -237,7 +237,6 @@ current profile's GENERATION."
   (define-key map (kbd "+")   'guix-generation-list-show-added-packages)
   (define-key map (kbd "-")   'guix-generation-list-show-removed-packages)
   (define-key map (kbd "=")   'guix-generation-list-diff)
-  (define-key map (kbd "D")   'guix-generation-list-diff)
   (define-key map (kbd "e")   'guix-generation-list-ediff)
   (define-key map (kbd "x")   'guix-generation-list-execute)
   (define-key map (kbd "s")   'guix-generation-list-switch)
