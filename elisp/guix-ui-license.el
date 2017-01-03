@@ -1,6 +1,6 @@
 ;;; guix-ui-license.el --- Interface for displaying licenses  -*- lexical-binding: t -*-
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -118,11 +118,22 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
   :format '((name nil 40 t)
             (url bui-list-get-url 50 t))
   :titles '((name . "License"))
+  :hint 'guix-license-list-hint
   :sort-key '(name))
 
 (let ((map guix-license-list-mode-map))
   (define-key map (kbd "e")   'guix-license-list-edit)
   (define-key map (kbd "P")   'guix-license-list-show-packages))
+
+(defvar guix-license-list-default-hint
+  '(("\\[guix-license-list-show-packages]") " show packages;\n"
+    ("\\[guix-license-list-edit]") " edit (go to) the license definition;\n"))
+
+(defun guix-license-list-hint ()
+  (bui-format-hints
+   guix-license-list-default-hint
+   (bui-list-hint)
+   bui-common-hint))
 
 (defun guix-license-list-describe (&rest ids)
   "Describe licenses with IDS (list of identifiers)."

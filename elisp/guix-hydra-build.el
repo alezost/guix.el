@@ -1,6 +1,6 @@
 ;;; guix-hydra-build.el --- Interface for Hydra builds  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -312,11 +312,22 @@ Show latest builds for this %s (with prefix, prompt for all parameters)"
             (status guix-hydra-build-list-get-status 20 t)
             (project nil 10 t)
             (jobset nil 17 t)
-            (time bui-list-get-time 20 t)))
+            (time bui-list-get-time 20 t))
+  :hint 'guix-hydra-build-list-hint)
 
 (let ((map guix-hydra-build-list-mode-map))
   (define-key map (kbd "B") 'guix-hydra-build-list-latest-builds)
   (define-key map (kbd "L") 'guix-hydra-build-list-view-log))
+
+(defvar guix-hydra-build-list-default-hint
+  '(("\\[guix-hydra-build-list-latest-builds]")
+    " show latest builds of the current job;\n"
+    ("\\[guix-hydra-build-list-view-log]") " show build log;\n"))
+
+(defun guix-hydra-build-list-hint ()
+  (bui-format-hints
+   guix-hydra-build-list-default-hint
+   (bui-default-hint)))
 
 (defun guix-hydra-build-list-get-status (status &optional _)
   "Return a string for build STATUS."

@@ -1,6 +1,6 @@
 ;;; guix-ui-system-generation.el --- Interface for displaying system generations  -*- lexical-binding: t -*-
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -159,6 +159,7 @@ SEARCH-VALUES."
                                 :right-align t)
             (time bui-list-get-time 20 t))
   :titles guix-generation-list-titles
+  :hint guix-generation-list-hint
   :sort-key guix-generation-list-sort-key
   :marks guix-generation-list-additional-marks)
 

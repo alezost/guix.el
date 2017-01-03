@@ -1,6 +1,6 @@
 ;;; guix-ui-profile.el --- Interface for displaying profiles  -*- lexical-binding: t -*-
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -71,10 +71,10 @@
                                    :right-align t))
   :titles '((number-of-packages    . "Packages")
             (number-of-generations . "Generations"))
+  :hint 'guix-profile-list-hint
   :sort-key '(profile))
 
 (let ((map guix-profile-list-mode-map))
-  (define-key map [remap self-insert-command] 'guix-profile-list-hint)
   (define-key map (kbd "RET") 'guix-profile-list-show-packages)
   (define-key map (kbd "P") 'guix-profile-list-show-packages)
   (define-key map (kbd "G") 'guix-profile-list-show-generations)
@@ -83,12 +83,16 @@
   ;; Unbind "i" as "Profile Info" interface is not defined.
   (define-key map (kbd "i") nil))
 
+(defvar guix-profile-list-default-hint
+  '(("\\[guix-profile-list-show-packages]") " show packages;\n"
+    ("\\[guix-profile-list-show-generations]") " show generations;\n"
+    ("\\[guix-profile-list-set-current]") " set current profile;\n"))
+
 (defun guix-profile-list-hint ()
-  "Display a message with useful key bindings."
-  (interactive)
-  (message (substitute-command-keys "Hint:
-Press '\\[guix-profile-list-show-packages]' to display packages.
-Press '\\[guix-profile-list-show-generations]' to display generations.")))
+  (bui-format-hints
+   guix-profile-list-default-hint
+   bui-list-sort-hint
+   bui-common-hint))
 
 (defun guix-profile-list-current-profile ()
   "Return file name of the current profile."

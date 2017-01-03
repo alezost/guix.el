@@ -1,6 +1,6 @@
 ;;; guix-ui-generation.el --- Interface for displaying generations  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -228,6 +228,7 @@ current profile's GENERATION."
             (file-name bui-list-get-file-name 30 t))
   :titles '((number . "N.")
             (number-of-packages . "Packages"))
+  :hint 'guix-generation-list-hint
   :sort-key '(number . t)
   :marks '((delete . ?D)))
 
@@ -242,6 +243,18 @@ current profile's GENERATION."
   (define-key map (kbd "s")   'guix-generation-list-switch)
   (define-key map (kbd "c")   'guix-generation-list-switch)
   (define-key map (kbd "d")   'guix-generation-list-mark-delete))
+
+(defvar guix-generation-list-default-hint
+  '(("\\[guix-generation-list-show-packages]") " show packages;\n"
+    ("\\[guix-generation-list-switch]") " set current generation;\n"
+    ("\\[guix-generation-list-diff]") " show Diff of the marked generations;\n"
+    ("\\[guix-generation-list-mark-delete]") " mark for deletion; "
+    ("\\[guix-generation-list-execute]") " execute operation (deletions);\n"))
+
+(defun guix-generation-list-hint ()
+  (bui-format-hints
+   guix-generation-list-default-hint
+   (bui-default-hint)))
 
 (defun guix-generation-list-get-entries (profile search-type
                                                  &rest search-values)

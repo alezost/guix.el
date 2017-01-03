@@ -1,6 +1,6 @@
 ;;; guix-hydra-jobset.el --- Interface for Hydra jobsets  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -131,10 +131,20 @@
             (scheduled nil 12 t)
             (succeeded nil 12 t)
             (failed nil 9 t)
-            (total nil 10 t)))
+            (total nil 10 t))
+  :hint 'guix-hydra-jobset-list-hint)
 
 (let ((map guix-hydra-jobset-list-mode-map))
   (define-key map (kbd "B") 'guix-hydra-jobset-list-latest-builds))
+
+(defvar guix-hydra-jobset-list-default-hint
+  '(("\\[guix-hydra-jobset-list-latest-builds]")
+    " show latest builds for the current jobset;\n"))
+
+(defun guix-hydra-jobset-list-hint ()
+  (bui-format-hints
+   guix-hydra-jobset-list-default-hint
+   (bui-default-hint)))
 
 (defun guix-hydra-jobset-list-latest-builds (number &rest args)
   "Display latest NUMBER of Hydra builds of the current jobset.

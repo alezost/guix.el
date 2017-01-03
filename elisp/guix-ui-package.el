@@ -1,6 +1,6 @@
 ;;; guix-ui-package.el --- Interface for displaying packages  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -718,6 +718,7 @@ This function is used to hide a \"Download\" button if needed."
             (outputs nil 13 t)
             (installed guix-package-list-get-installed-outputs 13 t)
             (synopsis bui-list-get-one-line 30 nil))
+  :hint 'guix-package-list-hint
   :sort-key '(name)
   :marks '((install . ?I)
            (upgrade . ?U)
@@ -757,6 +758,19 @@ this variable to t.  It should not do much harm anyway (most
 likely)."
   :type 'boolean
   :group 'guix-package-list)
+
+(defvar guix-package-list-default-hint
+  '(("\\[guix-package-list-edit]") " edit (go to) the package definition;\n"
+    ("\\[guix-package-list-mark-install]") " mark for installation; "
+    ("\\[guix-package-list-mark-delete]") " mark for deletion;\n"
+    ("\\[guix-package-list-mark-upgrade]") " mark for upgrading; "
+    ("\\[guix-package-list-mark-upgrades]") " mark all for upgrading;\n"
+    ("\\[guix-package-list-execute]") " execute operation;\n"))
+
+(defun guix-package-list-hint ()
+  (bui-format-hints
+   guix-package-list-default-hint
+   (bui-default-hint)))
 
 (defun guix-package-list-get-entries (profile search-type
                                               &rest search-values)
@@ -942,6 +956,7 @@ for all ARGS."
             (installed nil 12 t)
             (synopsis bui-list-get-one-line 30 nil))
   :required '(id package-id)
+  :hint 'guix-output-list-hint
   :sort-key '(name)
   :marks '((install . ?I)
            (upgrade . ?U)
@@ -955,6 +970,19 @@ for all ARGS."
   (define-key map (kbd "d")   'guix-output-list-mark-delete)
   (define-key map (kbd "U")   'guix-output-list-mark-upgrade)
   (define-key map (kbd "^")   'guix-output-list-mark-upgrades))
+
+(defvar guix-output-list-default-hint
+  '(("\\[guix-output-list-edit]") " edit (go to) the package definition;\n"
+    ("\\[guix-output-list-mark-install]") " mark for installation; "
+    ("\\[guix-output-list-mark-delete]") " mark for deletion;\n"
+    ("\\[guix-output-list-mark-upgrade]") " mark for upgrading; "
+    ("\\[guix-output-list-mark-upgrades]") " mark all for upgrading;\n"
+    ("\\[guix-output-list-execute]") " execute operation;\n"))
+
+(defun guix-output-list-hint ()
+  (bui-format-hints
+   guix-output-list-default-hint
+   (bui-default-hint)))
 
 (defun guix-output-list-get-entries (profile search-type
                                              &rest search-values)

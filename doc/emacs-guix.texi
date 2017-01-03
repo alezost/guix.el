@@ -932,6 +932,9 @@ The following keys are available for both ``list'' and ``info''
 interfaces:
 
 @table @kbd
+@item h
+Show ``hint'' (a message with available key bindings).
+
 @item l
 @itemx r
 Go backward/forward by the history of the displayed results (this
@@ -945,9 +948,8 @@ displayed data and redisplay it.
 @item R
 Redisplay current buffer (without updating the data).
 
-@item h
-@itemx ?
-Describe current mode to see all available bindings.
+@item ?
+Describe current mode.
 
 @end table
 
