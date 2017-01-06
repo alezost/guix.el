@@ -239,13 +239,12 @@ current profile's GENERATION."
   (define-key map (kbd "=")   'guix-generation-list-diff)
   (define-key map (kbd "e")   'guix-generation-list-ediff)
   (define-key map (kbd "x")   'guix-generation-list-execute)
-  (define-key map (kbd "s")   'guix-generation-list-switch)
-  (define-key map (kbd "c")   'guix-generation-list-switch)
+  (define-key map (kbd "c")   'guix-generation-list-set-current)
   (define-key map (kbd "d")   'guix-generation-list-mark-delete))
 
 (defvar guix-generation-list-default-hint
   '(("\\[guix-generation-list-show-packages]") " show packages;\n"
-    ("\\[guix-generation-list-switch]") " set current generation;\n"
+    ("\\[guix-generation-list-set-current]") " set current generation;\n"
     ("\\[guix-generation-list-diff]") " show Diff of the marked generations;\n"
     ("\\[guix-generation-list-mark-delete]") " mark for deletion; "
     ("\\[guix-generation-list-execute]") " execute operation (deletions);\n"))
@@ -269,7 +268,7 @@ current profile's GENERATION."
 VAL is a boolean value."
   (if val "(current)" ""))
 
-(defun guix-generation-list-switch ()
+(defun guix-generation-list-set-current ()
   "Switch current profile to the generation at point."
   (interactive)
   (let* ((entry   (bui-list-current-entry))

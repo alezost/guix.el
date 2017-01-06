@@ -461,8 +461,7 @@ bindings:
 @table @kbd
 @item P
 List packages installed in the current generation.
-@item s
-@itemx c
+@item c
 Switch profile to the current generation.
 @item d
 Mark the current generation for deletion (with prefix, mark all
