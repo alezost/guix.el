@@ -92,8 +92,7 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
     (if (and comment
              (string-match-p "^http" comment))
         (bui-info-insert-value-simple comment 'bui-url)
-      (bui-info-insert-title-simple
-       (bui-info-param-title 'guix-license 'comment))
+      (bui-info-insert-title-simple (bui-current-param-title 'comment))
       (bui-info-insert-value-indent comment)))
   (bui-newline))
 
