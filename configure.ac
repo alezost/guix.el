@@ -1,5 +1,5 @@
 define(EMACS_GUIX_CONFIGURE_COPYRIGHT, [[
-Copyright (C) 2016 Alex Kost <alezost@gmail.com>
+Copyright (C) 2016-2017 Alex Kost <alezost@gmail.com>
 
 This file is part of Emacs-Guix.
 
@@ -75,7 +75,17 @@ AM_CONDITIONAL([GUIX_DIR], [test "x$guixmoduledir" != "x"])
 dnl ----------------------------------------------------------------
 dnl Emacs side
 
-AM_PATH_LISPDIR
+AC_PATH_PROG([EMACS], [emacs])
+AC_SUBST([EMACS])
+
+AC_ARG_WITH([lispdir],
+  [AS_HELP_STRING([--with-lispdir],
+    [directory for Emacs-Lisp (*.el) files])],
+  [lispdir="$withval"],
+  [lispdir="$datarootdir/emacs/site-lisp"])
+AC_SUBST([lispdir])
+AC_MSG_CHECKING([for the Emacs-Lisp directory])
+AC_MSG_RESULT([$lispdir])
 
 AC_ARG_WITH([geiser-lispdir],
   [AS_HELP_STRING([--with-geiser-lispdir],

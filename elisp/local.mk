@@ -1,6 +1,6 @@
 # local.mk --- Local Automake file for emacs-lisp code  -*- makefile-automake -*-
 
-# Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+# Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 # Copyright © 2016 Mathieu Lirzin <mthl@gnu.org>
 
 # This file is part of Emacs-Guix.
@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Emacs-Guix.  If not, see <http://www.gnu.org/licenses/>.
 
-AM_ELCFLAGS =
+AM_ELCFLAGS = -L "$(abs_builddir)/%D%" -L "$(abs_srcdir)/%D%"
 
 if GEISER_DIR
   AM_ELCFLAGS += -L "$(geiserlispdir)"
@@ -42,7 +42,7 @@ endif
 
 AUTOLOADS = %D%/guix-autoloads.el
 
-ELFILES =					\
+EL_FILES =					\
   %D%/guix.el					\
   %D%/guix-config.el				\
   %D%/guix-utils.el				\
@@ -75,22 +75,36 @@ ELFILES =					\
   %D%/guix-ui-generation.el			\
   %D%/guix-ui-system-generation.el
 
-dist_lisp_LISP = $(ELFILES)
+# Elisp files generated from ".in".
+EL_GEN_FILES = %D%/guix-build-config.el
 
-nodist_lisp_LISP =				\
-  %D%/guix-build-config.el			\
+ELC_FILES = $(EL_GEN_FILES:%.el=%.elc) $(EL_FILES:%.el=%.elc)
+
+dist_lisp_DATA = $(EL_FILES)
+
+nodist_lisp_DATA =				\
+  $(EL_GEN_FILES)				\
+  $(ELC_FILES)					\
   $(AUTOLOADS)
 
-$(AUTOLOADS): $(ELFILES)
-	$(AM_V_GEN) $(EMACS) -Q --batch --eval						\
+$(AUTOLOADS): $(EL_FILES)
+	$(AM_V_GEN) $(EMACS) -Q --batch --eval					\
 	  "(let ((backup-inhibited t)						\
 	         (generated-autoload-file \"$(abs_builddir)/$(AUTOLOADS)\"))	\
 	     (update-directory-autoloads \"$(abs_srcdir)/%D%\"))"
 
-CLEANFILES += $(AUTOLOADS)
+$(ELC_FILES): %.elc: %.el
+	-$(AM_V_GEN) $(EMACS) $(AM_ELCFLAGS) $(ELCFLAGS) --batch		\
+	--eval "(setq load-prefer-newer t)"					\
+	-f batch-byte-compile $<
+
+CLEANFILES += $(ELC_FILES) $(AUTOLOADS)
+
+clean-lisp:
+	-$(RM) -f $(ELC_FILES)
 
 clean-elc: clean-lisp
 
-.PHONY: clean-elc
+.PHONY: clean-lisp clean-elc
 
 # local.mk ends here
