@@ -1,6 +1,6 @@
 ;;; guix-utils.el --- General utility functions  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -172,6 +172,24 @@ single argument."
          (cons (cons url-handler-regexp 'url-file-handler)
                file-name-handler-alist)))
     (find-file file-or-url)))
+
+(defun guix-switch-to-buffer-or-funcall (buffer-or-name function
+                                         &optional message)
+  "Switch to BUFFER-OR-NAME if it exists.
+If BUFFER-OR-NAME does not exist, call FUNCTION without
+arguments, also display a message if MESSAGE is specified (it can
+be either nil, a string, or another value for a default
+message)."
+  (let ((buffer (get-buffer buffer-or-name)))
+    (if buffer
+        (progn
+          (switch-to-buffer buffer)
+          (when message
+            (message (if (stringp message)
+                         message
+                       (substitute-command-keys "\
+Press '\\[revert-buffer]' to update this buffer.")))))
+      (funcall function))))
 
 (cl-defun guix-show-pretty-print (file-name &optional (mode 'scheme-mode))
   "Show FILE-NAME contents in MODE and pretty-print it."

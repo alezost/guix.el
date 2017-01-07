@@ -155,11 +155,21 @@ See `guix-license-file' for the meaning of DIRECTORY."
 
 ;;; Interactive commands
 
-;;;###autoload
-(defun guix-licenses ()
-  "Display licenses of the Guix packages."
+(defun guix-licenses-show ()
+  "Display licenses of the Guix packages.
+Unlike `guix-licenses', this command always recreates
+`guix-license-list-buffer-name' buffer."
   (interactive)
   (guix-license-get-display 'all))
+
+;;;###autoload
+(defun guix-licenses ()
+  "Display licenses of the Guix packages.
+Switch to the `guix-license-list-buffer-name' buffer if it
+already exists."
+  (interactive)
+  (guix-switch-to-buffer-or-funcall
+   guix-license-list-buffer-name #'guix-licenses-show 'message))
 
 (provide 'guix-ui-license)
 

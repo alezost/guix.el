@@ -154,12 +154,23 @@
 
 ;;; Interactive commands
 
+(defun guix-profiles-show ()
+  "Display Guix profiles.
+Unlike `guix-profiles', this command always recreates
+`guix-profile-list-buffer-name' buffer."
+  (interactive)
+  (bui-list-get-display-entries 'guix-profile))
+
 ;;;###autoload
 (defun guix-profiles ()
   "Display Guix profiles.
+Switch to the `guix-profile-list-buffer-name' buffer if it
+already exists.
+
 Modify `guix-profiles' variable to add more profiles."
   (interactive)
-  (bui-list-get-display-entries 'guix-profile))
+  (guix-switch-to-buffer-or-funcall
+   guix-profile-list-buffer-name #'guix-profiles-show 'message))
 
 (provide 'guix-ui-profile)
 

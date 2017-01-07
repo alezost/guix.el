@@ -1,6 +1,6 @@
 ;;; guix-about.el --- Various info about Guix and Emacs-Guix  -*- lexical-binding: t -*-
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -269,12 +269,21 @@ See `guix-help-specifications' for the meaning of SPEC."
   (goto-char (point-min))
   (delete-char 1))
 
-;;;###autoload
-(defun guix-help ()
-  "Display a summary of the available Emacs-Guix commands."
+(defun guix-help-show ()
+  "Display a summary of the available Emacs-Guix commands.
+Unlike `guix-help', this command always recreates
+`guix-help-buffer-name' buffer."
   (interactive)
   (guix-help-display-buffer guix-help-buffer-name
                             #'guix-help-insert-content))
+
+;;;###autoload
+(defun guix-help ()
+  "Display a summary of the available Emacs-Guix commands.
+Switch to `guix-help-buffer-name' buffer if it already exists."
+  (interactive)
+  (guix-switch-to-buffer-or-funcall
+   guix-help-buffer-name #'guix-help-show))
 
 
 ;;; "About" buffer
@@ -343,12 +352,21 @@ Return nil, if the image cannot be found."
   (goto-char (point-min))
   (forward-line 3))
 
-;;;###autoload
-(defun guix-about ()
-  "Display 'About' buffer with fancy Guix logo if available."
+(defun guix-about-show ()
+  "Display 'About' buffer with fancy Guix logo if available.
+Unlike `guix-about', this command always recreates
+`guix-about-buffer-name' buffer."
   (interactive)
   (guix-help-display-buffer guix-about-buffer-name
                             #'guix-about-insert-content))
+
+;;;###autoload
+(defun guix-about ()
+  "Display 'About' buffer with fancy Guix logo if available.
+Switch to `guix-about-buffer-name' buffer if it already exists."
+  (interactive)
+  (guix-switch-to-buffer-or-funcall
+   guix-about-buffer-name #'guix-about-show))
 
 (provide 'guix-about)
 

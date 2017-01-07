@@ -92,11 +92,21 @@
 
 ;;; Interactive commands
 
-;;;###autoload
-(defun guix-locations ()
-  "Display locations of the Guix packages."
+(defun guix-locations-show ()
+  "Display locations of the Guix packages.
+Unlike `guix-locations', this command always recreates
+`guix-location-list-buffer-name' buffer."
   (interactive)
   (bui-list-get-display-entries 'guix-location))
+
+;;;###autoload
+(defun guix-locations ()
+  "Display locations of the Guix packages.
+Switch to the `guix-location-list-buffer-name' buffer if it
+already exists."
+  (interactive)
+  (guix-switch-to-buffer-or-funcall
+   guix-location-list-buffer-name #'guix-locations-show 'message))
 
 (provide 'guix-ui-location)
 
