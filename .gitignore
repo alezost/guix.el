@@ -17,6 +17,5 @@ install-sh
 m4
 missing
 texinfo.tex
-/build-aux
 /elisp/guix-autoloads.el
 /elisp/guix-build-config.el

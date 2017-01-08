@@ -40,6 +40,8 @@ if EMACS_Q
   AM_ELCFLAGS += -Q
 endif
 
+AM_ELCFLAGS += $(shell test -v GUIX_ENVIRONMENT && echo --no-site-file)
+
 AUTOLOADS = %D%/guix-autoloads.el
 
 EL_FILES =					\
@@ -95,7 +97,7 @@ $(AUTOLOADS): $(EL_FILES)
 
 $(ELC_FILES): %.elc: %.el
 	-$(AM_V_GEN) $(EMACS) $(AM_ELCFLAGS) $(ELCFLAGS) --batch		\
-	--eval "(setq load-prefer-newer t)"					\
+	--load "$(abs_top_srcdir)/build-aux/build-env.el"			\
 	-f batch-byte-compile $<
 
 CLEANFILES += $(ELC_FILES) $(AUTOLOADS)

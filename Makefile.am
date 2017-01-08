@@ -1,6 +1,6 @@
 # Makefile.am --- GNU Automake file to build Emacs-Guix
 
-# Copyright © 2016 Alex Kost <alezost@gmail.com>
+# Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 # This file is part of Emacs-Guix.
 
@@ -18,6 +18,8 @@
 # along with Emacs-Guix.  If not, see <http://www.gnu.org/licenses/>.
 
 CLEANFILES =
+
+EXTRA_DIST = build-aux/build-env.el
 
 info_TEXINFOS = doc/emacs-guix.texi
 
