@@ -1,5 +1,29 @@
 -*- mode: org -*-
 
+* Changes in 0.2.2 (since 0.2.1)
+
+** User visible changes
+
+*** Hints
+
+Press "h" (or any unbound key) in any 'list' or 'info' buffer to display
+a hint message (a summary of the available key bindings).
+
+*** Generation List
+
+- "D" key is removed (use "=" instead).
+
+- "s" key is used for sorting (as in the other lists), not for setting
+  current generation as before (use "c" instead).
+
+*** Location List
+
+"e" key can be used to go to the location file.
+
+** Internal changes
+
+*** "guix.scm" added
+
 * Changes in 0.2.1 (since 0.2)
 
 ** User visible changes
