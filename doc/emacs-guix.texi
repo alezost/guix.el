@@ -193,11 +193,15 @@ installation.
 
 At first, you need to clone the repository and to run
 @code{autogen.sh} script (it's just a wrapper for @code{autoreconf}
-command):
+command).  If you don't have all dependencies installed, you may use
+@file{guix.scm} file to make an environment to build Emacs-Guix
+(@pxref{Invoking guix environment,,, guix, The GNU Guix Reference
+Manual}):
 
 @example
 $ git clone https://github.com/alezost/guix.el.git
-$ cd guile-xosd
+$ cd guix.el
+$ guix environment --pure --load=guix.scm
 $ ./autogen.sh
 @end example
 
