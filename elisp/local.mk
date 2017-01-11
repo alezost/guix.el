@@ -55,6 +55,7 @@ EL_FILES =					\
   %D%/guix-repl.el				\
   %D%/guix-help-vars.el				\
   %D%/guix-read.el				\
+  %D%/guix-help.el				\
   %D%/guix-about.el				\
   %D%/guix-misc.el				\
   %D%/guix-build-log.el				\
