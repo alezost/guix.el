@@ -58,6 +58,7 @@ A copy of the license is available at
 * Hydra::               Interface for the Guix build farm.
 * List/Info Interface:: Describing ``list''/''info'' buffers.
 * Configuration::       Configuring Emacs-Guix.
+* Help::                Help commands.
 
 Indexes
 * Concept Index::       Concepts.
@@ -76,8 +77,8 @@ tools related to the GNU Guix package manager.
 Call @kbd{M-x guix-about} to see a splash screen similar to
 @kbd{M-x@tie{}about-emacs}.
 
-@findex guix-help
-Call @kbd{M-x guix-help} to get a summary of all the available commands.
+Call @kbd{M-x guix-help} to get a summary of all the available
+commands (@pxref{Help}).
 
 In short, Emacs-Guix provides the following features:
 
@@ -1153,6 +1154,23 @@ management.
 
 @vindex guix-devel-mode-map
 @item guix-devel-mode-map
+
+@end table
+
+@c ----------------------------------------------------------------
+@node Help
+@chapter Help
+
+So many commands, so many buffers!  This chapter describes few more
+commands that should help you not to get lost.
+
+@table @kbd
+
+@findex guix-help
+@item M-x guix-help
+Display a buffer with the summary of the available Emacs-Guix
+commands.  Buttons in this buffer allow you to run commands and to
+look at their docstrings and manual entries.
 
 @end table
 
