@@ -1172,6 +1172,17 @@ Display a buffer with the summary of the available Emacs-Guix
 commands.  Buttons in this buffer allow you to run commands and to
 look at their docstrings and manual entries.
 
+@findex guix-switch-to-buffer
+@item M-x guix-switch-to-buffer
+Switch to one of the Emacs-Guix buffers.  This is like a usual
+@code{switch-to-buffer} (bound to @kbd{C-x b} by default), except it
+completes only Guix buffers names.  If you are going to use this
+command, it is probably better to bind it to some key, for example:
+
+@example
+(global-set-key (kbd "C-x B") 'guix-switch-to-buffer)
+@end example
+
 @end table
 
 @c ----------------------------------------------------------------

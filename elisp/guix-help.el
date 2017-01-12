@@ -23,6 +23,7 @@
 
 ;;; Code:
 
+(require 'dash)
 (require 'bui)
 (require 'guix nil t)
 (require 'guix-utils)
@@ -112,6 +113,7 @@
     guix-set-current-profile
     guix-pull
     guix-apply-manifest
+    guix-switch-to-buffer
     (guix-about t nil)
     (guix-version t nil))
   "List of command specifications for '\\[guix-help]'.
@@ -269,6 +271,50 @@ Switch to `guix-help-buffer-name' buffer if it already exists."
   (interactive)
   (guix-switch-to-buffer-or-funcall
    guix-help-buffer-name #'guix-help-show))
+
+
+;;; Guix buffers
+
+(defcustom guix-define-buffer-function #'guix-define-buffer-by-name
+  "Function used to define a Guix buffer.
+This function is used by `guix-switch-to-buffer'.  It is called
+with a buffer as a single argument and should return non-nil if
+the buffer is the Guix one."
+  :type '(choice (function-item guix-define-buffer-by-name)
+                 (function-item guix-define-buffer-by-mode)
+                 (function :tag "Other function"))
+  :group 'guix)
+
+(defun guix-define-buffer-by-name (buffer)
+  "Return non-nil if BUFFER name matches Guix buffer names."
+  (string-match-p "\\`*Guix" (buffer-name buffer)))
+
+(defun guix-define-buffer-by-mode (buffer)
+  "Return non-nil if BUFFER major mode is one of the Guix major modes."
+  (with-current-buffer buffer
+    (string-match-p "\\`guix-" (symbol-name major-mode))))
+
+(defun guix-buffer? (buffer)
+  "Return non-nil if BUFFER is a Guix buffer.
+This is a wrapper for `guix-define-buffer-function'."
+  (funcall guix-define-buffer-function buffer))
+
+(defun guix-buffers ()
+  "Return all Guix buffers matching `guix-define-buffer-function'."
+  (-filter #'guix-buffer? (buffer-list)))
+
+;;;###autoload
+(defun guix-switch-to-buffer (buffer)
+  "Switch to BUFFER.
+Interactively, prompt for BUFFER completing only Guix buffer names.
+Guix buffers are defined using `guix-define-buffer-function'."
+  (interactive
+   (let ((buffers (guix-buffers)))
+     (if (null buffers)
+         (user-error "No Guix buffers found")
+       (list (completing-read "Buffer: "
+                              (mapcar #'buffer-name buffers))))))
+  (switch-to-buffer buffer))
 
 (provide 'guix-help)
 
