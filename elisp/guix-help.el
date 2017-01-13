@@ -45,9 +45,19 @@
   :type 'integer
   :group 'guix-help)
 
+(defcustom guix-help-key-column (+ 12 guix-help-doc-column)
+  "Column at which command key bindings are inserted."
+  :type 'integer
+  :group 'guix-help)
+
 (defface guix-help-heading
   '((t :inherit bui-info-heading))
   "Face for headings in `guix-help-buffer-name' buffer."
+  :group 'guix-help-faces)
+
+(defface guix-help-key
+  '((t :inherit bui-hint-key))
+  "Face for key bindings in `guix-help-buffer-name' buffer."
   :group 'guix-help-faces)
 
 (defvar guix-help-specifications
@@ -218,7 +228,14 @@ See `guix-help-specifications' for the meaning of SPEC."
          (guix-insert-doc-button "doc" name)
          (when info-button?
            (insert " ")
-           (guix-insert-info-command-button "info" name)))
+           (guix-insert-info-command-button "info" name))
+         (let ((keys (where-is-internal name)))
+           (when keys
+             (indent-to guix-help-key-column 2)
+             (insert "(")
+             (bui-format-insert (mapcar #'key-description keys)
+                                'guix-help-key)
+             (insert ")"))))
        (bui-newline)))
     (_
      (insert "<unknown specification>")
