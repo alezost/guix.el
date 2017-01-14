@@ -1,6 +1,6 @@
 ;;; guix-prettify.el --- Prettify Guix store file names
 
-;; Copyright © 2014, 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014, 2015, 2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -80,15 +80,16 @@ disabling `guix-prettify-mode' a little faster."
 (defcustom guix-prettify-regexp
   ;; The following file names / URLs should be abbreviated:
 
-  ;; /gnu/store/…-foo-0.1
-  ;; /nix/store/…-foo-0.1
-  ;; http://hydra.gnu.org/nar/…-foo-0.1
-  ;; http://hydra.gnu.org/log/…-foo-0.1
+  ;; /gnu/store/aiywpm2w299pk1ps96a8d8qwnwkzfr2g-foo-0.1
+  ;; /nix/store/inb6pfvfm2vqpn9wlyrivj3iyx7k2pv6-foo-0.1
+  ;; http://hydra.gnu.org/nar/hrr424q661d9wdpkr48gyk5a9w8nrlcr-foo-0.1
+  ;; http://hydra.gnu.org/log/fjbx25bap58k3mywzpmc8w9fjdydxqv8-foo-0.1
+  ;; https://bayfront.guixsd.org/nar/gzip/m4ccn9nzlsbvlj36w45555pq98spy007-foo-0.1
 
-  (rx "/" (or "store" "nar" "log") "/"
+  (rx "/" (or "store" "log" (and "nar" (zero-or-one "/gzip")))
       ;; Hash-parts do not include "e", "o", "u" and "t".  See base32Chars
       ;; at <https://github.com/NixOS/nix/blob/master/src/libutil/hash.cc>
-      (group (= 32 (any "0-9" "a-d" "f-n" "p-s" "v-z"))))
+      "/" (group (= 32 (any "0-9" "a-d" "f-n" "p-s" "v-z"))))
   "Regexp matching file names for prettifying.
 
 Disable `guix-prettify-mode' before modifying this variable and
