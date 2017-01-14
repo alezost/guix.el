@@ -208,6 +208,25 @@ INFO-NODE is the name passed to `info' function."
   "Open TOPIC of Command index in the Emacs-Guix manual."
   (guix-goto-index-topic "Command Index" topic))
 
+(defun guix-help-insert-doc-buttons (command &optional info-button?)
+  "Insert 'doc' button for COMMAND at `guix-help-doc-column'.
+If INFO-BUTTON? is non-nil, insert 'info' button as well."
+  (indent-to guix-help-doc-column 2)
+  (guix-insert-doc-button "doc" command)
+  (when info-button?
+    (insert " ")
+    (guix-insert-info-command-button "info" command)))
+
+(defun guix-help-insert-keys (command)
+  "Insert key bindings for COMMAND at `guix-help-key-column'."
+  (let ((keys (where-is-internal command)))
+    (when keys
+      (indent-to guix-help-key-column 2)
+      (insert "(")
+      (bui-format-insert (mapcar #'key-description keys)
+                         'guix-help-key)
+      (insert ")"))))
+
 (defun guix-help-insert-specification (spec)
   "Insert command specification SPEC at point.
 See `guix-help-specifications' for the meaning of SPEC."
@@ -224,18 +243,12 @@ See `guix-help-specifications' for the meaning of SPEC."
          (if command-button?
              (guix-insert-command-button name)
            (insert (symbol-name name)))
-         (indent-to guix-help-doc-column 2)
-         (guix-insert-doc-button "doc" name)
-         (when info-button?
-           (insert " ")
-           (guix-insert-info-command-button "info" name))
-         (let ((keys (where-is-internal name)))
-           (when keys
-             (indent-to guix-help-key-column 2)
-             (insert "(")
-             (bui-format-insert (mapcar #'key-description keys)
-                                'guix-help-key)
-             (insert ")"))))
+         (if (< guix-help-doc-column guix-help-key-column)
+             (progn
+               (guix-help-insert-doc-buttons name info-button?)
+               (guix-help-insert-keys name))
+           (guix-help-insert-keys name)
+           (guix-help-insert-doc-buttons name info-button?)))
        (bui-newline)))
     (_
      (insert "<unknown specification>")
