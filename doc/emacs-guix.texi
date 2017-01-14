@@ -1183,6 +1183,17 @@ command, it is probably better to bind it to some key, for example:
 (global-set-key (kbd "C-x B") 'guix-switch-to-buffer)
 @end example
 
+@findex guix-extended-command
+@item M-x guix-extended-command
+Run Emacs-Guix command.  This is like @kbd{M-x} (@pxref{M-x,,, emacs,
+The GNU Emacs Manual}), except it completes only Guix command names.
+And again, this is not a very useful command unless it is bound to
+some key, for example:
+
+@example
+(global-set-key (kbd "M-X") 'guix-extended-command)
+@end example
+
 @end table
 
 @c ----------------------------------------------------------------

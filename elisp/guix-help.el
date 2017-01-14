@@ -124,6 +124,7 @@
     guix-pull
     guix-apply-manifest
     guix-switch-to-buffer
+    guix-extended-command
     (guix-about t nil)
     (guix-version t nil))
   "List of command specifications for '\\[guix-help]'.
@@ -345,6 +346,48 @@ Guix buffers are defined using `guix-define-buffer-function'."
        (list (completing-read "Buffer: "
                               (mapcar #'buffer-name buffers))))))
   (switch-to-buffer buffer))
+
+
+;;; Guix commands
+
+(defun guix-extended-command-prompt ()
+  "Return prompt string for `guix-extended-command'."
+  ;; Taken from `read-extended-command'.
+  (concat (cond
+           ((eq current-prefix-arg '-) "- ")
+           ((and (consp current-prefix-arg)
+                 (eq (car current-prefix-arg) 4)) "C-u ")
+           ((and (consp current-prefix-arg)
+                 (integerp (car current-prefix-arg)))
+            (format "%d " (car current-prefix-arg)))
+           ((integerp current-prefix-arg)
+            (format "%d " current-prefix-arg)))
+          "M-x "))
+
+(defun guix-extended-commands ()
+  "Return a list of global Guix commands."
+  (delq nil
+        (mapcar (lambda (spec)
+                  (cond
+                   ((symbolp spec) spec)
+                   ((listp spec) (car spec))))
+                guix-help-specifications)))
+
+;;;###autoload
+(defun guix-extended-command (command)
+  "Run Emacs-Guix COMMAND.
+This is like '\\[execute-extended-command]' but only global Guix
+commands are completed (commands displayed with '\\[guix-help]')."
+  (interactive
+   (list (completing-read (guix-extended-command-prompt)
+                          (guix-extended-commands)
+                          nil t)))
+  (let ((cmd (if (stringp command)
+                 (intern-soft command)
+               command)))
+    (if (commandp cmd)
+        (call-interactively cmd)
+      (error "`%S' is not a valid command" cmd))))
 
 (provide 'guix-help)
 
