@@ -36,12 +36,13 @@
   "Evaluate STR with guile expression using Geiser REPL.
 If REPL is nil, use the current Geiser REPL.
 Return a list of strings with result values of evaluation."
-  (with-current-buffer (or repl (guix-geiser-repl))
-    (let ((res (geiser-eval--send/wait `(:eval (:scm ,str)))))
-      (if (geiser-eval--retort-error res)
-          (error "Error in evaluating guile expression: %s"
-                 (geiser-eval--retort-output res))
-        (cdr (assq 'result res))))))
+  (let ((gc-cons-threshold (max gc-cons-threshold 10000000)))
+    (with-current-buffer (or repl (guix-geiser-repl))
+      (let ((res (geiser-eval--send/wait `(:eval (:scm ,str)))))
+        (if (geiser-eval--retort-error res)
+            (error "Error in evaluating guile expression: %s"
+                   (geiser-eval--retort-output res))
+          (cdr (assq 'result res)))))))
 
 (defun guix-geiser-eval-read (str &optional repl)
   "Evaluate STR with guile expression using Geiser REPL.
