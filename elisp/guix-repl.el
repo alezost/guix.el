@@ -1,6 +1,6 @@
 ;;; guix-repl.el --- Making and using Guix REPL
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -225,7 +225,8 @@ If INTERNAL is non-nil, return the value for the internal Guix REPL."
 (defun guix-repl-socket-file-name ()
   "Return a name of a socket file used by Guix REPL."
   (make-temp-name
-   (concat (file-name-as-directory temporary-file-directory)
+   (concat (file-name-as-directory
+            (expand-file-name temporary-file-directory))
            "guix-repl-")))
 
 (defun guix-repl-delete-socket-maybe ()
