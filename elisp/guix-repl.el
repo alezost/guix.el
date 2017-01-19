@@ -137,6 +137,15 @@ they are successfully installed."
   :type 'boolean
   :group 'guix-repl)
 
+(defvar guix-repl-default-directory
+  ;; If the current buffer is "tramp"-ed, the REPL may be started
+  ;; with the root rights!  So make sure `default-directory' is
+  ;; "safe".  See <https://notabug.org/alezost/emacs-guix/issues/1>
+  ;; for details.
+  (or (getenv "HOME")
+      user-emacs-directory)
+  "Guix REPL is started with this directory as `default-directory'.")
+
 (defvar guix-repl-current-socket nil
   "Name of a socket file used by the current Guix REPL.")
 
@@ -252,7 +261,8 @@ START-MSG and END-MSG are strings displayed in the minibuffer in
 the beginning and in the end of the process.  If nil, do not
 display messages."
   (let* ((repl-var (guix-get-repl-buffer-variable internal))
-         (repl (symbol-value repl-var)))
+         (repl (symbol-value repl-var))
+         (default-directory guix-repl-default-directory))
     (unless (and (buffer-live-p repl)
                  (get-buffer-process repl))
       (and start-msg (message start-msg))
