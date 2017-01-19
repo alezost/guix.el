@@ -251,6 +251,46 @@ See `bui-define-groups' for details."
      ,@args))
 
 
+;;; Temporary file names
+
+(defvar guix-temporary-directory nil
+  "Directory for writing temporary Guix files.
+If nil, it will be set when it will be used the first time.
+This directory will be deleted on Emacs exit.")
+
+(defun guix-temporary-directory ()
+  "Return `guix-temporary-directory' (set it if needed)."
+  (or (and guix-temporary-directory
+           (file-exists-p guix-temporary-directory)
+           guix-temporary-directory)
+      (setq guix-temporary-directory
+            (make-temp-file "emacs-guix-" 'dir))))
+
+(defun guix-temporary-file-name (name &optional suffix)
+  "Return file NAME from `guix-temporary-directory'.
+If such file name already exists, or if SUFFIX string is
+specified, make the returned name unique."
+  (let* ((file-name (expand-file-name name (guix-temporary-directory)))
+         (file-name (if suffix
+                        (concat (make-temp-name file-name) suffix)
+                      file-name)))
+    (if (file-exists-p file-name)
+        (guix-temporary-file-name name (or suffix ""))
+      file-name)))
+
+(defun guix-delete-temporary-directory ()
+  "Delete `guix-temporary-directory' if it exists."
+  (when (and guix-temporary-directory
+	     (file-exists-p guix-temporary-directory))
+    (condition-case nil
+	(delete-directory (guix-temporary-directory) 'recursive)
+      (error
+       (message "Failed to delete temporary Guix directory: %s"
+		guix-temporary-directory)))))
+
+(add-hook 'kill-emacs-hook 'guix-delete-temporary-directory)
+
+
 ;;; Fontification
 
 (defvar guix-font-lock-flush-function

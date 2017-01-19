@@ -1,6 +1,6 @@
 ;;; guix-external.el --- External programs  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -26,6 +26,7 @@
 (require 'cl-lib)
 (require 'guix nil t)
 (require 'guix-config)
+(require 'guix-utils)
 
 (defgroup guix-external nil
   "Settings for external programs."
@@ -68,7 +69,7 @@ The function is called without arguments."
 If ARGS is nil, use `guix-dot-default-arguments'."
   (or guix-dot-program
       (error (concat "Couldn't find 'dot'.\n"
-                     "Set guix-dot-program to a proper value")))
+                     "Set `guix-dot-program' to a proper value")))
   (cl-list* guix-dot-program
             (concat "-o" output-file)
             (or args guix-dot-default-arguments)))
@@ -78,18 +79,12 @@ If ARGS is nil, use `guix-dot-default-arguments'."
   (funcall guix-dot-file-name-function))
 
 (defun guix-png-file-name ()
-  "Return '.png' file name in the `temporary-file-directory'."
-  (concat (make-temp-name
-           (concat (file-name-as-directory temporary-file-directory)
-                   "emacs-guix-graph-"))
-          ".png"))
+  "Return '.png' file name in the `guix-temporary-directory'."
+  (guix-temporary-file-name "graph-" ".png"))
 
 (defun guix-html-file-name ()
-  "Return '.html' file name in the `temporary-file-directory'."
-  (concat (make-temp-name
-           (concat (file-name-as-directory temporary-file-directory)
-                   "emacs-guix-"))
-          ".html"))
+  "Return '.html' file name in the `guix-temporary-directory'."
+  (guix-temporary-file-name "graph-" ".html"))
 
 (provide 'guix-external)
 

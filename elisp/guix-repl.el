@@ -223,19 +223,14 @@ If INTERNAL is non-nil, return the value for the internal Guix REPL."
             (guix-repl-guile-args))))
 
 (defun guix-repl-socket-file-name ()
-  "Return a name of a socket file used by Guix REPL."
-  (make-temp-name
-   (concat (file-name-as-directory
-            (expand-file-name temporary-file-directory))
-           "guix-repl-")))
+  "Return a fresh name of a socket file used by Guix REPL."
+  (guix-temporary-file-name "repl-socket"))
 
 (defun guix-repl-delete-socket-maybe ()
   "Delete `guix-repl-current-socket' file if it exists."
   (and guix-repl-current-socket
        (file-exists-p guix-repl-current-socket)
        (delete-file guix-repl-current-socket)))
-
-(add-hook 'kill-emacs-hook 'guix-repl-delete-socket-maybe)
 
 (defun guix-start-process-maybe (&optional start-msg end-msg)
   "Start Geiser REPL configured for Guix if needed.
