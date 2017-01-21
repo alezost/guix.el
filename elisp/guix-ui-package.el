@@ -352,7 +352,8 @@ prompt depending on `guix-operation-confirm' variable)."
 
 (defcustom guix-package-info-button-functions
   '(guix-package-info-insert-build-button
-    guix-package-info-insert-build-log-button)
+    guix-package-info-insert-build-log-button
+    guix-package-info-insert-graph-button)
   "List of functions used to insert package buttons in Info buffer.
 Each function is called with 2 arguments: package ID and full name."
   :type '(repeat function)
@@ -633,6 +634,19 @@ PACKAGE-ID is an ID of the package which store path to show."
    (lambda (btn)
      (guix-package-find-build-log (button-get btn 'id)))
    "View build log of the current package"
+   'id id))
+
+(declare-function guix-package-graph "guix-graph" t)
+
+(defun guix-package-info-insert-graph-button (id _name)
+  "Insert button to show a graph of a package defined by ID."
+  (bui-insert-action-button
+   "Graph"
+   (lambda (btn)
+     (guix-package-graph (button-get btn 'id)
+                         (guix-read-graph-backend)
+                         (guix-read-graph-node-type)))
+   "View graph of the current package"
    'id id))
 
 (defun guix-package-info-show-source (entry-id package-id)
