@@ -35,9 +35,9 @@
   "Return a list of names of available graph backends."
   (guix-eval-read "(graph-backend-names)"))
 
-(guix-memoized-defun guix-graph-type-names ()
+(guix-memoized-defun guix-graph-node-type-names ()
   "Return a list of names of available graph node types."
-  (guix-eval-read "(graph-type-names)"))
+  (guix-eval-read "(graph-node-type-names)"))
 
 (guix-memoized-defun guix-refresh-updater-names ()
   "Return a list of names of available refresh updater types."
@@ -109,11 +109,11 @@
 (guix-define-readers
  :completions-getter guix-graph-backend-names
  :single-reader guix-read-graph-backend
- :single-prompt "Graph backend type: ")
+ :single-prompt "Graph backend: ")
 
 (guix-define-readers
- :completions-getter guix-graph-type-names
- :single-reader guix-read-graph-type
+ :completions-getter guix-graph-node-type-names
+ :single-reader guix-read-graph-node-type
  :single-prompt "Graph node type: ")
 
 (guix-define-readers

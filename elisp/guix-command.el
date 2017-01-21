@@ -227,7 +227,7 @@ to be modified."
   '(("--list-backends" :char ?b)
     ("--list-types" :char ?t)
     ("--backend" :fun guix-read-graph-backend)
-    ("--type" :fun guix-read-graph-type)))
+    ("--type" :fun guix-read-graph-node-type)))
 
 (guix-command-define-argument-improver
     guix-command-improve-import-argument

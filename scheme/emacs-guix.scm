@@ -1,6 +1,6 @@
 ;;; emacs-guix.scm --- Scheme side of Emacs-Guix
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -52,7 +52,7 @@
                                    package-source-build-derivation
                                    package-build-log-file)
   #:autoload (emacs-guix graph) (graph-backend-names
-                                 graph-type-names)
+                                 graph-node-type-names)
   #:autoload (emacs-guix lint) (lint-checker-names)
   #:autoload (emacs-guix refresh) (refresh-updater-names))
 

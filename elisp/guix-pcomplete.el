@@ -1,6 +1,6 @@
 ;;; guix-pcomplete.el --- Functions for completing guix commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -122,7 +122,7 @@ subcommands, actions, etc. for this guix COMMAND."
    guix-help-parse-regexp-group
    "lint" "--list-checkers"))
 
-(guix-memoized-defun guix-pcomplete-graph-types ()
+(guix-memoized-defun guix-pcomplete-graph-node-types ()
   "Return a list of all available graph types."
   (guix-pcomplete-run-guix-and-search
    guix-help-parse-list-regexp
@@ -279,7 +279,7 @@ INPUT is the current partially completed string."
 
      ((and (command? "graph")
            (option? "-t" "--type"))
-      (complete* (guix-pcomplete-graph-types)))
+      (complete* (guix-pcomplete-graph-node-types)))
 
      ((and (command? "environment")
            (option? "-l" "--load"))
