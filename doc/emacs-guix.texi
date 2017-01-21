@@ -496,11 +496,13 @@ And some more commands related to profiles and packages:
 
 @table @kbd
 
+@cindex graph
 @findex guix-package-graph
 @item M-x guix-package-graph
 Show a package graph.  You'll be prompted for a package name, graph
 backend and graph node type (everything can be completed with
-@key{TAB} key).
+@key{TAB} key). @xref{Graph Configuration}, if you want to set an
+external graph viewer.
 
 @findex guix-apply-manifest
 @item M-x guix-apply-manifest
@@ -645,50 +647,11 @@ GNU Emacs Manual}).
 
 @end itemize
 
-@vindex guix-dot-program
-Several commands (@command{guix graph}, @command{guix system shepherd-graph}
-and @command{guix system extension-graph}) also have a ``View graph''
-action, which allows you to view a generated graph using @command{dot}
-command (specified by @code{guix-dot-program} variable).  By default a
-PNG file will be saved in @file{/tmp} directory and will be opened
-directly in Emacs.  This behavior may be changed with the following
-variables:
-
-@table @code
-
-@vindex guix-find-file-function
-@item guix-find-file-function
-Function used to open a generated graph.  If you want to open a graph in
-an external program, you can do it by modifying this variable---for
-example, you can use a functionality provided by the Org Mode
-(@pxref{Top,,, org, The Org Manual}):
-
-@example
-(setq guix-find-file-function 'org-open-file)
-(add-to-list 'org-file-apps '("\\.png\\'" . "sxiv %s"))
-@end example
-
-@item guix-dot-default-arguments
-Command line arguments to run @command{dot} command.  If you change an
-output format (for example, into @code{-Tpdf}), you also need to change
-the next variable.
-
-@item guix-dot-file-name-function
-Function used to define a name of the generated graph file.  Default
-name is @file{/tmp/guix-emacs-graph-XXXXXX.png}.
-
-@end table
-
-So, for example, if you want to generate and open a PDF file in your
-Emacs, you may change the settings like this:
-
-@example
-(defun my-guix-pdf-graph ()
-  "/tmp/my-current-guix-graph.pdf")
-
-(setq guix-dot-default-arguments '("-Tpdf")
-      guix-dot-file-name-function 'my-guix-pdf-graph)
-@end example
+@cindex graph
+Several commands (@command{guix graph}, @command{guix system
+shepherd-graph} and @command{guix system extension-graph}) also have a
+``View graph'' action, which allows you to view a generated graph
+(@pxref{Graph Configuration}).
 
 @c ----------------------------------------------------------------
 @node Prettify Mode
@@ -1044,10 +1007,62 @@ look at @code{guix-ENTRY-TYPE-BUFFER-TYPE-format} variables
 @code{info}).
 
 @menu
+* Graph Configuration::         Set external viewer for graphs, etc.
 * Guile and Build Options::     Settings for Guix REPL, Guile, etc.
 * Buffer Names::                Names of Guix buffers.
 * Keymaps::                     Configuring key bindings.
 @end menu
+
+@node Graph Configuration
+@section Graph Configuration
+
+@cindex graph
+Some commands may display a graph image.  Currently Guix provides 2
+graph backends (@pxref{Invoking guix graph,,, guix, The GNU Guix
+Reference Manual}):
+
+@table @code
+@item d3js
+Such graph will be displayed in your browser using @code{browse-url}
+function (@pxref{Browse-URL,,, emacs, The GNU Emacs Manual}).
+@item graphviz
+Such graph will be displayed inside Emacs by default, but this can be
+configured @dots{}
+@end table
+
+@vindex guix-find-file-function
+@dots{} Graphs are opened using @code{guix-find-file-function}, so if
+you want to use an external viewer, you need to set this variable.
+Probably the easiest way to set an external viewer is to use a
+functionality provided by the Org Mode.  For example, if you want to
+open the generated graphs (PNG files) with @code{sxiv} image viewer,
+you can do it like this:
+
+@example
+(setq guix-find-file-function 'org-open-file)
+(add-to-list 'org-file-apps '("\\.png\\'" . "sxiv %s"))
+@end example
+
+Now some deeper details and configuration options.
+
+@vindex guix-dot-program
+@vindex guix-dot-default-arguments
+@vindex guix-dot-file-name-function
+The @code{graphviz} graph is converted into an image file using
+@command{dot} command specified by @code{guix-dot-program} and
+@code{guix-dot-default-arguments} variables.  By default, a PNG file is
+generated and saved as @file{/tmp/emacs-guix-XXXXXX/graph-XXXXXX.png}.
+If you want to change an output format (for example, into PDF), you also
+need to change @code{guix-dot-file-name-function} (to make @code{.pdf}
+extension of the output file).  This can be done like this:
+
+@example
+(defun my-guix-pdf-graph ()
+  "/tmp/my-current-guix-graph.pdf")
+
+(setq guix-dot-default-arguments '("-Tpdf")
+      guix-dot-file-name-function 'my-guix-pdf-graph)
+@end example
 
 @node Guile and Build Options
 @section Guile and Build Options
