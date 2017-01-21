@@ -1,6 +1,6 @@
 ;;; packages.scm --- Guix packages and generations
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -59,6 +59,7 @@
             profile->specifications+file-names
             id->name+version
             package-by-id
+            package-by-id-or-name
             packages-by-id
             newest-package-by-id
             packages-by-name
@@ -321,6 +322,15 @@ of RESULT.  ENTRIES is a list of manifest entries with NAME/VERSION."
 
 (define (package-by-id id)
   (first-or-false (packages-by-id id)))
+
+(define (package-by-id-or-name id-or-name)
+  "Return package object by ID-OR-NAME.
+ID-OR-NAME may be either a package ID (object address) or its name."
+  (or (package-by-id id-or-name)
+      (and (string? id-or-name)
+           (match (packages-by-name id-or-name)
+             (()              #f)
+             ((package _ ...) package)))))
 
 (define (newest-package-by-id id)
   (and=> (id->name+version id)

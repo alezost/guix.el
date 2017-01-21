@@ -1,6 +1,6 @@
 ;;; locations.scm --- Locations of Guix package
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -24,13 +24,12 @@
 ;;; Code:
 
 (define-module (emacs-guix locations)
-  #:use-module (ice-9 match)
   #:use-module (ice-9 vlist)
   #:use-module (gnu packages)
   #:use-module (guix packages)
   #:autoload   (guix ui) (location->string)
   #:use-module (guix utils)
-  #:autoload   (emacs-guix packages) (package-by-id)
+  #:autoload   (emacs-guix packages) (package-by-id-or-name)
   #:use-module (emacs-guix utils)
   #:export (packages-by-location-file
             package-location-string
@@ -39,10 +38,7 @@
 
 (define (package-location-string id-or-name)
   "Return a location string of a package with ID-OR-NAME."
-  (and=> (or (package-by-id id-or-name)
-             (match (packages-by-name id-or-name)
-               (()              #f)
-               ((package _ ...) package)))
+  (and=> (package-by-id-or-name id-or-name)
          (compose location->string package-location)))
 
 (define-values (packages-by-location-file
