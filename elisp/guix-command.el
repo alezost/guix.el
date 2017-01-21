@@ -721,22 +721,21 @@ open the log file(s)."
     (dolist (file files)
       (guix-build-log-find-file file))))
 
-(declare-function browse-url-file-url "browse-url" (file))
+(declare-function guix-make-view-graph "guix-graph" t)
 
 (defun guix-run-view-graph (args)
   "Run 'guix ARGS ...' graph command, make the image and open it."
-  (if (member "--backend=d3js" args)
-      (let ((html-file (guix-html-file-name)))
-        (guix-eval-read (guix-make-guile-expression
-                         'guix-output-to-file args html-file))
-        (require 'browse-url)
-        (browse-url (browse-url-file-url html-file)))
-    (let* ((graph-file (guix-dot-file-name))
-           (dot-args   (guix-dot-arguments graph-file)))
-      (if (guix-eval-read (guix-make-guile-expression
-                           'pipe-guix-output args dot-args))
-          (guix-find-file graph-file)
-        (error "Couldn't create a graph")))))
+  (require 'guix-graph)
+  (guix-make-view-graph
+   (if (member "--backend=d3js" args) "d3js" "graphviz")
+   (lambda (graph-type graph-file)
+     (guix-eval-read
+      (cl-case graph-type
+        (dot  (guix-make-guile-expression
+               'pipe-guix-output
+               args (guix-dot-arguments graph-file)))
+        (html (guix-make-guile-expression
+               'guix-output-to-file args graph-file)))))))
 
 (defun guix-run-view-size-map (args)
   "Run 'guix ARGS ...' size command, and open the map file."
