@@ -1,6 +1,6 @@
 ;;; guix-read.el --- Minibuffer readers
 
-;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -27,40 +27,38 @@
 (require 'guix-help-vars)
 (require 'guix-utils)
 (require 'guix-repl)
-(require 'guix-guile)
 
 
 ;;; Receivable lists of packages, lint checkers, etc.
 
 (guix-memoized-defun guix-graph-backend-names ()
   "Return a list of names of available graph backends."
-  (guix-eval-read (guix-make-guile-expression 'graph-backend-names)))
+  (guix-eval-read "(graph-backend-names)"))
 
 (guix-memoized-defun guix-graph-type-names ()
   "Return a list of names of available graph node types."
-  (guix-eval-read (guix-make-guile-expression 'graph-type-names)))
+  (guix-eval-read "(graph-type-names)"))
 
 (guix-memoized-defun guix-refresh-updater-names ()
   "Return a list of names of available refresh updater types."
-  (guix-eval-read (guix-make-guile-expression 'refresh-updater-names)))
+  (guix-eval-read "(refresh-updater-names)"))
 
 (guix-memoized-defun guix-lint-checker-names ()
   "Return a list of names of available lint checkers."
-  (guix-eval-read (guix-make-guile-expression 'lint-checker-names)))
+  (guix-eval-read "(lint-checker-names)"))
 
 (guix-memoized-defun guix-package-names ()
   "Return a list of names of available packages."
-  (sort (guix-eval-read (guix-make-guile-expression 'package-names))
+  (sort (guix-eval-read "(package-names)")
         #'string<))
 
 (guix-memoized-defun guix-license-names ()
   "Return a list of names of available licenses."
-  (guix-eval-read (guix-make-guile-expression 'license-names)))
+  (guix-eval-read "(license-names)"))
 
 (guix-memoized-defun guix-package-locations ()
   "Return a list of available package locations."
-  (sort (guix-eval-read (guix-make-guile-expression
-                         'package-location-files))
+  (sort (guix-eval-read "(package-location-files)")
         #'string<))
 
 
