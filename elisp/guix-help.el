@@ -96,6 +96,9 @@
     guix-find-location
     guix-edit
 
+    "Other package related commands"
+    guix-package-graph
+
     "Magit-like interface"
     guix
 

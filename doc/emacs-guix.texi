@@ -496,6 +496,12 @@ And some more commands related to profiles and packages:
 
 @table @kbd
 
+@findex guix-package-graph
+@item M-x guix-package-graph
+Show a package graph.  You'll be prompted for a package name, graph
+backend and graph node type (everything can be completed with
+@key{TAB} key).
+
 @findex guix-apply-manifest
 @item M-x guix-apply-manifest
 Apply manifest file to the current profile or to a specified profile,

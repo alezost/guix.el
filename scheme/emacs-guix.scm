@@ -52,7 +52,8 @@
                                    package-source-build-derivation
                                    package-build-log-file)
   #:autoload (emacs-guix graph) (graph-backend-names
-                                 graph-node-type-names)
+                                 graph-node-type-names
+                                 make-package-graph)
   #:autoload (emacs-guix lint) (lint-checker-names)
   #:autoload (emacs-guix refresh) (refresh-updater-names))
 

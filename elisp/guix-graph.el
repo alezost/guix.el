@@ -26,6 +26,9 @@
 (require 'cl-lib)
 (require 'guix-external)
 (require 'guix-utils)
+(require 'guix-read)
+(require 'guix-repl)
+(require 'guix-guile)
 
 (defun guix-graph-backend->graph-type (backend)
   "Convert Guix graph BACKEND (string) to a graph type.
@@ -60,6 +63,27 @@ See `guix-graph-backend->graph-type' for the meaning of GRAPH-TYPE."
     (if (funcall graph-maker graph-type graph-file)
         (guix-view-graph graph-type graph-file)
       (error "Couldn't create a graph"))))
+
+;;;###autoload
+(defun guix-package-graph (package backend node-type)
+  "Show BACKEND/NODE-TYPE graph for a PACKAGE.
+PACKAGE can be either a package name or a package ID.
+Interactively, prompt for arguments."
+  (interactive
+   (list (guix-read-package-name)
+         (guix-read-graph-backend)
+         (guix-read-graph-node-type)))
+  (guix-make-view-graph
+   backend
+   (lambda (graph-type graph-file)
+     (guix-eval-read
+      (guix-make-guile-expression
+       'make-package-graph package
+       (cl-case graph-type
+         (dot  (guix-dot-arguments graph-file))
+         (html graph-file))
+       :node-type-name node-type
+       :backend-name backend)))))
 
 (provide 'guix-graph)
 
