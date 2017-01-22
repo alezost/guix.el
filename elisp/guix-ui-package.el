@@ -740,6 +740,7 @@ This function is used to hide a \"Download\" button if needed."
 
 (let ((map guix-package-list-mode-map))
   (define-key map (kbd "B")   'guix-package-list-latest-builds)
+  (define-key map (kbd "G")   'guix-package-list-graph)
   (define-key map (kbd "e")   'guix-package-list-edit)
   (define-key map (kbd "x")   'guix-package-list-execute)
   (define-key map (kbd "i")   'guix-package-list-mark-install)
@@ -775,6 +776,7 @@ likely)."
 
 (defvar guix-package-list-default-hint
   '(("\\[guix-package-list-edit]") " edit (go to) the package definition;\n"
+    ("\\[guix-package-list-graph]") " view package graph;\n"
     ("\\[guix-package-list-mark-install]") " mark for installation; "
     ("\\[guix-package-list-mark-delete]") " mark for deletion;\n"
     ("\\[guix-package-list-mark-upgrade]") " mark for upgrading; "
@@ -944,6 +946,17 @@ See `guix-find-location' for the meaning of DIRECTORY."
   (interactive (list (guix-read-directory)))
   (guix-edit (bui-list-current-id) directory))
 
+(defun guix-package-list-graph (backend node-type)
+  "Show BACKEND/NODE-TYPE graph for the current package."
+  (interactive
+   (list (guix-read-graph-backend)
+         (guix-read-graph-node-type)))
+  (let ((entry (bui-list-current-entry)))
+    (guix-package-graph (if (bui-entry-non-void-value entry 'obsolete)
+                            (bui-entry-non-void-value entry 'name)
+                          (bui-list-current-id))
+                        backend node-type)))
+
 (defun guix-package-list-latest-builds (number &rest args)
   "Display latest NUMBER of Hydra builds of the current package.
 Interactively, prompt for NUMBER.  With prefix argument, prompt
@@ -978,6 +991,7 @@ for all ARGS."
 
 (let ((map guix-output-list-mode-map))
   (define-key map (kbd "B")   'guix-package-list-latest-builds)
+  (define-key map (kbd "G")   'guix-output-list-graph)
   (define-key map (kbd "e")   'guix-output-list-edit)
   (define-key map (kbd "x")   'guix-output-list-execute)
   (define-key map (kbd "i")   'guix-output-list-mark-install)
@@ -987,6 +1001,7 @@ for all ARGS."
 
 (defvar guix-output-list-default-hint
   '(("\\[guix-output-list-edit]") " edit (go to) the package definition;\n"
+    ("\\[guix-output-list-graph]") " view package graph;\n"
     ("\\[guix-output-list-mark-install]") " mark for installation; "
     ("\\[guix-output-list-mark-delete]") " mark for deletion;\n"
     ("\\[guix-output-list-mark-upgrade]") " mark for upgrading; "
@@ -1079,6 +1094,17 @@ See `guix-find-location' for the meaning of DIRECTORY."
   (guix-edit (bui-entry-non-void-value (bui-list-current-entry)
                                        'package-id)
              directory))
+
+(defun guix-output-list-graph (backend node-type)
+  "Show BACKEND/NODE-TYPE graph for the current package."
+  (interactive
+   (list (guix-read-graph-backend)
+         (guix-read-graph-node-type)))
+  (let ((entry (bui-list-current-entry)))
+    (guix-package-graph (if (bui-entry-non-void-value entry 'obsolete)
+                            (bui-entry-non-void-value entry 'name)
+                          (bui-entry-non-void-value entry 'package-id))
+                        backend node-type)))
 
 
 ;;; Interactive commands
