@@ -325,15 +325,16 @@ If nil, do not perform refontifying.")
 
 ;;; Completing readers definers
 
-(defmacro guix-define-reader (name read-fun completions prompt)
+(defmacro guix-define-reader (name read-fun completions prompt
+                                   &optional require-match)
   "Define NAME function to read from minibuffer.
 READ-FUN may be `completing-read', `completing-read-multiple' or
 another function with the same arguments."
+  (declare (indent 1))
   `(defun ,name (&optional prompt initial-contents)
-     (,read-fun ,(if prompt
-                     `(or prompt ,prompt)
-                   'prompt)
-                ,completions nil nil initial-contents)))
+     (,read-fun (or prompt ,prompt)
+                ,completions nil ,require-match
+                initial-contents)))
 
 (defmacro guix-define-readers (&rest args)
   "Define reader functions.
@@ -344,6 +345,9 @@ keywords are available:
   - `completions-var' - variable used to get completions.
 
   - `completions-getter' - function used to get completions.
+
+  - `require-match' - if the match is required (see
+    `completing-read' for details); default is t.
 
   - `single-reader', `single-prompt' - name of a function to read
     a single value, and a prompt for it.
@@ -358,6 +362,7 @@ keywords are available:
   (bui-plist-let args
       ((completions-var    :completions-var)
        (completions-getter :completions-getter)
+       (require-match      :require-match t)
        (single-reader      :single-reader)
        (single-prompt      :single-prompt)
        (multiple-reader    :multiple-reader)
@@ -378,12 +383,14 @@ keywords are available:
             `(defvar ,completions-var nil))
 
          ,(when single-reader
-            `(guix-define-reader ,single-reader guix-completing-read
-                                 ,completions ,single-prompt))
+            `(guix-define-reader ,single-reader
+               guix-completing-read ,completions ,single-prompt
+               ,require-match))
 
          ,(when multiple-reader
-            `(guix-define-reader ,multiple-reader completing-read-multiple
-                                 ,completions ,multiple-prompt))
+            `(guix-define-reader ,multiple-reader
+               completing-read-multiple ,completions ,multiple-prompt
+               ,require-match))
 
          ,(when (and multiple-reader multiple-separator)
             (let ((name (intern (concat (symbol-name multiple-reader)

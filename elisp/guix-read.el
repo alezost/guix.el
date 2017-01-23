@@ -124,6 +124,7 @@
 
 (guix-define-readers
  :completions-getter guix-package-names
+ :require-match nil
  :single-reader guix-read-package-name
  :single-prompt "Package: "
  :multiple-reader guix-read-package-names

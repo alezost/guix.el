@@ -1,6 +1,6 @@
 ;;; guix-hydra.el --- Common code for interacting with Hydra  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -71,10 +71,12 @@
  :single-prompt "Project: ")
 
 (guix-define-readers
+ :require-match nil
  :single-reader guix-hydra-read-jobset
  :single-prompt "Jobset: ")
 
 (guix-define-readers
+ :require-match nil
  :single-reader guix-hydra-read-job
  :single-prompt "Job: ")
 
