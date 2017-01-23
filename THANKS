@@ -1,0 +1,10 @@
+Thanks to the following people who contributed to Emacs-Guix through
+suggestions, bug reports, patches, or general help:
+
+         George Clemmer
+        Ludovic Courtès
+        Clément Lassieur
+        Mathieu Lirzin
+
+Emacs-Guix also includes Guix(SD) logotips (in "image" sub-directory).
+Thanks to Luis Felipe López Acevedo for making these great logos.
