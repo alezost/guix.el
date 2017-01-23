@@ -38,6 +38,7 @@
 (require 'guix-read)
 (require 'guix-license)
 (require 'guix-location)
+(require 'guix-package)
 (require 'guix-profiles)
 
 (guix-ui-define-entry-type package)
@@ -96,29 +97,6 @@ is found and `guix-package-list-show-single' is nil."
   "Return a list of installed outputs for the package ENTRY."
   (--map (bui-entry-non-void-value it 'output)
          (bui-entry-non-void-value entry 'installed)))
-
-(defun guix-package-id-and-output-by-output-id (output-id)
-  "Return a list (PACKAGE-ID OUTPUT) by OUTPUT-ID."
-  (cl-multiple-value-bind (package-id-str output)
-      (split-string output-id ":")
-    (let ((package-id (string-to-number package-id-str)))
-      (list (if (= 0 package-id) package-id-str package-id)
-            output))))
-
-(defun guix-package-build-log-file (id)
-  "Return build log file name of a package defined by ID."
-  (guix-eval-read
-   (guix-make-guile-expression 'package-build-log-file id)))
-
-(declare-function guix-build-log-find-file "guix-build-log" (file))
-
-(defun guix-package-find-build-log (id)
-  "Show build log of a package defined by ID."
-  (require 'guix-build-log)
-  (let ((file (guix-package-build-log-file id)))
-    (if file
-        (guix-build-log-find-file file)
-      (message "Couldn't find the package build log."))))
 
 
 ;;; Processing package actions

@@ -33,11 +33,6 @@
 (require 'guix-ui)
 (require 'guix-profiles)
 
-(defun guix-package-name-specification (name version &optional output)
-  "Return Guix package specification by its NAME, VERSION and OUTPUT."
-  (concat name "@" version
-          (when output (concat ":" output))))
-
 
 ;;; Actions on packages and generations
 
@@ -163,50 +158,6 @@ Ask a user with PROMPT for continuing an operation."
                  guix-operation-options
                  guix-operation-option-separator)))
   (force-mode-line-update))
-
-(defun guix-package-source-file-name (package-id)
-  "Return a store file name to a source of a package PACKAGE-ID."
-  (message "Calculating the source derivation ...")
-  (guix-eval-read
-   (guix-make-guile-expression
-    'package-source-file-name package-id)))
-
-(defun guix-package-store-path (package-id)
-  "Return a list of store directories of outputs of package PACKAGE-ID."
-  (message "Calculating the package derivation ...")
-  (guix-eval-read
-   (guix-make-guile-expression
-    'package-store-path package-id)))
-
-(defvar guix-after-source-download-hook nil
-  "Hook run after successful performing a 'source-download' operation.")
-
-(defun guix-package-source-build-derivation (package-id &optional prompt)
-  "Build source derivation of a package PACKAGE-ID.
-Ask a user with PROMPT for continuing an operation."
-  (when (or (not guix-operation-confirm)
-            (guix-operation-prompt (or prompt
-                                       "Build the source derivation?")))
-    (guix-eval-in-repl
-     (guix-make-guile-expression
-      'package-source-build-derivation
-      package-id
-      :use-substitutes? (or guix-use-substitutes 'f)
-      :dry-run? (or guix-dry-run 'f))
-     nil 'source-download)))
-
-(defun guix-build-package (package-id &optional prompt)
-  "Build package with PACKAGE-ID.
-Ask a user with PROMPT for continuing the build operation."
-  (when (or (not guix-operation-confirm)
-            (guix-operation-prompt (or prompt "Build package?")))
-    (guix-eval-in-repl
-     (format (concat "(build-package* (package-by-id %d)"
-                     " #:use-substitutes? %s"
-                     " #:dry-run? %s)")
-             package-id
-             (guix-guile-boolean guix-use-substitutes)
-             (guix-guile-boolean guix-dry-run)))))
 
 ;;;###autoload
 (defun guix-apply-manifest (profile file &optional operation-buffer)

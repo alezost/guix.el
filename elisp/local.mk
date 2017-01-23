@@ -67,6 +67,7 @@ EL_FILES =					\
   %D%/guix-graph.el				\
   %D%/guix-license.el				\
   %D%/guix-location.el				\
+  %D%/guix-package.el				\
   %D%/guix-pcomplete.el				\
   %D%/guix-popup.el				\
   %D%/guix-prettify.el				\
