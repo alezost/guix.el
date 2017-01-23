@@ -326,7 +326,7 @@ If nil, do not perform refontifying.")
 ;;; Completing readers definers
 
 (defmacro guix-define-reader (name read-fun completions prompt
-                                   &optional require-match)
+                                   &optional require-match default)
   "Define NAME function to read from minibuffer.
 READ-FUN may be `completing-read', `completing-read-multiple' or
 another function with the same arguments."
@@ -334,7 +334,7 @@ another function with the same arguments."
   `(defun ,name (&optional prompt initial-contents)
      (,read-fun (or prompt ,prompt)
                 ,completions nil ,require-match
-                initial-contents)))
+                initial-contents nil ,default)))
 
 (defmacro guix-define-readers (&rest args)
   "Define reader functions.
@@ -348,6 +348,8 @@ keywords are available:
 
   - `require-match' - if the match is required (see
     `completing-read' for details); default is t.
+
+  - `default' - default value.
 
   - `single-reader', `single-prompt' - name of a function to read
     a single value, and a prompt for it.
@@ -363,6 +365,7 @@ keywords are available:
       ((completions-var    :completions-var)
        (completions-getter :completions-getter)
        (require-match      :require-match t)
+       (default            :default)
        (single-reader      :single-reader)
        (single-prompt      :single-prompt)
        (multiple-reader    :multiple-reader)
@@ -385,12 +388,12 @@ keywords are available:
          ,(when single-reader
             `(guix-define-reader ,single-reader
                guix-completing-read ,completions ,single-prompt
-               ,require-match))
+               ,require-match ,default))
 
          ,(when multiple-reader
             `(guix-define-reader ,multiple-reader
                completing-read-multiple ,completions ,multiple-prompt
-               ,require-match))
+               ,require-match ,default))
 
          ,(when (and multiple-reader multiple-separator)
             (let ((name (intern (concat (symbol-name multiple-reader)

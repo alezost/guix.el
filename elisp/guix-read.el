@@ -76,6 +76,7 @@
 
 (guix-define-readers
  :completions-var guix-help-hash-formats
+ :default "nix-base32"
  :single-reader guix-read-hash-format
  :single-prompt "Hash format: ")
 
@@ -92,11 +93,13 @@
 
 (guix-define-readers
  :completions-var guix-help-key-policies
+ :default "interactive"
  :single-reader guix-read-key-policy
  :single-prompt "Key policy: ")
 
 (guix-define-readers
  :completions-var guix-help-elpa-archives
+ :default "gnu"
  :single-reader guix-read-elpa-archive
  :single-prompt "ELPA archive: ")
 
@@ -108,11 +111,13 @@
 
 (guix-define-readers
  :completions-getter guix-graph-backend-names
+ :default "graphviz"
  :single-reader guix-read-graph-backend
  :single-prompt "Graph backend: ")
 
 (guix-define-readers
  :completions-getter guix-graph-node-type-names
+ :default "package"
  :single-reader guix-read-graph-node-type
  :single-prompt "Graph node type: ")
 
