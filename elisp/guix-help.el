@@ -98,6 +98,7 @@
 
     "Other package related commands"
     guix-package-graph
+    guix-package-size
 
     "Magit-like interface"
     guix

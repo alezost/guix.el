@@ -507,6 +507,12 @@ backend and graph node type (everything can be completed with
 @key{TAB} key). @xref{Graph Configuration}, if you want to set an
 external graph viewer.
 
+@findex guix-package-size
+@item M-x guix-package-size
+Show a package size (@pxref{Invoking guix size,,, guix, The GNU Guix
+Reference Manual}).  You'll be prompted for a package name and a size
+type (it should be either ``text'' or ``image'').
+
 @findex guix-apply-manifest
 @item M-x guix-apply-manifest
 Apply manifest file to the current profile or to a specified profile,

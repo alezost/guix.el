@@ -23,6 +23,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+(require 'guix-read)
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-misc)
@@ -98,6 +100,35 @@ Ask a user with PROMPT for continuing the build operation."
              package-id
              (guix-guile-boolean guix-use-substitutes)
              (guix-guile-boolean guix-dry-run)))))
+
+(defun guix-read-package-size-type ()
+  "Prompt a user for a package size type."
+  (intern
+   (completing-read "Size type (\"text\" or \"image\"): "
+                    '("text" "image")
+                    nil t nil nil "text")))
+
+;;;###autoload
+(defun guix-package-size (package-or-file &optional type)
+  "Show size of PACKAGE-OR-FILE.
+PACKAGE-OR-FILE should be either a package name or a store file name.
+TYPE should be on of the following symbols: `text' (default) or `image'.
+Interactively, prompt for a package name and size TYPE."
+  (interactive
+   (list (guix-read-package-name)
+         (guix-read-package-size-type)))
+  (cl-case (or type 'text)
+    (text (guix-eval-in-repl
+           (guix-make-guile-expression
+            'guix-command "size" package-or-file)))
+    (image (let ((map-file (guix-png-file-name)))
+             (guix-command-output
+              (list "size"
+                    (concat "--map-file=" map-file)
+                    package-or-file))
+             (guix-find-file map-file)))
+    (t (error "Unknown size type (should be `image' or `text'): %S"
+              type))))
 
 (provide 'guix-package)
 
