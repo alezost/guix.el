@@ -93,7 +93,7 @@ is found and `guix-package-list-show-single' is nil."
                                 entries)
                         :test #'string=))
 
-(defun guix-package-installed-outputs (entry)
+(defun guix-package-entry-installed-outputs (entry)
   "Return a list of installed outputs for the package ENTRY."
   (--map (bui-entry-non-void-value it 'output)
          (bui-entry-non-void-value entry 'installed)))
@@ -820,7 +820,7 @@ be separated with \",\")."
   (guix-package-list-marking-check)
   (let* ((entry     (bui-list-current-entry))
          (all       (bui-entry-non-void-value entry 'outputs))
-         (installed (guix-package-installed-outputs entry))
+         (installed (guix-package-entry-installed-outputs entry))
          (available (cl-set-difference all installed :test #'string=)))
     (or available
         (user-error "This package is already installed"))
@@ -836,7 +836,7 @@ be separated with \",\")."
   (interactive "P")
   (guix-package-list-marking-check)
   (let* ((entry (bui-list-current-entry))
-         (installed (guix-package-installed-outputs entry)))
+         (installed (guix-package-entry-installed-outputs entry)))
     (or installed
         (user-error "This package is not installed"))
     (guix-package-list-mark-outputs
@@ -851,7 +851,7 @@ be separated with \",\")."
   (interactive "P")
   (guix-package-list-marking-check)
   (let* ((entry (bui-list-current-entry))
-         (installed (guix-package-installed-outputs entry)))
+         (installed (guix-package-entry-installed-outputs entry)))
     (or installed
         (user-error "This package is not installed"))
     (when (or (bui-entry-non-void-value entry 'obsolete)
@@ -886,7 +886,7 @@ With ARG, mark all installed (including non-obsolete) packages."
    (lambda (entry)
      (apply #'bui-list--mark
             'upgrade nil
-            (guix-package-installed-outputs entry)))
+            (guix-package-entry-installed-outputs entry)))
    arg))
 
 (defun guix-package-assert-non-system-profile ()
