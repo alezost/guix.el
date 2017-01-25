@@ -1,6 +1,6 @@
 ;;; lint.scm --- Code related to linting Guix packages
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -21,12 +21,39 @@
 
 (define-module (emacs-guix lint)
   #:use-module (guix scripts lint)
-  #:export (lint-checker-names))
+  #:autoload   (emacs-guix packages) (package-by-id-or-name)
+  #:export (lint-checker-names
+            lint-package))
 
 (define (lint-checker-names)
   "Return a list of names of available lint checkers."
   (map (lambda (checker)
          (symbol->string (lint-checker-name checker)))
        %checkers))
+
+(define (checkers-by-names names)
+  "Return lint checkers by their NAMES (strings)."
+  (let ((names (map string->symbol names)))
+    (filter (lambda (checker)
+              (memq (lint-checker-name checker)
+                    names))
+            %checkers)))
+
+(define* (lint-package id-or-name #:optional (checkers '()))
+  "Lint package with ID-OR-NAME using CHECKERS.
+CHECKERS should be a list of strings (checker names).  If the list is
+empty, use all available checkers."
+  (let ((package (package-by-id-or-name id-or-name)))
+    (if package
+        (begin
+          (run-checkers package
+                        (if (null? checkers)
+                            %checkers
+                            (checkers-by-names checkers)))
+          (display "Package checking completed.")
+          (newline))
+        (format (current-error-port)
+                "Couldn't find '~A' package~%"
+                id-or-name))))
 
 ;;; lint.scm ends here

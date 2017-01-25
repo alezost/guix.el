@@ -54,7 +54,8 @@
   #:autoload (emacs-guix graph) (graph-backend-names
                                  graph-node-type-names
                                  make-package-graph)
-  #:autoload (emacs-guix lint) (lint-checker-names)
+  #:autoload (emacs-guix lint) (lint-checker-names
+                                lint-package)
   #:autoload (emacs-guix refresh) (refresh-updater-names))
 
 ;;; emacs-guix.scm ends here

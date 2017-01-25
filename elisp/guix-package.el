@@ -130,6 +130,25 @@ Interactively, prompt for a package name and size TYPE."
     (t (error "Unknown size type (should be `image' or `text'): %S"
               type))))
 
+;;;###autoload
+(defun guix-lint (package &optional checkers)
+  "Lint PACKAGE using CHECKERS.
+PACKAGE can be either a package name or a package ID.
+CHECKERS is a list of checker names; if nil, use all checkers.
+
+Interactively, prompt for PACKAGE name and use all checkers.
+With prefix argument, also prompt for checkers (should be comma
+separated).
+
+See Info node `(guix) Invoking guix lint' for details about linting."
+  (interactive
+   (list (guix-read-package-name)
+         (and current-prefix-arg
+              (guix-read-lint-checker-names))))
+  (guix-eval-in-repl
+   (guix-make-guile-expression
+    'lint-package package checkers)))
+
 (provide 'guix-package)
 
 ;;; guix-package.el ends here

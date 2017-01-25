@@ -516,6 +516,11 @@ Show a package size (@pxref{Invoking guix size,,, guix, The GNU Guix
 Reference Manual}).  You'll be prompted for a package name and a size
 type (it should be either ``text'' or ``image'').
 
+@findex guix-lint
+Lint a package (@pxref{Invoking guix lint,,, guix, The GNU Guix
+Reference Manual}).  You'll be prompted for a package name.  With
+prefix argument, you'll be also prompted for checker names.
+
 @findex guix-apply-manifest
 @item M-x guix-apply-manifest
 Apply manifest file to the current profile or to a specified profile,

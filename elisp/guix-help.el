@@ -99,6 +99,7 @@
     "Other package related commands"
     guix-package-graph
     guix-package-size
+    guix-lint
 
     "Magit-like interface"
     guix
