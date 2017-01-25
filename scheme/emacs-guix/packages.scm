@@ -70,7 +70,6 @@
             newest-available-packages
             packages-from-file
             matching-packages
-            matching-generations
             package/output-sexps))
 
 (define (full-name->name+version spec)
