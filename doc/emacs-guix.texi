@@ -371,6 +371,9 @@ package recipe in the current Emacs instance.
 @item G
 @cindex graph
 Show graph for the current package (@pxref{Graph Configuration}).
+@item z
+Show package size (@pxref{Invoking guix size,,, guix, The GNU Guix
+Reference Manual}).
 @item B
 Display latest builds of the current package (@pxref{Hydra}).
 @end table
