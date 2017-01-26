@@ -374,6 +374,10 @@ Show graph for the current package (@pxref{Graph Configuration}).
 @item z
 Show package size (@pxref{Invoking guix size,,, guix, The GNU Guix
 Reference Manual}).
+@item L
+Lint the current package (@pxref{Invoking guix lint,,, guix, The GNU
+Guix Reference Manual}).  With prefix argument, you'll be prompted for
+checker names.
 @item B
 Display latest builds of the current package (@pxref{Hydra}).
 @end table

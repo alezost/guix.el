@@ -756,6 +756,7 @@ This function is used to hide a \"Download\" button if needed."
   (define-key map (kbd "B")   'guix-package-list-latest-builds)
   (define-key map (kbd "G")   'guix-package-list-graph)
   (define-key map (kbd "z")   'guix-package-list-size)
+  (define-key map (kbd "L")   'guix-package-list-lint)
   (define-key map (kbd "e")   'guix-package-list-edit)
   (define-key map (kbd "x")   'guix-package-list-execute)
   (define-key map (kbd "i")   'guix-package-list-mark-install)
@@ -792,7 +793,8 @@ likely)."
 (defvar guix-package-list-default-hint
   '(("\\[guix-package-list-edit]") " edit (go to) the package definition;\n"
     ("\\[guix-package-list-graph]") " view package graph; "
-    ("\\[guix-package-list-size]") " view package size;\n"
+    ("\\[guix-package-list-size]") " view package size; "
+    ("\\[guix-package-list-lint]") " lint;\n"
     ("\\[guix-package-list-mark-install]") " mark for installation; "
     ("\\[guix-package-list-mark-delete]") " mark for deletion;\n"
     ("\\[guix-package-list-mark-upgrade]") " mark for upgrading; "
@@ -981,6 +983,15 @@ See `guix-package-size' for the meaning of TYPE."
                       (bui-list-current-entry))
                      type))
 
+(defun guix-package-list-lint (&optional checkers)
+  "Lint the current package.
+Interactively with prefix, prompt for CHECKERS.
+See `guix-lint' for details."
+  (interactive
+   (list (and current-prefix-arg
+              (guix-read-lint-checker-names))))
+  (guix-lint (bui-list-current-id) checkers))
+
 (defun guix-package-list-latest-builds (number &rest args)
   "Display latest NUMBER of Hydra builds of the current package.
 Interactively, prompt for NUMBER.  With prefix argument, prompt
@@ -1017,6 +1028,7 @@ for all ARGS."
   (define-key map (kbd "B")   'guix-package-list-latest-builds)
   (define-key map (kbd "G")   'guix-output-list-graph)
   (define-key map (kbd "z")   'guix-package-list-size)
+  (define-key map (kbd "L")   'guix-output-list-lint)
   (define-key map (kbd "e")   'guix-output-list-edit)
   (define-key map (kbd "x")   'guix-output-list-execute)
   (define-key map (kbd "i")   'guix-output-list-mark-install)
@@ -1027,7 +1039,8 @@ for all ARGS."
 (defvar guix-output-list-default-hint
   '(("\\[guix-output-list-edit]") " edit (go to) the package definition;\n"
     ("\\[guix-output-list-graph]") " view package graph; "
-    ("\\[guix-package-list-size]") " view package size;\n"
+    ("\\[guix-package-list-size]") " view package size; "
+    ("\\[guix-output-list-lint]") " lint;\n"
     ("\\[guix-output-list-mark-install]") " mark for installation; "
     ("\\[guix-output-list-mark-delete]") " mark for deletion;\n"
     ("\\[guix-output-list-mark-upgrade]") " mark for upgrading; "
@@ -1131,6 +1144,17 @@ See `guix-find-location' for the meaning of DIRECTORY."
                             (bui-entry-non-void-value entry 'name)
                           (bui-entry-non-void-value entry 'package-id))
                         backend node-type)))
+
+(defun guix-output-list-lint (&optional checkers)
+  "Lint the current package.
+Interactively with prefix, prompt for CHECKERS.
+See `guix-lint' for details."
+  (interactive
+   (list (and current-prefix-arg
+              (guix-read-lint-checker-names))))
+  (guix-lint (bui-entry-non-void-value (bui-list-current-entry)
+                                       'package-id)
+             checkers))
 
 
 ;;; Interactive commands
