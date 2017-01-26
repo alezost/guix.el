@@ -332,7 +332,8 @@ prompt depending on `guix-operation-confirm' variable)."
   '(guix-package-info-insert-build-button
     guix-package-info-insert-build-log-button
     guix-package-info-insert-graph-button
-    guix-package-info-insert-size-button)
+    guix-package-info-insert-size-button
+    guix-package-info-insert-lint-button)
   "List of functions used to insert package buttons in Info buffer.
 Each function is called with 2 arguments: package ID and full name."
   :type '(repeat function)
@@ -650,6 +651,17 @@ PACKAGE-ID is an ID of the package which store path to show."
                         (guix-read-package-size-type)))
    (format "View size of '%s' package" name)
    'name name))
+
+(defun guix-package-info-insert-lint-button (id _name)
+  "Insert button to lint a package defined by ID."
+  (bui-insert-action-button
+   "Lint"
+   (lambda (btn)
+     (guix-lint (button-get btn 'id)
+                (and current-prefix-arg
+                     (guix-read-lint-checker-names))))
+   "Lint the current package"
+   'id id))
 
 (defun guix-package-info-show-source (entry-id package-id)
   "Show file name of a package source in the current info buffer.
