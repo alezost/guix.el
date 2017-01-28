@@ -33,12 +33,11 @@
   #:export (system-generation-sexps))
 
 (define system-generation-boot-parameters
-  (memoize
-   (lambda (profile generation)
-     "Return boot parameters for PROFILE's system GENERATION."
-     (let* ((gen-file   (generation-file-name profile generation))
-            (param-file (string-append gen-file "/parameters")))
-       (call-with-input-file param-file read-boot-parameters)))))
+  (mlambda (profile generation)
+    "Return boot parameters for PROFILE's system GENERATION."
+    (let* ((gen-file   (generation-file-name profile generation))
+           (param-file (string-append gen-file "/parameters")))
+      (call-with-input-file param-file read-boot-parameters))))
 
 (define (system-generation-param-alist profile)
   "Return an alist of system generation parameters and procedures for

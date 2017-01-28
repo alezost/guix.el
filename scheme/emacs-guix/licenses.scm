@@ -50,12 +50,11 @@
   (map license-name (licenses)))
 
 (define lookup-license
-  (memoize
-   (lambda (name)
-     "Return a license by its name."
-     (find (lambda (l)
-             (string=? name (license-name l)))
-           (licenses)))))
+  (mlambda (name)
+    "Return a license by its name."
+    (find (lambda (l)
+            (string=? name (license-name l)))
+          (licenses))))
 
 (define (lookup-license-uri name)
   "Return a license URI by its name."
