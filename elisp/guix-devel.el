@@ -1,6 +1,6 @@
 ;;; guix-devel.el --- Development tools  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -207,6 +207,8 @@ to find 'modify-phases' keywords."
     "emacs-substitute-sexps"
     "emacs-substitute-variables"
     "mbegin"
+    "mlambda"
+    "mlambdaq"
     "mlet"
     "mlet*"
     "modify-services"
@@ -298,6 +300,8 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (manifest-entry 0)
   (manifest-pattern 0)
   (mbegin 1)
+  (mlambda 1)
+  (mlambdaq 1)
   (mlet 2)
   (mlet* 2)
   (modify-phases 1)

@@ -1,6 +1,6 @@
 ;;; system-generations.scm --- Generations of system profiles
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -26,7 +26,7 @@
 
 (define-module (emacs-guix system-generations)
   #:use-module (gnu system)
-  #:use-module (guix combinators)
+  #:use-module (guix memoization)
   #:use-module (guix profiles)
   #:use-module (emacs-guix generations)
   #:use-module (emacs-guix utils)

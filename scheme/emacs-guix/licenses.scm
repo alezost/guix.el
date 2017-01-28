@@ -1,6 +1,6 @@
 ;;; licenses.scm --- Guix licenses
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -26,7 +26,7 @@
 
 (define-module (emacs-guix licenses)
   #:use-module (srfi srfi-1)
-  #:use-module (guix combinators)
+  #:use-module (guix memoization)
   #:use-module (guix licenses)
   #:use-module (emacs-guix utils)
   #:export (licenses
