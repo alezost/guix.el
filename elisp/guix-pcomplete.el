@@ -105,16 +105,6 @@ subcommands, actions, etc. for this guix COMMAND."
    guix-help-parse-regexp-group
    "package" "--list-available"))
 
-(guix-memoized-defun guix-pcomplete-installed-packages (&optional profile)
-  "Return a list of Guix packages installed in PROFILE."
-  (let* ((args (and profile
-                    (list (concat "--profile=" profile))))
-         (args (append '("package" "--list-installed") args)))
-    (apply #'guix-pcomplete-run-guix-and-search
-           guix-help-parse-package-regexp
-           guix-help-parse-regexp-group
-           args)))
-
 (guix-memoized-defun guix-pcomplete-lint-checkers ()
   "Return a list of all available lint checkers."
   (guix-pcomplete-run-guix-and-search
@@ -246,19 +236,11 @@ INPUT is the current partially completed string."
        ;; For '--install[=]' and '--remove[=]', try to complete a package
        ;; name (INPUT) after the "=" sign, and then the rest packages
        ;; separated with spaces.
-       ((option? "-i" "--install")
+       ((or (option? "-i" "--install")
+            (option? "-r" "--remove"))
         (complete (guix-pcomplete-all-packages))
         (while (not (guix-pcomplete-match-option))
           (pcomplete-here (guix-pcomplete-all-packages))))
-       ((option? "-r" "--remove")
-        (let* ((profile (or (guix-pcomplete-short-option-arg
-                             "-p" pcomplete-args)
-                            (guix-pcomplete-long-option-arg
-                             "--profile" pcomplete-args)))
-               (profile (and profile (expand-file-name profile))))
-          (complete (guix-pcomplete-installed-packages profile))
-          (while (not (guix-pcomplete-match-option))
-            (pcomplete-here (guix-pcomplete-installed-packages profile)))))
        ((string= "--show" option)
         (complete (guix-pcomplete-all-packages)))
        ((option? "-p" "--profile")
