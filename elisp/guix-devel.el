@@ -196,6 +196,8 @@ to find 'modify-phases' keywords."
     "call-with-derivation-narinfo"
     "call-with-derivation-substitute"
     "call-with-error-handling"
+    "call-with-gzip-input-port"
+    "call-with-gzip-output-port"
     "call-with-temporary-directory"
     "call-with-temporary-output-file"
     "define-enumerate-type"
@@ -288,6 +290,8 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (build-system 0)
   (call-with-compressed-output-port 2)
   (call-with-container 1)
+  (call-with-gzip-input-port 1)
+  (call-with-gzip-output-port 1)
   (call-with-decompressed-port 2)
   (call-with-error-handling 0)
   (container-excursion 1)
