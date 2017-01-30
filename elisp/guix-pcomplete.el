@@ -28,32 +28,21 @@
 (require 'pcmpl-unix)
 (require 'cl-lib)
 (require 'guix nil t)
+(require 'guix-read)
+(require 'guix-misc)
 (require 'guix-utils)
 (require 'guix-help-vars)
 
 
-;;; Interacting with guix
+;;; Parsing guix output
 
-(defcustom guix-pcomplete-guix-program (executable-find "guix")
-  "Name of the 'guix' program.
-It is used to find guix commands, options, packages, etc."
-  :type 'file
-  :group 'pcomplete
-  :group 'guix)
-
-(defun guix-pcomplete-run-guix (&rest args)
-  "Run `guix-pcomplete-guix-program' with ARGS.
-Insert the output to the current buffer."
-  (apply #'call-process
-         guix-pcomplete-guix-program nil t nil args))
-
-(defun guix-pcomplete-run-guix-and-search (regexp &optional group
-                                                  &rest args)
-  "Run `guix-pcomplete-guix-program' with ARGS and search for matches.
+(defun guix-pcomplete-search-in-help (regexp &optional group
+                                             &rest args)
+  "Search for REGEXP in 'guix ARGS... --help' output.
 Return a list of strings matching REGEXP.
 GROUP specifies a parenthesized expression used in REGEXP."
   (with-temp-buffer
-    (apply #'guix-pcomplete-run-guix args)
+    (insert (guix-help-string args))
     (let (result)
       (guix-while-search regexp
         (push (match-string-no-properties group) result))
@@ -63,68 +52,38 @@ GROUP specifies a parenthesized expression used in REGEXP."
                                                      &optional filter)
   "Define function NAME to receive guix options and commands.
 
-The defined function takes an optional COMMAND argument.  This
-function will run 'guix COMMAND --help' (or 'guix --help' if
-COMMAND is nil) using `guix-pcomplete-run-guix-and-search' and
-return its result.
+The defined function takes rest COMMANDS argument.  This function
+will search for REGEXP in 'guix COMMANDS... --help' output (or
+'guix --help' if COMMANDS is nil) using
+`guix-pcomplete-search-in-help' and will return its result.
 
 If FILTER is specified, it should be a function.  The result is
 passed to this FILTER as argument and the result value of this
 function call is returned."
   (declare (doc-string 2) (indent 1))
-  `(guix-memoized-defun ,name (&optional command)
+  `(guix-memoized-defun ,name (&rest commands)
      ,docstring
-     (let* ((args '("--help"))
-            (args (if command (cons command args) args))
-            (res (apply #'guix-pcomplete-run-guix-and-search
-                        ,regexp guix-help-parse-regexp-group args)))
+     (let ((res (apply #'guix-pcomplete-search-in-help
+                       ,regexp guix-help-parse-regexp-group commands)))
        ,(if filter
             `(funcall ,filter res)
           'res))))
 
 (guix-pcomplete-define-options-finder guix-pcomplete-commands
-  "If COMMAND is nil, return a list of available guix commands.
-If COMMAND is non-nil (it should be a string), return available
-subcommands, actions, etc. for this guix COMMAND."
+  "If COMMANDS is nil, return a list of available guix commands.
+If COMMANDS is non-nil (it should be a list of strings), return
+available subcommands, actions, etc. for 'guix COMMANDS'."
   guix-help-parse-command-regexp)
 
 (guix-pcomplete-define-options-finder guix-pcomplete-long-options
-  "Return a list of available long options for guix COMMAND."
+  "Return a list of available long options for 'guix COMMANDS'."
   guix-help-parse-long-option-regexp)
 
 (guix-pcomplete-define-options-finder guix-pcomplete-short-options
-  "Return a string with available short options for guix COMMAND."
+  "Return a string with available short options for 'guix COMMANDS'."
   guix-help-parse-short-option-regexp
   (lambda (list)
     (guix-concat-strings list "")))
-
-(guix-memoized-defun guix-pcomplete-all-packages ()
-  "Return a list of all available Guix packages."
-  (guix-pcomplete-run-guix-and-search
-   guix-help-parse-package-regexp
-   guix-help-parse-regexp-group
-   "package" "--list-available"))
-
-(guix-memoized-defun guix-pcomplete-lint-checkers ()
-  "Return a list of all available lint checkers."
-  (guix-pcomplete-run-guix-and-search
-   guix-help-parse-list-regexp
-   guix-help-parse-regexp-group
-   "lint" "--list-checkers"))
-
-(guix-memoized-defun guix-pcomplete-graph-node-types ()
-  "Return a list of all available graph types."
-  (guix-pcomplete-run-guix-and-search
-   guix-help-parse-list-regexp
-   guix-help-parse-regexp-group
-   "graph" "--list-types"))
-
-(guix-memoized-defun guix-pcomplete-refresh-updaters ()
-  "Return a list of all available refresh updater types."
-  (guix-pcomplete-run-guix-and-search
-   guix-help-parse-list-regexp
-   guix-help-parse-regexp-group
-   "refresh" "--list-updaters"))
 
 
 ;;; Completing
@@ -210,7 +169,7 @@ group - the argument.")
             '("archive" "build" "challenge" "edit" "environment"
               "graph" "lint" "refresh" "size"))
     (while t
-      (pcomplete-here (guix-pcomplete-all-packages))))
+      (pcomplete-here (guix-package-names))))
    (t (pcomplete-here* (pcomplete-entries)))))
 
 (defun guix-pcomplete-complete-option-arg (command option &optional input)
@@ -238,11 +197,11 @@ INPUT is the current partially completed string."
        ;; separated with spaces.
        ((or (option? "-i" "--install")
             (option? "-r" "--remove"))
-        (complete (guix-pcomplete-all-packages))
+        (complete (guix-package-names))
         (while (not (guix-pcomplete-match-option))
-          (pcomplete-here (guix-pcomplete-all-packages))))
+          (pcomplete-here (guix-package-names))))
        ((string= "--show" option)
-        (complete (guix-pcomplete-all-packages)))
+        (complete (guix-package-names)))
        ((option? "-p" "--profile")
         (complete* (pcomplete-dirs)))
        ((or (option? "-f" "--install-from-file")
@@ -261,7 +220,7 @@ INPUT is the current partially completed string."
 
      ((and (command? "graph")
            (option? "-t" "--type"))
-      (complete* (guix-pcomplete-graph-node-types)))
+      (complete* (guix-graph-node-type-names)))
 
      ((and (command? "environment")
            (option? "-l" "--load"))
@@ -274,7 +233,7 @@ INPUT is the current partially completed string."
      ((and (command? "lint")
            (option? "-c" "--checkers"))
       (guix-pcomplete-complete-comma-args
-       (guix-pcomplete-lint-checkers)))
+       (guix-lint-checker-names)))
 
      ((and (command? "publish")
            (option? "-u" "--user"))
@@ -286,7 +245,7 @@ INPUT is the current partially completed string."
         (complete* guix-help-refresh-subsets))
        ((option? "-t" "--type")
         (guix-pcomplete-complete-comma-args
-         (guix-pcomplete-refresh-updaters)))))
+         (guix-refresh-updater-names)))))
 
      ((and (command? "size")
            (option? "-m" "--map-file"))
