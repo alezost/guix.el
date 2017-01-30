@@ -1,6 +1,6 @@
 ;;; guix-guile.el --- Auxiliary tools for working with Guile code  -*- lexical-binding: t -*-
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -77,6 +77,8 @@ PROC and ARGS should be strings."
            (lambda (arg)
              (cond
               ((null arg) "'()")
+              ((stringp arg)
+               (prin1-to-string (substring-no-properties arg)))
               ((or (eq arg t)
                    ;; An ugly hack to separate 'false' from nil.
                    (equal arg 'f)
