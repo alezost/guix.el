@@ -208,9 +208,13 @@ INPUT is the current partially completed string."
             (option? "-m" "--manifest"))
         (complete* (pcomplete-entries)))))
 
-     ((and (command? "archive" "build" "size")
+     ((and (command? "archive" "build" "environment" "size")
            (option? "-s" "--system"))
       (complete* guix-help-system-types))
+
+     ((and (command? "archive")
+           (option? "-x" "--extract"))
+      (complete* (pcomplete-dirs)))
 
      ((and (command? "build")
            (or (option? "-f" "--file")
@@ -218,9 +222,12 @@ INPUT is the current partially completed string."
                (string= "--with-source" option)))
       (complete* (pcomplete-entries)))
 
-     ((and (command? "graph")
-           (option? "-t" "--type"))
-      (complete* (guix-graph-node-type-names)))
+     ((command? "graph")
+      (cond
+       ((option? "-t" "--type")
+        (complete* (guix-graph-node-type-names)))
+       ((option? "-b" "--backend")
+        (complete* (guix-graph-backend-names)))))
 
      ((and (command? "environment")
            (option? "-l" "--load"))
@@ -269,6 +276,11 @@ INPUT is the current partially completed string."
             ;; because 'guix package --install/--remove' may be used this
             ;; way.  So try to complete an argument after the option has
             ;; been completed.
+            ;;
+            ;; XXX This leads to a problem: optional arguments cannot be
+            ;; completed.  For example, after typing "guix build --sources ",
+            ;; most likely, a user would want to complete a package name, so
+            ;; we can't complete sources type there.
             (unless (guix-pcomplete-match-option)
               (guix-pcomplete-complete-option-arg
                command (pcomplete-arg 0 -1))))
