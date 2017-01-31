@@ -178,7 +178,7 @@ to be modified."
 (defvar guix-command-improve-common-build-argument
   '(("--no-substitutes"  :char ?s)
     ("--no-build-hook"   :char ?h)
-    ("--max-silent-time" :char ?x)
+    ("--max-silent-time" :char ?X)
     ("--rounds"          :char ?R :fun read-number)
     ("--no-grafts"       :char ?G)
     ("--with-graft"      :char ?g)
@@ -193,7 +193,7 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-archive-argument
-  '(("--generate-key" :char ?g)))
+  '(("--extract" :fun read-directory-name)))
 
 (guix-command-define-argument-improver
     guix-command-improve-build-argument
