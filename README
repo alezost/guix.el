@@ -53,6 +53,38 @@ changed since then).
 
 ([[https://github.com/alezost/alect-themes][alect-light]] theme is used there).
 
+* Installation
+
+Emacs-Guix can be installed using Guix, from [[http://melpa.org/][MELPA]], or it can be used
+from a git checkout.
+
+** Guix
+
+Just use:
+
+#+BEGIN_SRC sh
+guix package -i emacs-guix
+#+END_SRC
+
+** MELPA
+
+If you added "melpa" or "melpa-stable" archives to =package-archives= as
+it is described on the [[http://melpa.org/#/getting-started][MELPA Getting Started]] page, you can install
+"emacs-guix" using =M-x package-install= or =M-x list-packages=
+commands.
+
+** Git checkout
+
+Also you can clone this git repository and use Emacs-Guix from this git
+checkout (see the info manual for details).
+
+Finally, if you have the git checkout, you can install Guix package for
+the current commit of Emacs-Guix using [[file:guix.scm]] file:
+
+#+BEGIN_SRC sh
+guix package --install-from-file=guix.scm
+#+END_SRC
+
 * Usage
 
 Call =M-x guix-help= to get a summary of all available commands.
