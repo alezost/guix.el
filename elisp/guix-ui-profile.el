@@ -122,7 +122,7 @@
 (defun guix-profile-list-apply-manifest (file)
   "Apply manifest from FILE to the current profile."
   (interactive
-   (list (read-file-name "File with manifest: ")))
+   (list (guix-read-file-name "File with manifest: ")))
   (guix-apply-manifest (guix-package-profile
                         (guix-profile-list-current-profile))
                        file (current-buffer)))

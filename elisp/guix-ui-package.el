@@ -1205,7 +1205,7 @@ Interactively with prefix, prompt for PROFILE."
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
-   (list (read-file-name "File with package: ")
+   (list (guix-read-file-name "File with package: ")
          (guix-ui-read-package-profile)))
   (bui-get-display-entries
    'guix-package 'info

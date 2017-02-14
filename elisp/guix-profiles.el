@@ -1,6 +1,6 @@
 ;;; guix-profiles.el --- Guix profiles
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 ;; Copyright © 2015 Mathieu Lirzin <mthl@openmailbox.org>
 
 ;; This file is part of Emacs-Guix.
@@ -24,6 +24,8 @@
 ;; Guix profiles.
 
 ;;; Code:
+
+(require 'guix-utils)
 
 (defvar guix-state-directory
   ;; guix-daemon honors `NIX_STATE_DIR'.
@@ -166,9 +168,9 @@ the returned file name ends with '/profile'."
   "Prompt for profile and return it.
 Use DEFAULT as a start directory.  If it is nil, use
 `guix-current-profile'."
-  (read-file-name "Profile: "
-                  (file-name-directory
-                   (or default guix-current-profile))))
+  (guix-read-file-name "Profile: "
+                       (file-name-directory
+                        (or default guix-current-profile))))
 
 (defun guix-read-package-profile (&optional default)
   "Prompt for a package profile and return it.

@@ -1,6 +1,6 @@
 ;;; guix-misc.el --- Miscellaneous definitions  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -172,7 +172,7 @@ FILE.  With a prefix argument, also prompt for PROFILE."
           (profile (if current-prefix-arg
                        (guix-read-package-profile)
                      (or current-profile guix-current-profile)))
-          (file (read-file-name "File with manifest: "))
+          (file (guix-read-file-name "File with manifest: "))
           (buffer (and current-profile (current-buffer))))
      (list profile file buffer)))
   (guix-assert-non-system-profile profile)
