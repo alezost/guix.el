@@ -163,8 +163,7 @@ or to receive some info from Hydra (@pxref{Hydra}).
 @uref{http://nongnu.org/geiser/, Geiser}, version 0.8 or later.  It is
 used to communicate with the Guix daemon, and to receive various info
 from the Guix Guile code.  So without Geiser, you can use the same
-features as without Guix, plus shell completions
-(@pxref{Completions}).
+features as without Guix.
 
 @item
 @uref{https://github.com/magnars/dash.el, dash library}, version
@@ -766,6 +765,7 @@ Emacs Manual}).  It can be enabled there like this:
 @node Completions
 @chapter Shell Completions
 
+@cindex shell
 @cindex completions
 Another available feature is completing @command{guix} subcommands,
 options, packages and other things in @code{shell} (@pxref{Interactive
@@ -790,6 +790,7 @@ something:
 @item @code{guix system rec}@key{TAB}
 @item @code{guix lint --checkers=sy}@key{TAB}
 @item @code{guix lint --checkers=synopsis,des}@key{TAB}
+@item @code{guix graph --backend=}@key{TAB}
 
 @end itemize
 
