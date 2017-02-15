@@ -1213,6 +1213,37 @@ Interactively with prefix, prompt for PROFILE."
    'add))
 
 ;;;###autoload
+(defun guix-packages-from-system-config-file (file &optional profile)
+  "Display Guix packages from the operating system configuration FILE.
+
+Make sure FILE has a proper operating-system declaration.  You
+may check it, for example, by running the following shell command:
+
+  guix system build --dry-run FILE
+
+See also Info node `(guix) System Configuration'.
+
+If PROFILE is nil, use system profile (it is used to show what
+packages from FILE are installed in PROFILE).
+
+Interactively, prompt for FILE.  With prefix argument, also prompt
+for PROFILE.
+
+Note: This command displays only those packages that are placed
+in 'packages' field of the 'operating-system' declaration.  An
+installed system also contains packages installed by
+services (like 'guix' or 'shepherd').  To see all the packages
+installed in a system profile, use
+'\\[guix-installed-system-packages]' command."
+  (interactive
+   (list (guix-read-file-name "System configuration file: ")
+         (and current-prefix-arg
+              (guix-read-package-profile guix-system-profile))))
+  (guix-package-get-display (or profile (guix-package-profile
+                                         guix-system-profile))
+                            'from-os-file file))
+
+;;;###autoload
 (defun guix-search-by-regexp (regexp &optional params profile)
   "Search for Guix packages by REGEXP.
 PARAMS are package parameters that should be searched.

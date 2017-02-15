@@ -48,6 +48,8 @@
   #:use-module (guix profiles)
   #:use-module (guix ui)
   #:use-module (guix utils)
+  #:autoload   (gnu system) (operating-system-packages)
+  #:autoload   (guix scripts system) (read-operating-system)
   #:autoload   (guix git-download) (git-reference?
                                     git-reference-url)
   #:autoload   (guix licenses) (license?
@@ -403,6 +405,10 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
           (list package))
         '())))
 
+(define (packages-from-system-config-file file)
+  "Return a list of packages from system configuration FILE."
+  (operating-system-packages (read-operating-system file)))
+
 
 ;;; Making package/output patterns.
 
@@ -657,6 +663,8 @@ ENTRIES is a list of installed manifest entries."
                                   (packages-by-location-file location)))
          (file-proc             (lambda (_ file)
                                   (packages-from-file file)))
+         (os-file-proc          (lambda (_ file)
+                                  (packages-from-system-config-file file)))
          (all-proc              (lambda _ (all-available-packages)))
          (newest-proc           (lambda _ (newest-available-packages))))
     `((package
@@ -668,6 +676,7 @@ ENTRIES is a list of installed manifest entries."
        (license          . ,license-proc)
        (location         . ,location-proc)
        (from-file        . ,file-proc)
+       (from-os-file     . ,os-file-proc)
        (all-available    . ,all-proc)
        (newest-available . ,newest-proc))
       (output
@@ -679,6 +688,7 @@ ENTRIES is a list of installed manifest entries."
        (license          . ,license-proc)
        (location         . ,location-proc)
        (from-file        . ,file-proc)
+       (from-os-file     . ,os-file-proc)
        (all-available    . ,all-proc)
        (newest-available . ,newest-proc)))))
 
@@ -694,7 +704,7 @@ ENTRIES is a list of installed manifest entries."
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name',
 'regexp', 'all-available', 'newest-available', 'installed', 'obsolete',
-'generation'.
+'license', 'location', 'from-file', 'from-os-file'.
 
 PARAMS is a list of parameters for receiving.  If it is an empty list,
 get information with all available parameters, which are: 'id', 'name',

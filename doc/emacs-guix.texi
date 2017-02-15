@@ -321,6 +321,12 @@ Display package that the code within the specified file evaluates to.
 GNU Guix Reference Manual}, for an example of what such a file may
 look like.
 
+@findex guix-packages-from-system-config-file
+@item M-x guix-packages-from-system-config-file
+Display packages from the specified file with @code{operating-system}
+declaration (@pxref{Using the Configuration System,,, guix, The GNU
+Guix Reference Manual}).
+
 @findex guix-search-by-regexp
 @item M-x guix-search-by-regexp
 Search for packages by a specified regexp.  By default ``name'',

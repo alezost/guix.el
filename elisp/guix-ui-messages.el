@@ -1,6 +1,6 @@
 ;;; guix-ui-messages.el --- Minibuffer messages for Guix package management interface
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -47,6 +47,10 @@
      (from-file
       (0 "No package in file '%s'." val)
       (1 "Package from file '%s'." val))
+     (from-os-file
+      (0 "No packages in OS file '%s'." val)
+      (1 "Package from OS file '%s'." val)
+      (many "%d packages from OS file '%s'." count val))
      (regexp
       (0 "No packages matching '%s'." val)
       (1 "A single package matching '%s'." val)
@@ -87,6 +91,10 @@
       (0 "No package in file '%s'." val)
       (1 "Package from file '%s'." val)
       (many "Package outputs from file '%s'." val))
+     (from-os-file
+      (0 "No packages in OS file '%s'." val)
+      (1 "Package from OS file '%s'." val)
+      (many "%d package outputs from OS file '%s'." count val))
      (regexp
       (0 "No package outputs matching '%s'." val)
       (1 "A single package output matching '%s'." val)
@@ -166,7 +174,12 @@
         (message (substitute-command-keys "%s %s.
 Most likely, Guix REPL was restarted, so IDs are not actual
 anymore, because they live only during the REPL process.
-Try \"\\[guix-search-by-name]\".")
+
+Or it may be some package variant that cannot be handled by
+Emacs-Guix.  For example, it may be so called 'canonical package'
+used by '%%base-packages' in an operating-system declaration.
+
+Try \"\\[guix-search-by-name]\" to find this package.")
                  str-beg str-end)
       (message "%s %s." str-beg str-end))))
 

@@ -1,6 +1,6 @@
 ;;; guix-ui.el --- Common code for Guix package management interface  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -67,7 +67,7 @@ ENTRY-TYPE should be one of the following symbols: `package' or
 
 SEARCH-TYPE may be one of the following symbols: `id', `name',
 `regexp', `all-available', `newest-available', `installed',
-`obsolete', `generation'.
+`obsolete', `license', `location', `from-file', `from-os-file'.
 
 PARAMS is a list of parameters for receiving.  If nil, get data
 with all available parameters."

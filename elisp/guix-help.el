@@ -74,6 +74,7 @@
     guix-package-from-file
     guix-search-by-name
     guix-search-by-regexp
+    guix-packages-from-system-config-file
 
     "Show profiles"
     guix-profiles
