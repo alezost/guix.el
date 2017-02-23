@@ -191,16 +191,25 @@ message)."
 Press '\\[revert-buffer]' to update this buffer.")))))
       (funcall function))))
 
-(cl-defun guix-show-pretty-print (file-name &optional (mode 'scheme-mode))
-  "Show FILE-NAME contents in MODE and pretty-print it."
+(defun guix-pretty-print-buffer (buffer-or-name)
+  "Pretty-print the contents of BUFFER-OR-NAME."
+  (with-current-buffer buffer-or-name
+    (save-excursion (pp-buffer))
+    (toggle-truncate-lines -1)))
+
+(defun guix-pretty-print-file (file-name &optional mode)
+  "Show FILE-NAME contents in MODE and pretty-print it.
+If MODE is nil, use `scheme-mode'.
+Put the point in the beginning of buffer.
+Return buffer with the prettified contents."
   (let* ((base-name (file-name-nondirectory file-name))
          (buffer    (generate-new-buffer base-name)))
     (with-current-buffer buffer
       (insert-file-contents file-name)
-      (pp-buffer)
-      (funcall mode)
-      (toggle-truncate-lines -1))
-    (switch-to-buffer buffer)))
+      (goto-char (point-min))
+      (funcall (or mode 'scheme-mode)))
+    (guix-pretty-print-buffer buffer)
+    buffer))
 
 (defmacro guix-while-search (regexp &rest body)
   "Evaluate BODY after each search for REGEXP in the current buffer."

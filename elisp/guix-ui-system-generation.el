@@ -128,12 +128,32 @@ SEARCH-VALUES."
    (cl-union guix-system-generation-info-required-params
              (bui-info-displayed-params 'guix-system-generation))))
 
+(defun guix-system-generation-pretty-print (config)
+  "Pretty print Sheprhed CONFIG file name."
+  (let* ((base-name (file-name-nondirectory config))
+         (buffer    (generate-new-buffer base-name)))
+    (with-current-buffer buffer
+      (insert-file-contents config)
+      (goto-char (point-min))
+      ;; Put "/gnu/store/..." strings and service names on the new
+      ;; lines.
+      (save-excursion
+        (while (re-search-forward "(quote" nil t)
+          (down-list)
+          (forward-sexp)
+          (while (not (looking-at ")"))
+            (insert "\n")
+            (forward-sexp))))
+      (scheme-mode))
+    (guix-pretty-print-buffer buffer)
+    (switch-to-buffer buffer)))
+
 (defun guix-system-generation-info-insert-shepherd (config &optional _)
   "Insert Shepherd CONFIG file name and 'Pretty print' button at point."
   (bui-insert-action-button
    "Pretty print"
    (lambda (btn)
-     (guix-show-pretty-print (button-get btn 'config)))
+     (guix-system-generation-pretty-print (button-get btn 'config)))
    "Show Shepherd config in a human-readable form"
    'config config)
   (bui-info-insert-value-indent config 'bui-file))
