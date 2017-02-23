@@ -194,7 +194,14 @@ Press '\\[revert-buffer]' to update this buffer.")))))
 (defun guix-pretty-print-buffer (buffer-or-name)
   "Pretty-print the contents of BUFFER-OR-NAME."
   (with-current-buffer buffer-or-name
-    (save-excursion (pp-buffer))
+    (goto-char (point-max))
+    (let (sexp-beg)
+      (while (setq sexp-beg (scan-sexps (point) -1))
+        (goto-char sexp-beg)
+        (delete-horizontal-space t)
+        (unless (= (point) (line-beginning-position))
+          (insert "\n"))
+        (indent-pp-sexp 'pp)))
     (toggle-truncate-lines -1)))
 
 (defun guix-pretty-print-file (file-name &optional mode)
