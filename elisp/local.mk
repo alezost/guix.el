@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Emacs-Guix.  If not, see <http://www.gnu.org/licenses/>.
 
+AM_V_ELC = $(AM_V_ELC_$(V))
+AM_V_ELC_ = $(AM_V_ELC_$(AM_DEFAULT_VERBOSITY))
+AM_V_ELC_0 = @echo "  ELC     " $@;
+
 AM_ELCFLAGS = -L "$(abs_builddir)/%D%" -L "$(abs_srcdir)/%D%"
 
 if GEISER_DIR
@@ -99,7 +103,7 @@ $(AUTOLOADS): $(EL_FILES)
 	     (update-directory-autoloads \"$(abs_srcdir)/%D%\"))"
 
 $(ELC_FILES): %.elc: %.el
-	-$(AM_V_GEN) $(EMACS) $(AM_ELCFLAGS) $(ELCFLAGS) --batch		\
+	-$(AM_V_ELC) $(EMACS) $(AM_ELCFLAGS) $(ELCFLAGS) --batch		\
 	--load "$(abs_top_srcdir)/build-aux/build-env.el"			\
 	-f batch-byte-compile $<
 
