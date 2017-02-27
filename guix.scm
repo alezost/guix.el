@@ -36,21 +36,16 @@
 ;;; Code:
 
 (use-modules
- (ice-9 match)
  (ice-9 popen)
  (ice-9 rdelim)
- (srfi srfi-1)
- (srfi srfi-26)
- (guix gexp)
- (guix packages)
  (guix build utils)
+ (guix gexp)
+ (guix git-download)
+ (guix packages)
  (gnu packages autotools)
  (gnu packages emacs)
  (gnu packages pkg-config)
  (gnu packages texinfo))
-
-;; The code for finding git files is based on
-;; <https://git.dthompson.us/guile-sdl2.git/blob/HEAD:/guix.scm>.
 
 (define %source-dir (dirname (current-filename)))
 
@@ -63,20 +58,6 @@ newspace."
       (close-port port)
       (string-trim-right output #\newline))))
 
-(define (git-files)
-  "Return a list of all git-controlled files."
-  (string-split (git-output "ls-files") #\newline))
-
-(define git-file?
-  (let ((files (git-files)))
-    (lambda (file stat)
-      "Return #t if FILE is the git-controlled file in '%source-dir'."
-      (match (stat:type stat)
-        ('directory #t)
-        ((or 'regular 'symlink)
-         (any (cut string-suffix? <> file) files))
-        (_ #f)))))
-
 (define (current-commit)
   (git-output "log" "-n" "1" "--pretty=format:%H"))
 
@@ -88,7 +69,7 @@ newspace."
                               "-" (string-take commit 7)))
       (source (local-file %source-dir
                           #:recursive? #t
-                          #:select? git-file?))
+                          #:select? (git-predicate %source-dir)))
       (arguments
        (append (package-arguments emacs-guix)
                '(#:phases
