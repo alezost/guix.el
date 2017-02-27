@@ -1,5 +1,45 @@
 -*- mode: org -*-
 
+* Changes in 0.3 (since 0.2.2)
+
+** User visible changes
+
+*** New commands
+
+**** M-x guix-packages-from-system-config-file
+**** M-x guix-package-graph
+**** M-x guix-package-size
+**** M-x guix-lint
+**** M-x guix-switch-to-buffer
+**** M-x guix-extended-command
+
+*** Package List
+
+New key bindings:
+
+- "G": show package graph;
+- "z": show package size;
+- "L": lint package.
+
+*** Package Info
+
+New buttons: "Graph", "Size", "Lint".
+
+** Internal changes
+
+*** Guix REPL is used for shell completions
+
+Previously, when you pressed TAB to complete some guix shell command, an
+according 'guix ... -h' shell command was called to get possible
+completions from the help output.  Now this help output is received
+through Guix REPL, which is faster.
+
+*** Temporary files are placed in a sub-directory
+
+Previously, temporary files (REPL socket and generated graph images)
+were put directly in 'temporary-file-directory'.  Now they are placed in
+"emacs-guix-..." sub-directory.
+
 * Changes in 0.2.2 (since 0.2.1)
 
 ** User visible changes
