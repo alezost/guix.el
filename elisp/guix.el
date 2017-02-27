@@ -3,7 +3,7 @@
 ;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; Author: Alex Kost <alezost@gmail.com>
-;; Version: 0.2.2
+;; Version: 0.3
 ;; URL: https://github.com/alezost/guix.el
 ;; Keywords: tools
 ;; Package-Requires: ((emacs "24.3") (dash "2.11.0") (geiser "0.8") (bui "1.1.0") (magit-popup "2.1.0"))
