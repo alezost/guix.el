@@ -201,8 +201,7 @@ Press '\\[revert-buffer]' to update this buffer.")))))
         (delete-horizontal-space t)
         (unless (= (point) (line-beginning-position))
           (insert "\n"))
-        (indent-pp-sexp 'pp)))
-    (toggle-truncate-lines -1)))
+        (indent-pp-sexp 'pp)))))
 
 (defun guix-pretty-print-file (file-name &optional mode)
   "Show FILE-NAME contents in MODE and pretty-print it.
