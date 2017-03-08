@@ -139,7 +139,7 @@ SEARCH-TYPE may be one of the following symbols: `all', `id', `name'."
   "Describe licenses with IDS (list of identifiers)."
   (bui-display-entries
    (bui-entries-by-ids (bui-current-entries) ids)
-   'guix-license 'info (cl-list* 'id ids)))
+   'guix-license 'info (cons 'id ids)))
 
 (defun guix-license-list-show-packages ()
   "Display packages with the license at point."
