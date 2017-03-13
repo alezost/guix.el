@@ -167,7 +167,7 @@ group - the argument.")
   (cond
    ((member command
             '("archive" "build" "challenge" "copy" "edit" "environment"
-              "graph" "lint" "refresh" "size"))
+              "graph" "lint" "pack" "refresh" "size"))
     (while t
       (pcomplete-here (guix-package-names))))
    (t (pcomplete-here* (pcomplete-entries)))))
@@ -241,6 +241,10 @@ INPUT is the current partially completed string."
            (option? "-c" "--checkers"))
       (guix-pcomplete-complete-comma-args
        (guix-lint-checker-names)))
+
+     ((and (command? "pack")
+           (option? "-C" "--compression"))
+      (complete* (guix-compressor-names)))
 
      ((and (command? "publish")
            (option? "-u" "--user"))
