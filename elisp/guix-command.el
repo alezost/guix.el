@@ -138,6 +138,7 @@ to be modified."
     ("copy"        :char ?y)
     ("graph"       :char ?G)
     ("environment" :char ?E)
+    ("pack"        :char ?k)
     ("publish"     :char ?u)
     ("pull"        :char ?P)
     ("size"        :char ?z)))
@@ -244,6 +245,10 @@ to be modified."
   '(("--checkers" :fun guix-read-lint-checker-names-string)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-pack-argument
+  '(("--compression" :fun guix-read-compressor-name)))
+
+(guix-command-define-argument-improver
     guix-command-improve-package-argument
   ;; Unlike all other options, --install/--remove do not have a form
   ;; '--install=foo,bar' but '--install foo bar' instead, so we need
@@ -321,6 +326,10 @@ to be modified."
      guix-command-improve-import-elpa-argument)
     (("lint")
      guix-command-improve-lint-argument)
+    (("pack")
+     guix-command-improve-common-build-argument
+     guix-command-improve-system-type-argument
+     guix-command-improve-pack-argument)
     (("package")
      guix-command-improve-common-build-argument
      guix-command-improve-search-paths-argument
@@ -398,7 +407,7 @@ to be modified."
       (cond
        ((member command
                 '("archive" "build" "challenge" "copy" "edit"
-                  "graph" "lint" "refresh"))
+                  "graph" "lint" "pack" "refresh"))
         (argument :doc "Packages" :fun 'guix-read-package-names-string))
        ((equal commands '("container" "exec"))
         (argument :doc "PID Command [Args...]"))
