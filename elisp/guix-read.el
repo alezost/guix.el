@@ -47,6 +47,10 @@
   "Return a list of names of available lint checkers."
   (guix-eval-read "(lint-checker-names)"))
 
+(guix-memoized-defun guix-compressor-names ()
+  "Return a list of names of available compressors."
+  (guix-eval-read "(compressor-names)"))
+
 (guix-memoized-defun guix-package-names ()
   "Return a list of names of available packages."
   (sort (guix-eval-read "(package-names)")
@@ -126,6 +130,11 @@
  :multiple-reader guix-read-lint-checker-names
  :multiple-prompt "Linter,s: "
  :multiple-separator ",")
+
+(guix-define-readers
+ :completions-getter guix-compressor-names
+ :single-reader guix-read-compressor-name
+ :single-prompt "Compressor: ")
 
 (guix-define-readers
  :completions-getter guix-package-names

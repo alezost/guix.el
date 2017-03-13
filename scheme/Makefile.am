@@ -25,6 +25,7 @@ MODULES =					\
   emacs-guix/utils.scm				\
   emacs-guix/graph.scm				\
   emacs-guix/lint.scm				\
+  emacs-guix/pack.scm				\
   emacs-guix/refresh.scm			\
   emacs-guix/commands.scm			\
   emacs-guix/licenses.scm			\

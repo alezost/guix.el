@@ -56,6 +56,7 @@
                                  make-package-graph)
   #:autoload (emacs-guix lint) (lint-checker-names
                                 lint-package)
+  #:autoload (emacs-guix pack) (compressor-names)
   #:autoload (emacs-guix refresh) (refresh-updater-names))
 
 ;;; emacs-guix.scm ends here
