@@ -397,7 +397,7 @@ to be modified."
     (let ((command (car commands)))
       (cond
        ((member command
-                '("archive" "build" "challenge" "edit"
+                '("archive" "build" "challenge" "copy" "edit"
                   "graph" "lint" "refresh"))
         (argument :doc "Packages" :fun 'guix-read-package-names-string))
        ((equal commands '("container" "exec"))
