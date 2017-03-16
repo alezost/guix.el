@@ -242,9 +242,15 @@ INPUT is the current partially completed string."
       (guix-pcomplete-complete-comma-args
        (guix-lint-checker-names)))
 
-     ((and (command? "pack")
-           (option? "-C" "--compression"))
-      (complete* (guix-compressor-names)))
+     ((command? "pack")
+      (cond
+       ((option? "-C" "--compression")
+        (complete* (guix-compressor-names)))
+       ;; Although the argument should be "FILE-NAME=TARGET", it is
+       ;; still better to complete the FILE-NAME than to complete
+       ;; nothing.
+       ((option? "-S" "--symlink")
+        (complete* (pcomplete-entries)))))
 
      ((and (command? "publish")
            (option? "-u" "--user"))

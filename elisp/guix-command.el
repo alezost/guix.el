@@ -246,7 +246,10 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-pack-argument
-  '(("--compression" :fun guix-read-compressor-name)))
+  '(("--compression" :fun guix-read-compressor-name)
+    ;; "--symlink" is not completed as it should be "FILE-NAME=TARGET".
+    ;; ("--symlink" :fun guix-read-file-name)
+    ))
 
 (guix-command-define-argument-improver
     guix-command-improve-package-argument
