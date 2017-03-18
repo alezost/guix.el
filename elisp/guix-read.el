@@ -51,6 +51,10 @@
   "Return a list of names of available compressors."
   (guix-eval-read "(compressor-names)"))
 
+(guix-memoized-defun guix-pack-format-names ()
+  "Return a list of names of available pack formats."
+  (guix-eval-read "(pack-format-names)"))
+
 (guix-memoized-defun guix-package-names ()
   "Return a list of names of available packages."
   (sort (guix-eval-read "(package-names)")
@@ -135,6 +139,11 @@
  :completions-getter guix-compressor-names
  :single-reader guix-read-compressor-name
  :single-prompt "Compressor: ")
+
+(guix-define-readers
+ :completions-getter guix-pack-format-names
+ :single-reader guix-read-pack-format-name
+ :single-prompt "Pack format: ")
 
 (guix-define-readers
  :completions-getter guix-package-names

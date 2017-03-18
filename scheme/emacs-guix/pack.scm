@@ -20,12 +20,23 @@
 ;;; Code:
 
 (define-module (emacs-guix pack)
+  #:use-module (ice-9 match)
+  #:use-module (srfi srfi-1)
   #:use-module (guix scripts pack)
-  #:export (compressor-names))
+  #:export (compressor-names
+            pack-format-names))
 
 (define (compressor-names)
   "Return a list of names of available pack compressors."
   (map (@@ (guix scripts pack) compressor-name)
        (@@ (guix scripts pack) %compressors)))
+
+(define (pack-format-names)
+  "Return a list of names of available pack formats."
+  (filter-map (match-lambda
+                ((name . _proc)
+                 (symbol->string name))
+                (_ #f))
+              (@@ (guix scripts pack) %formats)))
 
 ;;; pack.scm ends here

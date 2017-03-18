@@ -246,6 +246,8 @@ INPUT is the current partially completed string."
       (cond
        ((option? "-C" "--compression")
         (complete* (guix-compressor-names)))
+       ((option? "-f" "--format")
+        (complete* (guix-pack-format-names)))
        ;; Although the argument should be "FILE-NAME=TARGET", it is
        ;; still better to complete the FILE-NAME than to complete
        ;; nothing.
