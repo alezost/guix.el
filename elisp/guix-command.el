@@ -339,6 +339,7 @@ to be modified."
     (("pack")
      guix-command-improve-common-build-argument
      guix-command-improve-system-type-argument
+     guix-command-improve-target-argument
      guix-command-improve-pack-argument)
     (("package")
      guix-command-improve-common-build-argument
