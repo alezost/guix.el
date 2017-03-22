@@ -276,7 +276,8 @@ to be modified."
 (guix-command-define-argument-improver
     guix-command-improve-publish-argument
   '(("--public-key"  :char ?k :fun guix-read-file-name)
-    ("--private-key" :char ?K :fun guix-read-file-name)))
+    ("--private-key" :char ?K :fun guix-read-file-name)
+    ("--user" :fun guix-read-user-name)))
 
 (guix-command-define-argument-improver
     guix-command-improve-refresh-argument

@@ -140,6 +140,15 @@ Return time value."
   (require 'org)
   (org-read-date nil t nil prompt))
 
+(declare-function pcmpl-unix-user-names "pcmpl-unix")
+
+(defun guix-read-user-name (&optional prompt initial-input)
+  "Prompt for a user name using completions."
+  (require 'pcmpl-unix)
+  (guix-completing-read (or prompt "User name: ")
+                        (pcmpl-unix-user-names)
+                        nil nil initial-input))
+
 (defun guix-read-file-name (prompt &optional dir default-filename
                                    mustmatch initial predicate)
   "Read file name.
