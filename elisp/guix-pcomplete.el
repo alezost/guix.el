@@ -254,9 +254,12 @@ INPUT is the current partially completed string."
        ((option? "-S" "--symlink")
         (complete* (pcomplete-entries)))))
 
-     ((and (command? "publish")
-           (option? "-u" "--user"))
-      (complete* (pcmpl-unix-user-names)))
+     ((command? "publish")
+      (cond
+       ((member option '("--public-key" "--private-key"))
+        (complete* (pcomplete-entries)))
+       ((option? "-u" "--user")
+        (complete* (pcmpl-unix-user-names)))))
 
      ((command? "refresh")
       (cond

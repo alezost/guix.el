@@ -274,6 +274,11 @@ to be modified."
     ("--show"           :char ?h :fun guix-read-package-name)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-publish-argument
+  '(("--public-key"  :char ?k :fun guix-read-file-name)
+    ("--private-key" :char ?K :fun guix-read-file-name)))
+
+(guix-command-define-argument-improver
     guix-command-improve-refresh-argument
   '(("--select"     :fun guix-read-refresh-subset)
     ("--type"       :fun guix-read-refresh-updater-names-string)
@@ -338,6 +343,8 @@ to be modified."
      guix-command-improve-common-build-argument
      guix-command-improve-search-paths-argument
      guix-command-improve-package-argument)
+    (("publish")
+     guix-command-improve-publish-argument)
     (("refresh")
      guix-command-improve-key-policy-argument
      guix-command-improve-refresh-argument)
