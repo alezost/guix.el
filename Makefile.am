@@ -30,6 +30,9 @@ include elisp/local.mk
 
 SUBDIRS = scheme
 
+doc/dir: doc/emacs-guix.info
+	$(AM_V_GEN) install-info $< $@
+
 clean-go:
 	@cd scheme; make clean-go
 
