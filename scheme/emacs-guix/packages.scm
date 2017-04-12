@@ -242,7 +242,7 @@ of RESULT.  ENTRIES is a list of manifest entries with NAME/VERSION."
     (version           . ,package-version)
     (license           . ,package-license-names)
     (source            . ,package-source-names)
-    (synopsis          . ,package-synopsis)
+    (synopsis          . ,package-synopsis-string)
     (description       . ,package-description-string)
     (home-url          . ,package-home-page)
     (outputs           . ,package-outputs)
