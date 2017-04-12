@@ -1222,6 +1222,11 @@ Display a buffer with the summary of the available Emacs-Guix
 commands.  Buttons in this buffer allow you to run commands and to
 look at their docstrings and manual entries.
 
+@findex guix-info
+@item M-x guix-info
+Show this Emacs-Guix info manual.  With prefix argument, show the Guix
+info manual.
+
 @findex guix-switch-to-buffer
 @item M-x guix-switch-to-buffer
 Switch to one of the Emacs-Guix buffers.  This is like a usual

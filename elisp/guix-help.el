@@ -28,6 +28,13 @@
 (require 'guix nil t)
 (require 'guix-utils)
 
+;;;###autoload
+(defun guix-info (&optional arg)
+  "Show Emacs-Guix info manual.
+If ARG is non-nil (interactively with prefix), show Guix info manual."
+  (interactive "P")
+  (info (if arg "guix" "emacs-guix")))
+
 
 ;;; "Help" buffer
 
@@ -131,6 +138,7 @@
     guix-apply-manifest
     guix-switch-to-buffer
     guix-extended-command
+    guix-info
     (guix-about t nil)
     (guix-version t nil))
   "List of command specifications for '\\[guix-help]'.
