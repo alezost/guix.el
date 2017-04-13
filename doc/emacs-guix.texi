@@ -226,6 +226,49 @@ done by adding the following code into your Emacs init file
 Now, if you start Emacs, all @kbd{M-x guix-@dots{}} commands should
 become available.
 
+@node Using the Manual from Git
+@subsection Using the Manual from Git
+
+After ``make''-ing, the info manual is ready to use.  You can run it,
+for example, with @kbd{C-u C-h i} command (the file is
+@file{doc/emacs-guix.info}).  However it is not convenient.  You may
+want to have this manual in the top info directory along with the
+other manuals.  To make it possible, you need to do the following 2
+steps:
+
+@itemize
+
+@item
+At first, you need to add the doc directory to your Info path.  One
+way to do it is to extend INFOPATH environment variable:
+
+@example
+export INFOPATH="/path/to/emacs-guix/doc$@{INFOPATH:+:@}$INFOPATH"
+@end example
+
+Alternatively, you can adjust Info path inside Emacs, like this:
+
+@example
+(with-eval-after-load 'info
+  (info-initialize)
+  (add-to-list 'Info-directory-list "/path/to/emacs-guix/doc"))
+@end example
+
+@item
+And secondly, the doc directory should contain @file{dir} file
+(@pxref{Directory File,,, texinfo, The GNU Texinfo Manual}).  It can
+be generated simply by running the following command:
+
+@example
+make doc/dir
+@end example
+
+@end itemize
+
+Once the above 2 steps are done, @kbd{C-h i} should display the
+Emacs-Guix entry.  Also you can use @kbd{M-x guix-info} command to run
+the manual (@pxref{Help}).
+
 @c ----------------------------------------------------------------
 @node Package Management
 @chapter Package Management
