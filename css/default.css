@@ -1,0 +1,8 @@
+/* This stylesheet is used by "index.html". */
+
+@import url('/style.css');
+
+table, thead, tbody, colgroup { border: 0; }
+thead { background-color: #e8e8e8; }
+th, td { border: 1px solid #ddd; }
+tr:hover td { background-color: #f0f0f0; }

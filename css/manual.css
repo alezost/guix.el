@@ -1,0 +1,37 @@
+/* Style-sheet to use for manuals (copied from Emacs) */
+
+@import url('/style.css');
+
+/* makeinfo convert @deffn and similar functions to something inside
+   <blockquote>.  style.css uses italic for blockquote.  This looks poor
+   in the Emacs manuals, which make extensive use of @defun (etc).
+   In particular, references to function arguments appear as <var>
+   inside <blockquote>.  Since <var> is also italic, it makes it
+   impossible to distinguish variables.  We could change <var> to
+   e.g. bold-italic, or normal, or a different color, but that does
+   not look as good IMO.  So we just override blockquote to be non-italic.
+   */
+blockquote { font-style: normal; }
+
+var { font-style: italic; }
+
+/* ----- coreutils specific styling ----- */
+
+/* layout.css indents "body p" when it should probably only indent "body > p"?
+   In any case, disable indenting of p in these sub elements.  */
+dd p,li p {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* underlined links are distracting, especially within outlined tables.  */
+a { /*add :link for external links*/
+    text-decoration: none; /* don't underline links by default */
+    outline-style: none;   /* don't put dotted box around clicked links */
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* The shadow around the body is distracting.  */
+body { box-shadow: 0 0 0 0; }

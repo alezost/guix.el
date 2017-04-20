@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This document describes Emacs-Guix, the Emacs interface for the
+https://www.gnu.org/software/guix/ (GNU Guix) package manager.
+
+Copyright (C) 2014-2017 Alex Kost
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is available at
+http://www.gnu.org/licenses/fdl.html.
+ -->
+<!-- Created by GNU Texinfo 6.3, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Emacs-Guix Reference Manual: Prettify Mode</title>
+
+<meta name="description" content="Emacs-Guix Reference Manual: Prettify Mode">
+<meta name="keywords" content="Emacs-Guix Reference Manual: Prettify Mode">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Build-Log-Mode.html#Build-Log-Mode" rel="next" title="Build Log Mode">
+<link href="Popup-Interface.html#Popup-Interface" rel="prev" title="Popup Interface">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="/css/manual.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Prettify-Mode"></a>
+<div class="header">
+<p>
+Next: <a href="Build-Log-Mode.html#Build-Log-Mode" accesskey="n" rel="next">Build Log Mode</a>, Previous: <a href="Popup-Interface.html#Popup-Interface" accesskey="p" rel="prev">Popup Interface</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Guix-Prettify-Mode"></a>
+<h2 class="chapter">7 Guix Prettify Mode</h2>
+
+<p>Emacs-Guix also comes with &ldquo;guix-prettify.el&rdquo;.  It provides a minor
+mode for abbreviating store file names by replacing hash sequences of
+symbols with &ldquo;&hellip;&rdquo;:
+</p>
+<div class="example">
+<pre class="example">/gnu/store/72f54nfp6g1hz873w8z3gfcah0h4nl9p-foo-0.1
+&rArr; /gnu/store/…-foo-0.1
+</pre></div>
+
+<dl compact="compact">
+<dd>
+<a name="index-guix_002dprettify_002dmode"></a>
+</dd>
+<dt><kbd>M-x guix-prettify-mode</kbd></dt>
+<dd><p>Enable/disable prettifying for the current buffer.
+</p>
+<a name="index-global_002dguix_002dprettify_002dmode"></a>
+</dd>
+<dt><kbd>M-x global-guix-prettify-mode</kbd></dt>
+<dd><p>Enable/disable prettifying globally.
+</p>
+</dd>
+</dl>
+
+<p>To automatically enable <code>guix-prettify-mode</code> globally on Emacs
+start, add the following line to your init file:
+</p>
+<div class="example">
+<pre class="example">(global-guix-prettify-mode)
+</pre></div>
+
+<p>If you want to enable it only for specific major modes, add it to the
+mode hooks (see <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html#Hooks">Hooks</a> in <cite>The GNU Emacs Manual</cite>), for example:
+</p>
+<div class="example">
+<pre class="example">(add-hook 'shell-mode-hook 'guix-prettify-mode)
+(add-hook 'dired-mode-hook 'guix-prettify-mode)
+</pre></div>
+
+
+
+
+</body>
+</html>

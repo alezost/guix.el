@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This document describes Emacs-Guix, the Emacs interface for the
+https://www.gnu.org/software/guix/ (GNU Guix) package manager.
+
+Copyright (C) 2014-2017 Alex Kost
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is available at
+http://www.gnu.org/licenses/fdl.html.
+ -->
+<!-- Created by GNU Texinfo 6.3, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Emacs-Guix Reference Manual: Package Commands</title>
+
+<meta name="description" content="Emacs-Guix Reference Manual: Package Commands">
+<meta name="keywords" content="Emacs-Guix Reference Manual: Package Commands">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Packages.html#Packages" rel="up" title="Packages">
+<link href="Package-Keys.html#Package-Keys" rel="next" title="Package Keys">
+<link href="Packages.html#Packages" rel="prev" title="Packages">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="/css/manual.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Package-Commands"></a>
+<div class="header">
+<p>
+Next: <a href="Package-Keys.html#Package-Keys" accesskey="n" rel="next">Package Keys</a>, Up: <a href="Packages.html#Packages" accesskey="u" rel="up">Packages</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Package-Commands-1"></a>
+<h4 class="subsection">3.1.1 Package Commands</h4>
+
+<a name="index-guix_002dcurrent_002dprofile"></a>
+<a name="index-guix_002dset_002dcurrent_002dprofile"></a>
+<p>All commands for displaying packages use the current profile
+(<code>guix-current-profile</code> variable), which can be changed with
+<kbd>M-x&nbsp;guix-set-current-profile</kbd>.  Alternatively, if you call
+any of the following commands with a prefix argument (<kbd>C-u</kbd>), you
+will be prompted for a profile just for that command.
+</p>
+<dl compact="compact">
+<dd>
+<a name="index-guix_002dall_002davailable_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-all-available-packages</kbd></dt>
+<dd><a name="index-guix_002dnewest_002davailable_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-newest-available-packages</kbd></dt>
+<dd><p>Display all/newest available packages.
+</p>
+<a name="index-guix_002dinstalled_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-installed-packages</kbd></dt>
+<dd><a name="index-guix_002dinstalled_002duser_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-installed-user-packages</kbd></dt>
+<dd><a name="index-guix_002dinstalled_002dsystem_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-installed-system-packages</kbd></dt>
+<dd><p>Display installed packages.  As explained above, <kbd>M-x
+guix-installed-packages</kbd> uses an arbitrary profile that you can specify,
+while the other commands display packages installed in 2 special
+profiles: <samp>~/.guix-profile</samp> and <samp>/run/current-system/profile</samp>
+(only on GuixSD).
+</p>
+<a name="index-guix_002dobsolete_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-obsolete-packages</kbd></dt>
+<dd><p>Display obsolete packages (the packages that are installed in a profile
+but cannot be found among available packages).
+</p>
+<a name="index-guix_002dpackages_002dby_002dname"></a>
+</dd>
+<dt><kbd>M-x guix-packages-by-name</kbd></dt>
+<dd><p>Display package(s) with the specified name.
+</p>
+<a name="index-guix_002dpackages_002dby_002dlicense"></a>
+</dd>
+<dt><kbd>M-x guix-packages-by-license</kbd></dt>
+<dd><p>Display package(s) with the specified license.
+</p>
+<a name="index-guix_002dpackages_002dby_002dlocation"></a>
+</dd>
+<dt><kbd>M-x guix-packages-by-location</kbd></dt>
+<dd><p>Display package(s) located in the specified file.  These files usually
+have the following form: <samp>gnu/packages/emacs.scm</samp>, but don&rsquo;t type
+them manually!  Press <tt class="key">TAB</tt> to complete the file name.
+</p>
+<a name="index-guix_002dpackage_002dfrom_002dfile"></a>
+</dd>
+<dt><kbd>M-x guix-package-from-file</kbd></dt>
+<dd><p>Display package that the code within the specified file evaluates to.
+See <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-package.html#Invoking-guix-package"><code>--install-from-file</code></a> in <cite>The
+GNU Guix Reference Manual</cite>, for an example of what such a file may
+look like.
+</p>
+<a name="index-guix_002dpackages_002dfrom_002dsystem_002dconfig_002dfile"></a>
+</dd>
+<dt><kbd>M-x guix-packages-from-system-config-file</kbd></dt>
+<dd><p>Display packages from the specified file with <code>operating-system</code>
+declaration (see <a href="http://www.gnu.org/software/guix/manual/html_node/Using-the-Configuration-System.html#Using-the-Configuration-System">Using the Configuration System</a> in <cite>The GNU
+Guix Reference Manual</cite>).
+</p>
+<a name="index-guix_002dsearch_002dby_002dregexp"></a>
+</dd>
+<dt><kbd>M-x guix-search-by-regexp</kbd></dt>
+<dd><p>Search for packages by a specified regexp.  By default &ldquo;name&rdquo;,
+&ldquo;synopsis&rdquo; and &ldquo;description&rdquo; of the packages will be searched.  This
+can be changed by modifying <code>guix-package-search-params</code> variable.
+</p>
+<a name="index-guix_002dsearch_002dby_002dname"></a>
+</dd>
+<dt><kbd>M-x guix-search-by-name</kbd></dt>
+<dd><p>Search for packages with names matching a specified regexp.  This
+command is the same as <code>guix-search-by-regexp</code>, except only a
+package &ldquo;name&rdquo; is searched.
+</p>
+</dd>
+</dl>
+
+<a name="index-guix_002dpackage_002dlist_002dtype"></a>
+<p>By default, these commands display each package <strong>output</strong> on a
+separate line.  If you prefer to see a list of packages&mdash;i.e., a list
+with a <strong>package</strong> per line, use the following setting:
+</p>
+<div class="example">
+<pre class="example">(setq guix-package-list-type 'package)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Package-Keys.html#Package-Keys" accesskey="n" rel="next">Package Keys</a>, Up: <a href="Packages.html#Packages" accesskey="u" rel="up">Packages</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
