@@ -11,7 +11,7 @@ to display all available info about packages and to do many other
 things.
 
 This README provides only a basic overview on Emacs-Guix, for a full and
-detailed description, see the [[https://alezost.github.io/guix.el/manual/git/html_node/index.html][info manual]] that comes with it.
+detailed description, see the [[https://alezost.github.io/guix.el/manual/latest/html_node/index.html][info manual]] that comes with it.
 
 In short, Emacs-Guix provides the following features:
 
