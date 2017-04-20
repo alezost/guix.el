@@ -17,12 +17,16 @@
 # You should have received a copy of the GNU General Public License
 # along with Emacs-Guix.  If not, see <http://www.gnu.org/licenses/>.
 
+EMACS_BATCH = emacs -Q --batch
+
 HTML_FILES = index.html
 
 all: $(HTML_FILES)
 
 %.html: %.org
-	emacs $< -Q --batch -f org-html-export-to-html
+	$(EMACS_BATCH) $< \
+	  --eval "(setq make-backup-files nil)" \
+	  --funcall org-html-export-to-html
 
 clean:
 	rm -f $(HTML_FILES)
