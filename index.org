@@ -1,10 +1,11 @@
 #+TITLE: Emacs-Guix
 #+OPTIONS: ^:nil toc:nil H:4 num:nil html-postamble:nil
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/default.css"/>
+#+MACRO: kbd @@html:<kbd>@@$1@@html:</kbd>@@
 
 * About
 
-=Emacs-Guix= (aka =guix.el=) is an Emacs interface for [[http://www.gnu.org/software/guix/][GNU Guix]] package
+*Emacs-Guix* (aka *guix.el*) is an Emacs interface for [[http://www.gnu.org/software/guix/][GNU Guix]] package
 manager.
 
 Emacs-Guix allows you to manage your Guix profile(s): to install,
@@ -23,5 +24,5 @@ Source code: [[https://github.com/alezost/guix.el]].
 
 The above HTML pages were generated from a Texinfo manual that comes
 with Emacs-Guix.  Since you probably use Emacs, you can always read this
-manual by following Emacs-Guix entry in =C-h i= (=M-x info=) or simply
-with =M-x guix-info=.
+manual by following Emacs-Guix entry in {{{kbd(C-h i)}}} (=M-x info=) or
+simply with =M-x guix-info=.
