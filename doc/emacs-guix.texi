@@ -298,7 +298,7 @@ Manual}).  Specifically, it makes it easy to:
 @cindex packages
 There are multiple commands to display a list of Guix packages.  You
 can either perform some actions in such ``package-list'' buffer, or
-``describe'' package(s) with @key{RET} and do what you need in
+``describe'' package(s) with @kbd{@key{RET}} and do what you need in
 ``info'' buffer.
 
 @menu
@@ -354,7 +354,7 @@ Display package(s) with the specified license.
 @item M-x guix-packages-by-location
 Display package(s) located in the specified file.  These files usually
 have the following form: @file{gnu/packages/emacs.scm}, but don't type
-them manually!  Press @key{TAB} to complete the file name.
+them manually!  Press @kbd{@key{TAB}} to complete the file name.
 
 @findex guix-package-from-file
 @item M-x guix-package-from-file
@@ -559,8 +559,8 @@ And some more commands related to profiles and packages:
 @item M-x guix-package-graph
 Show a package graph.  You'll be prompted for a package name, graph
 backend and graph node type (everything can be completed with
-@key{TAB} key). @xref{Graph Configuration}, if you want to set an
-external graph viewer.
+@kbd{@key{TAB}} key). @xref{Graph Configuration}, if you want to set
+an external graph viewer.
 
 @findex guix-package-size
 @item M-x guix-package-size
@@ -644,19 +644,19 @@ Display a list of package locations.  You can press @kbd{P} or
 @kbd{@key{RET}} there to display packages placed in the current
 location in the same way as @kbd{M-x@tie{}guix-packages-by-location}
 would do (@pxref{Package Commands}).  Note that when the point is on a
-location button, @key{RET} will open this location file.
+location button, @kbd{@key{RET}} will open this location file.
 
 @findex guix-find-location
 @item M-x guix-find-location
-Open the given package definition source file (press @key{TAB} to choose
-a location from a completion list).
+Open the given package definition source file (press @kbd{@key{TAB}}
+to choose a location from a completion list).
 
 @findex guix-edit
 @item M-x guix-edit
 Find location of a specified package.  This is an Emacs analog of
 @command{guix edit} command (@pxref{Invoking guix edit,,, guix, The
 GNU Guix Reference Manual}).  As with
-@kbd{M-x@tie{}guix-packages-by-name}, you can press @key{TAB} to
+@kbd{M-x@tie{}guix-packages-by-name}, you can press @kbd{@key{TAB}} to
 complete a package name.
 
 @end table
@@ -688,11 +688,11 @@ not acquainted with Magit, there should be no worries as it is very
 intuitive.
 
 @findex guix
-So @kbd{M-x@tie{}guix} command provides a top-level popup interface for
-all available guix commands.  When you select an option, you'll be
+So @kbd{M-x@tie{}guix} command provides a top-level popup interface
+for all available guix commands.  When you select an option, you'll be
 prompted for a value in the minibuffer.  Many values have completions,
-so don't hesitate to press @key{TAB} key.  Multiple values (for example,
-packages or lint checkers) should be separated by commas.
+so don't hesitate to press @kbd{@key{TAB}} key.  Multiple values (for
+example, packages or lint checkers) should be separated by commas.
 
 After specifying all options and switches for a command, you may choose
 one of the available actions.  The following default actions are
@@ -815,25 +815,25 @@ options, packages and other things in @code{shell} (@pxref{Interactive
 Shell,,, emacs, The GNU Emacs Manual}) and @code{eshell}
 (@pxref{Top,,, eshell, Eshell: The Emacs Shell}) buffers.
 
-It works the same way as other completions do.  Just press @key{TAB}
-when your intuition tells you.
+It works the same way as other completions do.  Just press
+@kbd{@key{TAB}} when your intuition tells you.
 
-And here are some examples, where pressing @key{TAB} may complete
-something:
+And here are some examples, where pressing @kbd{@key{TAB}} may
+complete something:
 
 @itemize @w{}
 
-@item @code{guix pa}@key{TAB}
-@item @code{guix package -}@key{TAB}
-@item @code{guix package --}@key{TAB}
-@item @code{guix package -i gei}@key{TAB}
-@item @code{guix build -L/tm}@key{TAB}
-@item @code{guix build --sy}@key{TAB}
-@item @code{guix build --system=i}@key{TAB}
-@item @code{guix system rec}@key{TAB}
-@item @code{guix lint --checkers=sy}@key{TAB}
-@item @code{guix lint --checkers=synopsis,des}@key{TAB}
-@item @code{guix graph --backend=}@key{TAB}
+@item @code{guix pa}@kbd{@key{TAB}}
+@item @code{guix package -}@kbd{@key{TAB}}
+@item @code{guix package --}@kbd{@key{TAB}}
+@item @code{guix package -i gei}@kbd{@key{TAB}}
+@item @code{guix build -L/tm}@kbd{@key{TAB}}
+@item @code{guix build --sy}@kbd{@key{TAB}}
+@item @code{guix build --system=i}@kbd{@key{TAB}}
+@item @code{guix system rec}@kbd{@key{TAB}}
+@item @code{guix lint --checkers=sy}@kbd{@key{TAB}}
+@item @code{guix lint --checkers=synopsis,des}@kbd{@key{TAB}}
+@item @code{guix graph --backend=}@kbd{@key{TAB}}
 
 @end itemize
 
@@ -1051,9 +1051,9 @@ to open files, browse URLs, do some actions (like installing/removing
 packages), etc.
 
 @cindex buttons
-As always, you may use @key{TAB} / @kbd{S-@key{TAB}} to move between
-buttons and @key{RET} to press a button, or you can just use mouse
-(@pxref{Mouse References,,, emacs, The GNU Emacs Manual}).
+As always, you may use @kbd{@key{TAB}} / @kbd{S-@key{TAB}} to move
+between buttons and @kbd{@key{RET}} to press a button, or you can just
+use mouse (@pxref{Mouse References,,, emacs, The GNU Emacs Manual}).
 
 Finally, you can copy any button label (a link to an URL or a file) by
 pressing @kbd{c} on a button.
