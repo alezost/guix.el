@@ -1,6 +1,6 @@
 /* Style-sheet to use for manuals (copied from Emacs) */
 
-@import url('/style.css');
+@import url('style.css');
 
 /* makeinfo convert @deffn and similar functions to something inside
    <blockquote>.  style.css uses italic for blockquote.  This looks poor
