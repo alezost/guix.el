@@ -7,3 +7,5 @@ The following CSS files from this directory were taken from gnu.org:
 | style.css  | https://www.gnu.org/style.css                  |
 | reset.css  | https://www.gnu.org/reset.css                  |
 | manual.css | https://www.gnu.org/software/gnulib/manual.css |
+
+"style.css" was modified a bit (rules for 'code' and 'kbd' were added).
