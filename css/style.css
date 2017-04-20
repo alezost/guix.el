@@ -43,6 +43,8 @@ kbd {
     box-shadow:inset 0 -1px 0 #9090a0;
 }
 
+samp { color: #028902; }
+
 p, pre, li, dt, dd, table, code, address { line-height: 1.3em; }
 
 h1 { font-size: 2em; margin: 1em 0 }
