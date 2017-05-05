@@ -1,5 +1,14 @@
 -*- mode: org -*-
 
+* Changes in 0.3.1 (since 0.3)
+
+** User visible changes
+
+*** New commands
+
+**** M-x guix-info
+**** M-x guix-services-from-system-config-file
+
 * Changes in 0.3 (since 0.2.2)
 
 ** User visible changes
