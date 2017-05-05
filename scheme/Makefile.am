@@ -23,8 +23,6 @@ AM_V_GUILEC_0 = @echo "  GUILEC     " $@;
 
 MODULES =					\
   emacs-guix/utils.scm				\
-  emacs-guix/graph.scm				\
-  emacs-guix/lint.scm				\
   emacs-guix/pack.scm				\
   emacs-guix/refresh.scm			\
   emacs-guix/commands.scm			\
@@ -33,6 +31,8 @@ MODULES =					\
   emacs-guix/locations.scm			\
   emacs-guix/generations.scm			\
   emacs-guix/system-generations.scm		\
+  emacs-guix/graph.scm				\
+  emacs-guix/lint.scm				\
   emacs-guix/services.scm			\
   emacs-guix/actions.scm			\
   emacs-guix.scm
