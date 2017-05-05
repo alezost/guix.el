@@ -19,7 +19,9 @@ Source code: [[https://github.com/alezost/guix.el]].
 
 | Version           | Entirely on one web page | One web page per node |
 |-------------------+--------------------------+-----------------------|
+| <l>               |                          |                       |
 | Latest (from git) | [[./manual/latest/emacs-guix.html][html]]                     | [[./manual/latest/html_node/index.html][html]]                  |
+| 0.3.1             | [[./manual/0.3.1/emacs-guix.html][html]]                     | [[./manual/0.3.1/html_node/index.html][html]]                  |
 | 0.3               | [[./manual/0.3/emacs-guix.html][html]]                     | [[./manual/0.3/html_node/index.html][html]]                  |
 
 The above HTML pages were generated from a Texinfo manual that comes

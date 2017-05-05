@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This document describes Emacs-Guix, the Emacs interface for the
+https://www.gnu.org/software/guix/ (GNU Guix) package manager.
+
+Copyright (C) 2014-2017 Alex Kost
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is available at
+http://www.gnu.org/licenses/fdl.html.
+ -->
+<!-- Created by GNU Texinfo 6.3, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Emacs-Guix Reference Manual: Top</title>
+
+<meta name="description" content="Emacs-Guix Reference Manual: Top">
+<meta name="keywords" content="Emacs-Guix Reference Manual: Top">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="../dir/index.html" rel="up" title="(dir)">
+<link href="Introduction.html#Introduction" rel="next" title="Introduction">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="../../../css/manual.css">
+
+
+</head>
+
+<body lang="en">
+<h1 class="settitle" align="center">Emacs-Guix Reference Manual</h1>
+
+
+
+
+<a name="SEC_Contents"></a>
+<h2 class="contents-heading">Table of Contents</h2>
+
+<div class="contents">
+
+<ul class="no-bullet">
+  <li><a name="toc-Introduction-1" href="Introduction.html#Introduction">1 Introduction</a></li>
+  <li><a name="toc-Installation-1" href="Installation.html#Installation">2 Installation</a>
+  <ul class="no-bullet">
+    <li><a name="toc-Requirements-1" href="Requirements.html#Requirements">2.1 Requirements</a></li>
+    <li><a name="toc-Using-from-Git-1" href="Using-from-Git.html#Using-from-Git">2.2 Using from Git</a>
+    <ul class="no-bullet">
+      <li><a name="toc-Using-the-Manual-from-Git-1" href="Using-the-Manual-from-Git.html#Using-the-Manual-from-Git">2.2.1 Using the Manual from Git</a></li>
+    </ul></li>
+  </ul></li>
+  <li><a name="toc-Package-Management-1" href="Package-Management.html#Package-Management">3 Package Management</a>
+  <ul class="no-bullet">
+    <li><a name="toc-Packages-1" href="Packages.html#Packages">3.1 Packages</a>
+    <ul class="no-bullet">
+      <li><a name="toc-Package-Commands-1" href="Package-Commands.html#Package-Commands">3.1.1 Package Commands</a></li>
+      <li><a name="toc-Package-Keys-1" href="Package-Keys.html#Package-Keys">3.1.2 Package Keys</a></li>
+    </ul></li>
+    <li><a name="toc-Profiles-1" href="Profiles.html#Profiles">3.2 Profiles</a></li>
+    <li><a name="toc-Generations-1" href="Generations.html#Generations">3.3 Generations</a>
+    <ul class="no-bullet">
+      <li><a name="toc-Generation-Commands-1" href="Generation-Commands.html#Generation-Commands">3.3.1 Generation Commands</a></li>
+      <li><a name="toc-Generation-Keys-1" href="Generation-Keys.html#Generation-Keys">3.3.2 Generation Keys</a></li>
+    </ul></li>
+    <li><a name="toc-Miscellaneous-Commands-1" href="Miscellaneous-Commands.html#Miscellaneous-Commands">3.4 Miscellaneous Commands</a></li>
+  </ul></li>
+  <li><a name="toc-Package-Licenses-1" href="Package-Licenses.html#Package-Licenses">4 Package Licenses</a></li>
+  <li><a name="toc-Package-Locations-1" href="Package-Locations.html#Package-Locations">5 Package Locations</a></li>
+  <li><a name="toc-Popup-Interface-1" href="Popup-Interface.html#Popup-Interface">6 Popup Interface</a></li>
+  <li><a name="toc-Guix-Prettify-Mode" href="Prettify-Mode.html#Prettify-Mode">7 Guix Prettify Mode</a></li>
+  <li><a name="toc-Build-Log-Mode-1" href="Build-Log-Mode.html#Build-Log-Mode">8 Build Log Mode</a></li>
+  <li><a name="toc-Shell-Completions" href="Completions.html#Completions">9 Shell Completions</a></li>
+  <li><a name="toc-Development-1" href="Development.html#Development">10 Development</a></li>
+  <li><a name="toc-Hydra-1" href="Hydra.html#Hydra">11 Hydra</a></li>
+  <li><a name="toc-List_002fInfo-Interface-1" href="List_002fInfo-Interface.html#List_002fInfo-Interface">12 List/Info Interface</a>
+  <ul class="no-bullet">
+    <li><a name="toc-List_002fInfo-Keys-1" href="List_002fInfo-Keys.html#List_002fInfo-Keys">12.1 List/Info Keys</a></li>
+    <li><a name="toc-_0060_0060List_0027_0027-buffer" href="List-buffer.html#List-buffer">12.2 &ldquo;List&rdquo; buffer</a></li>
+    <li><a name="toc-_0060_0060Info_0027_0027-buffer" href="Info-buffer.html#Info-buffer">12.3 &ldquo;Info&rdquo; buffer</a></li>
+  </ul></li>
+  <li><a name="toc-Configuration-1" href="Configuration.html#Configuration">13 Configuration</a>
+  <ul class="no-bullet">
+    <li><a name="toc-Graph-Configuration-1" href="Graph-Configuration.html#Graph-Configuration">13.1 Graph Configuration</a></li>
+    <li><a name="toc-Guile-and-Build-Options-1" href="Guile-and-Build-Options.html#Guile-and-Build-Options">13.2 Guile and Build Options</a></li>
+    <li><a name="toc-Buffer-Names-1" href="Buffer-Names.html#Buffer-Names">13.3 Buffer Names</a></li>
+    <li><a name="toc-Keymaps-1" href="Keymaps.html#Keymaps">13.4 Keymaps</a></li>
+  </ul></li>
+  <li><a name="toc-Help-1" href="Help.html#Help">14 Help</a></li>
+  <li><a name="toc-Concept-Index-1" href="Concept-Index.html#Concept-Index">Concept Index</a></li>
+  <li><a name="toc-Command-Index-1" href="Command-Index.html#Command-Index">Command Index</a></li>
+  <li><a name="toc-Variable-Index-1" href="Variable-Index.html#Variable-Index">Variable Index</a></li>
+</ul>
+</div>
+
+
+<a name="Top"></a>
+<div class="header">
+<p>
+Next: <a href="Introduction.html#Introduction" accesskey="n" rel="next">Introduction</a>, Up: <a href="../dir/index.html" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Emacs_002dGuix"></a>
+<h1 class="top">Emacs-Guix</h1>
+
+<p>This document describes Emacs-Guix, the Emacs interface for the
+<a href="https://www.gnu.org/software/guix/">GNU Guix</a> package manager.
+</p>
+<blockquote>
+<p>Copyright &copy; 2014-2017 Alex Kost
+</p>
+<p>Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is available at
+<a href="http://www.gnu.org/licenses/fdl.html">http://www.gnu.org/licenses/fdl.html</a>.
+</p>
+</blockquote>
+
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Introduction.html#Introduction" accesskey="1">Introduction</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Quick overview.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Installation.html#Installation" accesskey="2">Installation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Installing Emacs-Guix.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Package-Management.html#Package-Management" accesskey="3">Package Management</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Managing packages and profile generations.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Package-Licenses.html#Package-Licenses" accesskey="4">Package Licenses</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for licenses of packages.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Package-Locations.html#Package-Locations" accesskey="5">Package Locations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for locations of package source files.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Popup-Interface.html#Popup-Interface" accesskey="6">Popup Interface</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Magit-like interface for guix commands.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Prettify-Mode.html#Prettify-Mode" accesskey="7">Prettify Mode</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Abbreviating <samp>/gnu/store/&hellip;</samp> file names.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Build-Log-Mode.html#Build-Log-Mode" accesskey="8">Build Log Mode</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Highlighting Guix build logs.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Completions.html#Completions" accesskey="9">Completions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Completing <code>guix</code> shell command.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Development.html#Development">Development</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Highlighting and tools for Guix code.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Hydra.html#Hydra">Hydra</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for the Guix build farm.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="List_002fInfo-Interface.html#List_002fInfo-Interface">List/Info Interface</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Describing &ldquo;list&rdquo;/&rdquo;info&rdquo; buffers.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Configuration.html#Configuration">Configuration</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Configuring Emacs-Guix.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Help.html#Help">Help</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Help commands.
+</td></tr>
+<tr><th colspan="3" align="left" valign="top"><pre class="menu-comment">
+
+Indexes
+</pre></th></tr><tr><td align="left" valign="top">&bull; <a href="Concept-Index.html#Concept-Index">Concept Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Concepts.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Command-Index.html#Command-Index">Command Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Commands and functions.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Variable-Index.html#Variable-Index">Variable Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Variables.
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Introduction.html#Introduction" accesskey="n" rel="next">Introduction</a>, Up: <a href="../dir/index.html" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
