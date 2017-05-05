@@ -254,6 +254,12 @@ INPUT is the current partially completed string."
        ((option? "-S" "--symlink")
         (complete* (pcomplete-entries)))))
 
+     ((command? "potluck")
+      (cond
+       ;; ((option? "--license"))  ; TODO
+       ((member option '("--scratch" "--source" "--target"))
+        (complete* (pcomplete-dirs)))))
+
      ((command? "publish")
       (cond
        ((member option '("--public-key" "--private-key"))
