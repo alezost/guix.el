@@ -76,7 +76,7 @@
   :group 'guix)
 
 (defvar guix-command-complex-with-shared-arguments
-  '("system")
+  '("potluck" "system")
   "List of guix commands which have subcommands with shared options.
 I.e., 'guix foo --help' is the same as 'guix foo bar --help'.")
 
@@ -139,6 +139,7 @@ to be modified."
     ("graph"       :char ?G)
     ("environment" :char ?E)
     ("pack"        :char ?k)
+    ("potluck"     :char ?L)
     ("publish"     :char ?u)
     ("pull"        :char ?P)
     ("size"        :char ?z)))
@@ -274,6 +275,13 @@ to be modified."
     ("--show"           :char ?h :fun guix-read-package-name)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-potluck-argument
+  ;; TODO Add completions for "--license".
+  '(("--scratch" :fun read-directory-name)
+    ("--source" :char ?S :fun read-directory-name)
+    ("--target" :fun read-directory-name)))
+
+(guix-command-define-argument-improver
     guix-command-improve-publish-argument
   '(("--public-key"  :char ?k :fun guix-read-file-name)
     ("--private-key" :char ?K :fun guix-read-file-name)
@@ -345,6 +353,8 @@ to be modified."
      guix-command-improve-common-build-argument
      guix-command-improve-search-paths-argument
      guix-command-improve-package-argument)
+    (("potluck")
+     guix-command-improve-potluck-argument)
     (("publish")
      guix-command-improve-publish-argument)
     (("refresh")
@@ -428,6 +438,8 @@ to be modified."
         (argument :doc "URL"))
        ((string= command "environment")
         (argument :doc "Command [Args...]" :fun 'read-shell-command))
+       ((string= command "potluck")
+        (argument :doc "[Args...]"))
        ((string= command "gc")
         (argument :doc "Paths" :fun 'guix-read-file-name))
        ((member command '("hash" "system"))
