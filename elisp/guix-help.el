@@ -109,6 +109,9 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-package-size
     guix-lint
 
+    "Show services"
+    (guix-services-from-system-config-file t nil)
+
     "Magit-like interface"
     guix
 

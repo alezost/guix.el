@@ -33,6 +33,7 @@ MODULES =					\
   emacs-guix/locations.scm			\
   emacs-guix/generations.scm			\
   emacs-guix/system-generations.scm		\
+  emacs-guix/services.scm			\
   emacs-guix/actions.scm			\
   emacs-guix.scm
 

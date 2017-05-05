@@ -44,6 +44,7 @@
   #:autoload (emacs-guix locations) (package-location-string
                                      package-location-files
                                      package-location-sexps)
+  #:autoload (emacs-guix services) (service-sexps)
   #:autoload (emacs-guix actions) (process-package-actions
                                    build-package*
                                    delete-generations*
