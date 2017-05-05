@@ -58,14 +58,20 @@ GUILEC_OPTS =					\
   -Wunbound-variable
 
 if GUIX_DIR
-  GUILEC_ENV +=							\
-    GUILE_LOAD_PATH="$(abs_srcdir):$(guixmoduledir)"		\
-    GUILE_LOAD_COMPILED_PATH="$(abs_builddir):$(guixccachedir)"
+  guix_module_part=":$(guixmoduledir)"
+  guix_ccache_part=":$(guixccachedir)"
 else
-  GUILEC_ENV +=									\
-    GUILE_LOAD_PATH="$(abs_srcdir):$$GUILE_LOAD_PATH"				\
-    GUILE_LOAD_COMPILED_PATH="$(abs_builddir):$$GUILE_LOAD_COMPILED_PATH"
+  guix_module_part=
+  guix_ccache_part=
 endif
+
+# Guile PATHs shouldn't be unset: some guix modules want to load
+# (gnutls) module, that's why 'guix' package propagates 'gnutls', i.e.
+# a directory with gnutls module is placed in GUILE_LOAD_PATH.
+
+GUILEC_ENV +=										   \
+  GUILE_LOAD_PATH="$(abs_srcdir)$(guix_module_part):$$GUILE_LOAD_PATH"			   \
+  GUILE_LOAD_COMPILED_PATH="$(abs_builddir)$(guix_ccache_part):$$GUILE_LOAD_COMPILED_PATH"
 
 $(GO_FILES): %.go: %.scm
 	-$(AM_V_GUILEC) $(GUILEC_ENV) \
