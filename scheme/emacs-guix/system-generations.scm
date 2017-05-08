@@ -52,7 +52,13 @@ PROFILE."
      (store-device      . ,(accessor boot-parameters-store-device))
      (store-mount-point . ,(accessor boot-parameters-store-mount-point))
      (kernel            . ,(accessor boot-parameters-kernel))
-     (kernel-arguments  . ,(accessor boot-parameters-kernel-arguments))
+
+     ;; FIXME `read-boot-parameters-file' adds bootable-kernel-arguments
+     ;; to the user arguments.  Since they contain gexps, they are
+     ;; disabled now.  Perhaps it's better to use 'read-boot-parameters'
+     ;; instead.
+
+     ;; (kernel-arguments  . ,(accessor boot-parameters-kernel-arguments))
      (initrd            . ,(accessor boot-parameters-initrd)))))
 
 (define (system-generation-sexps profile search-type search-values params)
