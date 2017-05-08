@@ -35,9 +35,8 @@
 (define system-generation-boot-parameters
   (mlambda (profile generation)
     "Return boot parameters for PROFILE's system GENERATION."
-    (let* ((gen-file   (generation-file-name profile generation))
-           (param-file (string-append gen-file "/parameters")))
-      (call-with-input-file param-file read-boot-parameters))))
+    (read-boot-parameters-file
+     (generation-file-name profile generation))))
 
 (define (system-generation-param-alist profile)
   "Return an alist of system generation parameters and procedures for
