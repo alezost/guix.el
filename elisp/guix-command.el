@@ -304,7 +304,7 @@ to be modified."
     ("roll-back"   :char ?R)
     ("switch-generation" :char ?S)
     ("--on-error"  :char ?E)
-    ("--no-grub"   :char ?g)
+    ("--no-bootloader" :char ?B)
     ("--full-boot" :char ?b)))
 
 (defvar guix-command-argument-improvers
