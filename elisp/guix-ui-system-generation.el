@@ -110,6 +110,7 @@ SEARCH-VALUES."
             (number-of-packages format guix-generation-info-insert-packages)
             (file-name simple guix-system-generation-info-insert-file-name)
             (time format (time))
+            (boot-name format (format))
             (root-device format (format))
             (store-device format (format))
             (store-mount-point format (format))
@@ -117,7 +118,8 @@ SEARCH-VALUES."
             (kernel-config simple (indent bui-file))
             (shepherd-config simple
                              guix-system-generation-info-insert-shepherd))
-  :titles guix-generation-info-titles
+  :titles (cons '(boot-name . "Bootloader")
+                guix-generation-info-titles)
   :required guix-generation-info-required-params)
 
 (defun guix-system-generation-info-get-entries (profile search-type
