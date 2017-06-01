@@ -108,7 +108,7 @@ SEARCH-VALUES."
             (prev-number format guix-generation-info-insert-previous)
             (current format guix-generation-info-insert-current)
             (number-of-packages format guix-generation-info-insert-packages)
-            (file-name format (format bui-file))
+            (file-name simple guix-system-generation-info-insert-file-name)
             (time format (time))
             (root-device format (format))
             (store-device format (format))
@@ -147,6 +147,13 @@ SEARCH-VALUES."
       (scheme-mode))
     (guix-pretty-print-buffer buffer)
     (switch-to-buffer buffer)))
+
+(defun guix-system-generation-info-insert-file-name (file-name &optional _)
+  "Insert generation FILE-NAME at point."
+  (bui-info-insert-value-indent
+   (list file-name
+         (file-truename file-name))
+   'bui-file))
 
 (defun guix-system-generation-info-insert-shepherd (config &optional _)
   "Insert Shepherd CONFIG file name and 'Pretty print' button at point."
