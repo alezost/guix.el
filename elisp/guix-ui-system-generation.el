@@ -113,7 +113,7 @@ SEARCH-VALUES."
             (boot-name format (format))
             (root-device format (format))
             (store-device format (format))
-            (store-mount-point format (format))
+            (store-mount-point format (format bui-file))
             (kernel-arguments format (format))
             (kernel-config simple (indent bui-file))
             (shepherd-config simple
