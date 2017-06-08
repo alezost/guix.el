@@ -802,11 +802,16 @@ See `guix-find-location' for the meaning of DIRECTORY."
   "Show size of the package ENTRY.
 See `guix-package-size' for the meaning of TYPE."
   (interactive
-   (let ((entry (guix-read-package-entry-by-name)))
-     (guix-package-entry-ensure-non-obsolete entry)
-     (list entry
-           (guix-read-package-size-type))))
-  (guix-package-size (guix-package-entry->name-specification entry)
+   (list (guix-read-package-entry-by-name)
+         (guix-read-package-size-type)))
+  (guix-package-size (if (bui-entry-non-void-value entry 'obsolete)
+                         ;; Take file name of the first output.
+                         ;; FIXME It is better to ask for an output, if
+                         ;; there are several outputs.
+                         (bui-entry-value
+                          (car (bui-entry-value entry 'installed))
+                          'file-name)
+                       (guix-package-entry->name-specification entry))
                      type))
 
 (defun guix-package-info-lint (entry &optional checkers)
