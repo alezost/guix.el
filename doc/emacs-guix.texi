@@ -395,6 +395,8 @@ with a @strong{package} per line, use the following setting:
 @node Package Keys
 @subsection Package Keys
 
+@subsubsection List Buffer
+
 Along with the general ``list'' keys (@pxref{List buffer}), a
 ``package-list'' buffer additionally provides the following key
 bindings:
@@ -428,6 +430,21 @@ Guix Reference Manual}).  With prefix argument, you'll be prompted for
 checker names.
 @item B
 Display latest builds of the current package (@pxref{Hydra}).
+@end table
+
+@subsubsection Info Buffer
+
+Similarly, ``package-info'' buffer provides the following key bindings:
+
+@table @kbd
+@item e
+Go to the package definition.
+@item G
+Show package graph.
+@item z
+Show package size.
+@item L
+Lint the package.
 @end table
 
 @node Profiles

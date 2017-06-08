@@ -98,6 +98,26 @@ is found and `guix-package-list-show-single' is nil."
   (--map (bui-entry-non-void-value it 'output)
          (bui-entry-non-void-value entry 'installed)))
 
+(defun guix-read-package-name-from-entries (entries)
+  "Prompt for a package name and return it.
+Names are completed from package ENTRIES."
+  (completing-read "Package: "
+                   (--map (bui-entry-value it 'name) entries)))
+
+(defun guix-read-package-entry-by-name (&optional entries)
+  "Return an entry from package ENTRIES (current entries by default).
+If there is only one entry, return it.  If there are multiple
+entries, prompt for a package name and return an entry with this
+name."
+  (or entries (setq entries (bui-current-entries)))
+  ;; There is unavoidable (?) downside: when there are several packages
+  ;; with the same name, they cannot be distinguished, so the first one
+  ;; from ENTRIES will be returned.
+  (pcase entries
+    (`(,entry) entry)
+    (_ (bui-entry-by-param entries 'name
+                           (guix-read-package-name-from-entries entries)))))
+
 
 ;;; Processing package actions
 
@@ -224,6 +244,7 @@ ENTRIES is a list of package entries to get info about packages."
             (native-inputs format (format guix-package-native-input))
             (propagated-inputs format
                                (format guix-package-propagated-input)))
+  :hint 'guix-package-info-hint
   :titles '((home-url . "Home page")
             (systems . "Supported systems"))
   :required '(id name version installed non-unique))
@@ -233,6 +254,23 @@ ENTRIES is a list of package entries to get info about packages."
             (dependencies simple (indent bui-file)))
   :titles '((file-name . "Store directory"))
   :reduced? t)
+
+(let ((map guix-package-info-mode-map))
+  (define-key map (kbd "e") 'guix-package-info-edit)
+  (define-key map (kbd "G") 'guix-package-info-graph)
+  (define-key map (kbd "z") 'guix-package-info-size)
+  (define-key map (kbd "L") 'guix-package-info-lint))
+
+(defvar guix-package-info-default-hint
+  '(("\\[guix-package-info-edit]") " edit (go to) the package definition;\n"
+    ("\\[guix-package-info-graph]") " view package graph; "
+    ("\\[guix-package-info-size]") " view package size; "
+    ("\\[guix-package-info-lint]") " lint;\n"))
+
+(defun guix-package-info-hint ()
+  (bui-format-hints
+   guix-package-info-default-hint
+   (bui-default-hint)))
 
 (defface guix-package-info-heading
   '((t :inherit bui-info-heading))
@@ -732,6 +770,56 @@ This function is used to hide a \"Download\" button if needed."
 
 (add-hook 'guix-after-source-download-hook
           'guix-package-info-redisplay-after-download)
+
+(defun guix-package-entry-ensure-non-obsolete (entry)
+  "Signal an error if package ENTRY is obsolete."
+  (when (bui-entry-non-void-value entry 'obsolete)
+    (error "This command is not available for obsolete packages")))
+
+(defun guix-package-info-edit (entry &optional directory)
+  "Go to the location of the package ENTRY.
+See `guix-find-location' for the meaning of DIRECTORY."
+  (interactive
+   (let ((entry (guix-read-package-entry-by-name)))
+     (guix-package-entry-ensure-non-obsolete entry)
+     (list entry
+           (guix-read-directory))))
+  (guix-find-location (bui-entry-non-void-value entry 'location)
+                      directory))
+
+(defun guix-package-info-graph (entry backend node-type)
+  "Show BACKEND/NODE-TYPE graph for the package ENTRY."
+  (interactive
+   (list (guix-read-package-entry-by-name)
+         (guix-read-graph-backend)
+         (guix-read-graph-node-type)))
+  (guix-package-graph (if (bui-entry-non-void-value entry 'obsolete)
+                          (bui-entry-non-void-value entry 'name)
+                        (bui-entry-id entry))
+                      backend node-type))
+
+(defun guix-package-info-size (entry &optional type)
+  "Show size of the package ENTRY.
+See `guix-package-size' for the meaning of TYPE."
+  (interactive
+   (let ((entry (guix-read-package-entry-by-name)))
+     (guix-package-entry-ensure-non-obsolete entry)
+     (list entry
+           (guix-read-package-size-type))))
+  (guix-package-size (guix-package-entry->name-specification entry)
+                     type))
+
+(defun guix-package-info-lint (entry &optional checkers)
+  "Lint the package ENTRY.
+Interactively with prefix, prompt for CHECKERS.
+See `guix-lint' for details."
+  (interactive
+   (let ((entry (guix-read-package-entry-by-name)))
+     (guix-package-entry-ensure-non-obsolete entry)
+     (list entry
+           (and current-prefix-arg
+                (guix-read-lint-checker-names)))))
+  (guix-lint (bui-entry-id entry) checkers))
 
 
 ;;; Package 'list'
