@@ -51,7 +51,7 @@ PROFILE."
      (root-device       . ,(accessor boot-parameters-root-device))
      (store-device      . ,(accessor boot-parameters-store-device))
      (store-mount-point . ,(accessor boot-parameters-store-mount-point))
-     (boot-name         . ,(accessor boot-parameters-boot-name))
+     (bootloader        . ,(accessor boot-parameters-bootloader-name))
      (kernel            . ,(accessor boot-parameters-kernel))
 
      ;; FIXME `read-boot-parameters-file' adds bootable-kernel-arguments
