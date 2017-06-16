@@ -117,8 +117,14 @@ current profile's GENERATION."
             (number-of-packages format guix-generation-info-insert-packages)
             (file-name simple (indent bui-file))
             (time format (time)))
+  :hint 'guix-generation-info-hint
   :titles '((prev-number . "Prev. generation"))
   :required '(id number))
+
+(defun guix-generation-info-hint ()
+  (bui-format-hints
+   guix-ui-hint
+   (bui-default-hint)))
 
 (defface guix-generation-info-heading
   '((t :inherit bui-info-heading))
@@ -252,6 +258,7 @@ current profile's GENERATION."
 (defun guix-generation-list-hint ()
   (bui-format-hints
    guix-generation-list-default-hint
+   guix-ui-hint
    (bui-default-hint)))
 
 (defun guix-generation-list-get-entries (profile search-type

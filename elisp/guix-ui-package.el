@@ -270,6 +270,7 @@ ENTRIES is a list of package entries to get info about packages."
 (defun guix-package-info-hint ()
   (bui-format-hints
    guix-package-info-default-hint
+   guix-ui-hint
    (bui-default-hint)))
 
 (defface guix-package-info-heading
@@ -897,6 +898,7 @@ likely)."
 (defun guix-package-list-hint ()
   (bui-format-hints
    guix-package-list-default-hint
+   guix-ui-hint
    (bui-default-hint)))
 
 (defun guix-package-list-get-entries (profile search-type
@@ -1143,6 +1145,7 @@ for all ARGS."
 (defun guix-output-list-hint ()
   (bui-format-hints
    guix-output-list-default-hint
+   guix-ui-hint
    (bui-default-hint)))
 
 (defun guix-output-list-get-entries (profile search-type

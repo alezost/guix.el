@@ -40,6 +40,12 @@
     map)
   "Parent keymap for Guix package/generation buffers.")
 
+(defvar guix-ui-hint
+  '(("\\[guix-apply-manifest]") " apply manifest; "
+    ("\\[guix-switch-to-repl]") " switch to Guix REPL;\n")
+  "General hint for UI buffers.
+See `bui-hint' for details.")
+
 (bui-define-current-args-accessors
  guix-ui-current profile search-type search-values)
 
