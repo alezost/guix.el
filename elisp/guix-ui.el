@@ -188,7 +188,7 @@ Along with the mentioned definitions, this macro also defines:
          (defvar ,mode-map
            (let ((map (make-sparse-keymap)))
              (set-keymap-parent
-              map (make-composed-keymap ,parent-map guix-ui-map))
+              map (make-composed-keymap guix-ui-map ,parent-map))
              map)
            ,(format "Keymap for `%s' buffers." mode-str))
 
