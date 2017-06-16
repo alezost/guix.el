@@ -86,7 +86,8 @@
 (defvar guix-profile-list-default-hint
   '(("\\[guix-profile-list-show-packages]") " show packages;\n"
     ("\\[guix-profile-list-show-generations]") " show generations;\n"
-    ("\\[guix-profile-list-set-current]") " set current profile;\n"))
+    ("\\[guix-profile-list-set-current]") " set current profile;\n"
+    ("\\[guix-profile-list-apply-manifest]") " apply manifest;\n"))
 
 (defun guix-profile-list-hint ()
   (bui-format-hints
