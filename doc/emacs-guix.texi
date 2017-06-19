@@ -437,6 +437,12 @@ Display latest builds of the current package (@pxref{Hydra}).
 Similarly, ``package-info'' buffer provides the following key bindings:
 
 @table @kbd
+@item i
+Install the current package.
+@item d
+Delete the current package.
+@item U
+Upgrade the current package.
 @item e
 Go to the package definition.
 @item G

@@ -118,6 +118,25 @@ name."
     (_ (bui-entry-by-param entries 'name
                            (guix-read-package-name-from-entries entries)))))
 
+(defun guix-read-package-output (outputs)
+  "Return an output from package OUTPUTS.
+If there is only one output, return it.  If there are multiple
+OUTPUTS, prompt for it."
+  (or outputs
+      (error "No package outputs!"))
+  (if (cdr outputs)
+      (completing-read "Output: " outputs nil t)
+    (car outputs)))
+
+(defun guix-read-package-entry-and-output (&optional entries)
+  "Return a list with package entry and output.
+See `guix-read-package-entry-by-name' and
+`guix-read-package-output' for details."
+  (let* ((entry   (guix-read-package-entry-by-name entries))
+         (outputs (bui-entry-non-void-value entry 'outputs))
+         (output  (guix-read-package-output outputs)))
+    (list entry output)))
+
 
 ;;; Processing package actions
 
@@ -256,6 +275,10 @@ ENTRIES is a list of package entries to get info about packages."
   :reduced? t)
 
 (let ((map guix-package-info-mode-map))
+  (define-key map (kbd "i") 'guix-package-info-install)
+  (define-key map (kbd "d") 'guix-package-info-delete)
+  (define-key map (kbd "U") 'guix-package-info-upgrade)
+  (define-key map (kbd "u") 'guix-package-info-upgrade)
   (define-key map (kbd "e") 'guix-package-info-edit)
   (define-key map (kbd "G") 'guix-package-info-graph)
   (define-key map (kbd "z") 'guix-package-info-size)
@@ -265,7 +288,10 @@ ENTRIES is a list of package entries to get info about packages."
   '(("\\[guix-package-info-edit]") " edit (go to) the package definition;\n"
     ("\\[guix-package-info-graph]") " view package graph; "
     ("\\[guix-package-info-size]") " view package size; "
-    ("\\[guix-package-info-lint]") " lint;\n"))
+    ("\\[guix-package-info-lint]") " lint;\n"
+    ("\\[guix-package-info-install]") " install; "
+    ("\\[guix-package-info-delete]") " delete; "
+    ("\\[guix-package-info-upgrade]") " upgrade;\n"))
 
 (defun guix-package-info-hint ()
   (bui-format-hints
@@ -826,6 +852,55 @@ See `guix-lint' for details."
            (and current-prefix-arg
                 (guix-read-lint-checker-names)))))
   (guix-lint (bui-entry-id entry) checkers))
+
+(defun guix-package-info-install (entry output)
+  "Install package OUTPUT to the current profile.
+Interactively, prompt for package ENTRY and OUTPUT (if there are
+more than one)."
+  (interactive (guix-read-package-entry-and-output))
+  (if (member output (guix-package-entry-installed-outputs entry))
+      (user-error "'%s' is already installed"
+                  (guix-package-entry->name-specification entry output))
+    (guix-process-package-actions
+     (guix-ui-current-profile)
+     `((install (,(bui-entry-id entry) ,output)))
+     (current-buffer))))
+
+(defun guix-package-info-delete (entry output)
+  "Delete package OUTPUT from the current profile.
+Interactively, prompt for package ENTRY and OUTPUT (if there are
+more than one)."
+  (interactive (guix-read-package-entry-and-output))
+  (if (member output (guix-package-entry-installed-outputs entry))
+      (guix-process-package-actions
+       (guix-ui-current-profile)
+       `((delete (,(bui-entry-id entry) ,output)))
+       (current-buffer))
+    (user-error "'%s' cannot be deleted as it is not installed"
+                (guix-package-entry->name-specification entry output))))
+
+(defun guix-package-info-upgrade (entry output)
+  "Upgrade package OUTPUT in the current profile.
+Interactively, prompt for package ENTRY and OUTPUT (if there are
+more than one)."
+  (interactive (guix-read-package-entry-and-output))
+  (if (member output (guix-package-entry-installed-outputs entry))
+      (when (or (bui-entry-non-void-value entry 'obsolete)
+                (y-or-n-p
+                 (format "'%s' is not obsolete.  Try to upgrade it anyway? "
+                         (guix-package-entry->name-specification
+                          entry output))))
+        (guix-process-package-actions
+         (guix-ui-current-profile)
+         `((upgrade (,(bui-entry-id entry) ,output)))
+         (current-buffer)))
+    (when (y-or-n-p
+           (format "'%s' is not installed.  Install it? "
+                   (guix-package-entry->name-specification entry output)))
+      (guix-process-package-actions
+       (guix-ui-current-profile)
+       `((install (,(bui-entry-id entry) ,output)))
+       (current-buffer)))))
 
 
 ;;; Package 'list'
