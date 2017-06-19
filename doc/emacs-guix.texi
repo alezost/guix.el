@@ -1173,6 +1173,14 @@ this variable, for example:
 (setq guix-guile-program '("/bin/guile" "--no-auto-compile"))
 @end example
 
+If you use Guix via @file{pre-inst-env} script (@pxref{Running Guix
+Before It Is Installed,,, guix, The GNU Guix Reference Manual}), you
+may customize this variable like this:
+
+@example
+(setq guix-guile-program '("/path/to/guix/pre-inst-env" "guile"))
+@end example
+
 @vindex guix-use-substitutes
 @item guix-use-substitutes
 Has the same meaning as @code{--no-substitutes} option
