@@ -634,6 +634,15 @@ checker names.
 <p>Similarly, &ldquo;package-info&rdquo; buffer provides the following key bindings:
 </p>
 <dl compact="compact">
+<dt><kbd>i</kbd></dt>
+<dd><p>Install the current package.
+</p></dd>
+<dt><kbd>d</kbd></dt>
+<dd><p>Delete the current package.
+</p></dd>
+<dt><kbd>U</kbd></dt>
+<dd><p>Upgrade the current package.
+</p></dd>
 <dt><kbd>e</kbd></dt>
 <dd><p>Go to the package definition.
 </p></dd>
@@ -1534,6 +1543,14 @@ this variable, for example:
 </p>
 <div class="example">
 <pre class="example">(setq guix-guile-program '(&quot;/bin/guile&quot; &quot;--no-auto-compile&quot;))
+</pre></div>
+
+<p>If you use Guix via <samp>pre-inst-env</samp> script (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Running-Guix-Before-It-Is-Installed">Running Guix
+Before It Is Installed</a> in <cite>The GNU Guix Reference Manual</cite>), you
+may customize this variable like this:
+</p>
+<div class="example">
+<pre class="example">(setq guix-guile-program '(&quot;/path/to/guix/pre-inst-env&quot; &quot;guile&quot;))
 </pre></div>
 
 <a name="index-guix_002duse_002dsubstitutes"></a>
