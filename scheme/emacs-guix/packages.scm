@@ -185,10 +185,22 @@ of RESULT.  ENTRIES is a list of manifest entries with NAME/VERSION."
              init
              (manifest->hash-table manifest)))
 
+(define (manifest-entry-dependencies-file-names entry)
+  "Return store file names of manifest ENTRY dependencies."
+  (map (match-lambda
+         ((? manifest-entry? entry)
+          (manifest-entry-item entry))
+         ;; Before manifest version 3
+         ;; <http://git.savannah.gnu.org/cgit/guix.git/commit/?id=55b4715fd4c03e46501f123c5c9bc6072edf12a4>,
+         ;; 'manifest-entry-dependencies' returned a list of file names.
+         ((? string? file-name) file-name)
+         (_ "unknown dependency format"))
+       (manifest-entry-dependencies entry)))
+
 (define %manifest-entry-param-alist
   `((output       . ,manifest-entry-output)
     (file-name    . ,manifest-entry-item)
-    (dependencies . ,manifest-entry-dependencies)))
+    (dependencies . ,manifest-entry-dependencies-file-names)))
 
 (define manifest-entry->sexp
   (object-transformer %manifest-entry-param-alist))
