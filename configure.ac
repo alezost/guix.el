@@ -65,7 +65,7 @@ AC_ARG_WITH([guix-site-ccache-dir],
 
 dnl If ccache dir is not specified, set it to the module dir.
 AS_IF([test "x$guixccachedir" = "x" -a \
-            "x$guixmoduledir" != "x"]
+            "x$guixmoduledir" != "x"],
       [guixccachedir="$guixmoduledir"])
 
 AC_SUBST([guixccachedir])
