@@ -1,5 +1,22 @@
 -*- mode: org -*-
 
+* Changes in 0.3.2 (since 0.3.1)
+
+** User visible changes
+
+*** Package Info
+
+New key bindings:
+
+- "i", "d", "U": install, delete, upgrade;
+- "G": show package graph;
+- "z": show package size;
+- "L": lint package.
+
+*** System Generation Info
+
+More information added (bootloader, direct link to a system file name).
+
 * Changes in 0.3.1 (since 0.3)
 
 ** User visible changes
