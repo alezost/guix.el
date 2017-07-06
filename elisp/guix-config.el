@@ -71,6 +71,21 @@ directory with 'emacs-guix' sub-directory.")
         nil))
   "Directory with image files for Emacs-Guix package.")
 
+(defvar guix-state-directory
+  ;; guix-daemon honors `NIX_STATE_DIR'.
+  (or (getenv "NIX_STATE_DIR")
+      (guix-first-existing-file "/var/guix"
+                                "/usr/local/var/guix")
+      (progn
+        (message "WARNING: Can't define `guix-state-directory'!")
+        "/var/guix"))
+  "Guix local state directory.
+This directory is used to define default Guix profiles.  Set it
+to a proper value, if you configure your Guix with a non-standard
+--localstatedir option.  See Info node `(guix) Invoking guix
+package' and other nodes for the meaning of --localstatedir
+configure option.")
+
 (provide 'guix-config)
 
 ;;; guix-config.el ends here

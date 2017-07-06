@@ -25,11 +25,8 @@
 
 ;;; Code:
 
+(require 'guix-config)
 (require 'guix-utils)
-
-(defvar guix-state-directory
-  ;; guix-daemon honors `NIX_STATE_DIR'.
-  (or (getenv "NIX_STATE_DIR") "/var/guix"))
 
 (defvar guix-user-profile
   (expand-file-name "~/.guix-profile")
