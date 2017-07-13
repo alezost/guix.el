@@ -118,6 +118,12 @@
  :multiple-separator ",")
 
 (guix-define-readers
+ :completions-var guix-help-size-sort-keys
+ :default "closure"
+ :single-reader guix-read-size-sort-key
+ :single-prompt "Sort key: ")
+
+(guix-define-readers
  :completions-getter guix-graph-backend-names
  :default "graphviz"
  :single-reader guix-read-graph-backend

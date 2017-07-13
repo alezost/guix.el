@@ -1,6 +1,6 @@
 ;;; guix-help-vars.el --- Variables related to Guix --help output
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -102,6 +102,10 @@ options.")
 (defvar guix-help-elpa-archives
   '("gnu" "melpa" "melpa-stable")
   "List of supported ELPA archives.")
+
+(defvar guix-help-size-sort-keys
+  '("closure" "self")
+  "List of supported sort keys for 'guix size' command.")
 
 (provide 'guix-help-vars)
 

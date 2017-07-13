@@ -295,7 +295,8 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-size-argument
-  '(("--map-file" :fun guix-read-file-name)))
+  '(("--map-file" :fun guix-read-file-name)
+    ("--sort" :char ?S  :fun guix-read-size-sort-key)))
 
 (guix-command-define-argument-improver
     guix-command-improve-system-argument

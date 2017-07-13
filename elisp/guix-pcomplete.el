@@ -275,9 +275,12 @@ INPUT is the current partially completed string."
         (guix-pcomplete-complete-comma-args
          (guix-refresh-updater-names)))))
 
-     ((and (command? "size")
-           (option? "-m" "--map-file"))
-      (complete* (pcomplete-entries))))))
+     ((command? "size")
+      (cond
+       ((option? "-m" "--map-file")
+        (complete* (pcomplete-entries)))
+       ((string= "--sort" option)
+        (complete* guix-help-size-sort-keys)))))))
 
 (defun guix-pcomplete-complete-options (command)
   "Complete options (with their arguments) for guix COMMAND."
