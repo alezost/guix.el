@@ -771,11 +771,12 @@ Enable/disable prettifying globally.
 
 @end table
 
-To automatically enable @code{guix-prettify-mode} globally on Emacs
-start, add the following line to your init file:
+If you wish to enable @code{global-guix-prettify-mode} automatically
+on Emacs start, you may do it by adding the following line to your
+Emacs init file:
 
 @example
-(global-guix-prettify-mode)
+(add-hook 'after-init-hook 'global-guix-prettify-mode)
 @end example
 
 If you want to enable it only for specific major modes, add it to the
