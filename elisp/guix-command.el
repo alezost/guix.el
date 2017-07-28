@@ -174,6 +174,10 @@ to be modified."
   '(("--format" :fun guix-read-hash-format)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-manifest-argument
+  '(("--manifest" :fun guix-read-file-name)))
+
+(guix-command-define-argument-improver
     guix-command-improve-key-policy-argument
   '(("--key-download" :fun guix-read-key-policy)))
 
@@ -265,7 +269,6 @@ to be modified."
      :name "--remove "  :fun guix-read-package-names-string
      :switch? nil :option? t)
     ("--install-from-file" :fun guix-read-file-name)
-    ("--manifest"       :fun guix-read-file-name)
     ("--profile"        :fun guix-read-file-name)
     ;; Although it is documented that regexp is optional for --upgrade
     ;; and --do-not-upgrade, use them only as options (not as switches).
@@ -352,6 +355,7 @@ to be modified."
      guix-command-improve-pack-argument)
     (("package")
      guix-command-improve-common-build-argument
+     guix-command-improve-manifest-argument
      guix-command-improve-search-paths-argument
      guix-command-improve-package-argument)
     (("potluck")
@@ -367,7 +371,11 @@ to be modified."
      guix-command-improve-size-argument)
     (("system")
      guix-command-improve-common-build-argument
-     guix-command-improve-system-argument))
+     guix-command-improve-system-argument)
+    (("weather")
+     guix-command-improve-manifest-argument
+     guix-command-improve-system-type-argument
+     guix-command-improve-substitute-urls-argument))
   "Alist of guix commands and argument improvers for them.")
 
 (defun guix-command-improve-argument (argument improvers)

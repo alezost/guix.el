@@ -190,6 +190,10 @@ INPUT is the current partially completed string."
      ((string= "--key-download" option)
       (complete* guix-help-key-policies))
 
+     ((and (command? "package" "weather")
+           (option? "-m" "--manifest"))
+      (complete* (pcomplete-entries)))
+
      ((command? "package")
       (cond
        ;; For '--install[=]' and '--remove[=]', try to complete a package
@@ -208,7 +212,7 @@ INPUT is the current partially completed string."
             (option? "-m" "--manifest"))
         (complete* (pcomplete-entries)))))
 
-     ((and (command? "archive" "build" "environment" "size")
+     ((and (command? "archive" "build" "environment" "size" "weather")
            (option? "-s" "--system"))
       (complete* guix-help-system-types))
 
