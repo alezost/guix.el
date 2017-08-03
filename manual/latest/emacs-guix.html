@@ -1053,11 +1053,12 @@ symbols with &ldquo;&hellip;&rdquo;:
 </dd>
 </dl>
 
-<p>To automatically enable <code>guix-prettify-mode</code> globally on Emacs
-start, add the following line to your init file:
+<p>If you wish to enable <code>global-guix-prettify-mode</code> automatically
+on Emacs start, you may do it by adding the following line to your
+Emacs init file:
 </p>
 <div class="example">
-<pre class="example">(global-guix-prettify-mode)
+<pre class="example">(add-hook 'after-init-hook 'global-guix-prettify-mode)
 </pre></div>
 
 <p>If you want to enable it only for specific major modes, add it to the
