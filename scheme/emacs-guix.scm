@@ -59,6 +59,7 @@
                                 lint-package)
   #:autoload (emacs-guix pack) (compressor-names
                                 pack-format-names)
-  #:autoload (emacs-guix refresh) (refresh-updater-names))
+  #:autoload (emacs-guix refresh) (refresh-updater-names)
+  #:autoload (emacs-guix utils) (search-load-path))
 
 ;;; emacs-guix.scm ends here

@@ -1,6 +1,6 @@
 ;;; utils.scm --- General utilities
 
-;; Copyright © 2014-2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -24,6 +24,7 @@
   #:use-module (srfi srfi-1)
   #:export (first-or-false
             list-maybe
+            search-load-path
             object-transformer))
 
 (define-syntax-rule (first-or-false lst)
@@ -65,5 +66,9 @@ Example:
             ((param . proc)
              (cons param (apply proc objects))))
            alist))))
+
+(define (search-load-path file-name)
+  "Call (search-path %load-path FILE-NAME)."
+  (search-path %load-path file-name))
 
 ;;; utils.scm ends here

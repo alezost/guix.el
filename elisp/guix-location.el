@@ -1,6 +1,6 @@
 ;;; guix-location.el --- Package locations
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -42,7 +42,7 @@ LOCATION is a string of the form:
   \"FILE:LINE:COLUMN\"
 
 If FILE is relative, it is considered to be relative to
-DIRECTORY (`guix-directory' by default).
+DIRECTORY (if it is specified and exists).
 
 Interactively, prompt for LOCATION.  With prefix argument, prompt
 for DIRECTORY as well."
@@ -51,7 +51,16 @@ for DIRECTORY as well."
          (guix-read-directory)))
   (cl-multiple-value-bind (file line column)
       (split-string location ":")
-    (find-file (expand-file-name file (or directory guix-directory)))
+    (let* ((file-name (expand-file-name file (or directory
+                                                 guix-directory)))
+           (file-name (if (file-exists-p file-name)
+                          file-name
+                        (guix-eval-read
+                         (guix-make-guile-expression
+                          'search-load-path file)))))
+      (unless file-name         ; not found in Guile %load-path
+        (error "Package location file not found: %s" file))
+      (find-file file-name))
     (when (and line column)
       (let ((line   (string-to-number line))
             (column (string-to-number column)))
