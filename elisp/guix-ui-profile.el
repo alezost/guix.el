@@ -56,6 +56,11 @@
   "Return 'guix-profile' entries."
   (mapcar #'guix-profile->entry guix-profiles))
 
+(defun guix-profile-message (entries)
+  "Display a message after showing profile ENTRIES."
+  (unless entries
+    (message "Guix profiles not found.  Set `guix-profiles' variable.")))
+
 
 ;;; Profile 'list'
 
@@ -63,6 +68,7 @@
   :mode-name "Profile-List"
   :buffer-name "*Guix Profiles*"
   :get-entries-function 'guix-profile-get-entries
+  :message-function 'guix-profile-message
   :format '((current guix-profile-list-get-current 10 t)
             (profile bui-list-get-file-name 40 t)
             (number-of-packages nil 11 bui-list-sort-numerically-2
