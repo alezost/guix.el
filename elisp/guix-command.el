@@ -291,6 +291,10 @@ to be modified."
     ("--user" :fun guix-read-user-name)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-pull-argument
+  '(("--commit" :char ?C)))
+
+(guix-command-define-argument-improver
     guix-command-improve-refresh-argument
   '(("--select"     :fun guix-read-refresh-subset)
     ("--type"       :fun guix-read-refresh-updater-names-string)
@@ -362,6 +366,9 @@ to be modified."
      guix-command-improve-potluck-argument)
     (("publish")
      guix-command-improve-publish-argument)
+    (("pull")
+     guix-command-improve-common-build-argument
+     guix-command-improve-pull-argument)
     (("refresh")
      guix-command-improve-key-policy-argument
      guix-command-improve-refresh-argument)
