@@ -208,6 +208,8 @@ INPUT is the current partially completed string."
         (complete (guix-package-names)))
        ((option? "-p" "--profile")
         (complete* (pcomplete-dirs)))
+       ((string= "--search-paths" option)
+        (complete* guix-help-search-paths-types))
        ((or (option? "-f" "--install-from-file")
             (option? "-m" "--manifest"))
         (complete* (pcomplete-entries)))))

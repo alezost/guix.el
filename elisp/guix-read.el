@@ -124,6 +124,12 @@
  :single-prompt "Sort key: ")
 
 (guix-define-readers
+ :completions-var guix-help-search-paths-types
+ :default "exact"
+ :single-reader guix-read-search-paths-type
+ :single-prompt "Search paths type: ")
+
+(guix-define-readers
  :completions-getter guix-graph-backend-names
  :default "graphviz"
  :single-reader guix-read-graph-backend

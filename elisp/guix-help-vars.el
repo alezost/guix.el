@@ -107,6 +107,10 @@ options.")
   '("closure" "self")
   "List of supported sort keys for 'guix size' command.")
 
+(defvar guix-help-search-paths-types
+  '("exact" "prefix" "suffix")
+  "List of supported sort types for 'guix package --search-paths' command.")
+
 (provide 'guix-help-vars)
 
 ;;; guix-help-vars.el ends here
