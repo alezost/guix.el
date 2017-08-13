@@ -30,7 +30,9 @@
 (require 'bui)
 (require 'guix nil t)
 (require 'guix-profiles)
+(require 'guix-read)
 (require 'guix-utils)
+(require 'guix-misc)
 
 (guix-define-groups profile)
 
@@ -81,6 +83,7 @@
   :sort-key '(profile))
 
 (let ((map guix-profile-list-mode-map))
+  (define-key map (kbd "E") 'guix-profile-list-show-search-paths)
   (define-key map (kbd "RET") 'guix-profile-list-show-packages)
   (define-key map (kbd "P") 'guix-profile-list-show-packages)
   (define-key map (kbd "G") 'guix-profile-list-show-generations)
@@ -92,6 +95,7 @@
 (defvar guix-profile-list-default-hint
   '(("\\[guix-profile-list-show-packages]") " show packages;\n"
     ("\\[guix-profile-list-show-generations]") " show generations;\n"
+    ("\\[guix-profile-list-show-search-paths]") " show search paths;\n"
     ("\\[guix-profile-list-set-current]") " set current profile;\n"
     ("\\[guix-profile-list-apply-manifest]") " apply manifest;\n"))
 
@@ -107,10 +111,17 @@
   ;; Just get the ID, as currently ID is the profile file name.
   (bui-list-current-id))
 
+(defun guix-profile-list-marked-profiles ()
+  "Return a list of file names of the marked profiles.
+If nothing is marked, return a list with profile at point."
+  ;; XXX This should become available in bui > 1.1.0
+  ;; (bui-list-marked-or-current)
+  (or (bui-list-get-marked-id-list)
+      (list (bui-list-current-id))))
+
 (declare-function guix-installed-packages "guix-ui-package" t)
 (declare-function guix-generations "guix-ui-generation" t)
 (declare-function guix-system-generations "guix-ui-system-generation" t)
-(declare-function guix-apply-manifest "guix-misc" t)
 
 (defun guix-profile-list-show-packages ()
   "Display packages installed in the current profile."
@@ -125,6 +136,12 @@
     (if (guix-system-profile? profile)
         (guix-system-generations)
       (guix-generations (guix-generation-profile profile)))))
+
+(defun guix-profile-list-show-search-paths (&optional type)
+  "Display 'search paths' environment variables for the marked profiles.
+If nothing is marked, use profile on the current line."
+  (interactive (list (guix-read-search-paths-type)))
+  (guix-show-search-paths (guix-profile-list-marked-profiles) type))
 
 (defun guix-profile-list-apply-manifest (file)
   "Apply manifest from FILE to the current profile."

@@ -27,6 +27,7 @@ MODULES =					\
   emacs-guix/refresh.scm			\
   emacs-guix/commands.scm			\
   emacs-guix/licenses.scm			\
+  emacs-guix/profiles.scm			\
   emacs-guix/packages.scm			\
   emacs-guix/locations.scm			\
   emacs-guix/generations.scm			\

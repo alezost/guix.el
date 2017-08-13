@@ -482,6 +482,12 @@ bindings:
 Display packages installed in profile at point.
 @item G
 Display generations of profile at point.
+@item E
+Display ``search paths'' environment variables for the marked
+profiles, or the current profile if nothing is marked.  This command
+is analogous to @code{guix package --search-paths} shell command
+(@pxref{Invoking guix package,,, guix, The GNU Guix Reference
+Manual}).
 @item c
 Make profile at point the current profile for the package commands
 (@pxref{Packages}).
@@ -546,7 +552,11 @@ bindings:
 
 @table @kbd
 @item P
-List packages installed in the current generation.
+Display packages installed in the current generation.
+@item E
+Display ``search paths'' environment variables for the marked
+generations.  This command is similar to the one for a list of
+profiles (@pxref{Profiles}).
 @item c
 Switch profile to the current generation.
 @item d
@@ -1241,6 +1251,9 @@ the buffer names, you can do it like this:
 
 @vindex guix-internal-repl-buffer-name
 @item guix-internal-repl-buffer-name
+
+@vindex guix-search-paths-buffer-name
+@item guix-search-paths-buffer-name
 
 @vindex guix-help-buffer-name
 @item guix-help-buffer-name

@@ -239,6 +239,7 @@ current profile's GENERATION."
   :marks '((delete . ?D)))
 
 (let ((map guix-generation-list-mode-map))
+  (define-key map (kbd "E")   'guix-generation-list-show-search-paths)
   (define-key map (kbd "P")   'guix-generation-list-show-packages)
   (define-key map (kbd "+")   'guix-generation-list-show-added-packages)
   (define-key map (kbd "-")   'guix-generation-list-show-removed-packages)
@@ -260,6 +261,18 @@ current profile's GENERATION."
    guix-generation-list-default-hint
    guix-ui-hint
    (bui-default-hint)))
+
+(defun guix-generation-list-marked-file-names ()
+  "Return a list of file names of the marked generations.
+If nothing is marked, return a list with generation at point."
+  (let ((entries (bui-current-entries)))
+    (mapcar (lambda (id)
+              (bui-entry-non-void-value (bui-entry-by-id entries id)
+                                        'file-name))
+            ;; XXX This should become available in bui > 1.1.0
+            ;; (bui-list-marked-or-current)
+            (or (bui-list-get-marked-id-list)
+                (list (bui-list-current-id))))))
 
 (defun guix-generation-list-get-entries (profile search-type
                                                  &rest search-values)
@@ -292,6 +305,14 @@ VAL is a boolean value."
   (guix-package-get-display
    (guix-generation-current-package-profile (bui-list-current-id))
    'installed))
+
+(defun guix-generation-list-show-search-paths (&optional type)
+  "Display 'search paths' environment variables for the marked generations.
+If nothing is marked, use generation on the current line."
+  (interactive (list (guix-read-search-paths-type)))
+  (guix-show-search-paths
+   (guix-generation-list-marked-file-names)
+   type))
 
 (defun guix-generation-list-generations-to-compare ()
   "Return a sorted list of 2 marked generations for comparing."

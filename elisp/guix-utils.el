@@ -200,6 +200,12 @@ message)."
 Press '\\[revert-buffer]' to update this buffer.")))))
       (funcall function))))
 
+(defun guix-display-buffer (buffer)
+  "Switch to BUFFER, preferably reusing a window displaying this buffer."
+  (pop-to-buffer buffer
+                 '((display-buffer-reuse-window
+                    display-buffer-same-window))))
+
 (defun guix-pretty-print-buffer (buffer-or-name)
   "Pretty-print the contents of BUFFER-OR-NAME."
   (with-current-buffer buffer-or-name

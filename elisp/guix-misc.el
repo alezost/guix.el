@@ -187,6 +187,40 @@ FILE.  With a prefix argument, also prompt for PROFILE."
       (concat "--manifest=" (expand-file-name file)))
      operation-buffer)))
 
+(defcustom guix-search-paths-buffer-name "*Guix Search Paths*"
+  "Name of a buffer for displaying 'search paths' environment variables."
+  :type 'string
+  :group 'guix)
+
+(defun guix-show-search-paths (profiles &optional type)
+  "Display 'search paths' environment variables for PROFILES."
+  (let* ((profiles (mapcar #'guix-package-profile profiles))
+         (type (or type "exact"))
+         (type-symbol (intern type))
+         (paths (guix-eval-read
+                 (guix-make-guile-expression
+                  'search-paths profiles :type type-symbol))))
+    (with-current-buffer (get-buffer-create guix-search-paths-buffer-name)
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert
+         "# \"Search paths\" environment variables for the Guix "
+         (if (cdr profiles) "profiles" "profile")
+         ".
+#
+# Shell command to reproduce:
+#
+# guix package --search-paths=" type " "
+         (mapconcat (lambda (p)
+                      (concat "--profile=" (shell-quote-argument p)))
+                    profiles
+                    " ")
+         "\n\n"
+         (mapconcat #'identity paths "\n")
+         "\n"))
+      (sh-mode))
+    (guix-display-buffer guix-search-paths-buffer-name)))
+
 
 ;;; Executing guix commands
 
