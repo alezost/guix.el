@@ -1245,6 +1245,9 @@ the buffer names, you can do it like this:
 @vindex guix-help-buffer-name
 @item guix-help-buffer-name
 
+@vindex guix-about-buffer-name
+@item guix-about-buffer-name
+
 @end table
 
 @node Keymaps
