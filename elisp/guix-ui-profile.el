@@ -46,14 +46,17 @@
 
 (defun guix-profile->entry (profile)
   "Return 'guix-profile' entry by PROFILE file-name."
-  (let ((profile (guix-profile profile)))
-    `((id                    . ,profile)
-      (profile               . ,profile)
-      (current               . ,(guix-current-profile? profile))
-      (number-of-packages    . ,(guix-profile-number-of-packages
-                                 profile))
-      (number-of-generations . ,(guix-profile-number-of-generations
-                                 profile)))))
+  (let* ((profile (guix-profile profile))
+         (number-of-packages (guix-profile-number-of-packages
+                              profile)))
+    (if number-of-packages
+        `((id                    . ,profile)
+          (profile               . ,profile)
+          (current               . ,(guix-current-profile? profile))
+          (number-of-packages    . ,number-of-packages)
+          (number-of-generations . ,(guix-profile-number-of-generations
+                                     profile)))
+      (error "No packages in '%s'.  Is it a real profile?" profile))))
 
 (defun guix-profile-get-entries ()
   "Return 'guix-profile' entries."
