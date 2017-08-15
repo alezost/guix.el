@@ -50,6 +50,23 @@
   :group 'guix
   :group 'faces)
 
+(defface guix-true
+  '((default :weight bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "ForestGreen")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "PaleGreen")
+    (((class color) (min-colors 8))
+     :foreground "green")
+    (t :underline t))
+  "Parent face for various true-kind things ('Yes' strings, etc.)."
+  :group 'guix-faces)
+
+(defface guix-false
+  '((t :weight bold))
+  "Parent face for various false-kind things ('No' strings, etc.)."
+  :group 'guix-faces)
+
 (provide 'guix)
 
 ;;; guix.el ends here

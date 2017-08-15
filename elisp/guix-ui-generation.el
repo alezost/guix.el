@@ -132,12 +132,12 @@ current profile's GENERATION."
   :group 'guix-generation-info-faces)
 
 (defface guix-generation-info-current
-  '((t :inherit guix-package-info-installed-outputs))
+  '((t :inherit guix-true))
   "Face used if a generation is the current one."
   :group 'guix-generation-info-faces)
 
 (defface guix-generation-info-not-current
-  '((t nil))
+  '((t :inherit guix-false))
   "Face used if a generation is not the current one."
   :group 'guix-generation-info-faces)
 

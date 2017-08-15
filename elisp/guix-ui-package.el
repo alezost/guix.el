@@ -350,19 +350,12 @@ ENTRIES is a list of package entries to get info about packages."
   :group 'guix-package-info-faces)
 
 (defface guix-package-info-installed-outputs
-  '((default :weight bold)
-    (((class color) (min-colors 88) (background light))
-     :foreground "ForestGreen")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "PaleGreen")
-    (((class color) (min-colors 8))
-     :foreground "green")
-    (t :underline t))
+  '((t :inherit guix-true))
   "Face used for installed outputs of a package."
   :group 'guix-package-info-faces)
 
 (defface guix-package-info-uninstalled-outputs
-  '((t :weight bold))
+  '((t :inherit guix-false))
   "Face used for uninstalled outputs of a package."
   :group 'guix-package-info-faces)
 
