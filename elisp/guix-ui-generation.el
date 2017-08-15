@@ -521,13 +521,20 @@ GENERATION is a generation number of the current profile."
 
 ;;; Interactive commands
 
+(declare-function guix-system-generations "guix-ui-system-generation" t)
+(declare-function guix-last-system-generations "guix-ui-system-generation" t)
+(declare-function guix-system-generations-by-time "guix-ui-system-generation" t)
+
 ;;;###autoload
 (defun guix-generations (&optional profile)
   "Display information about all generations.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive (list (guix-ui-read-generation-profile)))
-  (guix-generation-get-display profile 'all))
+  (let ((profile (guix-profile profile)))
+    (if (guix-system-profile? profile)
+        (guix-system-generations)
+      (guix-generation-get-display profile 'all))))
 
 ;;;###autoload
 (defun guix-last-generations (number &optional profile)
@@ -537,7 +544,10 @@ Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (read-number "The number of last generations: ")
          (guix-ui-read-generation-profile)))
-  (guix-generation-get-display profile 'last number))
+  (let ((profile (guix-profile profile)))
+    (if (guix-system-profile? profile)
+        (guix-last-system-generations number)
+      (guix-generation-get-display profile 'last number))))
 
 ;;;###autoload
 (defun guix-generations-by-time (from to &optional profile)
@@ -549,9 +559,12 @@ Interactively with prefix, prompt for PROFILE."
    (list (guix-read-date "Find generations (from): ")
          (guix-read-date "Find generations (to): ")
          (guix-ui-read-generation-profile)))
-  (guix-generation-get-display profile 'time
-                               (float-time from)
-                               (float-time to)))
+  (let ((profile (guix-profile profile)))
+    (if (guix-system-profile? profile)
+        (guix-system-generations-by-time from to)
+      (guix-generation-get-display profile 'time
+                                   (float-time from)
+                                   (float-time to)))))
 
 (provide 'guix-ui-generation)
 

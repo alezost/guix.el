@@ -125,7 +125,6 @@ If nothing is marked, return a list with profile at point."
 
 (declare-function guix-installed-packages "guix-ui-package" t)
 (declare-function guix-generations "guix-ui-generation" t)
-(declare-function guix-system-generations "guix-ui-system-generation" t)
 
 (defun guix-profile-list-show-packages ()
   "Display packages installed in the current profile."
@@ -136,10 +135,7 @@ If nothing is marked, return a list with profile at point."
 (defun guix-profile-list-show-generations ()
   "Display generations of the current profile."
   (interactive)
-  (let ((profile (guix-profile-list-current-profile)))
-    (if (guix-system-profile? profile)
-        (guix-system-generations)
-      (guix-generations (guix-generation-profile profile)))))
+  (guix-generations (guix-profile-list-current-profile)))
 
 (defun guix-profile-list-show-search-paths (&optional type)
   "Display 'search paths' environment variables for the marked profiles.
