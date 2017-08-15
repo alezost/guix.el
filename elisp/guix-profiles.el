@@ -129,7 +129,9 @@ the returned file name ends with '/profile'."
                     (guix-package-profile profile generation)))
 
 (defun guix-profile-number-of-packages (profile &optional generation)
-  "Return the number of packages installed in PROFILE or its GENERATION."
+  "Return the number of packages installed in PROFILE or its GENERATION.
+Return nil if packages are not found (presumably because PROFILE
+is not a guix profile)."
   (let ((manifest (guix-manifest-file profile generation)))
     ;; Just count a number of sexps inside (packages ...) of manifest
     ;; file.  It should be much faster than running the REPL and
