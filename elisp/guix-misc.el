@@ -172,7 +172,7 @@ FILE.  With a prefix argument, also prompt for PROFILE."
           (profile (if current-prefix-arg
                        (guix-read-package-profile)
                      (or current-profile guix-current-profile)))
-          (file (guix-read-file-name "File with manifest: "))
+          (file (guix-read-manifest-file-name))
           (buffer (and current-profile (current-buffer))))
      (list profile file buffer)))
   (guix-assert-non-system-profile profile)

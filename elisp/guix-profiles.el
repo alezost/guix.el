@@ -183,6 +183,10 @@ See `guix-read-profile' for the meaning of DEFAULT, and
 `guix-generation-profile' for the meaning of generation profile."
   (guix-generation-profile (guix-read-profile default)))
 
+(defun guix-read-manifest-file-name (&optional prompt)
+  "Prompt for a manifest file name and return it."
+  (guix-read-file-name (or prompt "File with manifest: ")))
+
 
 ;;;###autoload
 (defun guix-set-current-profile (file-name)

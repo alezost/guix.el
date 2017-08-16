@@ -154,8 +154,7 @@ If nothing is marked, use profile on the current line."
 
 (defun guix-profile-list-apply-manifest (file)
   "Apply manifest from FILE to the current profile."
-  (interactive
-   (list (guix-read-file-name "File with manifest: ")))
+  (interactive (list (guix-read-manifest-file-name)))
   (guix-apply-manifest (guix-package-profile
                         (guix-profile-list-current-profile))
                        file (current-buffer)))
