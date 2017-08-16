@@ -58,11 +58,18 @@
                                      profile)))
       (error "No packages in '%s'.  Is it a real profile?" profile))))
 
-(defun guix-profile-get-entries ()
+(defun guix-profile-get-entries (&optional search-type &rest args)
   "Return 'guix-profile' entries."
-  (mapcar #'guix-profile->entry guix-profiles))
+  (let ((profiles (cond
+                   ((or (null search-type)
+                        (eq search-type 'all))
+                    guix-profiles)
+                   ((memq search-type '(id profile file-name))
+                    args)
+                   (t (error "Wrong search-type: %S" search-type)))))
+    (mapcar #'guix-profile->entry profiles)))
 
-(defun guix-profile-message (entries)
+(defun guix-profile-message (entries &rest _)
   "Display a message after showing profile ENTRIES."
   (unless entries
     (message "Guix profiles not found.  Set `guix-profiles' variable.")))
