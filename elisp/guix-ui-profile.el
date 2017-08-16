@@ -36,6 +36,12 @@
 
 (guix-define-groups profile)
 
+(bui-define-entry-type guix-profile
+  :get-entries-function 'guix-profile-get-entries
+  :message-function 'guix-profile-message
+  :titles '((number-of-packages    . "Packages")
+            (number-of-generations . "Generations")))
+
 (defcustom guix-profiles
   (-filter #'file-exists-p
            (list guix-user-profile
@@ -80,16 +86,12 @@
 (bui-define-interface guix-profile list
   :mode-name "Profile-List"
   :buffer-name "*Guix Profiles*"
-  :get-entries-function 'guix-profile-get-entries
-  :message-function 'guix-profile-message
   :format '((current guix-profile-list-get-current 10 t)
             (profile bui-list-get-file-name 40 t)
             (number-of-packages nil 11 bui-list-sort-numerically-2
                                 :right-align t)
             (number-of-generations nil 14 bui-list-sort-numerically-3
                                    :right-align t))
-  :titles '((number-of-packages    . "Packages")
-            (number-of-generations . "Generations"))
   :hint 'guix-profile-list-hint
   :sort-key '(profile))
 
