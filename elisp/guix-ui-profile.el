@@ -86,6 +86,7 @@
 (bui-define-interface guix-profile list
   :mode-name "Profile-List"
   :buffer-name "*Guix Profiles*"
+  :describe-function 'guix-profile-list-describe
   :format '((current guix-profile-list-get-current 10 t)
             (profile bui-list-get-file-name 40 t)
             (number-of-packages nil 11 bui-list-sort-numerically-2
@@ -97,13 +98,10 @@
 
 (let ((map guix-profile-list-mode-map))
   (define-key map (kbd "E") 'guix-profile-list-show-search-paths)
-  (define-key map (kbd "RET") 'guix-profile-list-show-packages)
   (define-key map (kbd "P") 'guix-profile-list-show-packages)
   (define-key map (kbd "G") 'guix-profile-list-show-generations)
   (define-key map (kbd "M") 'guix-profile-list-apply-manifest)
-  (define-key map (kbd "c") 'guix-profile-list-set-current)
-  ;; Unbind "i" as "Profile Info" interface is not defined.
-  (define-key map (kbd "i") nil))
+  (define-key map (kbd "c") 'guix-profile-list-set-current))
 
 (defvar guix-profile-list-default-hint
   '(("\\[guix-profile-list-show-packages]") " show packages;\n"
@@ -117,6 +115,12 @@
    guix-profile-list-default-hint
    bui-list-sort-hint
    bui-common-hint))
+
+(defun guix-profile-list-describe (&rest ids)
+  "Describe profiles with IDS (list of identifiers)."
+  (bui-display-entries
+   (bui-entries-by-ids (bui-current-entries) ids)
+   'guix-profile 'info (cons 'id ids)))
 
 (defun guix-profile-list-current-profile ()
   "Return file name of the current profile."
@@ -182,6 +186,103 @@ If nothing is marked, use profile on the current line."
     (setf (bui-item-entries bui-item)
           new-entries))
   (bui-redisplay))
+
+
+;;; Profile 'info'
+
+(bui-define-interface guix-profile info
+  :mode-name "Profile-Info"
+  :buffer-name "*Guix Profile Info*"
+  :format '((profile nil (simple bui-file))
+            nil
+            guix-profile-info-insert-buttons
+            (current format guix-profile-info-insert-current)
+            (number-of-packages
+             format guix-profile-info-insert-number-of-packages)
+            (number-of-generations
+             format guix-profile-info-insert-number-of-generations)))
+
+(defface guix-profile-info-current
+  '((t :inherit guix-true))
+  "Face used if a profile is the current one."
+  :group 'guix-profile-info-faces)
+
+(defface guix-profile-info-not-current
+  '((t :inherit guix-false))
+  "Face used if a profile is not the current one."
+  :group 'guix-profile-info-faces)
+
+(defun guix-profile-info-insert-search-paths-button (profile)
+  "Insert 'Search paths' button for PROFILE."
+  (bui-insert-action-button
+   "Search paths"
+   (lambda (btn)
+     (guix-show-search-paths (list (button-get btn 'profile))
+                             (guix-read-search-paths-type)))
+   (format "Show 'search paths' environment variables for profile '%s'"
+           profile)
+   'profile profile))
+
+(defun guix-profile-info-insert-apply-manifest-button (profile)
+  "Insert 'Apply manifest' button for PROFILE."
+  (bui-insert-action-button
+   "Apply manifest"
+   (lambda (btn)
+     (guix-apply-manifest (button-get btn 'profile)
+                          (guix-read-manifest-file-name)
+                          (current-buffer)))
+   (format "Apply manifest file to profile '%s'"
+           profile)
+   'profile profile))
+
+(defun guix-profile-info-insert-buttons (entry)
+  "Insert some buttons for profile ENTRY at point."
+  (let ((profile (bui-entry-non-void-value entry 'profile)))
+    (guix-profile-info-insert-search-paths-button profile)
+    (unless (guix-system-profile? profile)
+      (bui-insert-indent)
+      (guix-profile-info-insert-apply-manifest-button profile))
+    (bui-newline)))
+
+(defun guix-profile-info-insert-current (value entry)
+  "Insert boolean VALUE showing whether this profile is current."
+  (if value
+      (bui-info-insert-value-format "Yes" 'guix-profile-info-current)
+    (bui-info-insert-value-format "No" 'guix-profile-info-not-current)
+    (bui-insert-indent)
+    (let ((profile (bui-entry-non-void-value entry 'profile)))
+      (bui-insert-action-button
+       "Set"
+       (lambda (btn)
+         (guix-set-current-profile (button-get btn 'profile))
+         (bui-revert nil t))
+       (format "Make '%s' the current profile" profile)
+       'profile profile))))
+
+(defun guix-profile-info-insert-number-of-packages (value entry)
+  "Insert boolean VALUE showing whether this profile is current."
+  (bui-format-insert value)
+  (bui-insert-indent)
+  (let ((profile (bui-entry-non-void-value entry 'profile)))
+    (bui-insert-action-button
+     "Show"
+     (lambda (btn)
+       (guix-installed-packages
+        (guix-package-profile (button-get btn 'profile))))
+     (format "Show packages installed in profile '%s'" profile)
+     'profile profile)))
+
+(defun guix-profile-info-insert-number-of-generations (value entry)
+  "Insert boolean VALUE showing whether this profile is current."
+  (bui-format-insert value)
+  (bui-insert-indent)
+  (let ((profile (bui-entry-non-void-value entry 'profile)))
+    (bui-insert-action-button
+     "Show"
+     (lambda (btn)
+       (guix-generations (button-get btn 'profile)))
+     (format "Show generations of profile '%s'" profile)
+     'profile profile)))
 
 
 ;;; Interactive commands
