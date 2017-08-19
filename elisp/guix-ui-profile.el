@@ -80,6 +80,17 @@
   (unless entries
     (message "Guix profiles not found.  Set `guix-profiles' variable.")))
 
+(defun guix-read-profile-from-entries (&optional entries)
+  "Return profile file name from ENTRIES (current entries by default).
+If there is only one entry, return its profile name.  If there
+are multiple entries, prompt for a profile name and return it."
+  (or entries (setq entries (bui-current-entries)))
+  (if (cdr entries)
+      (completing-read "Profile: "
+                       (--map (bui-entry-value it 'profile)
+                              entries))
+    (bui-entry-value (car entries) 'profile)))
+
 
 ;;; Profile 'list'
 
@@ -199,7 +210,27 @@ If nothing is marked, use profile on the current line."
             (number-of-packages
              format guix-profile-info-insert-number-of-packages)
             (number-of-generations
-             format guix-profile-info-insert-number-of-generations)))
+             format guix-profile-info-insert-number-of-generations))
+  :hint 'guix-profile-info-hint)
+
+(let ((map guix-profile-info-mode-map))
+  (define-key map (kbd "E") 'guix-profile-info-show-search-paths)
+  (define-key map (kbd "P") 'guix-profile-info-show-packages)
+  (define-key map (kbd "G") 'guix-profile-info-show-generations)
+  (define-key map (kbd "M") 'guix-profile-info-apply-manifest)
+  (define-key map (kbd "c") 'guix-profile-info-set-current))
+
+(defvar guix-profile-info-default-hint
+  '(("\\[guix-profile-info-show-packages]") " show packages;\n"
+    ("\\[guix-profile-info-show-generations]") " show generations;\n"
+    ("\\[guix-profile-info-show-search-paths]") " show search paths;\n"
+    ("\\[guix-profile-info-set-current]") " set current profile;\n"
+    ("\\[guix-profile-info-apply-manifest]") " apply manifest;\n"))
+
+(defun guix-profile-info-hint ()
+  (bui-format-hints
+   guix-profile-info-default-hint
+   (bui-default-hint)))
 
 (defface guix-profile-info-current
   '((t :inherit guix-true))
@@ -281,6 +312,36 @@ If nothing is marked, use profile on the current line."
        (guix-generations (button-get btn 'profile)))
      (format "Show generations of profile '%s'" profile)
      'profile profile)))
+
+(defun guix-profile-info-show-packages (profile)
+  "Display packages installed in PROFILE."
+  (interactive (list (guix-read-profile-from-entries)))
+  (guix-installed-packages profile))
+
+(defun guix-profile-info-show-generations (profile)
+  "Display generations of PROFILE."
+  (interactive (list (guix-read-profile-from-entries)))
+  (guix-generations profile))
+
+(defun guix-profile-info-show-search-paths (profile &optional type)
+  "Display 'search paths' environment variables for PROFILE."
+  (interactive
+   (list (guix-read-profile-from-entries)
+         (guix-read-search-paths-type)))
+  (guix-show-search-paths (list profile) type))
+
+(defun guix-profile-info-apply-manifest (profile &optional file)
+  "Apply manifest from FILE to PROFILE."
+  (interactive
+   (list (guix-read-profile-from-entries)
+         (guix-read-manifest-file-name)))
+  (guix-apply-manifest profile file (current-buffer)))
+
+(defun guix-profile-info-set-current (profile)
+  "Set `guix-current-profile' to PROFILE."
+  (interactive (list (guix-read-profile-from-entries)))
+  (guix-set-current-profile profile)
+  (bui-revert nil t))
 
 
 ;;; Interactive commands
