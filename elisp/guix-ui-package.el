@@ -71,7 +71,8 @@ SEARCH-VALUES.
 
 Results are displayed in the list buffer, unless a single package
 is found and `guix-package-list-show-single' is nil."
-  (let* ((args    (cl-list* (or profile guix-current-profile)
+  (let* ((args    (cl-list* (guix-package-profile
+                             (or profile guix-current-profile))
                             search-type search-values))
          (entries (bui-get-entries (guix-package-list-type) 'list args)))
     (if (or guix-package-list-show-single
@@ -1403,8 +1404,7 @@ installed in a system profile, use
    (list (guix-read-file-name "System configuration file: ")
          (and current-prefix-arg
               (guix-read-package-profile guix-system-profile))))
-  (guix-package-get-display (or profile (guix-package-profile
-                                         guix-system-profile))
+  (guix-package-get-display (or profile guix-system-profile)
                             'from-os-file file))
 
 ;;;###autoload
@@ -1444,13 +1444,13 @@ Interactively with prefix, prompt for PROFILE."
 (defun guix-installed-user-packages ()
   "Display information about Guix packages installed in a user profile."
   (interactive)
-  (guix-installed-packages (guix-package-profile guix-user-profile)))
+  (guix-installed-packages guix-user-profile))
 
 ;;;###autoload
 (defun guix-installed-system-packages ()
   "Display information about Guix packages installed in a system profile."
   (interactive)
-  (guix-installed-packages (guix-package-profile guix-system-profile)))
+  (guix-installed-packages guix-system-profile))
 
 ;;;###autoload
 (defun guix-obsolete-packages (&optional profile)

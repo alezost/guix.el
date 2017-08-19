@@ -142,8 +142,7 @@ If nothing is marked, return a list with profile at point."
 (defun guix-profile-list-show-packages ()
   "Display packages installed in the current profile."
   (interactive)
-  (guix-installed-packages (guix-package-profile
-                            (guix-profile-list-current-profile))))
+  (guix-installed-packages (guix-profile-list-current-profile)))
 
 (defun guix-profile-list-show-generations ()
   "Display generations of the current profile."
@@ -267,8 +266,7 @@ If nothing is marked, use profile on the current line."
     (bui-insert-action-button
      "Show"
      (lambda (btn)
-       (guix-installed-packages
-        (guix-package-profile (button-get btn 'profile))))
+       (guix-installed-packages (button-get btn 'profile)))
      (format "Show packages installed in profile '%s'" profile)
      'profile profile)))
 
