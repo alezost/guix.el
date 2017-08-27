@@ -371,6 +371,7 @@ to be modified."
      guix-command-improve-pull-argument)
     (("refresh")
      guix-command-improve-key-policy-argument
+     guix-command-improve-manifest-argument
      guix-command-improve-refresh-argument)
     (("size")
      guix-command-improve-system-type-argument
