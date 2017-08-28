@@ -56,6 +56,7 @@
                                 license-name)
   #:autoload   (emacs-guix licenses) (lookup-license)
   #:autoload   (emacs-guix locations) (packages-by-location-file)
+  #:use-module (emacs-guix profiles)
   #:use-module (emacs-guix utils)
   #:export (package-names
             profile->specifications+file-names
@@ -93,12 +94,6 @@ return two values: name and version.  For example, for SPEC
         (string-append full-name ":" output)
         full-name)))
 
-(define (manifest-entry->name+version+output entry)
-  (values
-   (manifest-entry-name    entry)
-   (manifest-entry-version entry)
-   (manifest-entry-output  entry)))
-
 (define (manifest-entry->package-specification entry)
   (call-with-values
       (lambda () (manifest-entry->name+version+output entry))
@@ -129,73 +124,6 @@ and not installed in PROFILE2."
   (let ((specs1 (profile-package-specifications profile1))
         (specs2 (profile-package-specifications profile2)))
     (lset-difference string=? specs1 specs2)))
-
-(define (manifest-entries->hash-table entries)
-  "Return a hash table of name keys and lists of matching manifest ENTRIES."
-  (let ((table (make-hash-table (length entries))))
-    (for-each (lambda (entry)
-                (let* ((key (manifest-entry-name entry))
-                       (ref (hash-ref table key)))
-                  (hash-set! table key
-                             (if ref (cons entry ref) (list entry)))))
-              entries)
-    table))
-
-(define (manifest=? m1 m2)
-  (or (eq? m1 m2)
-      (equal? m1 m2)))
-
-(define manifest->hash-table
-  (let ((current-manifest #f)
-        (current-table #f))
-    (lambda (manifest)
-      "Return a hash table of name keys and matching MANIFEST entries."
-      (unless (manifest=? manifest current-manifest)
-        (set! current-manifest manifest)
-        (set! current-table (manifest-entries->hash-table
-                             (manifest-entries manifest))))
-      current-table)))
-
-(define* (manifest-entries-by-name manifest name #:optional version output)
-  "Return a list of MANIFEST entries matching NAME, VERSION and OUTPUT."
-  (let ((entries (or (hash-ref (manifest->hash-table manifest) name)
-                     '())))
-    (if (or version output)
-        (filter (lambda (entry)
-                  (and (or (not version)
-                           (equal? version (manifest-entry-version entry)))
-                       (or (not output)
-                           (equal? output  (manifest-entry-output entry)))))
-                entries)
-        entries)))
-
-(define (manifest-entry-by-output entries output)
-  "Return a manifest entry from ENTRIES matching OUTPUT."
-  (find (lambda (entry)
-          (string= output (manifest-entry-output entry)))
-        entries))
-
-(define (fold-manifest-by-name manifest proc init)
-  "Fold over MANIFEST entries.
-Call (PROC NAME VERSION ENTRIES RESULT), using INIT as the initial value
-of RESULT.  ENTRIES is a list of manifest entries with NAME/VERSION."
-  (hash-fold (lambda (name entries res)
-               (proc name (manifest-entry-version (car entries))
-                     entries res))
-             init
-             (manifest->hash-table manifest)))
-
-(define (manifest-entry-dependencies-file-names entry)
-  "Return store file names of manifest ENTRY dependencies."
-  (map (match-lambda
-         ((? manifest-entry? entry)
-          (manifest-entry-item entry))
-         ;; Before manifest version 3
-         ;; <http://git.savannah.gnu.org/cgit/guix.git/commit/?id=55b4715fd4c03e46501f123c5c9bc6072edf12a4>,
-         ;; 'manifest-entry-dependencies' returned a list of file names.
-         ((? string? file-name) file-name)
-         (_ "unknown dependency format"))
-       (manifest-entry-dependencies entry)))
 
 (define %manifest-entry-param-alist
   `((output       . ,manifest-entry-output)
