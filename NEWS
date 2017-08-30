@@ -1,5 +1,53 @@
 -*- mode: org -*-
 
+* Changes in 0.3.3 (since 0.3.2)
+
+** User visible changes
+
+*** Profile List
+
+New key bindings:
+
+- "E": show 'search paths';
+- "RET": show "Profile Info".
+
+*** Profile Info
+
+New interface.
+
+*** Generation Info
+
+New "Profile" and "Search paths" buttons.
+
+*** Generation List
+
+New key bindings:
+
+- "E": show 'search paths';
+
+** Internal changes
+
+*** New faces
+
+- 'guix-true';
+- 'guix-faces'.
+
+This faces are parent for:
+
+- 'guix-package-info-installed-outputs' and
+  'guix-package-info-uninstalled-outputs',
+- 'guix-generation-info-current' and 'guix-generation-info-not-current',
+- 'guix-profile-info-current' and 'guix-profile-info-not-current' (faces
+  for the new "Profile Info" interface).
+
+** Bug fixes
+
+*** Editing user packages honors relative file names
+
+Previously, "M-x guix-edit" might not open custom packages (from
+GUIX_PACKAGE_PATH) because it assumed the file names were absolute.  Now
+relative file names are also handled.
+
 * Changes in 0.3.2 (since 0.3.1)
 
 ** User visible changes
