@@ -77,7 +77,10 @@ directory with 'emacs-guix' sub-directory.")
       (guix-first-existing-file "/var/guix"
                                 "/usr/local/var/guix")
       (progn
-        (message "WARNING: Can't define `guix-state-directory'!")
+        ;; If "/var" does not exist, we are probably being compiled by
+        ;; guix.  Do not emit a warning in this case.
+        (when (file-exists-p "/var")
+          (message "WARNING: Can't define `guix-state-directory'!"))
         "/var/guix"))
   "Guix local state directory.
 This directory is used to define default Guix profiles.  Set it
