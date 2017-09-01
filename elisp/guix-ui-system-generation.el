@@ -186,6 +186,9 @@ SEARCH-VALUES."
             (number-of-packages nil 11 bui-list-sort-numerically-3
                                 :right-align t)
             (time bui-list-get-time 20 t))
+  ;; Always get 'file-name' parameter to make it possible to call
+  ;; `guix-generation-list-show-search-paths'.
+  :required '(id file-name)
   :titles guix-generation-list-titles
   :hint guix-generation-list-hint
   :sort-key guix-generation-list-sort-key
