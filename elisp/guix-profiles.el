@@ -62,8 +62,8 @@ It is used by various commands as the default working profile.")
 The first parenthesized group should match profile file name.")
 
 (defun guix-current-profile? (profile)
-  "Return non-nil, if package PROFILE is `guix-current-profile'."
-  (string= (guix-package-profile profile)
+  "Return non-nil, if PROFILE is `guix-current-profile'."
+  (string= (guix-profile profile)
            guix-current-profile))
 
 (defun guix-system-profile? (profile)
