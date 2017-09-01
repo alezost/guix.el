@@ -104,6 +104,7 @@ SEARCH-VALUES."
   :get-entries-function 'guix-system-generation-info-get-entries
   :format '(guix-generation-info-insert-heading
             nil
+            guix-generation-info-insert-buttons
             (label format (format))
             (prev-number format guix-generation-info-insert-previous)
             (current format guix-generation-info-insert-current)
