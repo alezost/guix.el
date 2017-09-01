@@ -55,6 +55,12 @@ It is used by various commands as the default working profile.")
                 t)
   "Regexp matching system profiles.")
 
+(defvar guix-generation-file-name-regexp
+  (rx (group (one-or-more any))
+      "-" (one-or-more digit) "-link")
+  "Regexp matching file names of profile generations.
+The first parenthesized group should match profile file name.")
+
 (defun guix-current-profile? (profile)
   "Return non-nil, if package PROFILE is `guix-current-profile'."
   (string= (guix-package-profile profile)
@@ -75,6 +81,12 @@ Use 'guix system reconfigure' shell command to modify a system profile."
 (defun guix-generation-file (profile generation)
   "Return the file name of a PROFILE's GENERATION."
   (format "%s-%s-link" profile generation))
+
+(defun guix-generation-file-name->profile (file-name)
+  "Return profile file name by generation FILE-NAME.
+Return nil if FILE-NAME does not look like a generation file name."
+  (when (string-match guix-generation-file-name-regexp file-name)
+    (match-string-no-properties 1 file-name)))
 
 (defun guix-profile (profile)
   "Return normalized file name of PROFILE.

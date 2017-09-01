@@ -160,9 +160,23 @@ current profile's GENERATION."
    'guix-generation-info-heading)
   (bui-newline))
 
+(defun guix-generation-info-insert-profile-button (file-name)
+  "Insert 'Profile' button for generation FILE-NAME."
+  (let ((profile (guix-generation-file-name->profile file-name)))
+    (bui-insert-action-button
+     "Profile"
+     (lambda (btn)
+       (bui-get-display-entries
+        'guix-profile 'info
+        (list 'file-name (button-get btn 'file-name))))
+     (format "Show profile '%s'" profile)
+     'file-name profile)))
+
 (defun guix-generation-info-insert-buttons (entry)
   "Insert some buttons for generation ENTRY at point."
   (let ((file-name (bui-entry-non-void-value entry 'file-name)))
+    (guix-generation-info-insert-profile-button file-name)
+    (bui-insert-indent)
     (guix-profile-info-insert-search-paths-button file-name)
     (bui-newline)))
 
