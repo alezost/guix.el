@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This document describes Emacs-Guix, the Emacs interface for the
+https://www.gnu.org/software/guix/ (GNU Guix) package manager.
+
+Copyright (C) 2014-2017 Alex Kost
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is available at
+http://www.gnu.org/licenses/fdl.html.
+ -->
+<!-- Created by GNU Texinfo 6.3, http://www.gnu.org/software/texinfo/ -->
+<head>
+<title>Emacs-Guix Reference Manual: Development</title>
+
+<meta name="description" content="Emacs-Guix Reference Manual: Development">
+<meta name="keywords" content="Emacs-Guix Reference Manual: Development">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Hydra.html#Hydra" rel="next" title="Hydra">
+<link href="Completions.html#Completions" rel="prev" title="Completions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="../../../css/manual.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Development"></a>
+<div class="header">
+<p>
+Next: <a href="Hydra.html#Hydra" accesskey="n" rel="next">Hydra</a>, Previous: <a href="Completions.html#Completions" accesskey="p" rel="prev">Completions</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Development-1"></a>
+<h2 class="chapter">10 Development</h2>
+
+<a name="index-guix_002ddevel_002dmode"></a>
+<p>If you often work with Guix package files, you may want to see some
+highlighting and to have some indentation rules specific for Guix
+keywords.  There is a minor mode to help
+you&mdash;<kbd>M-x&nbsp;guix-devel-mode</kbd>.  It can be enabled in Scheme
+buffers like this:
+</p>
+<div class="example">
+<pre class="example">(add-hook 'scheme-mode-hook 'guix-devel-mode)
+</pre></div>
+
+<p>Along with highlighting and indentation, this minor mode provides the
+following key bindings:
+</p>
+<dl compact="compact">
+<dt><kbd>C-c . k</kbd></dt>
+<dd><p>Copy the name of the current Guile module into kill ring
+(<code>guix-devel-copy-module-as-kill</code>).
+</p>
+</dd>
+<dt><kbd>C-c . u</kbd></dt>
+<dd><p>Use the current Guile module.  Often after opening a Scheme file, you
+want to use a module it defines, so you switch to the Geiser REPL and
+write <code>,use (some module)</code> there.  You may just use this command
+instead (<code>guix-devel-use-module</code>).
+</p>
+</dd>
+<dt><kbd>C-c . b</kbd></dt>
+<dd><p>Build a package defined by the current variable definition.  The
+building process is run in the current Geiser REPL.  If you modified the
+current package definition, don&rsquo;t forget to reevaluate it before calling
+this command&mdash;for example, with <kbd>C-M-x</kbd> (see <a href="../geiser/To-eval-or-not-to-eval.html#To-eval-or-not-to-eval">To eval or not to
+eval</a> in <cite>Geiser User Manual</cite>)
+(<code>guix-devel-build-package-definition</code>).
+</p>
+</dd>
+<dt><kbd>C-c . s</kbd></dt>
+<dd><p>Build a source derivation of the package defined by the current
+variable definition.  This command has the same meaning as <code>guix
+build -S</code> shell command (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-build.html#Invoking-guix-build">Invoking guix build</a> in <cite>The GNU
+Guix Reference Manual</cite>) (<code>guix-devel-build-package-source</code>).
+</p>
+</dd>
+<dt><kbd>C-c . d</kbd></dt>
+<dd><p>Download a source of the package defined by the current variable
+definition.  This command is the same as running <code>guix download</code>
+shell command on the package source (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-download.html#Invoking-guix-download">Invoking guix download</a> in <cite>The GNU Guix Reference Manual</cite>)
+(<code>guix-devel-download-package-source</code>).
+</p>
+</dd>
+<dt><kbd>C-c . l</kbd></dt>
+<dd><p>Lint (check) a package defined by the current variable definition
+(see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-lint.html#Invoking-guix-lint">Invoking guix lint</a> in <cite>The GNU Guix Reference Manual</cite>)
+(<code>guix-devel-lint-package</code>).
+</p>
+</dd>
+</dl>
+
+<p>Unluckily, there is a limitation related to long-running REPL commands.
+When there is a running process in a Geiser REPL, you are not supposed
+to evaluate anything in a scheme buffer, because this will &ldquo;freeze&rdquo;
+the REPL: it will stop producing any output (however, the evaluating
+process will continue&mdash;you will just not see any progress anymore).  Be
+aware: even moving the point in a scheme buffer may &ldquo;break&rdquo; the REPL
+if Autodoc (see <a href="../geiser/Autodoc-and-friends.html#Autodoc-and-friends">Autodoc and friends</a> in <cite>Geiser User Manual</cite>)
+is enabled (which is the default).
+</p>
+<p>So you have to postpone editing your scheme buffers until the running
+evaluation will be finished in the REPL.
+</p>
+<p>Alternatively, to avoid this limitation, you may just run another Geiser
+REPL, and while something is being evaluated in the previous REPL, you
+can continue editing a scheme file with the help of the current one.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Hydra.html#Hydra" accesskey="n" rel="next">Hydra</a>, Previous: <a href="Completions.html#Completions" accesskey="p" rel="prev">Completions</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
