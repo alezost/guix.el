@@ -124,8 +124,7 @@ are multiple entries, prompt for a profile name and return it."
 (defun guix-profile-list-hint ()
   (bui-format-hints
    guix-profile-list-default-hint
-   bui-list-sort-hint
-   bui-common-hint))
+   (bui-default-hint)))
 
 (defun guix-profile-list-describe (&rest ids)
   "Describe profiles with IDS (list of identifiers)."
