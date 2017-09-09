@@ -142,6 +142,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-switch-to-buffer
     guix-extended-command
     guix-info
+    guix-help
     (guix-about t nil)
     (guix-version t nil))
   "List of command specifications for '\\[guix-help]'.
