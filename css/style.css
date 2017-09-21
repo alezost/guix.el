@@ -176,6 +176,7 @@ div.example, pre.example {
    border-radius: .3em;
    border: 1px solid #d4cbb6;
    background-color: #f2efe4;
+   box-shadow: 3px 3px 3px #eee;
 }
 div.example > pre.example {
    padding: 0 0 .4em;
