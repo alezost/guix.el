@@ -1551,21 +1551,21 @@ Next: <a href="#Buffer-Names" accesskey="n" rel="next">Buffer Names</a>, Previou
 <a name="index-guix_002dguile_002dprogram"></a>
 </dd>
 <dt><code>guix-guile-program</code></dt>
-<dd><p>If you have some special needs for starting a Guile process, you may set
-this variable, for example:
+<dd><p>If you have some special needs for starting a Guile process, you may
+set this variable.  For example, if you use Guix via
+<samp>pre-inst-env</samp> script (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Running-Guix-Before-It-Is-Installed">Running Guix Before It Is
+Installed</a> in <cite>The GNU Guix Reference Manual</cite>), you may customize
+this variable like this:
 </p>
 <div class="example">
-<pre class="example">(setq guix-guile-program '(&quot;/bin/guile&quot; &quot;--no-auto-compile&quot;))
+<pre class="example">(setq guix-guile-program
+      '(&quot;/path/to/guix/pre-inst-env&quot; &quot;guile&quot; &quot;--no-auto-compile&quot;))
 </pre></div>
 
-<p>If you use Guix via <samp>pre-inst-env</samp> script (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Running-Guix-Before-It-Is-Installed">Running Guix
-Before It Is Installed</a> in <cite>The GNU Guix Reference Manual</cite>), you
-may customize this variable like this:
+<p>Note: <code>--no-auto-compile</code> flag is recommended as auto-compilation
+of a &ldquo;dirty&rdquo; tree may take a very long time and may even lead to
+unpredictable errors.
 </p>
-<div class="example">
-<pre class="example">(setq guix-guile-program '(&quot;/path/to/guix/pre-inst-env&quot; &quot;guile&quot;))
-</pre></div>
-
 <a name="index-guix_002duse_002dsubstitutes"></a>
 </dd>
 <dt><code>guix-use-substitutes</code></dt>
