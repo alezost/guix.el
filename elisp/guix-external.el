@@ -33,8 +33,11 @@
   :group 'guix)
 
 (defcustom guix-guile-program
-  (or guix-config-guile-program
-      (executable-find "guile"))
+  (list (or guix-config-guile-program
+            (executable-find "guile"))
+        ;; Avoid auto-compilation as it is slow and error-prone:
+        ;; <https://notabug.org/alezost/emacs-guix/issues/2>.
+        "--no-auto-compile")
   "Name of the 'guile' executable used for Guix REPL.
 May be either a string (the name of the executable) or a list of
 strings of the form:

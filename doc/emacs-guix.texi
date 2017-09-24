@@ -1177,20 +1177,20 @@ extension of the output file).  This can be done like this:
 
 @vindex guix-guile-program
 @item guix-guile-program
-If you have some special needs for starting a Guile process, you may set
-this variable, for example:
+If you have some special needs for starting a Guile process, you may
+set this variable.  For example, if you use Guix via
+@file{pre-inst-env} script (@pxref{Running Guix Before It Is
+Installed,,, guix, The GNU Guix Reference Manual}), you may customize
+this variable like this:
 
 @example
-(setq guix-guile-program '("/bin/guile" "--no-auto-compile"))
+(setq guix-guile-program
+      '("/path/to/guix/pre-inst-env" "guile" "--no-auto-compile"))
 @end example
 
-If you use Guix via @file{pre-inst-env} script (@pxref{Running Guix
-Before It Is Installed,,, guix, The GNU Guix Reference Manual}), you
-may customize this variable like this:
-
-@example
-(setq guix-guile-program '("/path/to/guix/pre-inst-env" "guile"))
-@end example
+Note: @code{--no-auto-compile} flag is recommended as auto-compilation
+of a ``dirty'' tree may take a very long time and may even lead to
+unpredictable errors.
 
 @vindex guix-use-substitutes
 @item guix-use-substitutes
