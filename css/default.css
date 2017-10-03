@@ -1,6 +1,7 @@
 /* This stylesheet is used by "index.html". */
 
 @import url('style.css');
+@import url('header.css');
 
 table, thead, tbody, colgroup { border: 0; }
 thead { background-color: #e8e8e8; }

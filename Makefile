@@ -17,20 +17,19 @@
 # You should have received a copy of the GNU General Public License
 # along with Emacs-Guix.  If not, see <http://www.gnu.org/licenses/>.
 
-EMACS_BATCH = emacs -Q --batch
+RAW_HTML_DIR = html-raw
 
-HTML_FILES = index.html
+all: html
 
-all: $(HTML_FILES)
+html:
+	@./build-html.scm
+	@find $(RAW_HTML_DIR) -name '*.html' | \
+	  while read file_name; do \
+	    base_name=`basename "$$file_name"`; \
+	    echo "tidying page '$$base_name'"; \
+	    tidy -quiet -indent -output "$$base_name" "$$file_name"; \
+	  done
 
-%.html: %.org
-	$(EMACS_BATCH) $< \
-	  --eval "(setq make-backup-files nil)" \
-	  --funcall org-html-export-to-html
-
-clean:
-	rm -f $(HTML_FILES)
-
-.PHONY: clean
+.PHONY: html
 
 # Makefile ends here
