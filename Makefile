@@ -18,8 +18,16 @@
 # along with Emacs-Guix.  If not, see <http://www.gnu.org/licenses/>.
 
 RAW_HTML_DIR = html-raw
+SCREENSHOTS_DIR = images/screenshots
+THUMBS_DIR = $(SCREENSHOTS_DIR)/thumbs
+SCREENSHOTS = $(notdir $(wildcard $(SCREENSHOTS_DIR)/*.png))
+THUMBS_FILES = $(foreach name, $(SCREENSHOTS), $(THUMBS_DIR)/$(name))
 
 all: html
+thumbs: $(THUMBS_FILES)
+
+$(THUMBS_DIR)/%.png: $(SCREENSHOTS_DIR)/%.png
+	convert $< -thumbnail 320 $@
 
 html:
 	@./build-html.scm
@@ -30,6 +38,6 @@ html:
 	    tidy -quiet -indent -output "$$base_name" "$$file_name"; \
 	  done
 
-.PHONY: html
+.PHONY: thumbs html
 
 # Makefile ends here

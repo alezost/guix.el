@@ -26,7 +26,9 @@
             make-url
             css-url
             manual-url
-            image-url))
+            image-url
+            screenshot-url
+            screenshot-thumb-url))
 
 (define %author-name "Alex Kost")
 (define %guix-url "http://www.gnu.org/software/guix/")
@@ -49,6 +51,12 @@
 
 (define (image-url . url-parts)
   (apply make-url "images" url-parts))
+
+(define (screenshot-url . url-parts)
+  (apply image-url "screenshots" url-parts))
+
+(define (screenshot-thumb-url name)
+  (screenshot-url "thumbs" name))
 
 (define (directory-files directory)
   "Return all file names from DIRECTORY."

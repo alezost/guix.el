@@ -67,6 +67,7 @@ URL-END is the part that prepended to the URL."
 	(div (@ (id "header-name")) "Emacs-Guix")
 	(ul (@ (id "header-links"))
 	    (li (a (@ (href "index.html")) "About"))
-	    (li (a (@ (href "doc.html")) "Documentation")))))
+	    (li (a (@ (href "doc.html")) "Documentation"))
+	    (li (a (@ (href "screenshots.html")) "Screenshots")))))
 
 ;;; shared.scm ends here

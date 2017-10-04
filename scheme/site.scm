@@ -21,6 +21,7 @@
   #:use-module (haunt page)
   #:use-module (site main)
   #:use-module (site doc)
+  #:use-module (site screenshots)
   #:use-module (site utils)
   #:export (build-pages))
 
@@ -39,7 +40,8 @@
   (define pages
     `(("index.html" ,main-page)
       ("doc.html" ,(lambda ()
-                     (doc-page (make-url directory "manual"))))))
+                     (doc-page (make-url directory "manual"))))
+      ("screenshots.html" ,screenshots-page)))
 
   (for-each (match-lambda
               ((name page-maker)

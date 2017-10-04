@@ -1,0 +1,56 @@
+/* This stylesheet is used by the Screenshots gallery. */
+
+/* The code originates from
+   <https://www.w3schools.com/Css/tryit.asp?filename=trycss_image_gallery_responsive>
+*/
+
+@import url('default.css');
+
+div.gallery {
+    border: 2px solid transparent;
+}
+
+div.gallery:hover {
+    border: 2px solid #000;
+}
+
+div.gallery img {
+    width: 100%;
+    height: auto;
+}
+
+div.desc {
+    /* padding: 0px; */
+    text-align: center;
+    height: 30px;
+}
+
+.responsive {
+    margin: 7px 0;
+    float: left;
+    width: 25%;
+}
+
+@media only screen and (max-width: 1000px) {
+    .responsive {
+        width: 33.3%;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .responsive {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .responsive {
+        width: 100%;
+    }
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
