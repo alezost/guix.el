@@ -26,11 +26,19 @@
 
 (define-module (emacs-guix system-generations)
   #:use-module (gnu system)
+  #:use-module (gnu system uuid)
   #:use-module (guix memoization)
   #:use-module (guix profiles)
   #:use-module (emacs-guix generations)
   #:use-module (emacs-guix utils)
   #:export (system-generation-sexps))
+
+(define (device->sexp device)
+  (cond ((string? device) device)
+        ((uuid? device)
+         (uuid->string (uuid-bytevector device) 'dce))
+        ((not device) #f)
+        (else "Unknown device type")))
 
 (define system-generation-boot-parameters
   (mlambda (profile generation)
@@ -48,8 +56,10 @@ PROFILE."
   (append
    (generation-param-alist profile)
    `((label             . ,(accessor boot-parameters-label))
-     (root-device       . ,(accessor boot-parameters-root-device))
-     (store-device      . ,(accessor boot-parameters-store-device))
+     (root-device       . ,(accessor (compose device->sexp
+                                              boot-parameters-root-device)))
+     (store-device      . ,(accessor (compose device->sexp
+                                              boot-parameters-store-device)))
      (store-mount-point . ,(accessor boot-parameters-store-mount-point))
      (bootloader        . ,(accessor boot-parameters-bootloader-name))
      (kernel            . ,(accessor boot-parameters-kernel))
