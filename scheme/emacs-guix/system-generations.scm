@@ -43,8 +43,9 @@
 (define system-generation-boot-parameters
   (mlambda (profile generation)
     "Return boot parameters for PROFILE's system GENERATION."
-    (read-boot-parameters-file
-     (generation-file-name profile generation))))
+    (let* ((gen-file   (generation-file-name profile generation))
+           (param-file (string-append gen-file "/parameters")))
+      (call-with-input-file param-file read-boot-parameters))))
 
 (define (system-generation-param-alist profile)
   "Return an alist of system generation parameters and procedures for
@@ -63,13 +64,7 @@ PROFILE."
      (store-mount-point . ,(accessor boot-parameters-store-mount-point))
      (bootloader        . ,(accessor boot-parameters-bootloader-name))
      (kernel            . ,(accessor boot-parameters-kernel))
-
-     ;; FIXME `read-boot-parameters-file' adds bootable-kernel-arguments
-     ;; to the user arguments.  Since they contain gexps, they are
-     ;; disabled now.  Perhaps it's better to use 'read-boot-parameters'
-     ;; instead.
-
-     ;; (kernel-arguments  . ,(accessor boot-parameters-kernel-arguments))
+     (kernel-arguments  . ,(accessor boot-parameters-kernel-arguments))
      (initrd            . ,(accessor boot-parameters-initrd)))))
 
 (define (system-generation-sexps profile search-type search-values params)
