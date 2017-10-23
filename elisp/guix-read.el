@@ -72,6 +72,31 @@
 
 ;;; Readers
 
+(defcustom guix-read-package-name-function #'guix-read-package-name-default
+  "Function used to read a package name from minibuffer.
+The function is called with 2 strings as arguments: a prompt and
+initial-contents."
+  :type '(choice (function-item guix-read-package-name-default)
+                 (function-item guix-read-package-name-at-point)
+                 (function :tag "Other function"))
+  :group 'guix)
+
+(defun guix-read-package-name-at-point (&optional prompt initial-contents)
+  "Read symbol at point and if it is a package name, return it.
+If it is not a package name, read it from minibuffer."
+  (let* ((at-point (thing-at-point 'symbol))
+         (name     (and at-point
+                        (substring-no-properties at-point))))
+    (if (and name
+             (member name (guix-package-names)))
+        name
+      (guix-read-package-name-default prompt initial-contents))))
+
+(defun guix-read-package-name (&optional prompt initial-contents)
+  "Read a package name using `guix-read-package-name-function'."
+  (funcall guix-read-package-name-function
+           prompt initial-contents))
+
 (guix-define-readers
  :completions-var guix-help-system-types
  :single-reader guix-read-system-type
@@ -160,7 +185,7 @@
 (guix-define-readers
  :completions-getter guix-package-names
  :require-match nil
- :single-reader guix-read-package-name
+ :single-reader guix-read-package-name-default
  :single-prompt "Package: "
  :multiple-reader guix-read-package-names
  :multiple-prompt "Package,s: "
