@@ -27,6 +27,7 @@
 (require 'guix-repl)
 (require 'guix-read)
 (require 'guix-guile)
+(require 'geiser-base)
 
 (defun guix-package-location (id-or-name)
   "Return location of a package with ID-OR-NAME.
@@ -76,7 +77,9 @@ See `guix-find-location' for the meaning of package location and
 DIRECTORY.
 Interactively, with prefix argument, prompt for DIRECTORY."
   (interactive
-   (list (guix-read-package-name)
+   (list (if (geiser--symbol-at-point)
+             (symbol-name (geiser--symbol-at-point))
+           (guix-read-package-name))
          (guix-read-directory)))
   (let ((loc (guix-package-location id-or-name)))
     (if loc
