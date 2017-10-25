@@ -83,14 +83,18 @@ initial-contents."
 
 (defun guix-read-package-name-at-point (&optional prompt initial-contents)
   "Read symbol at point and if it is a package name, return it.
-If it is not a package name, read it from minibuffer."
-  (let* ((at-point (thing-at-point 'symbol))
-         (name     (and at-point
-                        (substring-no-properties at-point))))
-    (if (and name
-             (member name (guix-package-names)))
-        name
-      (guix-read-package-name-default prompt initial-contents))))
+If it is not a package name or if current command has a prefix
+argument, read the name from minibuffer."
+  (if current-prefix-arg
+      (guix-read-package-name-default prompt initial-contents)
+    (let* ((at-point (thing-at-point 'symbol))
+           (name     (and at-point
+                          (substring-no-properties at-point))))
+      (if (and name
+               (member name (guix-package-names)))
+          name
+        (guix-read-package-name-default prompt
+                                        initial-contents)))))
 
 (defun guix-read-package-name (&optional prompt initial-contents)
   "Read a package name using `guix-read-package-name-function'."
