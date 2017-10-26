@@ -69,6 +69,7 @@ EL_FILES =					\
   %D%/guix-hydra-build.el			\
   %D%/guix-hydra-jobset.el			\
   %D%/guix-graph.el				\
+  %D%/guix-derivation.el			\
   %D%/guix-license.el				\
   %D%/guix-location.el				\
   %D%/guix-package.el				\
