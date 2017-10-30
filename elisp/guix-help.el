@@ -28,12 +28,23 @@
 (require 'guix nil t)
 (require 'guix-utils)
 
+(defcustom guix-info-path ""
+  "Path to the Guix Info file."
+  :type 'string
+  :group 'guix-help)
+
+(defcustom emacs-guix-info-path ""
+  "Path to the Guix Emacs Info file."
+  :type 'string
+  :group 'guix-help)
+
 ;;;###autoload
 (defun guix-info (&optional arg)
   "Show Emacs-Guix info manual.
 If ARG is non-nil (interactively with prefix), show Guix info manual."
   (interactive "P")
-  (info (if arg "guix" "emacs-guix")))
+  (info (if arg (or guix-info-path "guix")
+          (or emacs-guix-info-path "emacs-guix"))))
 
 
 ;;; "Help" buffer
