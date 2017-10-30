@@ -28,12 +28,12 @@
 (require 'guix nil t)
 (require 'guix-utils)
 
-(defcustom guix-info-path ""
+(defcustom guix-info-path nil
   "Path to the Guix Info file."
   :type 'string
   :group 'guix-help)
 
-(defcustom emacs-guix-info-path ""
+(defcustom emacs-guix-info-path nil
   "Path to the Guix Emacs Info file."
   :type 'string
   :group 'guix-help)
