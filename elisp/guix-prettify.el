@@ -86,10 +86,10 @@ disabling `guix-prettify-mode' a little faster."
   ;; http://hydra.gnu.org/log/fjbx25bap58k3mywzpmc8w9fjdydxqv8-foo-0.1
   ;; https://bayfront.guixsd.org/nar/gzip/m4ccn9nzlsbvlj36w45555pq98spy007-foo-0.1
 
-  (rx "/" (or "store" "log" (and "nar" (zero-or-one "/gzip")))
-      ;; Hash-parts do not include "e", "o", "u" and "t".  See base32Chars
-      ;; at <https://github.com/NixOS/nix/blob/master/src/libutil/hash.cc>
-      "/" (group (= 32 (any "0-9" "a-d" "f-n" "p-s" "v-z"))))
+  (rx-to-string `(and "/" (or "store" "log"
+                              (and "nar" (zero-or-one "/gzip")))
+                      "/" (group (regexp ,guix-hash-regexp)))
+                t)
   "Regexp matching file names for prettifying.
 
 Disable `guix-prettify-mode' before modifying this variable and

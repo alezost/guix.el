@@ -32,11 +32,9 @@
   :group  'guix)
 
 (defcustom guix-derivation-file-regexp
-  (rx "/gnu/store/"
-      ;; Hash-parts do not include "e", "o", "u" and "t".  See base32Chars
-      ;; at <https://github.com/NixOS/nix/blob/master/src/libutil/hash.cc>
-      (= 32 (any "0-9" "a-d" "f-n" "p-s" "v-z"))
-      (* (any "-_+." alnum)) ".drv")
+  (rx-to-string `(and "/gnu/store/" (regexp ,guix-hash-regexp)
+                      (+ (any "-_+." alnum)) ".drv")
+                t)
   "Regexp matching Guix derivation file name."
   :type  'regexp
   :group 'guix-derivation)

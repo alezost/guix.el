@@ -28,6 +28,12 @@
 (require 'bui-utils)
 (require 'guix nil t)
 
+(defvar guix-hash-regexp
+  ;; Hash-parts do not include "e", "o", "u" and "t".  See base32Chars
+  ;; at <https://github.com/NixOS/nix/blob/master/src/libutil/hash.cc>
+  (rx (= 32 (any "0-9" "a-d" "f-n" "p-s" "v-z")))
+  "Regexp matching hash part of a store file name.")
+
 (defun guix-guixsd? ()
   "Return non-nil, if current system is GuixSD."
   (file-exists-p "/run/current-system"))
