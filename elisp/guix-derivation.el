@@ -1,6 +1,7 @@
 ;;; guix-derivation.el --- Guix derivation mode
 
 ;; Copyright © 2017 Oleg Pykhalov <go.wigust@gmail.com>
+;; Copyright © 2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -51,9 +52,9 @@
 (defun guix-derivation-make-buttons ()
   "Create buttons in the current Guix derivation buffer."
   (guix-while-search guix-derivation-file-regexp
-    (make-button (match-beginning 0)
-                 (match-end       0)
-                 :type            'guix-derivation-file)))
+    (make-text-button (match-beginning 0)
+                      (match-end       0)
+                      :type            'guix-derivation-file)))
 
 (defvar guix-derivation-mode-map
   (let ((map (make-sparse-keymap)))
@@ -67,8 +68,8 @@
   "Major mode for viewing Guix derivations.
 
 \\{guix-derivation-mode-map}"
-  (guix-derivation-make-buttons)
   (let ((inhibit-read-only t))
+    (guix-derivation-make-buttons)
     (guix-pretty-print-buffer (current-buffer)))
   (set-buffer-modified-p nil))
 
