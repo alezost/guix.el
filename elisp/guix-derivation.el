@@ -28,9 +28,19 @@
 (require 'guix-utils)
 
 (defgroup guix-derivation nil
-  "Guix derivations."
+  "Settings for `guix-derivation-mode'."
   :prefix "guix-derivation-"
   :group  'guix)
+
+(defgroup guix-derivation-faces nil
+  "Faces for `guix-derivation-mode'."
+  :group 'guix-derivation
+  :group 'guix-faces)
+
+(defface guix-derivation-file-name
+  '((t :inherit link :underline nil))
+  "Face for store file names."
+  :group 'guix-derivation-faces)
 
 (defcustom guix-derivation-file-regexp
   (rx-to-string `(and "/gnu/store/" (regexp ,guix-hash-regexp)
@@ -42,6 +52,8 @@
 
 (define-button-type 'guix-derivation-file
   'follow-link t
+  'face        'guix-derivation-file-name
+  'help-echo   "Visit this file"
   'action      #'guix-derivation-button)
 
 (defun guix-derivation-button (button)
