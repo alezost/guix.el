@@ -68,6 +68,8 @@
   "Major mode for viewing Guix derivations.
 
 \\{guix-derivation-mode-map}"
+  ;; Set `font-lock-defaults' to make `global-guix-prettify-mode' work.
+  (setq font-lock-defaults '(nil t))
   (let ((inhibit-read-only t))
     (guix-derivation-make-buttons)
     (guix-pretty-print-buffer (current-buffer)))
