@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'guix-utils)
 
 (defgroup guix-derivation nil
@@ -42,19 +43,49 @@
   "Face for store file names."
   :group 'guix-derivation-faces)
 
+(defface guix-derivation-drv-file-name
+  '((default :inherit guix-derivation-file-name)
+    (((class color) (background light)) :foreground "SpringGreen4")
+    (((class color) (background dark)) :foreground "SpringGreen3"))
+  "Face for '*.drv' store file names."
+  :group 'guix-derivation-faces)
+
 (defcustom guix-derivation-file-regexp
-  (rx-to-string `(and "/gnu/store/" (regexp ,guix-hash-regexp)
-                      (+ (any "-_+." alnum)) ".drv")
-                t)
+  (rx "\""
+      (group "/gnu/store/" (+ (not (any "\""))))
+      "\"")
   "Regexp matching Guix derivation file name."
   :type  'regexp
   :group 'guix-derivation)
 
+(defcustom guix-derivation-file-regexp-group 1
+  "Regexp group in `guix-derivation-file-regexp'."
+  :type 'integer
+  :group 'guix-derivation)
+
 (define-button-type 'guix-derivation-file
   'follow-link t
-  'face        'guix-derivation-file-name
+  'face        nil
   'help-echo   "Visit this file"
   'action      #'guix-derivation-button)
+
+(defvar guix-derivation-file-name-faces
+  '(("\\.drv\\'" . guix-derivation-drv-file-name))
+  "Alist used to define faces to highlight store file names.
+Each element of the list has a form:
+
+  (REGEXP . FACE)
+
+If any substring of the file name matches REGEXP, this file name
+will be highlighted with FACE.")
+
+(defun guix-derivation-file-name-face (file-name)
+  "Return a face to highlight FILE-NAME.
+See `guix-derivation-file-name-faces'."
+  (or (cdr (cl-find-if (lambda (assoc)
+                         (string-match-p (car assoc) file-name))
+                       guix-derivation-file-name-faces))
+      'guix-derivation-file-name))
 
 (defun guix-derivation-button (button)
   "View file Guix derivation BUTTON."
@@ -64,9 +95,13 @@
 (defun guix-derivation-make-buttons ()
   "Create buttons in the current Guix derivation buffer."
   (guix-while-search guix-derivation-file-regexp
-    (make-text-button (match-beginning 0)
-                      (match-end       0)
-                      :type            'guix-derivation-file)))
+    (let* ((beg    (match-beginning guix-derivation-file-regexp-group))
+           (end    (match-end       guix-derivation-file-regexp-group))
+           (string (substring-no-properties (match-string 1)))
+           (face   (guix-derivation-file-name-face string)))
+      (make-text-button beg end
+                        :type 'guix-derivation-file
+                        'font-lock-face face))))
 
 (defvar guix-derivation-mode-map
   (let ((map (make-sparse-keymap)))
