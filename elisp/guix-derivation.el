@@ -70,7 +70,8 @@
   'action      #'guix-derivation-button)
 
 (defvar guix-derivation-file-name-faces
-  '(("\\.drv\\'" . guix-derivation-drv-file-name))
+  '(("\\.drv\\'" . guix-derivation-drv-file-name)
+    ("" . guix-derivation-file-name))
   "Alist used to define faces to highlight store file names.
 Each element of the list has a form:
 
@@ -82,10 +83,9 @@ will be highlighted with FACE.")
 (defun guix-derivation-file-name-face (file-name)
   "Return a face to highlight FILE-NAME.
 See `guix-derivation-file-name-faces'."
-  (or (cdr (cl-find-if (lambda (assoc)
-                         (string-match-p (car assoc) file-name))
-                       guix-derivation-file-name-faces))
-      'guix-derivation-file-name))
+  (cdr (cl-find-if (lambda (assoc)
+                     (string-match-p (car assoc) file-name))
+                   guix-derivation-file-name-faces)))
 
 (defun guix-derivation-button (button)
   "View file Guix derivation BUTTON."
@@ -99,9 +99,10 @@ See `guix-derivation-file-name-faces'."
            (end    (match-end       guix-derivation-file-regexp-group))
            (string (substring-no-properties (match-string 1)))
            (face   (guix-derivation-file-name-face string)))
-      (make-text-button beg end
-                        :type 'guix-derivation-file
-                        'font-lock-face face))))
+      (apply #'make-text-button
+             beg end
+             :type 'guix-derivation-file
+             (and face `(font-lock-face ,face))))))
 
 (defvar guix-derivation-mode-map
   (let ((map (make-sparse-keymap)))
