@@ -52,6 +52,7 @@ EL_FILES =					\
   %D%/guix.el					\
   %D%/guix-config.el				\
   %D%/guix-utils.el				\
+  %D%/guix-derivation-mode.el			\
   %D%/guix-external.el				\
   %D%/guix-profiles.el				\
   %D%/guix-guile.el				\
