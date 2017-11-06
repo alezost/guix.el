@@ -51,14 +51,12 @@
   :group 'guix-derivation-faces)
 
 (defcustom guix-derivation-file-regexp
-  (rx "\""
-      (group "/gnu/store/" (+ (not (any "\""))))
-      "\"")
+  (rx "/gnu/store/" (+ (not (any "\" "))))
   "Regexp matching Guix derivation file name."
   :type  'regexp
   :group 'guix-derivation)
 
-(defcustom guix-derivation-file-regexp-group 1
+(defcustom guix-derivation-file-regexp-group 0
   "Regexp group in `guix-derivation-file-regexp'."
   :type 'integer
   :group 'guix-derivation)
@@ -97,7 +95,8 @@ See `guix-derivation-file-name-faces'."
   (guix-while-search guix-derivation-file-regexp
     (let* ((beg    (match-beginning guix-derivation-file-regexp-group))
            (end    (match-end       guix-derivation-file-regexp-group))
-           (string (substring-no-properties (match-string 1)))
+           (string (substring-no-properties
+                    (match-string guix-derivation-file-regexp-group)))
            (face   (guix-derivation-file-name-face string)))
       (apply #'make-text-button
              beg end
