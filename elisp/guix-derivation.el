@@ -118,8 +118,8 @@ See `guix-derivation-file-name-faces'."
   ;; Set `font-lock-defaults' to make `global-guix-prettify-mode' work.
   (setq font-lock-defaults '(nil t))
   (let ((inhibit-read-only t))
-    (guix-derivation-make-buttons)
-    (guix-pretty-print-buffer (current-buffer)))
+    (guix-pretty-print-buffer (current-buffer))
+    (guix-derivation-make-buttons))
   (set-buffer-modified-p nil))
 
 ;;;###autoload
