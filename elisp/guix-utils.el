@@ -212,9 +212,9 @@ Press '\\[revert-buffer]' to update this buffer.")))))
                  '((display-buffer-reuse-window
                     display-buffer-same-window))))
 
-(defun guix-pretty-print-buffer (buffer-or-name)
+(defun guix-pretty-print-buffer (&optional buffer-or-name)
   "Pretty-print the contents of BUFFER-OR-NAME."
-  (with-current-buffer buffer-or-name
+  (with-current-buffer (or buffer-or-name (current-buffer))
     (goto-char (point-max))
     (let (sexp-beg)
       (while (setq sexp-beg (scan-sexps (point) -1))
