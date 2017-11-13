@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'guix-config)
 (require 'guix-utils)
 
 (defgroup guix-derivation nil
@@ -51,7 +52,9 @@
   :group 'guix-derivation-faces)
 
 (defcustom guix-derivation-file-regexp
-  (rx "/gnu/store/" (+ (not (any "\" "))))
+  (rx-to-string `(and ,guix-store-directory "/"
+                      (+ (not (any "\" "))))
+                t)
   "Regexp matching Guix derivation file name."
   :type  'regexp
   :group 'guix-derivation)

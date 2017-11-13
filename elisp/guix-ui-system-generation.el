@@ -27,12 +27,19 @@
 (require 'cl-lib)
 (require 'bui)
 (require 'guix nil t)
+(require 'guix-config)
 (require 'guix-ui)
 (require 'guix-ui-generation)
 (require 'guix-utils)
 (require 'guix-profiles)
 
 (guix-ui-define-entry-type system-generation)
+
+(defvar guix-system-generation-shepherd-config-regexp
+  (rx-to-string `(and ,guix-store-directory "/"
+                      (+ alnum) "-shepherd.conf")
+                t)
+  "Regexp matching 'shepherd.conf' file placed in the store.")
 
 (defun guix-system-generation-add-kernel-config (entry)
   "Return ENTRY with 'kernel-config' parameter."
@@ -53,8 +60,7 @@
     (with-temp-buffer
       (insert-file-contents-literally boot-file)
       (goto-char (point-min))
-      (if (re-search-forward (rx "/gnu/store/" (+ alnum)
-                                 "-shepherd.conf")
+      (if (re-search-forward guix-system-generation-shepherd-config-regexp
                              nil t)
           `((shepherd-config . ,(match-string 0))
             ,@entry)

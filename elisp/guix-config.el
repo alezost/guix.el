@@ -1,6 +1,6 @@
 ;;; guix-config.el --- Configuration variables
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -88,6 +88,13 @@ to a proper value, if you configure your Guix with a non-standard
 --localstatedir option.  See Info node `(guix) Invoking guix
 package' and other nodes for the meaning of --localstatedir
 configure option.")
+
+(defvar guix-store-directory "/gnu/store"
+  "Name of the Guix store directory.
+See Info node `(guix) The Store'.
+
+This string is used in various regular expressions and it
+shouldn't end with a trailing slash.")
 
 (provide 'guix-config)
 
