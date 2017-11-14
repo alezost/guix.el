@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'guix-config)
+(require 'guix-auto-mode)  ; for `guix-store-directory'
 (require 'guix-utils)
 
 (defgroup guix-derivation nil
@@ -124,9 +124,6 @@ See `guix-derivation-file-name-faces'."
     (guix-pretty-print-buffer)
     (guix-derivation-make-buttons))
   (set-buffer-modified-p nil))
-
-;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.drv\\'" . guix-derivation-mode))
 
 (provide 'guix-derivation)
 

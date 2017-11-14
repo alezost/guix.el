@@ -89,13 +89,6 @@ to a proper value, if you configure your Guix with a non-standard
 package' and other nodes for the meaning of --localstatedir
 configure option.")
 
-(defvar guix-store-directory "/gnu/store"
-  "Name of the Guix store directory.
-See Info node `(guix) The Store'.
-
-This string is used in various regular expressions and it
-shouldn't end with a trailing slash.")
-
 (provide 'guix-config)
 
 ;;; guix-config.el ends here

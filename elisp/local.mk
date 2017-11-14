@@ -51,6 +51,7 @@ AUTOLOADS = %D%/guix-autoloads.el
 EL_FILES =					\
   %D%/guix.el					\
   %D%/guix-config.el				\
+  %D%/guix-auto-mode.el				\
   %D%/guix-utils.el				\
   %D%/guix-external.el				\
   %D%/guix-profiles.el				\

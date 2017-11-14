@@ -27,7 +27,7 @@
 (require 'cl-lib)
 (require 'bui)
 (require 'guix nil t)
-(require 'guix-config)
+(require 'guix-auto-mode)  ; for `guix-store-directory'
 (require 'guix-ui)
 (require 'guix-ui-generation)
 (require 'guix-utils)

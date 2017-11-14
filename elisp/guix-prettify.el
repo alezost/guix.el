@@ -48,6 +48,7 @@
 ;;; Code:
 
 (require 'guix nil t)
+(require 'guix-auto-mode)  ; for `guix-hash-regexp'
 (require 'guix-utils)
 
 (defgroup guix-prettify nil

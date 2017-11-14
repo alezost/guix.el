@@ -353,13 +353,6 @@ programmatically using hooks, like this:
   (guix-find-file-or-url file-or-url)
   (guix-build-log-mode))
 
-;;;###autoload
-(add-to-list 'auto-mode-alist
-             ;; Regexp for log files (usually placed in /var/log/guix/...)
-             (cons (rx "/guix/drvs/" (= 2 alnum) "/" (= 30 alnum)
-                       "-" (+ (any alnum "-_+.")) ".drv" string-end)
-                   'guix-build-log-mode))
-
 (provide 'guix-build-log)
 
 ;;; guix-build-log.el ends here
