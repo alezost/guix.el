@@ -206,17 +206,27 @@ Press '\\[revert-buffer]' to update this buffer.")))))
                  '((display-buffer-reuse-window
                     display-buffer-same-window))))
 
-(defun guix-pretty-print-buffer (&optional buffer-or-name)
-  "Pretty-print the contents of BUFFER-OR-NAME."
-  (with-current-buffer (or buffer-or-name (current-buffer))
-    (goto-char (point-max))
-    (let (sexp-beg)
-      (while (setq sexp-beg (scan-sexps (point) -1))
-        (goto-char sexp-beg)
-        (delete-horizontal-space t)
-        (unless (= (point) (line-beginning-position))
-          (insert "\n"))
-        (indent-pp-sexp 'pp)))))
+(cl-defun guix-pretty-print-buffer
+    (&optional buffer-or-name
+     &key (modified-flag nil modified-flag-bound?))
+  "Pretty-print the contents of BUFFER-OR-NAME.
+MODIFIED-FLAG defines if the buffer should marked as modified or
+unmodified.  If this flag is not set, the modification status
+of the buffer stays unchanged (as it was before prettifying)."
+  (let ((modified? (buffer-modified-p))
+        (inhibit-read-only t))
+    (with-current-buffer (or buffer-or-name (current-buffer))
+      (goto-char (point-max))
+      (let (sexp-beg)
+        (while (setq sexp-beg (scan-sexps (point) -1))
+          (goto-char sexp-beg)
+          (delete-horizontal-space t)
+          (unless (= (point) (line-beginning-position))
+            (insert "\n"))
+          (indent-pp-sexp 'pp)))
+      (set-buffer-modified-p (if modified-flag-bound?
+                                 modified-flag
+                               modified?)))))
 
 (defun guix-pretty-print-file (file-name &optional mode)
   "Show FILE-NAME contents in MODE and pretty-print it.

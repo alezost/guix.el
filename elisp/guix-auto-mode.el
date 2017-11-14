@@ -56,7 +56,22 @@ shouldn't end with a trailing slash.")
         (,(rx-to-string `(and ,guix-store-directory "/"
                               (regexp ,chars-rx) ".drv" string-end)
                         t)
-         . guix-derivation-mode))
+         . guix-derivation-mode)
+        (,(rx-to-string
+           `(and "/guix/profiles/system" (* (regexp ,chars-rx)) "/"
+                 (or "boot" "parameters")
+                 string-end)
+           t)
+         . guix-scheme-mode)
+        (,(rx-to-string
+           `(and ,guix-store-directory "/" (regexp ,guix-hash-regexp) "-"
+                 (or "activate" "activate-service" "boot" "parameters"
+                     "shepherd.conf"
+                     (and "shepherd" (regexp ,chars-rx) ".scm")
+                     (and (regexp ,chars-rx) "-guile-builder"))
+                 string-end)
+           t)
+         . guix-scheme-mode))
       auto-mode-alist))))
 
 (provide 'guix-auto-mode)
