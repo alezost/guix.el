@@ -249,6 +249,7 @@ ENTRIES is a list of package entries to get info about packages."
   :get-entries-function 'guix-package-info-get-entries
   :format '(guix-package-info-insert-heading
             nil
+            guix-package-info-insert-additional-text
             (synopsis nil (simple guix-package-info-synopsis))
             nil
             (description nil (simple guix-package-info-description))
@@ -406,7 +407,7 @@ Each function is called with 2 arguments: package ID and full name."
 It should be a '%s'-sequence.  After inserting an output name
 formatted with this string, an action button is inserted.")
 
-(defvar guix-package-info-obsolete-string "(This package is obsolete)"
+(defvar guix-package-info-obsolete-string "This package is obsolete"
   "String used if a package is obsolete.")
 
 (define-button-type 'guix-package-location
@@ -528,29 +529,31 @@ Face name is `guix-package-info-TYPE-inputs'."
 
 (defun guix-package-info-insert-outputs (outputs entry)
   "Insert OUTPUTS from package ENTRY at point."
-  (and (bui-entry-non-void-value entry 'obsolete)
-       (guix-package-info-insert-obsolete-text))
-  (and (bui-entry-non-void-value entry 'non-unique)
-       (bui-entry-non-void-value entry 'installed)
-       (guix-package-info-insert-non-unique-text
-        (guix-package-entry->name-specification entry)))
   (bui-newline)
   (dolist (output outputs)
     (guix-package-info-insert-output output entry)))
 
+(defun guix-package-info-insert-additional-text (entry)
+  "Insert some additional info for package ENTRY at point."
+  (if (bui-entry-non-void-value entry 'obsolete)
+      (guix-package-info-insert-obsolete-text)
+    (when (bui-entry-non-void-value entry 'non-unique)
+      (guix-package-info-insert-non-unique-text
+       (guix-package-entry->name-specification entry))
+      (bui-newline))))
+
 (defun guix-package-info-insert-obsolete-text ()
   "Insert a message about obsolete package at point."
-  (bui-insert-indent)
   (bui-format-insert guix-package-info-obsolete-string
-                     'guix-package-info-obsolete))
+                     'guix-package-info-obsolete)
+  (bui-newline))
 
 (defun guix-package-info-insert-non-unique-text (full-name)
   "Insert a message about non-unique package with FULL-NAME at point."
-  (bui-newline)
-  (bui-insert-indent)
   (insert "Installed outputs are displayed for a non-unique ")
   (bui-insert-button full-name 'guix-package-name)
-  (insert " package."))
+  (insert " package.")
+  (bui-newline))
 
 (defun guix-package-info-insert-output (output entry)
   "Insert OUTPUT at point.
