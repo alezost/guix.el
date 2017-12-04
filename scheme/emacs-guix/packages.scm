@@ -87,12 +87,19 @@ return two values: name and version.  For example, for SPEC
   (string-append name "@" version))
 
 (define* (make-package-specification name #:optional version output)
+  "Convert NAME, VERSION and OUTPUT to a package specification string."
   (let ((full-name (if version
                        (name+version->full-name name version)
                        name)))
     (if output
         (string-append full-name ":" output)
         full-name)))
+
+(define* (package->specification package #:optional output)
+  "Convert PACKAGE object to a package specification string."
+  (make-package-specification (package-name package)
+                              (package-version package)
+                              output))
 
 (define (manifest-entry->package-specification entry)
   (call-with-values
@@ -139,14 +146,11 @@ and not installed in PROFILE2."
 (define (package-inputs-names inputs)
   "Return a list of full names of the packages from package INPUTS."
   (filter-map (match-lambda
-               ((_ (? package? package))
-                (make-package-specification (package-name package)
-                                            (package-version package)))
-               ((_ (? package? package) output)
-                (make-package-specification (package-name package)
-                                            (package-version package)
-                                            output))
-               (_ #f))
+                ((_ (? package? package))
+                 (package->specification package))
+                ((_ (? package? package) output)
+                 (package->specification package output))
+                (_ #f))
               inputs))
 
 (define (package-license-names package)
