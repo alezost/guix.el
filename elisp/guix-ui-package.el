@@ -268,7 +268,7 @@ ENTRIES is a list of package entries to get info about packages."
   :hint 'guix-package-info-hint
   :titles '((home-url . "Home page")
             (systems . "Supported systems"))
-  :required '(id name version installed non-unique))
+  :required '(id name version installed non-unique superseded))
 
 (bui-define-interface guix-installed-output info
   :format '((file-name simple guix-installed-output-info-insert-file-name)
@@ -364,6 +364,11 @@ ENTRIES is a list of package entries to get info about packages."
 (defface guix-package-info-obsolete
   '((t :inherit error))
   "Face used if a package is obsolete."
+  :group 'guix-package-info-faces)
+
+(defface guix-package-info-superseded
+  '((t :inherit shadow))
+  "Face used for superseded packages."
   :group 'guix-package-info-faces)
 
 (defcustom guix-package-info-auto-find-package t
@@ -540,6 +545,9 @@ Face name is `guix-package-info-TYPE-inputs'."
     (when (bui-entry-non-void-value entry 'non-unique)
       (guix-package-info-insert-non-unique-text
        (guix-package-entry->name-specification entry))
+      (bui-newline))
+    (--when-let (bui-entry-non-void-value entry 'superseded)
+      (guix-package-info-insert-superseded-text it)
       (bui-newline))))
 
 (defun guix-package-info-insert-obsolete-text ()
@@ -551,6 +559,15 @@ Face name is `guix-package-info-TYPE-inputs'."
 (defun guix-package-info-insert-non-unique-text (full-name)
   "Insert a message about non-unique package with FULL-NAME at point."
   (insert "Installed outputs are displayed for a non-unique ")
+  (bui-insert-button full-name 'guix-package-name)
+  (insert " package.")
+  (bui-newline))
+
+(defun guix-package-info-insert-superseded-text (full-name)
+  "Insert a message that current package is superseded by FULL-NAME."
+  (insert "This package is ")
+  (bui-format-insert "superseded" 'guix-package-info-superseded)
+  (insert " by ")
   (bui-insert-button full-name 'guix-package-name)
   (insert " package.")
   (bui-newline))
@@ -912,6 +929,7 @@ more than one)."
             (outputs nil 13 t)
             (installed guix-package-list-get-installed-outputs 13 t)
             (synopsis bui-list-get-one-line 30 nil))
+  :required '(id superseded)
   :hint 'guix-package-list-hint
   :sort-key '(name)
   :marks '((install . ?I)
@@ -938,6 +956,12 @@ more than one)."
 (defface guix-package-list-obsolete
   '((t :inherit guix-package-info-obsolete))
   "Face used if a package is obsolete."
+  :group 'guix-package-list-faces)
+
+(defface guix-package-list-superseded
+  '((t :inherit guix-package-info-superseded))
+  "Face used for superseded packages.
+See `guix-package-info-superseded' face for details."
   :group 'guix-package-list-faces)
 
 (defcustom guix-package-list-generation-marking-enabled nil
@@ -991,6 +1015,8 @@ Colorize it with `guix-package-list-installed' or
    name
    (cond ((bui-entry-non-void-value entry 'obsolete)
           'guix-package-list-obsolete)
+         ((bui-entry-non-void-value entry 'superseded)
+          'guix-package-list-superseded)
          ((bui-entry-non-void-value entry 'installed)
           'guix-package-list-installed))))
 
@@ -1184,7 +1210,7 @@ for all ARGS."
             (output nil 9 t)
             (installed nil 12 t)
             (synopsis bui-list-get-one-line 30 nil))
-  :required '(id package-id)
+  :required '(id package-id superseded)
   :hint 'guix-output-list-hint
   :sort-key '(name)
   :marks '((install . ?I)

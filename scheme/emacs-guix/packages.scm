@@ -192,6 +192,9 @@ and not installed in PROFILE2."
     (outputs           . ,package-outputs)
     (systems           . ,package-supported-systems)
     (non-unique        . ,(negate package-unique?))
+    (superseded        . ,(lambda (pkg)
+                            (and=> (package-superseded pkg)
+                                   package->specification)))
     (inputs            . ,(lambda (pkg)
                             (package-inputs-names
                              (package-inputs pkg))))
