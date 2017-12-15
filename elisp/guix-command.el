@@ -310,6 +310,8 @@ to be modified."
   '(("disk-image"  :char ?D)
     ("vm-image"    :char ?V)
     ("roll-back"   :char ?R)
+    ("search"      :char ?s)
+    ("shepherd-graph" :char ?h)
     ("switch-generation" :char ?S)
     ("--on-error"  :char ?E)
     ("--no-bootloader" :char ?B)
@@ -459,6 +461,8 @@ to be modified."
         (argument :doc "[Args...]"))
        ((string= command "gc")
         (argument :doc "Paths" :fun 'guix-read-file-name))
+       ((equal commands '("system" "search"))
+        (argument :doc "Regexp"))
        ((member command '("hash" "system"))
         (argument :doc "File" :fun 'guix-read-file-name))
        ((string= command "size")
@@ -505,13 +509,22 @@ commands.")
   (let ((command (car commands)))
     (if (member command
                 guix-command-complex-with-shared-arguments)
-        ;; Take actions only for 'guix system', and switches+options for
-        ;; 'guix system foo'.
-        (funcall (if (null (cdr commands))
-                     #'cl-remove-if-not
-                   #'cl-remove-if)
-                 #'guix-command-argument-action?
-                 (guix-command-all-arguments-memoize (list command)))
+        ;; XXX 'guix system' is a messy command: some of its
+        ;; sub-commands share all common options, some sub-commands
+        ;; share only several options and have some unique ones, and
+        ;; some sub-commands don't have any options at all.  But 'guix
+        ;; system [foo] -h' shows all the system options for all
+        ;; sub-commands.  Hopefully, it will be fixed one day.  Until
+        ;; then we have to make some workarounds here.  The main is:
+        ;; take actions (sub-commands) only for 'guix system', and
+        ;; switches+options for 'guix system foo'.
+        (if (equal commands '("system" "search"))
+            (guix-command-additional-arguments commands)
+          (funcall (if (null (cdr commands))
+                       #'cl-remove-if-not
+                     #'cl-remove-if)
+                   #'guix-command-argument-action?
+                   (guix-command-all-arguments-memoize (list command))))
       (guix-command-all-arguments commands))))
 
 (defun guix-command-switch->popup-switch (switch)
