@@ -113,7 +113,7 @@ argument, read the name from minibuffer."
 
 (guix-define-readers
  :completions-var guix-help-hash-formats
- :default "nix-base32"
+ :default guix-default-hash-format
  :single-reader guix-read-hash-format
  :single-prompt "Hash format: ")
 
@@ -130,13 +130,13 @@ argument, read the name from minibuffer."
 
 (guix-define-readers
  :completions-var guix-help-key-policies
- :default "interactive"
+ :default guix-default-key-policy
  :single-reader guix-read-key-policy
  :single-prompt "Key policy: ")
 
 (guix-define-readers
  :completions-var guix-help-elpa-archives
- :default "gnu"
+ :default guix-default-elpa-archive
  :single-reader guix-read-elpa-archive
  :single-prompt "ELPA archive: ")
 
@@ -148,25 +148,25 @@ argument, read the name from minibuffer."
 
 (guix-define-readers
  :completions-var guix-help-size-sort-keys
- :default "closure"
+ :default guix-default-size-sort-key
  :single-reader guix-read-size-sort-key
  :single-prompt "Sort key: ")
 
 (guix-define-readers
  :completions-var guix-help-search-paths-types
- :default "exact"
+ :default guix-default-search-paths-type
  :single-reader guix-read-search-paths-type
  :single-prompt "Search paths type: ")
 
 (guix-define-readers
  :completions-getter guix-graph-backend-names
- :default "graphviz"
+ :default guix-default-graph-backend
  :single-reader guix-read-graph-backend
  :single-prompt "Graph backend: ")
 
 (guix-define-readers
  :completions-getter guix-graph-node-type-names
- :default "package"
+ :default guix-default-graph-node-type
  :single-reader guix-read-graph-node-type
  :single-prompt "Graph node type: ")
 

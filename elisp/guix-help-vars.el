@@ -109,7 +109,38 @@ options.")
 
 (defvar guix-help-search-paths-types
   '("exact" "prefix" "suffix")
-  "List of supported sort types for 'guix package --search-paths' command.")
+  "List of supported search-paths types for 'guix package' command.")
+
+
+;;; Default values of various options
+
+(defvar guix-default-hash-format
+  "nix-base32"
+  "Default format for 'guix hash' command.")
+
+(defvar guix-default-key-policy
+  "interactive"
+  "Default key download policy used by 'guix refresh' command.")
+
+(defvar guix-default-elpa-archive
+  "gnu"
+  "Default ELPA archive for 'guix import elpa' command.")
+
+(defvar guix-default-size-sort-key
+  "closure"
+  "Default sort key for 'guix size' command.")
+
+(defvar guix-default-search-paths-type
+  "exact"
+  "Default search-paths type for 'guix package' command.")
+
+(defvar guix-default-graph-backend
+  "graphviz"
+  "Default backend for 'guix graph' command.")
+
+(defvar guix-default-graph-node-type
+  "package"
+  "Default node type for 'guix graph' command.")
 
 (provide 'guix-help-vars)
 
