@@ -30,7 +30,7 @@
 
 ;; Since name/version pair is not necessarily unique, we use
 ;; 'object-address' to identify a package (for 'id' parameter), if
-;; possible.  However for the obsolete packages (that can be found in
+;; possible.  However for the unknown packages (that can be found in
 ;; installed manifest but not in a package directory), 'id' parameter is
 ;; still "name-version" string.  So 'id' package parameter in the code
 ;; below is either an object-address number or a full-name string.
@@ -179,6 +179,22 @@ and not installed in PROFILE2."
     ((package) #t)
     (_ #f)))
 
+(define (package-known-status name version)
+  "Return 'known status' of a package with NAME and VERSION.
+The result is one of the following symbols:
+
+  'known' - the package exists;
+  'unknown' - the package does not exist;
+  'obsolete' - the package NAME exists but has a newer version;
+  'future' - the package NAME exists but has an older version."
+  (let ((package (package-by-id-or-name name)))
+    (if package
+        (case (version-compare version (package-version package))
+          ((<) 'obsolete)
+          ((>) 'future)
+          (else 'known))
+        'unknown)))
+
 (define %package-param-alist
   `((id                . ,object-address)
     (package-id        . ,object-address)
@@ -192,6 +208,7 @@ and not installed in PROFILE2."
     (outputs           . ,package-outputs)
     (systems           . ,package-supported-systems)
     (non-unique        . ,(negate package-unique?))
+    (known-status      . ,(const 'known))
     (superseded        . ,(lambda (pkg)
                             (and=> (package-superseded pkg)
                                    package->specification)))
@@ -398,62 +415,62 @@ ID should be '<package-address>:<output>' or '<name>-<version>:<output>'."
 (define (ids->output-patterns . ids)
   (map id->output-pattern ids))
 
-(define* (manifest-patterns-result packages res obsolete-pattern
+(define* (manifest-patterns-result packages res unknown-pattern
                                    #:optional installed-pattern)
   "Auxiliary procedure for 'manifest-package-patterns' and
 'manifest-output-patterns'."
   (if (null? packages)
-      (cons (obsolete-pattern) res)
+      (cons (unknown-pattern) res)
       (if installed-pattern
           ;; We don't need duplicates for a list of installed packages,
           ;; so just take any (car) package.
           (cons (installed-pattern (car packages)) res)
           res)))
 
-(define* (manifest-package-patterns manifest #:optional obsolete-only?)
+(define* (manifest-package-patterns manifest #:optional unknown-only?)
   "Return a list of package patterns for MANIFEST entries.
-If OBSOLETE-ONLY? is #f, use all entries, otherwise make patterns only
-for obsolete packages."
+If UNKNOWN-ONLY? is #f, use all entries, otherwise make patterns only
+for unknown packages."
   (fold-manifest-by-name
    manifest
    (lambda (name version entries res)
      (manifest-patterns-result (packages-by-name name version)
                                res
                                (lambda () (list name version entries))
-                               (and (not obsolete-only?)
+                               (and (not unknown-only?)
                                     (cut list <> entries))))
    '()))
 
-(define* (manifest-output-patterns manifest #:optional obsolete-only?)
+(define* (manifest-output-patterns manifest #:optional unknown-only?)
   "Return a list of output patterns for MANIFEST entries.
-If OBSOLETE-ONLY? is #f, use all entries, otherwise make patterns only
-for obsolete packages."
+If UNKNOWN-ONLY? is #f, use all entries, otherwise make patterns only
+for unknown packages."
   (fold (lambda (entry res)
           (manifest-patterns-result (manifest-entry->packages entry)
                                     res
                                     (lambda () entry)
-                                    (and (not obsolete-only?)
+                                    (and (not unknown-only?)
                                          (cut list <> entry))))
         '()
         (manifest-entries manifest)))
 
-(define (obsolete-package-patterns manifest)
+(define (unknown-package-patterns manifest)
   (manifest-package-patterns manifest #t))
 
-(define (obsolete-output-patterns manifest)
+(define (unknown-output-patterns manifest)
   (manifest-output-patterns manifest #t))
 
 
 ;;; Transforming package/output patterns into alists.
 
-(define (obsolete-package-sexp name version entries)
-  "Return an alist with information about obsolete package.
+(define (unknown-package-sexp name version entries)
+  "Return an alist with information about unknown package.
 ENTRIES is a list of installed manifest entries."
   `((id        . ,(name+version->full-name name version))
     (name      . ,name)
     (version   . ,version)
     (outputs   . ,(map manifest-entry-output entries))
-    (obsolete  . #t)
+    (known-status . ,(package-known-status name version))
     (installed . ,(manifest-entries->sexps entries))))
 
 (define (package-pattern-transformer manifest params)
@@ -476,7 +493,7 @@ ENTRIES is a list of installed manifest entries."
       (((? package? package) entries)
        (list (sexp-by-package package entries)))
       ((name version entries)
-       (list (obsolete-package-sexp
+       (list (unknown-package-sexp
               name version entries)))
       ((name version)
        (let ((packages (packages-by-name name version)))
@@ -485,7 +502,7 @@ ENTRIES is a list of installed manifest entries."
                              manifest name version)))
                (if (null? entries)
                    '()
-                   (list (obsolete-package-sexp
+                   (list (unknown-package-sexp
                           name version entries))))
              (map sexp-by-package packages))))
       (_ '())))
@@ -514,7 +531,7 @@ ENTRIES is a list of installed manifest entries."
                   (installed . ,(->bool entry)))))
       (append entry-alist base pkg-alist)))
 
-  (define (obsolete-output-sexp entry)
+  (define (unknown-output-sexp entry)
     (let-values (((name version output)
                   (manifest-entry->name+version+output entry)))
       (let ((base `((id         . ,(make-package-specification
@@ -523,7 +540,7 @@ ENTRIES is a list of installed manifest entries."
                     (name       . ,name)
                     (version    . ,version)
                     (output     . ,output)
-                    (obsolete   . #t)
+                    (known-status . ,(package-known-status name version))
                     (installed  . #t))))
         (append (manifest-entry->sexp entry) base))))
 
@@ -547,7 +564,7 @@ ENTRIES is a list of installed manifest entries."
                                     (packages (manifest-entry->packages
                                                entry)))
     (if (null? packages)
-        (list (obsolete-output-sexp entry))
+        (list (unknown-output-sexp entry))
         (map (lambda (package)
                (output-sexp (package->sexp package)
                             (object-address package)
@@ -562,7 +579,7 @@ ENTRIES is a list of installed manifest entries."
       ((package (? string? output))
        (sexps-by-package package output))
       ((? manifest-entry? entry)
-       (list (obsolete-output-sexp entry)))
+       (list (unknown-output-sexp entry)))
       ((package entry)
        (sexps-by-manifest-entry entry (list package)))
       ((name version output)
@@ -618,7 +635,7 @@ ENTRIES is a list of installed manifest entries."
        (id               . ,(apply-to-rest ids->package-patterns))
        (name             . ,(apply-to-rest specifications->package-patterns))
        (installed        . ,manifest-package-proc)
-       (obsolete         . ,(apply-to-first obsolete-package-patterns))
+       (unknown          . ,(apply-to-first unknown-package-patterns))
        (regexp           . ,regexp-proc)
        (license          . ,license-proc)
        (location         . ,location-proc)
@@ -630,7 +647,7 @@ ENTRIES is a list of installed manifest entries."
        (id               . ,(apply-to-rest ids->output-patterns))
        (name             . ,(apply-to-rest specifications->output-patterns))
        (installed        . ,manifest-output-proc)
-       (obsolete         . ,(apply-to-first obsolete-output-patterns))
+       (unknown          . ,(apply-to-first unknown-output-patterns))
        (regexp           . ,regexp-proc)
        (license          . ,license-proc)
        (location         . ,location-proc)
@@ -650,7 +667,7 @@ ENTRIES is a list of installed manifest entries."
 
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name',
-'regexp', 'all-available', 'newest-available', 'installed', 'obsolete',
+'regexp', 'all-available', 'newest-available', 'installed', 'unknown',
 'license', 'location', 'from-file', 'from-os-file'.
 
 PARAMS is a list of parameters for receiving.  If it is an empty list,

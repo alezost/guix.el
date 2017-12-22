@@ -67,10 +67,11 @@
       (0 "No packages installed in profile '%s'." profile)
       (1 "A single package installed in profile '%s'." profile)
       (many "%d packages installed in profile '%s'." count profile))
-     (obsolete
+     (unknown
       (0 "No obsolete packages in profile '%s'." profile)
-      (1 "A single obsolete package in profile '%s'." profile)
-      (many "%d obsolete packages in profile '%s'." count profile)))
+      (1 "A single obsolete or unknown package in profile '%s'." profile)
+      (many "%d obsolete or unknown packages in profile '%s'."
+            count profile)))
 
     (output
      (id
@@ -111,10 +112,12 @@
       (0 "No package outputs installed in profile '%s'." profile)
       (1 "A single package output installed in profile '%s'." profile)
       (many "%d package outputs installed in profile '%s'." count profile))
-     (obsolete
+     (unknown
       (0 "No obsolete package outputs in profile '%s'." profile)
-      (1 "A single obsolete package output in profile '%s'." profile)
-      (many "%d obsolete package outputs in profile '%s'." count profile))
+      (1 "A single obsolete or unknown package output in profile '%s'."
+         profile)
+      (many "%d obsolete or unknown package outputs in profile '%s'."
+            count profile))
      (profile-diff
       guix-message-outputs-by-diff))
 

@@ -268,7 +268,7 @@ ENTRIES is a list of package entries to get info about packages."
   :hint 'guix-package-info-hint
   :titles '((home-url . "Home page")
             (systems . "Supported systems"))
-  :required '(id name version installed non-unique superseded))
+  :required '(id name version installed non-unique known-status superseded))
 
 (bui-define-interface guix-installed-output info
   :format '((file-name simple guix-installed-output-info-insert-file-name)
@@ -361,9 +361,37 @@ ENTRIES is a list of package entries to get info about packages."
   "Face used for uninstalled outputs of a package."
   :group 'guix-package-info-faces)
 
-(defface guix-package-info-obsolete
+(defface guix-package-info-unknown
   '((t :inherit error))
-  "Face used if a package is obsolete."
+  "Face used for unknown packages.
+'Unknown' means there are no packages with this name among Guix
+packages.  Perhaps you installed this package in the past, and it
+was renamed later."
+  :group 'guix-package-info-faces)
+
+(defface guix-package-info-obsolete
+  '((t :inherit font-lock-warning-face))
+  "Face used for obsolete packages.
+'Obsolete' means there is a Guix package with this name but with
+a newer version (probably it's time to update)."
+  :group 'guix-package-info-faces)
+
+(defface guix-package-info-future
+  '((default :inherit guix-package-info-installed)
+    (((class color) (min-colors 88) (background light))
+     :foreground "RoyalBlue3")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "DeepSkyBlue")
+    (((class color) (min-colors 8))
+     :foreground "blue"))
+  "Face used for packages from the future.
+'From the future' means there is a Guix package with this name
+but with an older version, i.e. the installed package is newer
+than available from Guix!  This is rather unusual, it may happen,
+for example, if you installed a package after 'guix pull' (see
+Info node `(guix) Invoking guix pull') and then you removed the
+pulled directory, so Guix searches for packages in its original
+directory with the old package recipes."
   :group 'guix-package-info-faces)
 
 (defface guix-package-info-superseded
@@ -411,9 +439,6 @@ Each function is called with 2 arguments: package ID and full name."
   "String used to format output names of the packages.
 It should be a '%s'-sequence.  After inserting an output name
 formatted with this string, an action button is inserted.")
-
-(defvar guix-package-info-obsolete-string "This package is obsolete"
-  "String used if a package is obsolete.")
 
 (define-button-type 'guix-package-location
   :supertype 'bui
@@ -540,21 +565,45 @@ Face name is `guix-package-info-TYPE-inputs'."
 
 (defun guix-package-info-insert-additional-text (entry)
   "Insert some additional info for package ENTRY at point."
-  (if (bui-entry-non-void-value entry 'obsolete)
-      (guix-package-info-insert-obsolete-text)
-    (when (bui-entry-non-void-value entry 'non-unique)
-      (guix-package-info-insert-non-unique-text
-       (guix-package-entry->name-specification entry))
-      (bui-newline))
-    (--when-let (bui-entry-non-void-value entry 'superseded)
-      (guix-package-info-insert-superseded-text it)
-      (bui-newline))))
+  (cl-case (bui-entry-non-void-value entry 'known-status)
+    (known
+     (when (bui-entry-non-void-value entry 'non-unique)
+       (guix-package-info-insert-non-unique-text
+        (guix-package-entry->name-specification entry))
+       (bui-newline))
+     (--when-let (bui-entry-non-void-value entry 'superseded)
+       (guix-package-info-insert-superseded-text it)
+       (bui-newline)))
+    (obsolete (guix-package-info-insert-obsolete-text
+               (bui-entry-non-void-value entry 'name)))
+    (unknown  (guix-package-info-insert-unknown-text
+               (bui-entry-non-void-value entry 'name)))
+    (future   (guix-package-info-insert-future-text
+               (bui-entry-non-void-value entry 'name)))))
 
-(defun guix-package-info-insert-obsolete-text ()
-  "Insert a message about obsolete package at point."
-  (bui-format-insert guix-package-info-obsolete-string
-                     'guix-package-info-obsolete)
-  (bui-newline))
+(defun guix-package-info-insert-unknown-text (name)
+  "Insert a message about unknown package at point."
+  (insert "This package is ")
+  (bui-format-insert "unknown" 'guix-package-info-unknown)
+  (insert ", i.e. there are no packages with\n"
+          "'" name "' name among the available package recipes."))
+
+(defun guix-package-info-insert-obsolete-text (name)
+  "Insert a message about obsolete package NAME at point."
+  (insert "This package is ")
+  (bui-format-insert "obsolete" 'guix-package-info-obsolete)
+  (insert ", i.e. a newer version of\n")
+  (bui-insert-button name 'guix-package-name)
+  (insert " package is available."))
+
+(defun guix-package-info-insert-future-text (name)
+  "Insert a message about package NAME with a future VERSION at point."
+  (insert "This package is ")
+  (bui-format-insert "from the future" 'guix-package-info-future)
+  (insert ", i.e. this (installed) package
+is newer than the available package recipe for ")
+  (bui-insert-button name 'guix-package-name)
+  (insert "."))
 
 (defun guix-package-info-insert-non-unique-text (full-name)
   "Insert a message about non-unique package with FULL-NAME at point."
@@ -578,7 +627,8 @@ Make some fancy text with buttons and additional stuff if the
 current OUTPUT is installed (if there is such output in
 `installed' parameter of a package ENTRY)."
   (let* ((installed (bui-entry-non-void-value entry 'installed))
-         (obsolete  (bui-entry-non-void-value entry 'obsolete))
+         (obsolete  (eq (bui-entry-non-void-value entry 'known-status)
+                        'obsolete))
          (installed-entry (--find
                            (string= (bui-entry-non-void-value it 'output)
                                     output)
@@ -661,7 +711,8 @@ PACKAGE-ID is an ID of the package which store path to show."
 
 (defun guix-package-info-insert-misc (entry)
   "Insert various buttons and other info for package ENTRY at point."
-  (unless (bui-entry-non-void-value entry 'obsolete)
+  (when (eq (bui-entry-non-void-value entry 'known-status)
+            'known)
     (let* ((entry-id   (bui-entry-id entry))
            (package-id (or (bui-entry-non-void-value entry 'package-id)
                            entry-id))
@@ -812,17 +863,18 @@ This function is used to hide a \"Download\" button if needed."
 (add-hook 'guix-after-source-download-hook
           'guix-package-info-redisplay-after-download)
 
-(defun guix-package-entry-ensure-non-obsolete (entry)
-  "Signal an error if package ENTRY is obsolete."
-  (when (bui-entry-non-void-value entry 'obsolete)
-    (error "This command is not available for obsolete packages")))
+(defun guix-package-entry-ensure-known (entry)
+  "Signal an error if package ENTRY is unknown."
+  (unless (eq (bui-entry-non-void-value entry 'known-status)
+              'known)
+    (error "This command is not available for obsolete or unknown packages")))
 
 (defun guix-package-info-edit (entry &optional directory)
   "Go to the location of the package ENTRY.
 See `guix-find-location' for the meaning of DIRECTORY."
   (interactive
    (let ((entry (guix-read-package-entry-by-name)))
-     (guix-package-entry-ensure-non-obsolete entry)
+     (guix-package-entry-ensure-known entry)
      (list entry
            (guix-read-directory))))
   (guix-find-location (bui-entry-non-void-value entry 'location)
@@ -834,9 +886,10 @@ See `guix-find-location' for the meaning of DIRECTORY."
    (list (guix-read-package-entry-by-name)
          (guix-read-graph-backend)
          (guix-read-graph-node-type)))
-  (guix-package-graph (if (bui-entry-non-void-value entry 'obsolete)
-                          (bui-entry-non-void-value entry 'name)
-                        (bui-entry-id entry))
+  (guix-package-graph (if (eq (bui-entry-non-void-value entry 'known-status)
+                              'known)
+                          (bui-entry-id entry)
+                        (bui-entry-non-void-value entry 'name))
                       backend node-type))
 
 (defun guix-package-info-size (entry &optional type)
@@ -845,14 +898,15 @@ See `guix-package-size' for the meaning of TYPE."
   (interactive
    (list (guix-read-package-entry-by-name)
          (guix-read-package-size-type)))
-  (guix-package-size (if (bui-entry-non-void-value entry 'obsolete)
-                         ;; Take file name of the first output.
-                         ;; FIXME It is better to ask for an output, if
-                         ;; there are several outputs.
-                         (bui-entry-value
-                          (car (bui-entry-value entry 'installed))
-                          'file-name)
-                       (guix-package-entry->name-specification entry))
+  (guix-package-size (if (eq (bui-entry-non-void-value entry 'known-status)
+                             'known)
+                         (guix-package-entry->name-specification entry)
+                       ;; Take file name of the first output.
+                       ;; FIXME It is better to ask for an output, if
+                       ;; there are several outputs.
+                       (bui-entry-value
+                        (car (bui-entry-value entry 'installed))
+                        'file-name))
                      type))
 
 (defun guix-package-info-lint (entry &optional checkers)
@@ -861,7 +915,7 @@ Interactively with prefix, prompt for CHECKERS.
 See `guix-lint' for details."
   (interactive
    (let ((entry (guix-read-package-entry-by-name)))
-     (guix-package-entry-ensure-non-obsolete entry)
+     (guix-package-entry-ensure-known entry)
      (list entry
            (and current-prefix-arg
                 (guix-read-lint-checker-names)))))
@@ -899,7 +953,8 @@ Interactively, prompt for package ENTRY and OUTPUT (if there are
 more than one)."
   (interactive (guix-read-package-entry-and-output))
   (if (member output (guix-package-entry-installed-outputs entry))
-      (when (or (bui-entry-non-void-value entry 'obsolete)
+      (when (or (eq (bui-entry-non-void-value entry 'known-status)
+                    'obsolete)
                 (y-or-n-p
                  (format "'%s' is not obsolete.  Try to upgrade it anyway? "
                          (guix-package-entry->name-specification
@@ -929,7 +984,7 @@ more than one)."
             (outputs nil 13 t)
             (installed guix-package-list-get-installed-outputs 13 t)
             (synopsis bui-list-get-one-line 30 nil))
-  :required '(id superseded)
+  :required '(id known-status superseded)
   :hint 'guix-package-list-hint
   :sort-key '(name)
   :marks '((install . ?I)
@@ -950,12 +1005,25 @@ more than one)."
 
 (defface guix-package-list-installed
   '((t :inherit guix-package-info-installed-outputs))
-  "Face used if there are installed outputs for the current package."
+  "Face used for installed packages."
+  :group 'guix-package-list-faces)
+
+(defface guix-package-list-unknown
+  '((t :inherit guix-package-info-unknown))
+  "Face used for unknown packages.
+See `guix-package-info-unknown' face for details."
   :group 'guix-package-list-faces)
 
 (defface guix-package-list-obsolete
   '((t :inherit guix-package-info-obsolete))
-  "Face used if a package is obsolete."
+  "Face used for obsolete packages.
+See `guix-package-info-obsolete' face for details."
+  :group 'guix-package-list-faces)
+
+(defface guix-package-list-future
+  '((t :inherit guix-package-info-future))
+  "Face used for packages from the future.
+See `guix-package-info-future' face for details."
   :group 'guix-package-list-faces)
 
 (defface guix-package-list-superseded
@@ -1009,16 +1077,19 @@ likely)."
 
 (defun guix-package-list-get-name (name entry)
   "Return NAME of the package ENTRY.
-Colorize it with `guix-package-list-installed' or
-`guix-package-list-obsolete' if needed."
+Colorize it with an appropriate face if needed."
   (bui-get-string
    name
-   (cond ((bui-entry-non-void-value entry 'obsolete)
-          'guix-package-list-obsolete)
-         ((bui-entry-non-void-value entry 'superseded)
-          'guix-package-list-superseded)
-         ((bui-entry-non-void-value entry 'installed)
-          'guix-package-list-installed))))
+   (cl-case (bui-entry-non-void-value entry 'known-status)
+     ((known nil)
+      (cond
+       ((bui-entry-non-void-value entry 'superseded)
+        'guix-package-list-superseded)
+       ((bui-entry-non-void-value entry 'installed)
+        'guix-package-list-installed)))
+     (obsolete 'guix-package-list-obsolete)
+     (unknown  'guix-package-list-unknown)
+     (future   'guix-package-list-future))))
 
 (defun guix-package-list-get-installed-outputs (installed &optional _)
   "Return string with outputs from INSTALLED entries."
@@ -1087,7 +1158,8 @@ be separated with \",\")."
          (installed (guix-package-entry-installed-outputs entry)))
     (or installed
         (user-error "This package is not installed"))
-    (when (or (bui-entry-non-void-value entry 'obsolete)
+    (when (or (eq (bui-entry-non-void-value entry 'known-status)
+                  'obsolete)
               (y-or-n-p "This package is not obsolete.  Try to upgrade it anyway? "))
       (guix-package-list-mark-outputs
        'upgrade installed
@@ -1100,8 +1172,10 @@ Use FUN to perform marking of the current line.  FUN should
 take an entry as argument.
 If ALL is non-nil, mark all installed (not only obsolete) packages."
   (guix-package-list-marking-check)
-  (let ((entries (--filter (bui-entry-non-void-value
-                            it (if all 'installed 'obsolete))
+  (let ((entries (--filter (if all
+                               (bui-entry-non-void-value it 'installed)
+                             (eq (bui-entry-non-void-value it 'known-status)
+                                 'obsolete))
                            (bui-current-entries))))
     (bui-list-for-each-line
      (lambda ()
@@ -1163,9 +1237,10 @@ See `guix-find-location' for the meaning of DIRECTORY."
    (list (guix-read-graph-backend)
          (guix-read-graph-node-type)))
   (let ((entry (bui-list-current-entry)))
-    (guix-package-graph (if (bui-entry-non-void-value entry 'obsolete)
-                            (bui-entry-non-void-value entry 'name)
-                          (bui-list-current-id))
+    (guix-package-graph (if (eq (bui-entry-non-void-value entry 'known-status)
+                                'known)
+                            (bui-list-current-id)
+                          (bui-entry-non-void-value entry 'name))
                         backend node-type)))
 
 (defun guix-package-list-size (&optional type)
@@ -1210,7 +1285,7 @@ for all ARGS."
             (output nil 9 t)
             (installed nil 12 t)
             (synopsis bui-list-get-one-line 30 nil))
-  :required '(id package-id superseded)
+  :required '(id package-id known-status superseded)
   :hint 'guix-output-list-hint
   :sort-key '(name)
   :marks '((install . ?I)
@@ -1284,7 +1359,8 @@ for all ARGS."
          (installed (bui-entry-non-void-value entry 'installed)))
     (or installed
         (user-error "This output is not installed"))
-    (when (or (bui-entry-non-void-value entry 'obsolete)
+    (when (or (eq (bui-entry-non-void-value entry 'known-status)
+                  'obsolete)
               (y-or-n-p "This output is not obsolete.  Try to upgrade it anyway? "))
       (bui-list--mark 'upgrade t))))
 
@@ -1334,9 +1410,10 @@ See `guix-find-location' for the meaning of DIRECTORY."
    (list (guix-read-graph-backend)
          (guix-read-graph-node-type)))
   (let ((entry (bui-list-current-entry)))
-    (guix-package-graph (if (bui-entry-non-void-value entry 'obsolete)
-                            (bui-entry-non-void-value entry 'name)
-                          (bui-entry-non-void-value entry 'package-id))
+    (guix-package-graph (if (eq (bui-entry-non-void-value entry 'known-status)
+                                'known)
+                            (bui-entry-non-void-value entry 'package-id)
+                          (bui-entry-non-void-value entry 'name))
                         backend node-type)))
 
 (defun guix-output-list-lint (&optional checkers)
@@ -1483,11 +1560,11 @@ Interactively with prefix, prompt for PROFILE."
 
 ;;;###autoload
 (defun guix-obsolete-packages (&optional profile)
-  "Display information about obsolete Guix packages.
+  "Display information about obsolete (or unknown) Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive (list (guix-ui-read-package-profile)))
-  (guix-package-get-display profile 'obsolete))
+  (guix-package-get-display profile 'unknown))
 
 ;;;###autoload
 (defun guix-all-available-packages (&optional profile)
