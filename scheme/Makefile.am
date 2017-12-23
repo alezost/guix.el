@@ -24,6 +24,7 @@ AM_V_GUILEC_0 = @echo "  GUILEC     " $@;
 MODULES =					\
   emacs-guix/utils.scm				\
   emacs-guix/pack.scm				\
+  emacs-guix/hash.scm				\
   emacs-guix/refresh.scm			\
   emacs-guix/commands.scm			\
   emacs-guix/licenses.scm			\

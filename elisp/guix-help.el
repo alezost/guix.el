@@ -138,6 +138,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     (guix-emacs-autoload-packages t nil)
     guix-set-current-profile
     guix-pull
+    guix-hash
     guix-apply-manifest
     guix-switch-to-buffer
     guix-extended-command

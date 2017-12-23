@@ -55,6 +55,7 @@
   #:autoload (emacs-guix graph) (graph-backend-names
                                  graph-node-type-names
                                  make-package-graph)
+  #:autoload (emacs-guix hash) (file-hash)
   #:autoload (emacs-guix lint) (lint-checker-names
                                 lint-package)
   #:autoload (emacs-guix pack) (compressor-names

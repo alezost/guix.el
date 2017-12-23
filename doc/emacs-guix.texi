@@ -1307,6 +1307,23 @@ session, so if the Guix REPL was restarted, you may want to revert
 ``list'' buffer (by pressing @kbd{g}).}.  This allows you to keep
 using the Emacs interface with the updated Guix code.
 
+@findex guix-hash
+@item M-x guix-hash
+Compute the SHA256 hash of a file similarly to @command{guix hash}
+shell command (@pxref{Invoking guix hash,,, guix, The GNU Guix
+Reference Manual}).  With @kbd{C-u}, prompt for a hash format.
+
+If you call this command on a directory, its hash will be calculated
+recursively without version-controlled files (so you can use this hash
+in a package recipe).
+
+@vindex guix-hash-support-dired
+Finally, this command supports @code{dired-mode} (@pxref{Dired,,,
+emacs, The GNU Emacs Manual}): whenever you run @kbd{M-x guix-hash} in
+a Dired buffer, a hash of the current file will be calculated---i.e.,
+you will not be prompted for a file name.  If you wish to disable this
+feature, set @code{guix-hash-support-dired} variable to nil.
+
 @end table
 
 @c ----------------------------------------------------------------
