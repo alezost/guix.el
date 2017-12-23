@@ -58,6 +58,7 @@ A copy of the license is available at
 * Hydra::               Interface for the Guix build farm.
 * List/Info Interface:: Describing ``list''/''info'' buffers.
 * Configuration::       Configuring Emacs-Guix.
+* Miscellaneous Commands:: @kbd{M-x guix-@dots{}} uncovered by other sections.
 * Help::                Help commands.
 
 Indexes
@@ -289,7 +290,6 @@ Manual}).  Specifically, it makes it easy to:
 * Packages::                    Interface for packages.
 * Profiles::                    Interface for profiles.
 * Generations::                 Interface for profile generations.
-* Miscellaneous Commands::      Other related commands.
 @end menu
 
 @node Packages
@@ -304,6 +304,7 @@ can either perform some actions in such ``package-list'' buffer, or
 @menu
 * Package Commands::    @kbd{M-x guix-@dots{}} to show packages.
 * Package Keys::        Key bindings in ``package-list'' buffer.
+* More Package Commands:: Other @kbd{M-x guix-@dots{}} related to packages.
 @end menu
 
 @node Package Commands
@@ -453,6 +454,35 @@ Show package size.
 Lint the package.
 @end table
 
+@node More Package Commands
+@subsection More Package Commands
+
+And some more commands related to packages:
+
+@table @kbd
+
+@cindex graph
+@findex guix-package-graph
+@item M-x guix-package-graph
+Show a package graph.  You'll be prompted for a package name, graph
+backend and graph node type (everything can be completed with
+@kbd{@key{TAB}} key). @xref{Graph Configuration}, if you want to set
+an external graph viewer.
+
+@findex guix-package-size
+@item M-x guix-package-size
+Show a package size (@pxref{Invoking guix size,,, guix, The GNU Guix
+Reference Manual}).  You'll be prompted for a package name and a size
+type (it should be either ``text'' or ``image'').
+
+@findex guix-package-lint
+@item M-x guix-package-lint
+Lint a package (@pxref{Invoking guix lint,,, guix, The GNU Guix
+Reference Manual}).  You'll be prompted for a package name.  With
+prefix argument, you'll be also prompted for checker names.
+
+@end table
+
 @node Profiles
 @section Profiles
 
@@ -492,6 +522,13 @@ Manual}).
 Make profile at point the current profile for the package commands
 (@pxref{Packages}).
 @end table
+
+@findex guix-apply-manifest
+Finally, you can use @kbd{M-x guix-apply-manifest} to apply a manifest
+file to the current profile or to a specified profile, if prefix
+argument is used.  This has the same meaning as @code{--manifest}
+option (@pxref{Invoking guix package,,, guix, The GNU Guix Reference
+Manual}).
 
 @node Generations
 @section Generations
@@ -578,57 +615,6 @@ with another marked generation.
 @item -
 List package outputs removed from the latest marked generation comparing
 with another marked generation.
-@end table
-
-@node Miscellaneous Commands
-@section Miscellaneous Commands
-
-And some more commands related to profiles and packages:
-
-@table @kbd
-
-@cindex graph
-@findex guix-package-graph
-@item M-x guix-package-graph
-Show a package graph.  You'll be prompted for a package name, graph
-backend and graph node type (everything can be completed with
-@kbd{@key{TAB}} key). @xref{Graph Configuration}, if you want to set
-an external graph viewer.
-
-@findex guix-package-size
-@item M-x guix-package-size
-Show a package size (@pxref{Invoking guix size,,, guix, The GNU Guix
-Reference Manual}).  You'll be prompted for a package name and a size
-type (it should be either ``text'' or ``image'').
-
-@findex guix-lint
-@item M-x guix-lint
-Lint a package (@pxref{Invoking guix lint,,, guix, The GNU Guix
-Reference Manual}).  You'll be prompted for a package name.  With
-prefix argument, you'll be also prompted for checker names.
-
-@findex guix-apply-manifest
-@item M-x guix-apply-manifest
-Apply manifest file to the current profile or to a specified profile,
-if prefix argument is used.  This has the same meaning as
-@code{--manifest} option (@pxref{Invoking guix package,,, guix, The
-GNU Guix Reference Manual}).
-
-@findex guix-pull
-@item M-x guix-pull
-It is the same as @command{guix pull} shell command (@pxref{Invoking
-guix pull,,, guix, The GNU Guix Reference Manual}).  With @kbd{C-u},
-make it verbose.
-
-@cindex Guix REPL
-Once @command{guix pull} has succeeded, the Guix REPL is
-restarted@footnote{Note that name/version pairs cannot be used to
-identify packages (because a name is not necessarily unique), so
-Emacs-Guix uses special identifiers that live only during a guile
-session, so if the Guix REPL was restarted, you may want to revert
-``list'' buffer (by pressing @kbd{g}).}.  This allows you to keep
-using the Emacs interface with the updated Guix code.
-
 @end table
 
 @c ----------------------------------------------------------------
@@ -1295,6 +1281,31 @@ management.
 
 @vindex guix-devel-mode-map
 @item guix-devel-mode-map
+
+@end table
+
+@c ----------------------------------------------------------------
+@node Miscellaneous Commands
+@chapter Miscellaneous Commands
+
+And some more commands that were not covered by the other chapters.
+
+@table @kbd
+
+@findex guix-pull
+@item M-x guix-pull
+It is the same as @command{guix pull} shell command (@pxref{Invoking
+guix pull,,, guix, The GNU Guix Reference Manual}).  With @kbd{C-u},
+make it verbose.
+
+@cindex Guix REPL
+Once @command{guix pull} has succeeded, the Guix REPL is
+restarted@footnote{Note that name/version pairs cannot be used to
+identify packages (because a name is not necessarily unique), so
+Emacs-Guix uses special identifiers that live only during a guile
+session, so if the Guix REPL was restarted, you may want to revert
+``list'' buffer (by pressing @kbd{g}).}.  This allows you to keep
+using the Emacs interface with the updated Guix code.
 
 @end table
 
