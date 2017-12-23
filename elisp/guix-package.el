@@ -149,6 +149,9 @@ See Info node `(guix) Invoking guix lint' for details about linting."
    (guix-make-guile-expression
     'lint-package package checkers)))
 
+;;;###autoload
+(defalias 'guix-package-lint 'guix-lint)
+
 (provide 'guix-package)
 
 ;;; guix-package.el ends here
