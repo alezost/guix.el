@@ -15,19 +15,19 @@ http://www.gnu.org/licenses/fdl.html.
 <!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Keymaps (Emacs-Guix Reference Manual)</title>
+<title>More Package Commands (Emacs-Guix Reference Manual)</title>
 
-<meta name="description" content="Keymaps (Emacs-Guix Reference Manual)">
-<meta name="keywords" content="Keymaps (Emacs-Guix Reference Manual)">
+<meta name="description" content="More Package Commands (Emacs-Guix Reference Manual)">
+<meta name="keywords" content="More Package Commands (Emacs-Guix Reference Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="texi2any">
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Configuration.html#Configuration" rel="up" title="Configuration">
-<link href="Miscellaneous-Commands.html#Miscellaneous-Commands" rel="next" title="Miscellaneous Commands">
-<link href="Buffer-Names.html#Buffer-Names" rel="prev" title="Buffer Names">
+<link href="Packages.html#Packages" rel="up" title="Packages">
+<link href="Profiles.html#Profiles" rel="next" title="Profiles">
+<link href="Package-Keys.html#Package-Keys" rel="prev" title="Package Keys">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -61,51 +61,43 @@ ul.no-bullet {list-style: none}
 </head>
 
 <body lang="en">
-<a name="Keymaps"></a>
+<a name="More-Package-Commands"></a>
 <div class="header">
 <p>
-Previous: <a href="Buffer-Names.html#Buffer-Names" accesskey="p" rel="prev">Buffer Names</a>, Up: <a href="Configuration.html#Configuration" accesskey="u" rel="up">Configuration</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="Package-Keys.html#Package-Keys" accesskey="p" rel="prev">Package Keys</a>, Up: <a href="Packages.html#Packages" accesskey="u" rel="up">Packages</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Keymaps-1"></a>
-<h3 class="section">13.4 Keymaps</h3>
+<a name="More-Package-Commands-1"></a>
+<h4 class="subsection">3.1.3 More Package Commands</h4>
 
-<p>If you want to change default key bindings, look at the following
-keymaps (see <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Init-Rebinding.html#Init-Rebinding">Init Rebinding</a> in <cite>The GNU Emacs Manual</cite>):
+<p>And some more commands related to packages:
 </p>
 <dl compact="compact">
 <dd>
-<a name="index-guix_002dui_002dmap"></a>
+<a name="index-graph-1"></a>
+<a name="index-guix_002dpackage_002dgraph"></a>
 </dd>
-<dt><code>guix-ui-map</code></dt>
-<dd><p>Parent keymap with general keys for buffers used for Guix package
-management.
+<dt><kbd>M-x guix-package-graph</kbd></dt>
+<dd><p>Show a package graph.  You&rsquo;ll be prompted for a package name, graph
+backend and graph node type (everything can be completed with
+<kbd><span class="key">TAB</span></kbd> key). See <a href="Graph-Configuration.html#Graph-Configuration">Graph Configuration</a>, if you want to set
+an external graph viewer.
 </p>
-<a name="index-guix_002dENTRY_002dTYPE_002dBUFFER_002dTYPE_002dmode_002dmap"></a>
+<a name="index-guix_002dpackage_002dsize"></a>
 </dd>
-<dt><code>guix-ENTRY-TYPE-BUFFER-TYPE-mode-map</code></dt>
-<dd><p>See <a href="Configuration.html#Configuration">Configuration</a>, for the meaning of <code>ENTRY-TYPE</code> and
-<code>BUFFER-TYPE</code>.
+<dt><kbd>M-x guix-package-size</kbd></dt>
+<dd><p>Show a package size (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-size.html#Invoking-guix-size">Invoking guix size</a> in <cite>The GNU Guix
+Reference Manual</cite>).  You&rsquo;ll be prompted for a package name and a size
+type (it should be either &ldquo;text&rdquo; or &ldquo;image&rdquo;).
 </p>
-<a name="index-guix_002dbuild_002dlog_002dcommon_002dmap"></a>
+<a name="index-guix_002dpackage_002dlint"></a>
 </dd>
-<dt><code>guix-build-log-common-map</code></dt>
-<dd>
-<a name="index-guix_002dbuild_002dlog_002dmode_002dmap"></a>
+<dt><kbd>M-x guix-package-lint</kbd></dt>
+<dd><p>Lint a package (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-lint.html#Invoking-guix-lint">Invoking guix lint</a> in <cite>The GNU Guix
+Reference Manual</cite>).  You&rsquo;ll be prompted for a package name.  With
+prefix argument, you&rsquo;ll be also prompted for checker names.
+</p>
 </dd>
-<dt><code>guix-build-log-mode-map</code></dt>
-<dd>
-<a name="index-guix_002dbuild_002dlog_002dminor_002dmode_002dmap"></a>
-</dd>
-<dt><code>guix-build-log-minor-mode-map</code></dt>
-<dd>
-<a name="index-guix_002ddevel_002dkeys_002dmap"></a>
-</dd>
-<dt><code>guix-devel-keys-map</code></dt>
-<dd>
-<a name="index-guix_002ddevel_002dmode_002dmap"></a>
-</dd>
-<dt><code>guix-devel-mode-map</code></dt>
 </dl>
 
 

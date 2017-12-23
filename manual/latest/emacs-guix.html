@@ -12,8 +12,9 @@ with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
 A copy of the license is available at
 http://www.gnu.org/licenses/fdl.html.
  -->
-<!-- Created by GNU Texinfo 6.3, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Emacs-Guix Reference Manual</title>
 
 <meta name="description" content="Emacs-Guix Reference Manual">
@@ -21,7 +22,6 @@ http://www.gnu.org/licenses/fdl.html.
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="texi2any">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link href="#Top" rel="start" title="Top">
 <link href="#Concept-Index" rel="index" title="Concept Index">
 <link href="#SEC_Contents" rel="contents" title="Table of Contents">
@@ -89,6 +89,7 @@ ul.no-bullet {list-style: none}
         <li><a name="toc-List-Buffer" href="#List-Buffer">3.1.2.1 List Buffer</a></li>
         <li><a name="toc-Info-Buffer" href="#Info-Buffer">3.1.2.2 Info Buffer</a></li>
       </ul></li>
+      <li><a name="toc-More-Package-Commands-1" href="#More-Package-Commands">3.1.3 More Package Commands</a></li>
     </ul></li>
     <li><a name="toc-Profiles-1" href="#Profiles">3.2 Profiles</a></li>
     <li><a name="toc-Generations-1" href="#Generations">3.3 Generations</a>
@@ -96,7 +97,6 @@ ul.no-bullet {list-style: none}
       <li><a name="toc-Generation-Commands-1" href="#Generation-Commands">3.3.1 Generation Commands</a></li>
       <li><a name="toc-Generation-Keys-1" href="#Generation-Keys">3.3.2 Generation Keys</a></li>
     </ul></li>
-    <li><a name="toc-Miscellaneous-Commands-1" href="#Miscellaneous-Commands">3.4 Miscellaneous Commands</a></li>
   </ul></li>
   <li><a name="toc-Package-Licenses-1" href="#Package-Licenses">4 Package Licenses</a></li>
   <li><a name="toc-Package-Locations-1" href="#Package-Locations">5 Package Locations</a></li>
@@ -119,7 +119,8 @@ ul.no-bullet {list-style: none}
     <li><a name="toc-Buffer-Names-1" href="#Buffer-Names">13.3 Buffer Names</a></li>
     <li><a name="toc-Keymaps-1" href="#Keymaps">13.4 Keymaps</a></li>
   </ul></li>
-  <li><a name="toc-Help-1" href="#Help">14 Help</a></li>
+  <li><a name="toc-Miscellaneous-Commands-1" href="#Miscellaneous-Commands">14 Miscellaneous Commands</a></li>
+  <li><a name="toc-Help-1" href="#Help">15 Help</a></li>
   <li><a name="toc-Concept-Index-1" href="#Concept-Index">Concept Index</a></li>
   <li><a name="toc-Command-Index-1" href="#Command-Index">Command Index</a></li>
   <li><a name="toc-Variable-Index-1" href="#Variable-Index">Variable Index</a></li>
@@ -177,6 +178,8 @@ A copy of the license is available at
 <tr><td align="left" valign="top">&bull; <a href="#List_002fInfo-Interface">List/Info Interface</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Describing &ldquo;list&rdquo;/&rdquo;info&rdquo; buffers.
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Configuration">Configuration</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Configuring Emacs-Guix.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Miscellaneous-Commands">Miscellaneous Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top"><kbd>M-x guix-&hellip;</kbd> uncovered by other sections.
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Help">Help</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Help commands.
 </td></tr>
@@ -439,8 +442,6 @@ Manual</cite>).  Specifically, it makes it easy to:
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Generations" accesskey="3">Generations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for profile generations.
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Miscellaneous-Commands" accesskey="4">Miscellaneous Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Other related commands.
-</td></tr>
 </table>
 
 <hr>
@@ -462,6 +463,8 @@ can either perform some actions in such &ldquo;package-list&rdquo; buffer, or
 <tr><td align="left" valign="top">&bull; <a href="#Package-Commands" accesskey="1">Package Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top"><kbd>M-x guix-&hellip;</kbd> to show packages.
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Package-Keys" accesskey="2">Package Keys</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Key bindings in &ldquo;package-list&rdquo; buffer.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#More-Package-Commands" accesskey="3">More Package Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Other <kbd>M-x guix-&hellip;</kbd> related to packages.
 </td></tr>
 </table>
 
@@ -575,7 +578,7 @@ with a <strong>package</strong> per line, use the following setting:
 <a name="Package-Keys"></a>
 <div class="header">
 <p>
-Previous: <a href="#Package-Commands" accesskey="p" rel="prev">Package Commands</a>, Up: <a href="#Packages" accesskey="u" rel="up">Packages</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#More-Package-Commands" accesskey="n" rel="next">More Package Commands</a>, Previous: <a href="#Package-Commands" accesskey="p" rel="prev">Package Commands</a>, Up: <a href="#Packages" accesskey="u" rel="up">Packages</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Package-Keys-1"></a>
 <h4 class="subsection">3.1.2 Package Keys</h4>
@@ -658,6 +661,45 @@ checker names.
 </dl>
 
 <hr>
+<a name="More-Package-Commands"></a>
+<div class="header">
+<p>
+Previous: <a href="#Package-Keys" accesskey="p" rel="prev">Package Keys</a>, Up: <a href="#Packages" accesskey="u" rel="up">Packages</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="More-Package-Commands-1"></a>
+<h4 class="subsection">3.1.3 More Package Commands</h4>
+
+<p>And some more commands related to packages:
+</p>
+<dl compact="compact">
+<dd>
+<a name="index-graph-1"></a>
+<a name="index-guix_002dpackage_002dgraph"></a>
+</dd>
+<dt><kbd>M-x guix-package-graph</kbd></dt>
+<dd><p>Show a package graph.  You&rsquo;ll be prompted for a package name, graph
+backend and graph node type (everything can be completed with
+<kbd><span class="key">TAB</span></kbd> key). See <a href="#Graph-Configuration">Graph Configuration</a>, if you want to set
+an external graph viewer.
+</p>
+<a name="index-guix_002dpackage_002dsize"></a>
+</dd>
+<dt><kbd>M-x guix-package-size</kbd></dt>
+<dd><p>Show a package size (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-size">Invoking guix size</a> in <cite>The GNU Guix
+Reference Manual</cite>).  You&rsquo;ll be prompted for a package name and a size
+type (it should be either &ldquo;text&rdquo; or &ldquo;image&rdquo;).
+</p>
+<a name="index-guix_002dpackage_002dlint"></a>
+</dd>
+<dt><kbd>M-x guix-package-lint</kbd></dt>
+<dd><p>Lint a package (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-lint">Invoking guix lint</a> in <cite>The GNU Guix
+Reference Manual</cite>).  You&rsquo;ll be prompted for a package name.  With
+prefix argument, you&rsquo;ll be also prompted for checker names.
+</p>
+</dd>
+</dl>
+
+<hr>
 <a name="Profiles"></a>
 <div class="header">
 <p>
@@ -707,11 +749,18 @@ Manual</cite>).
 </p></dd>
 </dl>
 
+<a name="index-guix_002dapply_002dmanifest"></a>
+<p>Finally, you can use <kbd>M-x guix-apply-manifest</kbd> to apply a manifest
+file to the current profile or to a specified profile, if prefix
+argument is used.  This has the same meaning as <code>--manifest</code>
+option (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-package">Invoking guix package</a> in <cite>The GNU Guix Reference
+Manual</cite>).
+</p>
 <hr>
 <a name="Generations"></a>
 <div class="header">
 <p>
-Next: <a href="#Miscellaneous-Commands" accesskey="n" rel="next">Miscellaneous Commands</a>, Previous: <a href="#Profiles" accesskey="p" rel="prev">Profiles</a>, Up: <a href="#Package-Management" accesskey="u" rel="up">Package Management</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="#Profiles" accesskey="p" rel="prev">Profiles</a>, Up: <a href="#Package-Management" accesskey="u" rel="up">Package Management</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Generations-1"></a>
 <h3 class="section">3.3 Generations</h3>
@@ -828,65 +877,6 @@ with another marked generation.
 <dd><p>List package outputs removed from the latest marked generation comparing
 with another marked generation.
 </p></dd>
-</dl>
-
-<hr>
-<a name="Miscellaneous-Commands"></a>
-<div class="header">
-<p>
-Previous: <a href="#Generations" accesskey="p" rel="prev">Generations</a>, Up: <a href="#Package-Management" accesskey="u" rel="up">Package Management</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
-</div>
-<a name="Miscellaneous-Commands-1"></a>
-<h3 class="section">3.4 Miscellaneous Commands</h3>
-
-<p>And some more commands related to profiles and packages:
-</p>
-<dl compact="compact">
-<dd>
-<a name="index-graph-1"></a>
-<a name="index-guix_002dpackage_002dgraph"></a>
-</dd>
-<dt><kbd>M-x guix-package-graph</kbd></dt>
-<dd><p>Show a package graph.  You&rsquo;ll be prompted for a package name, graph
-backend and graph node type (everything can be completed with
-<kbd><span class="key">TAB</span></kbd> key). See <a href="#Graph-Configuration">Graph Configuration</a>, if you want to set
-an external graph viewer.
-</p>
-<a name="index-guix_002dpackage_002dsize"></a>
-</dd>
-<dt><kbd>M-x guix-package-size</kbd></dt>
-<dd><p>Show a package size (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-size">Invoking guix size</a> in <cite>The GNU Guix
-Reference Manual</cite>).  You&rsquo;ll be prompted for a package name and a size
-type (it should be either &ldquo;text&rdquo; or &ldquo;image&rdquo;).
-</p>
-<a name="index-guix_002dlint"></a>
-</dd>
-<dt><kbd>M-x guix-lint</kbd></dt>
-<dd><p>Lint a package (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-lint">Invoking guix lint</a> in <cite>The GNU Guix
-Reference Manual</cite>).  You&rsquo;ll be prompted for a package name.  With
-prefix argument, you&rsquo;ll be also prompted for checker names.
-</p>
-<a name="index-guix_002dapply_002dmanifest"></a>
-</dd>
-<dt><kbd>M-x guix-apply-manifest</kbd></dt>
-<dd><p>Apply manifest file to the current profile or to a specified profile,
-if prefix argument is used.  This has the same meaning as
-<code>--manifest</code> option (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-package">Invoking guix package</a> in <cite>The
-GNU Guix Reference Manual</cite>).
-</p>
-<a name="index-guix_002dpull"></a>
-</dd>
-<dt><kbd>M-x guix-pull</kbd></dt>
-<dd><p>It is the same as <code>guix pull</code> shell command (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-pull">Invoking
-guix pull</a> in <cite>The GNU Guix Reference Manual</cite>).  With <kbd>C-u</kbd>,
-make it verbose.
-</p>
-<a name="index-Guix-REPL"></a>
-<p>Once <code>guix pull</code> has succeeded, the Guix REPL is
-restarted<a name="DOCF1" href="#FOOT1"><sup>1</sup></a>.  This allows you to keep
-using the Emacs interface with the updated Guix code.
-</p>
-</dd>
 </dl>
 
 <hr>
@@ -1372,7 +1362,7 @@ displayed data and redisplay it.
 </p>
 </dd>
 <dt><kbd>C-c C-z</kbd></dt>
-<dd><a name="index-Guix-REPL-1"></a>
+<dd><a name="index-Guix-REPL"></a>
 <p>Go to the Guix REPL (see <a href="geiser.html#The-REPL">The REPL</a> in <cite>Geiser User Manual</cite>).
 </p>
 </dd>
@@ -1446,7 +1436,7 @@ pressing <kbd>c</kbd> on a button.
 <a name="Configuration"></a>
 <div class="header">
 <p>
-Next: <a href="#Help" accesskey="n" rel="next">Help</a>, Previous: <a href="#List_002fInfo-Interface" accesskey="p" rel="prev">List/Info Interface</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Miscellaneous-Commands" accesskey="n" rel="next">Miscellaneous Commands</a>, Previous: <a href="#List_002fInfo-Interface" accesskey="p" rel="prev">List/Info Interface</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Configuration-1"></a>
 <h2 class="chapter">13 Configuration</h2>
@@ -1580,7 +1570,7 @@ Manual</cite>)&mdash;i.e., when non-nil, substitutes are enabled.
 build</a> in <cite>The GNU Guix Reference Manual</cite>)&mdash;i.e., when non-nil,
 do not build the derivations.
 </p>
-<a name="index-Guix-REPL-2"></a>
+<a name="index-Guix-REPL-1"></a>
 <a name="index-guix_002drepl_002duse_002dserver"></a>
 </dd>
 <dt><code>guix-repl-use-server</code></dt>
@@ -1702,13 +1692,58 @@ management.
 </dl>
 
 <hr>
+<a name="Miscellaneous-Commands"></a>
+<div class="header">
+<p>
+Next: <a href="#Help" accesskey="n" rel="next">Help</a>, Previous: <a href="#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<a name="Miscellaneous-Commands-1"></a>
+<h2 class="chapter">14 Miscellaneous Commands</h2>
+
+<p>And some more commands that were not covered by the other chapters.
+</p>
+<dl compact="compact">
+<dd>
+<a name="index-guix_002dpull"></a>
+</dd>
+<dt><kbd>M-x guix-pull</kbd></dt>
+<dd><p>It is the same as <code>guix pull</code> shell command (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-pull">Invoking
+guix pull</a> in <cite>The GNU Guix Reference Manual</cite>).  With <kbd>C-u</kbd>,
+make it verbose.
+</p>
+<a name="index-Guix-REPL-2"></a>
+<p>Once <code>guix pull</code> has succeeded, the Guix REPL is
+restarted<a name="DOCF1" href="#FOOT1"><sup>1</sup></a>.  This allows you to keep
+using the Emacs interface with the updated Guix code.
+</p>
+<a name="index-guix_002dhash"></a>
+</dd>
+<dt><kbd>M-x guix-hash</kbd></dt>
+<dd><p>Compute the SHA256 hash of a file similarly to <code>guix hash</code>
+shell command (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-hash">Invoking guix hash</a> in <cite>The GNU Guix
+Reference Manual</cite>).  With <kbd>C-u</kbd>, prompt for a hash format.
+</p>
+<p>If you call this command on a directory, its hash will be calculated
+recursively without version-controlled files (so you can use this hash
+in a package recipe).
+</p>
+<a name="index-guix_002dhash_002dsupport_002ddired"></a>
+<p>Finally, this command supports <code>dired-mode</code> (see <a href="http://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Dired">Dired</a> in <cite>The GNU Emacs Manual</cite>): whenever you run <kbd>M-x guix-hash</kbd> in
+a Dired buffer, a hash of the current file will be calculated&mdash;i.e.,
+you will not be prompted for a file name.  If you wish to disable this
+feature, set <code>guix-hash-support-dired</code> variable to nil.
+</p>
+</dd>
+</dl>
+
+<hr>
 <a name="Help"></a>
 <div class="header">
 <p>
-Next: <a href="#Concept-Index" accesskey="n" rel="next">Concept Index</a>, Previous: <a href="#Configuration" accesskey="p" rel="prev">Configuration</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Concept-Index" accesskey="n" rel="next">Concept Index</a>, Previous: <a href="#Miscellaneous-Commands" accesskey="p" rel="prev">Miscellaneous Commands</a>, Up: <a href="#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Help-1"></a>
-<h2 class="chapter">14 Help</h2>
+<h2 class="chapter">15 Help</h2>
 
 <p>So many commands, so many buffers!  This chapter describes few more
 commands that should help you not to get lost.
@@ -1791,12 +1826,12 @@ Next: <a href="#Command-Index" accesskey="n" rel="next">Command Index</a>, Previ
 <tr><th><a name="Concept-Index_cp_letter-G">G</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-generations">generations</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Generations">Generations</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-graph">graph</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Keys">Package Keys</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-graph-1">graph</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-graph-1">graph</a>:</td><td>&nbsp;</td><td valign="top"><a href="#More-Package-Commands">More Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-graph-2">graph</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Popup-Interface">Popup Interface</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-graph-3">graph</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Graph-Configuration">Graph Configuration</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-Guix-REPL">Guix REPL</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-Guix-REPL-1">Guix REPL</a>:</td><td>&nbsp;</td><td valign="top"><a href="#List_002fInfo-Keys">List/Info Keys</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-Guix-REPL-2">Guix REPL</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Guile-and-Build-Options">Guile and Build Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Guix-REPL">Guix REPL</a>:</td><td>&nbsp;</td><td valign="top"><a href="#List_002fInfo-Keys">List/Info Keys</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Guix-REPL-1">Guix REPL</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Guile-and-Build-Options">Guile and Build Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-Guix-REPL-2">Guix REPL</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-Index_cp_letter-H">H</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-hydra">hydra</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Hydra">Hydra</a></td></tr>
@@ -1849,7 +1884,7 @@ Next: <a href="#Variable-Index" accesskey="n" rel="next">Variable Index</a>, Pre
 <tr><td></td><td valign="top"><a href="#index-guix"><code>guix</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Popup-Interface">Popup Interface</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dabout"><code>guix-about</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Introduction">Introduction</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dall_002davailable_002dpackages"><code>guix-all-available-packages</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-guix_002dapply_002dmanifest"><code>guix-apply-manifest</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dapply_002dmanifest"><code>guix-apply-manifest</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Profiles">Profiles</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dbrowse_002dlicense_002durl"><code>guix-browse-license-url</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Licenses">Package Licenses</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dbuild_002dlog_002dminor_002dmode"><code>guix-build-log-minor-mode</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Build-Log-Mode">Build Log Mode</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dbuild_002dlog_002dmode"><code>guix-build-log-mode</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Build-Log-Mode">Build Log Mode</a></td></tr>
@@ -1860,6 +1895,7 @@ Next: <a href="#Variable-Index" accesskey="n" rel="next">Variable Index</a>, Pre
 <tr><td></td><td valign="top"><a href="#index-guix_002dfind_002dlocation"><code>guix-find-location</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Locations">Package Locations</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dgenerations"><code>guix-generations</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Generation-Commands">Generation Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dgenerations_002dby_002dtime"><code>guix-generations-by-time</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Generation-Commands">Generation Commands</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dhash"><code>guix-hash</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dhelp"><code>guix-help</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Help">Help</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dhydra_002djobsets"><code>guix-hydra-jobsets</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Hydra">Hydra</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dhydra_002dlatest_002dbuilds"><code>guix-hydra-latest-builds</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Hydra">Hydra</a></td></tr>
@@ -1871,13 +1907,13 @@ Next: <a href="#Variable-Index" accesskey="n" rel="next">Variable Index</a>, Pre
 <tr><td></td><td valign="top"><a href="#index-guix_002dlast_002dgenerations"><code>guix-last-generations</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Generation-Commands">Generation Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dlast_002dsystem_002dgenerations"><code>guix-last-system-generations</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Generation-Commands">Generation Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dlicenses"><code>guix-licenses</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Licenses">Package Licenses</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-guix_002dlint"><code>guix-lint</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dlocations"><code>guix-locations</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Locations">Package Locations</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dnewest_002davailable_002dpackages"><code>guix-newest-available-packages</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dobsolete_002dpackages"><code>guix-obsolete-packages</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dfrom_002dfile"><code>guix-package-from-file</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dgraph"><code>guix-package-graph</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dsize"><code>guix-package-size</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dgraph"><code>guix-package-graph</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#More-Package-Commands">More Package Commands</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dlint"><code>guix-package-lint</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#More-Package-Commands">More Package Commands</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dsize"><code>guix-package-size</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#More-Package-Commands">More Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackages_002dby_002dlicense"><code>guix-packages-by-license</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackages_002dby_002dlocation"><code>guix-packages-by-location</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackages_002dby_002dname"><code>guix-packages-by-name</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
@@ -1929,6 +1965,7 @@ Previous: <a href="#Command-Index" accesskey="p" rel="prev">Command Index</a>, U
 <tr><td></td><td valign="top"><a href="#index-guix_002dENTRY_002dTYPE_002dBUFFER_002dTYPE_002dmode_002dmap"><code>guix-ENTRY-TYPE-BUFFER-TYPE-mode-map</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Keymaps">Keymaps</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dfind_002dfile_002dfunction"><code>guix-find-file-function</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Graph-Configuration">Graph Configuration</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dguile_002dprogram"><code>guix-guile-program</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Guile-and-Build-Options">Guile and Build Options</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dhash_002dsupport_002ddired"><code>guix-hash-support-dired</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dhelp_002dbuffer_002dname"><code>guix-help-buffer-name</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Buffer-Names">Buffer Names</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dinternal_002drepl_002dbuffer_002dname"><code>guix-internal-repl-buffer-name</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Buffer-Names">Buffer Names</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dlist_002dtype"><code>guix-package-list-type</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
