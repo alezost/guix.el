@@ -1,5 +1,62 @@
 -*- mode: org -*-
 
+* Changes in 0.3.4 (since 0.3.3)
+
+** User visible changes
+
+*** New commands
+
+**** M-x guix-hash
+
+**** M-x guix-superseded-packages
+
+**** M-x guix-derivation-mode
+It is enabled automatically in "/gnu/store/….drv" files.
+
+**** M-x guix-scheme-mode
+It is enabled automatically in various Guile files from the store (for
+example, "/gnu/store/…-activate-service" or "/gnu/store/…-shepherd.conf").
+
+*** Package List
+
+Along with "obsolete" packages, names of "superseded", "unknown" and
+"future" packages are also highlighted.
+
+** Internal changes
+
+*** New faces
+
+- guix-derivation-file-name;
+- guix-derivation-drv-file-name;
+- guix-package-info-unknown;
+- guix-package-info-future;
+- guix-package-info-superseded;
+- guix-package-list-unknown;
+- guix-package-list-future;
+- guix-package-list-superseded.
+
+*** New variables
+
+- guix-derivation-file-regexp;
+- guix-derivation-file-regexp-group;
+- guix-derivation-file-name-faces;
+- guix-read-package-name-function;
+- guix-hash-regexp;
+- guix-default-hash-format;
+- guix-default-key-policy;
+- guix-default-elpa-archive;
+- guix-default-size-sort-key;
+- guix-default-search-paths-type;
+- guix-default-graph-backend;
+- guix-default-graph-node-type.
+
+** Bug fixes
+
+*** UUIDs are handled properly by System Generation Info
+
+Previously "M-x guix-system-generations" followed by "i" failed if store
+devices were specified by UUIDs in a system configuration.
+
 * Changes in 0.3.3 (since 0.3.2)
 
 ** User visible changes
