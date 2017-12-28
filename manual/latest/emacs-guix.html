@@ -513,8 +513,13 @@ profiles: <samp>~/.guix-profile</samp> and <samp>/run/current-system/profile</sa
 <a name="index-guix_002dobsolete_002dpackages"></a>
 </dd>
 <dt><kbd>M-x guix-obsolete-packages</kbd></dt>
-<dd><p>Display obsolete packages (the packages that are installed in a profile
-but cannot be found among available packages).
+<dd><p>Display obsolete or unknown packages (the packages that are installed
+in a profile but cannot be found among the available packages).
+</p>
+<a name="index-guix_002dsuperseded_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-superseded-packages</kbd></dt>
+<dd><p>Display packages that are superseded by the other packages.
 </p>
 <a name="index-guix_002dpackages_002dby_002dname"></a>
 </dd>
@@ -1719,9 +1724,9 @@ using the Emacs interface with the updated Guix code.
 <a name="index-guix_002dhash"></a>
 </dd>
 <dt><kbd>M-x guix-hash</kbd></dt>
-<dd><p>Compute the SHA256 hash of a file similarly to <code>guix hash</code>
-shell command (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-hash">Invoking guix hash</a> in <cite>The GNU Guix
-Reference Manual</cite>).  With <kbd>C-u</kbd>, prompt for a hash format.
+<dd><p>Compute and copy to the kill ring (see <a href="http://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Yanking">Yanking</a> in <cite>The GNU
+Emacs Manual</cite>) the SHA256 hash of a file (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Invoking-guix-hash">Invoking guix hash</a> in <cite>The GNU Guix Reference Manual</cite>).  With <kbd>C-u</kbd>, prompt for a
+hash format.
 </p>
 <p>If you call this command on a directory, its hash will be calculated
 recursively without version-controlled files (so you can use this hash
@@ -1924,6 +1929,7 @@ Next: <a href="#Variable-Index" accesskey="n" rel="next">Variable Index</a>, Pre
 <tr><td></td><td valign="top"><a href="#index-guix_002dsearch_002dby_002dname"><code>guix-search-by-name</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dsearch_002dby_002dregexp"><code>guix-search-by-regexp</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dset_002dcurrent_002dprofile"><code>guix-set-current-profile</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dsuperseded_002dpackages"><code>guix-superseded-packages</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dswitch_002dto_002dbuffer"><code>guix-switch-to-buffer</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Help">Help</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dsystem_002dgenerations"><code>guix-system-generations</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Generation-Commands">Generation Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dsystem_002dgenerations_002dby_002dtime"><code>guix-system-generations-by-time</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Generation-Commands">Generation Commands</a></td></tr>

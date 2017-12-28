@@ -89,9 +89,9 @@ using the Emacs interface with the updated Guix code.
 <a name="index-guix_002dhash"></a>
 </dd>
 <dt><kbd>M-x guix-hash</kbd></dt>
-<dd><p>Compute the SHA256 hash of a file similarly to <code>guix hash</code>
-shell command (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-hash.html#Invoking-guix-hash">Invoking guix hash</a> in <cite>The GNU Guix
-Reference Manual</cite>).  With <kbd>C-u</kbd>, prompt for a hash format.
+<dd><p>Compute and copy to the kill ring (see <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Yanking.html#Yanking">Yanking</a> in <cite>The GNU
+Emacs Manual</cite>) the SHA256 hash of a file (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-hash.html#Invoking-guix-hash">Invoking guix hash</a> in <cite>The GNU Guix Reference Manual</cite>).  With <kbd>C-u</kbd>, prompt for a
+hash format.
 </p>
 <p>If you call this command on a directory, its hash will be calculated
 recursively without version-controlled files (so you can use this hash
