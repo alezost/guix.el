@@ -1567,6 +1567,14 @@ Interactively with prefix, prompt for PROFILE."
   (guix-package-get-display profile 'unknown))
 
 ;;;###autoload
+(defun guix-superseded-packages (&optional profile)
+  "Display information about superseded Guix packages.
+If PROFILE is nil, use `guix-current-profile'.
+Interactively with prefix, prompt for PROFILE."
+  (interactive (list (guix-ui-read-package-profile)))
+  (guix-package-get-display profile 'superseded))
+
+;;;###autoload
 (defun guix-all-available-packages (&optional profile)
   "Display information about all available Guix packages.
 If PROFILE is nil, use `guix-current-profile'.

@@ -67,6 +67,10 @@
       (0 "No packages installed in profile '%s'." profile)
       (1 "A single package installed in profile '%s'." profile)
       (many "%d packages installed in profile '%s'." count profile))
+     (superseded
+      (0 "No packages are superseded.")
+      (1 "A single package is superseded.")
+      (many "%d packages are superseded." count))
      (unknown
       (0 "No obsolete packages in profile '%s'." profile)
       (1 "A single obsolete or unknown package in profile '%s'." profile)
@@ -112,6 +116,10 @@
       (0 "No package outputs installed in profile '%s'." profile)
       (1 "A single package output installed in profile '%s'." profile)
       (many "%d package outputs installed in profile '%s'." count profile))
+     (superseded
+      (0 "No packages are superseded.")
+      (1 "A single package is superseded.")
+      (many "%d package outputs are superseded." count))
      (unknown
       (0 "No obsolete package outputs in profile '%s'." profile)
       (1 "A single obsolete or unknown package output in profile '%s'."

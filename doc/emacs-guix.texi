@@ -340,8 +340,12 @@ profiles: @file{~/.guix-profile} and @file{/run/current-system/profile}
 
 @findex guix-obsolete-packages
 @item M-x guix-obsolete-packages
-Display obsolete packages (the packages that are installed in a profile
-but cannot be found among available packages).
+Display obsolete or unknown packages (the packages that are installed
+in a profile but cannot be found among the available packages).
+
+@findex guix-superseded-packages
+@item M-x guix-superseded-packages
+Display packages that are superseded by the other packages.
 
 @findex guix-packages-by-name
 @item M-x guix-packages-by-name

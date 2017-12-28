@@ -303,6 +303,9 @@ ID-OR-NAME may be either a package ID (object address) or its name."
            (first-or-false (find-best-packages-by-name name #f)))))
 
 (define (matching-packages predicate)
+  "Return all packages matching PREDICATE.
+If (PREDICATE package) returns #f, it is not a matching package,
+otherwise, it is."
   (fold-packages (lambda (pkg res)
                    (if (predicate pkg)
                        (cons pkg res)
@@ -346,6 +349,10 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
   (matching-packages
    (lambda (package)
      (memq license (list-maybe (package-license package))))))
+
+(define (superseded-packages)
+  "Return a list of superseded packages."
+  (matching-packages package-superseded))
 
 (define (all-available-packages)
   "Return a list of all available packages."
@@ -629,6 +636,7 @@ ENTRIES is a list of installed manifest entries."
                                   (packages-from-file file)))
          (os-file-proc          (lambda (_ file)
                                   (packages-from-system-config-file file)))
+         (superseded-proc       (lambda _ (superseded-packages)))
          (all-proc              (lambda _ (all-available-packages)))
          (newest-proc           (lambda _ (newest-available-packages))))
     `((package
@@ -641,6 +649,7 @@ ENTRIES is a list of installed manifest entries."
        (location         . ,location-proc)
        (from-file        . ,file-proc)
        (from-os-file     . ,os-file-proc)
+       (superseded       . ,superseded-proc)
        (all-available    . ,all-proc)
        (newest-available . ,newest-proc))
       (output
@@ -653,6 +662,7 @@ ENTRIES is a list of installed manifest entries."
        (location         . ,location-proc)
        (from-file        . ,file-proc)
        (from-os-file     . ,os-file-proc)
+       (superseded       . ,superseded-proc)
        (all-available    . ,all-proc)
        (newest-available . ,newest-proc)))))
 
@@ -668,7 +678,7 @@ ENTRIES is a list of installed manifest entries."
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name',
 'regexp', 'all-available', 'newest-available', 'installed', 'unknown',
-'license', 'location', 'from-file', 'from-os-file'.
+'superseded', 'license', 'location', 'from-file', 'from-os-file'.
 
 PARAMS is a list of parameters for receiving.  If it is an empty list,
 get information with all available parameters, which are: 'id', 'name',
