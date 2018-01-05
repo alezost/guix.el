@@ -1,6 +1,6 @@
 ;;; guix-help.el --- Help commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -108,7 +108,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     "Other package related commands"
     guix-package-graph
     guix-package-size
-    guix-lint
+    guix-package-lint
 
     "Show services"
     (guix-services-from-system-config-file t nil)
@@ -126,12 +126,14 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     (guix-prettify-mode nil t)
     global-guix-prettify-mode
 
-    "Highlighting for package build logs"
+    "Modes for package build logs and derivations"
     (guix-build-log-mode nil t)
     (guix-build-log-minor-mode nil t)
+    (guix-derivation-mode nil nil)
 
-    "Highlighting for Guix .scm files"
+    "Modes for Guile files"
     (guix-devel-mode nil t)
+    (guix-scheme-mode nil nil)
 
     "Miscellaneous commands"
     ;; `guix-emacs-autoload-packages' is available in Emacs installed
