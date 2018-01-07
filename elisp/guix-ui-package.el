@@ -1,6 +1,6 @@
 ;;; guix-ui-package.el --- Interface for displaying packages  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -377,7 +377,7 @@ a newer version (probably it's time to update)."
   :group 'guix-package-info-faces)
 
 (defface guix-package-info-future
-  '((default :inherit guix-package-info-installed)
+  '((default :inherit guix-package-info-installed-outputs)
     (((class color) (min-colors 88) (background light))
      :foreground "RoyalBlue3")
     (((class color) (min-colors 88) (background dark))
