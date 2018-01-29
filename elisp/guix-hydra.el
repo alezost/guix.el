@@ -1,6 +1,6 @@
 ;;; guix-hydra.el --- Common code for interacting with Hydra  -*- lexical-binding: t -*-
 
-;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -88,8 +88,18 @@
 
 ;;; Defining URLs
 
-(defvar guix-hydra-url "http://hydra.gnu.org"
-  "URL of the Hydra build farm.")
+(defvar guix-hydra-urls
+  '("https://hydra.gnu.org"
+    "https://berlin.guixsd.org"
+    "https://hydra.nixos.org")
+  "List of URLs of the available build farms.")
+
+(defcustom guix-hydra-url (car guix-hydra-urls)
+  "URL of the default build farm."
+  :type `(choice ,@(mapcar (lambda (url) (list 'const url))
+                           guix-hydra-urls)
+                 (string :tag "Other URL"))
+  :group 'guix-hydra)
 
 (defun guix-hydra-url (&rest url-parts)
   "Return Hydra URL."
