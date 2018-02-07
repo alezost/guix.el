@@ -1,6 +1,6 @@
 ;;; guix-hydra-build.el --- Interface for Hydra builds  -*- lexical-binding: t -*-
 
-;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -38,6 +38,16 @@
                   (timestamp . time))
   :filter-boolean-params '(finished busy))
 
+(defcustom guix-hydra-number-of-builds 64
+  "Default number of builds to display.
+This variable is used by '\\[guix-hydra-latest-builds]' and'
+'\\[guix-hydra-queued-builds]' commands.  If nil, always prompt
+for the number of builds."
+  :type `(choice ,@(mapcar (lambda (url) (list 'const url))
+                           guix-hydra-urls)
+                 (string :tag "Other URL"))
+  :group 'guix-hydra-build)
+
 (defun guix-hydra-build-get-display (search-type &rest args)
   "Search for Hydra builds and show results."
   (apply #'bui-list-get-display-entries
@@ -46,7 +56,11 @@
 (cl-defun guix-hydra-build-latest-prompt-args (&key project jobset
                                                     job system)
   "Prompt for and return a list of 'latest builds' arguments."
-  (let* ((number      (read-number "Number of latest builds: "))
+  (let* ((number      (if (or current-prefix-arg
+                              (null guix-hydra-number-of-builds))
+                          (read-number "Number of latest builds: "
+                                       guix-hydra-number-of-builds)
+                        guix-hydra-number-of-builds))
          (project     (if current-prefix-arg
                           (guix-hydra-read-project nil project)
                         project))
@@ -358,16 +372,24 @@ for all ARGS."
 (defun guix-hydra-latest-builds (number &rest args)
   "Display latest NUMBER of Hydra builds.
 ARGS are the same arguments as for `guix-hydra-build-latest-api-url'.
-Interactively, prompt for NUMBER.  With prefix argument, prompt
-for all ARGS."
+Interactively, use `guix-hydra-number-of-builds' variable for
+NUMBER.  With prefix argument, prompt for it and for the other
+ARGS."
   (interactive (guix-hydra-build-latest-prompt-args))
   (apply #'guix-hydra-build-get-display
          'latest number args))
 
 ;;;###autoload
 (defun guix-hydra-queued-builds (number)
-  "Display the NUMBER of queued Hydra builds."
-  (interactive "NNumber of queued builds: ")
+  "Display the NUMBER of queued Hydra builds.
+Interactively, use `guix-hydra-number-of-builds' variable for
+NUMBER.  With prefix argument, prompt for it."
+  (interactive
+   (list (if (or current-prefix-arg
+                 (null guix-hydra-number-of-builds))
+             (read-number "Number of queued builds: "
+                          guix-hydra-number-of-builds)
+           guix-hydra-number-of-builds)))
   (guix-hydra-build-get-display 'queue number))
 
 (provide 'guix-hydra-build)
