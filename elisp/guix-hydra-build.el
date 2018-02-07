@@ -167,11 +167,19 @@ for the number of builds."
   "Face used if hydra build failed."
   :group 'guix-hydra-build-faces)
 
+(defface guix-hydra-build-status-unknown
+  '((t))
+  "Face used if hydra build has an unknown status."
+  :group 'guix-hydra-build-faces)
+
 (defvar guix-hydra-build-status-alist
+  ;; "buildstatus" numbers can be looked at:
+  ;; <https://github.com/NixOS/hydra/blob/master/src/root/common.tt>.
   '((0 . succeeded)
     (1 . failed-build)
     (2 . failed-dependency)
     (3 . failed-other)
+    (6 . failed-output)
     (4 . cancelled))
   "Alist of hydra build status numbers and status names.
 Status numbers are returned by Hydra API, names (symbols) are
@@ -198,7 +206,11 @@ See `guix-hydra-build-status-alist'."
     (failed-dependency
      (guix-hydra-build-status-fail-string "dependency"))
     (failed-other
-     (guix-hydra-build-status-fail-string "other"))))
+     (guix-hydra-build-status-fail-string "other"))
+    (failed-output
+     (guix-hydra-build-status-fail-string "with output"))
+    (t
+     (bui-get-string "Unknown" 'guix-hydra-build-status-unknown))))
 
 (defun guix-hydra-build-status-fail-string (&optional reason)
   "Return a string for a failed build."
