@@ -1,0 +1,14 @@
+# htmlxref.cnf --- Reference file for HTML manual
+
+# This file is used to create proper links (if possible) to the external
+# manuals in the generated HTML pages (created by "make manual"
+# command).  See (info "(texinfo) HTML Xref Configuration") for details.
+
+MAGIT_POPUP = https://magit.vc/manual/magit-popup
+magit-popup     mono    ${MAGIT_POPUP}
+magit-popup     node    ${MAGIT_POPUP}/
+
+GEISER = http://www.nongnu.org/geiser
+geiser          mono    ${GEISER}
+
+# htmlxref.cnf ends here
