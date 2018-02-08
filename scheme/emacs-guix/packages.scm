@@ -1,6 +1,6 @@
 ;;; packages.scm --- Guix packages and generations
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -187,7 +187,7 @@ The result is one of the following symbols:
   'unknown' - the package does not exist;
   'obsolete' - the package NAME exists but has a newer version;
   'future' - the package NAME exists but has an older version."
-  (let ((package (package-by-id-or-name name)))
+  (let ((package (first-or-false (find-best-packages-by-name name #f))))
     (if package
         (case (version-compare version (package-version package))
           ((<) 'obsolete)
