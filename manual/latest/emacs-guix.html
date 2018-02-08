@@ -3,7 +3,7 @@
 <!-- This document describes Emacs-Guix, the Emacs interface for the
 https://www.gnu.org/software/guix/ (GNU Guix) package manager.
 
-Copyright (C) 2014-2017 Alex Kost
+Copyright (C) 2014-2018 Alex Kost
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -140,7 +140,7 @@ Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a>, Up: <a 
 <a href="https://www.gnu.org/software/guix/">GNU Guix</a> package manager.
 </p>
 <blockquote>
-<p>Copyright &copy; 2014-2017 Alex Kost
+<p>Copyright &copy; 2014-2018 Alex Kost
 </p>
 <p>Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -1272,17 +1272,18 @@ view build logs, and so on.  This interface is mostly the same as the
 <dl compact="compact">
 <dd>
 <a name="index-guix_002dhydra_002dlatest_002dbuilds"></a>
+<a name="index-guix_002dhydra_002dnumber_002dof_002dbuilds"></a>
 </dd>
 <dt><kbd>M-x guix-hydra-latest-builds</kbd></dt>
-<dd><p>Display latest failed or successful builds (you will be prompted for a
-number of builds).  With <kbd>C-u</kbd>, you will also be prompted for other
-parameters (project, jobset, job and system).
+<dd><p>Display the latest failed or successful builds.  With <kbd>C-u</kbd>, you
+will be prompted for the number of builds and other parameters
+(project, jobset, job and system).  If you want to change the default
+number of builds, set <code>guix-hydra-number-of-builds</code> variable.
 </p>
 <a name="index-guix_002dhydra_002dqueued_002dbuilds"></a>
 </dd>
 <dt><kbd>M-x guix-hydra-queued-builds</kbd></dt>
-<dd><p>Display scheduled or currently running builds (you will be prompted for
-a number of builds).
+<dd><p>Display scheduled or currently running builds.
 </p>
 <a name="index-guix_002dhydra_002djobsets"></a>
 </dd>
@@ -1973,6 +1974,7 @@ Previous: <a href="#Command-Index" accesskey="p" rel="prev">Command Index</a>, U
 <tr><td></td><td valign="top"><a href="#index-guix_002dguile_002dprogram"><code>guix-guile-program</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Guile-and-Build-Options">Guile and Build Options</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dhash_002dsupport_002ddired"><code>guix-hash-support-dired</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Miscellaneous-Commands">Miscellaneous Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dhelp_002dbuffer_002dname"><code>guix-help-buffer-name</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Buffer-Names">Buffer Names</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dhydra_002dnumber_002dof_002dbuilds"><code>guix-hydra-number-of-builds</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Hydra">Hydra</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dinternal_002drepl_002dbuffer_002dname"><code>guix-internal-repl-buffer-name</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Buffer-Names">Buffer Names</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dlist_002dtype"><code>guix-package-list-type</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dprofiles-1"><code>guix-profiles</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Profiles">Profiles</a></td></tr>
