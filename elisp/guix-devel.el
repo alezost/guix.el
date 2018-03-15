@@ -1,6 +1,7 @@
 ;;; guix-devel.el --- Development tools  -*- lexical-binding: t -*-
 
 ;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2018 Oleg Pykhalov <go.wigust@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -338,6 +339,54 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (add-before 'guix-devel-indent-modify-phases-keyword-2))
 
 
+;;; String inside sexp
+
+(require 'edit-indirect nil t)
+
+(defvar guix-devel-code-block-syntax
+  '("description" "synopsis")
+  "List of strings used to match a sexp in
+ `guix-devel-code-block-regexp'.")
+
+(defvar guix-devel-code-block-regexp
+  (rx-to-string
+   `(and (syntax open-parenthesis)
+         ,(cl-macrolet ((apply-or (lst &rest args) ``(or ,@,lst)))
+            (apply-or guix-devel-code-block-syntax))
+         not-wordchar))
+  "Regexp used by '\\[guix-devel-code-block-edit]'.")
+
+(defun guix-devel-code-block-position ()
+  "Return begining and end of a string inside
+`guix-devel-code-block-syntax' sexp."
+  (save-excursion
+    (narrow-to-defun)
+    (or (re-search-backward guix-devel-code-block-regexp nil t)
+        (widen)
+        (user-error
+         (format "The point should be inside %s."
+                 (mapconcat 'identity
+                            (mapcar (lambda (str)
+                                      (concat "'" str "'"))
+                                    guix-devel-code-block-syntax)
+                            " or "))))
+    (widen)
+    (cons (re-search-forward (rx (syntax string-quote)))
+          (1- (progn (up-list 1 t) (point))))))
+
+;;;###autoload
+(defun guix-devel-code-block-edit ()
+  "Edit a string inside `guix-devel-code-block-syntax' sexp with
+`edit-indirect' in `texinfo-mode' major-mode."
+  (interactive)
+  (let* ((pos (guix-devel-code-block-position))
+         (begin (car pos))
+         (end (cdr pos))
+         (edit-indirect-guess-mode-function
+          (lambda (&rest _) (texinfo-mode))))
+    (edit-indirect-region begin end 'display-buffer)))
+
+
 (defvar guix-devel-keys-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "b") 'guix-devel-build-package-definition)
@@ -352,6 +401,7 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
 (defvar guix-devel-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c .") guix-devel-keys-map)
+    (define-key map (kbd "C-c '") 'guix-devel-code-block-edit)
     map)
   "Keymap for `guix-devel-mode'.")
 
