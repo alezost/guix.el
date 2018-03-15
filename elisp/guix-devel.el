@@ -1,6 +1,7 @@
 ;;; guix-devel.el --- Development tools  -*- lexical-binding: t -*-
 
-;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2018 Oleg Pykhalov <go.wigust@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -338,6 +339,41 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (add-before 'guix-devel-indent-modify-phases-keyword-2))
 
 
+;;; Edit synopsis/description
+
+(require 'edit-indirect nil t)
+
+(defvar guix-devel-code-block-regexp
+  (rx (syntax open-parenthesis)
+      (or "description" "synopsis")
+      not-wordchar)
+  "Regexp used by '\\[guix-devel-code-block-edit]'.")
+
+(defun guix-devel-code-block-position ()
+  "Return (beginning . end) positions of the string at point to edit."
+  (save-excursion
+    (narrow-to-defun)
+    (unless (re-search-backward guix-devel-code-block-regexp nil t)
+      (widen)
+      (user-error "The point should be inside 'description' or 'synopsis'"))
+    (widen)
+    (cons (re-search-forward (rx (syntax string-quote)))
+          (1- (progn (backward-char)
+                     (forward-sexp)
+                     (point))))))
+
+;;;###autoload
+(defun guix-devel-code-block-edit ()
+  "Edit the current synopsis/description in `texinfo-mode'."
+  (interactive)
+  (let* ((pos (guix-devel-code-block-position))
+         (begin (car pos))
+         (end (cdr pos))
+         (edit-indirect-guess-mode-function
+          (lambda (&rest _) (texinfo-mode))))
+    (edit-indirect-region begin end 'display-buffer)))
+
+
 (defvar guix-devel-keys-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "b") 'guix-devel-build-package-definition)
@@ -352,6 +388,7 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
 (defvar guix-devel-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c .") guix-devel-keys-map)
+    (define-key map (kbd "C-c '") 'guix-devel-code-block-edit)
     map)
   "Keymap for `guix-devel-mode'.")
 
