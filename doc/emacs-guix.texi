@@ -701,6 +701,10 @@ Also you can use @kbd{C-u} prefix argument to specify a directory just
 for the current @kbd{M-x@tie{}guix-find-location} or
 @kbd{M-x@tie{}guix-edit} command.
 
+Setting @code{guix-read-package-name-function} to
+@code{#'guix-read-package-name-at-point} will allow you to find a Guix
+package according to a word at current cursor position.
+
 @c ----------------------------------------------------------------
 @node Popup Interface
 @chapter Popup Interface
