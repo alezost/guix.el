@@ -1,6 +1,6 @@
 ;;; guix-command.el --- Popup interface for guix commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -356,6 +356,7 @@ to be modified."
      guix-command-improve-lint-argument)
     (("pack")
      guix-command-improve-common-build-argument
+     guix-command-improve-manifest-argument
      guix-command-improve-system-type-argument
      guix-command-improve-target-argument
      guix-command-improve-pack-argument)

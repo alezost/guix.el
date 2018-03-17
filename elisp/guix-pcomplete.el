@@ -1,6 +1,6 @@
 ;;; guix-pcomplete.el --- Functions for completing guix commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017, 2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -190,7 +190,7 @@ INPUT is the current partially completed string."
      ((string= "--key-download" option)
       (complete* guix-help-key-policies))
 
-     ((and (command? "package" "weather" "refresh")
+     ((and (command? "pack" "package" "weather" "refresh")
            (option? "-m" "--manifest"))
       (complete* (pcomplete-entries)))
 
