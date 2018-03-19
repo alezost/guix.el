@@ -705,7 +705,7 @@ for the current @kbd{M-x@tie{}guix-find-location} or
 By default, when you should specify a package name (for example, after
 @kbd{M-x guix-edit}), you will be prompted for it in the minibuffer,
 but you can configure Emacs-Guix to use a package name at the current
-point position (if possible):
+point position (unless @kbd{C-u} is used):
 
 @example
 (setq guix-read-package-name-function 'guix-read-package-name-at-point)
