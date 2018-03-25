@@ -34,6 +34,7 @@
 (require 'guix-guile)
 (require 'guix-geiser)
 (require 'guix-misc)
+(require 'ffap)
 
 (defgroup guix-devel nil
   "Settings for Guix development utils."
@@ -337,6 +338,21 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (replace    'guix-devel-indent-modify-phases-keyword-1)
   (add-after  'guix-devel-indent-modify-phases-keyword-2)
   (add-before 'guix-devel-indent-modify-phases-keyword-2))
+
+
+;;; Find file at point
+
+(defcustom guix-devel-ffap-patch-directories
+  (list (getenv "GUIX_PACKAGE_PATH") "patches")
+  "List of directories for `guix-devel-ffap-patch'."
+  :group 'guix-devel
+  :type '(repeat (directory :tag "Directory")))
+
+(defun guix-devel-ffap-patch (patch)
+  "Return Guix package patch from around point if it exists, or nil."
+  (and guix-devel-mode
+       (or (ffap-locate-file patch t guix-devel-ffap-patch-directories)
+           (expand-file-name patch (car guix-devel-ffap-patch-directories)))))
 
 
 ;;; Edit synopsis/description

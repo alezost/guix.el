@@ -6,7 +6,7 @@
 ;; Version: 0.3.4
 ;; URL: https://alezost.github.io/guix.el/
 ;; Keywords: tools
-;; Package-Requires: ((emacs "24.3") (dash "2.11.0") (geiser "0.8") (bui "1.1.0") (magit-popup "2.1.0") (edit-indirect "0.1.4"))
+;; Package-Requires: ((emacs "24.3") (dash "2.11.0") ((ffap "24.3")) (geiser "0.8") (bui "1.1.0") (magit-popup "2.1.0") (edit-indirect "0.1.4"))
 
 ;; This file is part of Emacs-Guix.
 

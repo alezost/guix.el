@@ -956,6 +956,11 @@ Alternatively, to avoid this limitation, you may just run another Geiser
 REPL, and while something is being evaluated in the previous REPL, you
 can continue editing a scheme file with the help of the current one.
 
+To find a patch file at point with a @kbd{M-x ffap} command:
+@example
+(add-to-list 'ffap-alist '("\\.patch" . guix-devel-ffap-patch))
+@end example
+
 @c ----------------------------------------------------------------
 @node Hydra
 @chapter Hydra
