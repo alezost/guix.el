@@ -340,23 +340,6 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (add-before 'guix-devel-indent-modify-phases-keyword-2))
 
 
-;;; Find file at point
-
-(defcustom guix-devel-ffap-patch-directories
-  (list (getenv "GUIX_PACKAGE_PATH") "patches")
-  "List of directories for `guix-devel-ffap-patch'.
-Look at Info node `(emacs-guix) Development' to see how
-'\\[ffap]' command can be configured to open Guix patch files."
-  :group 'guix-devel
-  :type '(repeat (directory :tag "Directory")))
-
-(defun guix-devel-ffap-patch (patch)
-  "Return Guix package patch from around point if it exists, or nil."
-  (and guix-devel-mode
-       (or (ffap-locate-file patch t guix-devel-ffap-patch-directories)
-           (expand-file-name patch (car guix-devel-ffap-patch-directories)))))
-
-
 ;;; Edit synopsis/description
 
 (require 'edit-indirect nil t)
@@ -435,6 +418,23 @@ like this:
     (setq-local font-lock-multiline nil)
     (font-lock-remove-keywords nil guix-devel-font-lock-keywords))
   (guix-font-lock-flush))
+
+
+;;; Find file at point
+
+(defcustom guix-devel-ffap-patch-directories
+  (list (getenv "GUIX_PACKAGE_PATH") "patches")
+  "List of directories for `guix-devel-ffap-patch'.
+Look at Info node `(emacs-guix) Development' to see how
+'\\[ffap]' command can be configured to open Guix patch files."
+  :group 'guix-devel
+  :type '(repeat (directory :tag "Directory")))
+
+(defun guix-devel-ffap-patch (patch)
+  "Return Guix package patch from around point if it exists, or nil."
+  (and guix-devel-mode
+       (or (ffap-locate-file patch t guix-devel-ffap-patch-directories)
+           (expand-file-name patch (car guix-devel-ffap-patch-directories)))))
 
 
 (defvar guix-devel-emacs-font-lock-keywords
