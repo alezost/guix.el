@@ -989,6 +989,16 @@ locations from your Git checkout.  This can be done by setting
 for the current <kbd>M-x&nbsp;guix-find-location</kbd> or
 <kbd>M-x&nbsp;guix-edit</kbd> command.
 </p>
+<a name="index-guix_002dread_002dpackage_002dname_002dfunction"></a>
+<p>By default, when you should specify a package name (for example, after
+<kbd>M-x guix-edit</kbd>), you will be prompted for it in the minibuffer,
+but you can configure Emacs-Guix to use a package name at the current
+point position (unless <kbd>C-u</kbd> is used):
+</p>
+<div class="example">
+<pre class="example">(setq guix-read-package-name-function 'guix-read-package-name-at-point)
+</pre></div>
+
 <hr>
 <a name="Popup-Interface"></a>
 <div class="header">
@@ -1258,6 +1268,13 @@ evaluation will be finished in the REPL.
 REPL, and while something is being evaluated in the previous REPL, you
 can continue editing a scheme file with the help of the current one.
 </p>
+<a name="index-ffap"></a>
+<p>To find a patch file at point with <kbd>M-x ffap</kbd> command, you may use:
+</p>
+<div class="example">
+<pre class="example">(add-to-list 'ffap-alist '(&quot;\\.patch&quot; . guix-devel-ffap-patch))
+</pre></div>
+
 <hr>
 <a name="Hydra"></a>
 <div class="header">
@@ -1820,6 +1837,8 @@ Next: <a href="#Command-Index" accesskey="n" rel="next">Command Index</a>, Previ
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-C"><b>C</b></a>
  &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-F"><b>F</b></a>
+ &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-G"><b>G</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-H"><b>H</b></a>
@@ -1841,6 +1860,9 @@ Next: <a href="#Command-Index" accesskey="n" rel="next">Command Index</a>, Previ
 <tr><th><a name="Concept-Index_cp_letter-C">C</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-completions">completions</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Completions">Completions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-customization-group">customization group</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Configuration">Configuration</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Concept-Index_cp_letter-F">F</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-ffap">ffap</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Development">Development</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-Index_cp_letter-G">G</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-generations">generations</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Generations">Generations</a></td></tr>
@@ -1871,6 +1893,8 @@ Next: <a href="#Command-Index" accesskey="n" rel="next">Command Index</a>, Previ
 <table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-Index_cp_letter-B"><b>B</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Concept-Index_cp_letter-F"><b>F</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_letter-G"><b>G</b></a>
  &nbsp; 
@@ -1991,6 +2015,7 @@ Previous: <a href="#Command-Index" accesskey="p" rel="prev">Command Index</a>, U
 <tr><td></td><td valign="top"><a href="#index-guix_002dinternal_002drepl_002dbuffer_002dname"><code>guix-internal-repl-buffer-name</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Buffer-Names">Buffer Names</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dlist_002dtype"><code>guix-package-list-type</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dprofiles-1"><code>guix-profiles</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Profiles">Profiles</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dread_002dpackage_002dname_002dfunction"><code>guix-read-package-name-function</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Locations">Package Locations</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002drepl_002dbuffer_002dname"><code>guix-repl-buffer-name</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Buffer-Names">Buffer Names</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002drepl_002duse_002dlatest"><code>guix-repl-use-latest</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Guile-and-Build-Options">Guile and Build Options</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002drepl_002duse_002dserver"><code>guix-repl-use-server</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Guile-and-Build-Options">Guile and Build Options</a></td></tr>

@@ -123,6 +123,21 @@ locations from your Git checkout.  This can be done by setting
 for the current <kbd>M-x&nbsp;guix-find-location</kbd> or
 <kbd>M-x&nbsp;guix-edit</kbd> command.
 </p>
+<a name="index-guix_002dread_002dpackage_002dname_002dfunction"></a>
+<p>By default, when you should specify a package name (for example, after
+<kbd>M-x guix-edit</kbd>), you will be prompted for it in the minibuffer,
+but you can configure Emacs-Guix to use a package name at the current
+point position (unless <kbd>C-u</kbd> is used):
+</p>
+<div class="example">
+<pre class="example">(setq guix-read-package-name-function 'guix-read-package-name-at-point)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Popup-Interface.html#Popup-Interface" accesskey="n" rel="next">Popup Interface</a>, Previous: <a href="Package-Licenses.html#Package-Licenses" accesskey="p" rel="prev">Package Licenses</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
 
 
 
