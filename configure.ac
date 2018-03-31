@@ -1,5 +1,5 @@
 define(EMACS_GUIX_CONFIGURE_COPYRIGHT, [[
-Copyright (C) 2016-2017 Alex Kost <alezost@gmail.com>
+Copyright (C) 2016-2018 Alex Kost <alezost@gmail.com>
 
 This file is part of Emacs-Guix.
 
@@ -108,6 +108,13 @@ AC_ARG_WITH([bui-lispdir],
   [builispdir="no"])
 AC_SUBST([builispdir])
 
+AC_ARG_WITH([editindirect-lispdir],
+  [AS_HELP_STRING([--with-editindirect-lispdir],
+    [directory with edit-indirect.el file])],
+  [editindirectlispdir="$withval"],
+  [editindirectlispdir="no"])
+AC_SUBST([editindirectlispdir])
+
 AC_ARG_WITH([popup-lispdir],
   [AS_HELP_STRING([--with-popup-lispdir],
     [directory with magit-popup.el file])],
@@ -118,6 +125,7 @@ AC_SUBST([popuplispdir])
 AM_CONDITIONAL([GEISER_DIR], [test "x$geiserlispdir" != "xno"])
 AM_CONDITIONAL([DASH_DIR], [test "x$dashlispdir" != "xno"])
 AM_CONDITIONAL([BUI_DIR], [test "x$builispdir" != "xno"])
+AM_CONDITIONAL([EDITINDIRECT_DIR], [test "x$editindirectlispdir" != "xno"])
 AM_CONDITIONAL([POPUP_DIR], [test "x$popuplispdir" != "xno"])
 
 dnl If all elisp dependencies are specified, we can use "emacs -Q" for
@@ -127,6 +135,7 @@ AM_CONDITIONAL([EMACS_Q],
   [test "x$geiserlispdir" != "xno" -a \
         "x$dashlispdir" != "xno" -a \
         "x$builispdir" != "xno" -a \
+        "x$editindirectlispdir" != "xno" -a \
         "x$popuplispdir" != "xno"])
 
 dnl ----------------------------------------------------------------

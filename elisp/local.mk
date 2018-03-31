@@ -1,6 +1,6 @@
 # local.mk --- Local Automake file for emacs-lisp code  -*- makefile-automake -*-
 
-# Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+# Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 # Copyright © 2016 Mathieu Lirzin <mthl@gnu.org>
 
 # This file is part of Emacs-Guix.
@@ -34,6 +34,10 @@ endif
 
 if BUI_DIR
   AM_ELCFLAGS += -L "$(builispdir)"
+endif
+
+if EDITINDIRECT_DIR
+  AM_ELCFLAGS += -L "$(editindirectlispdir)"
 endif
 
 if POPUP_DIR
