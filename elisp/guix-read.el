@@ -1,6 +1,6 @@
 ;;; guix-read.el --- Minibuffer readers
 
-;; Copyright © 2015–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -27,9 +27,36 @@
 (require 'guix-help-vars)
 (require 'guix-utils)
 (require 'guix-repl)
+(require 'guix nil t)
 
 
 ;;; Receivable lists of packages, lint checkers, etc.
+
+(defcustom guix-package-names-use-duplicates t
+  "Whether a list of package names is allowed to have duplicates or not.
+
+These names are used as completions by several commands (for
+example, by '\\[guix-packages-by-name]').
+
+In short: `t' is fast but you'll see unwanted duplicates of
+package names; `nil' is slow (only the first time) but there will
+be no duplicates.  Read further for details.
+
+To get a list of package names, Emacs-Guix walks through all of
+the Guix packages.  And since Guix may have multiple packages
+with the same name (like `gcc', `linux-libre', etc.), the default
+list of all names contains duplicates (like 6 times of `gcc'
+name).  Removing these duplicates from the list is a time
+consuming operation, so it is not enabled by default, but you can
+enable it by setting this variable to `nil'.
+
+Note that Emacs-Guix caches the list of names when it is used the
+first time, so the potential slowness will happen only during the
+first call.  For the same reason (because of cashing) the new
+value of this variable will take effect only after you restart
+Emacs."
+  :type 'boolean
+  :group 'guix)
 
 (guix-memoized-defun guix-graph-backend-names ()
   "Return a list of names of available graph backends."
@@ -56,9 +83,13 @@
   (guix-eval-read "(pack-format-names)"))
 
 (guix-memoized-defun guix-package-names ()
-  "Return a list of names of available packages."
-  (sort (guix-eval-read "(package-names)")
-        #'string<))
+  "Return a list of names of available packages.
+See also `guix-package-names-use-duplicates' variable."
+  (let ((names (guix-eval-read "(package-names)")))
+    (sort (if guix-package-names-use-duplicates
+              names
+            (cl-delete-duplicates names :test #'string=))
+          #'string<)))
 
 (guix-memoized-defun guix-license-names ()
   "Return a list of names of available licenses."

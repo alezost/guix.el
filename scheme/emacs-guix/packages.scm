@@ -700,9 +700,8 @@ get information with all available parameters, which are: 'id', 'name',
 
 (define (package-names)
   "Return a list of names of available packages."
-  (delete-duplicates
    (fold-packages (lambda (pkg res)
                     (cons (package-name pkg) res))
-                  '())))
+                  '()))
 
 ;;; packages.scm ends here
