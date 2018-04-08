@@ -148,7 +148,8 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-info
     guix-help
     (guix-about t nil)
-    (guix-version t nil))
+    (guix-version t nil)
+    (guix-report-bug t nil))
   "List of command specifications for '\\[guix-help]'.
 Each specification can have one of the following forms:
 

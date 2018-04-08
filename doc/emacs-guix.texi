@@ -1325,6 +1325,11 @@ And some more commands that were not covered by the other chapters.
 
 @table @kbd
 
+@findex guix-report-bug
+@item M-x guix-report-bug
+Open a mail buffer to report a bug for GNU Guix similarly to
+@kbd{M-x@tie{}report-emacs-bug} command.
+
 @findex guix-pull
 @item M-x guix-pull
 It is the same as @command{guix pull} shell command (@pxref{Invoking

@@ -1,6 +1,6 @@
 ;;; guix-misc.el --- Miscellaneous definitions  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -321,6 +321,19 @@ If VERBOSE is non-nil (with prefix argument), produce verbose output."
      (apply #'guix-make-guile-expression
             'guix-command "pull" args)
      nil 'pull)))
+
+
+;;; Reporting Guix bugs
+
+(defvar guix-bug-address "bug-guix@gnu.org"
+  "Email address for the GNU Guix bugs.")
+
+;;;###autoload
+(defun guix-report-bug (subject)
+  "Report GNU Guix bug.
+Prompt for bug subject and open a mail buffer."
+  (interactive "sBug Subject: ")
+  (compose-mail guix-bug-address subject))
 
 (provide 'guix-misc)
 
