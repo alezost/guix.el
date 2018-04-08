@@ -10,6 +10,9 @@ upgrade and remove packages, to switch and remove profile generations,
 to display all available info about packages and to do many other
 things.
 
+If you are [[https://github.com/emacs-evil/evil][Evil]] user, note that [[https://github.com/emacs-evil/evil-collection][Evil Collection]] provide key bindings for
+Emacs-Guix.
+
 This README provides only a basic overview on Emacs-Guix, for a full and
 detailed description, see the [[https://alezost.github.io/guix.el/manual/latest/html_node/index.html][info manual]] that comes with it.
 
