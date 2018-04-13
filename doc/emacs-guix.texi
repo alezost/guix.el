@@ -53,6 +53,7 @@ A copy of the license is available at
 * Package Locations::   Interface for locations of package source files.
 * Popup Interface::     Magit-like interface for guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
+* Prettify Variables::  Split and indent Shell variables.
 * Build Log Mode::      Highlighting Guix build logs.
 * Completions::         Completing @command{guix} shell command.
 * Development::         Highlighting and tools for Guix code.
@@ -803,6 +804,37 @@ mode hooks (@pxref{Hooks,,, emacs, The GNU Emacs Manual}), for example:
 (add-hook 'shell-mode-hook 'guix-prettify-mode)
 (add-hook 'dired-mode-hook 'guix-prettify-mode)
 @end example
+
+@c ----------------------------------------------------------------
+@node Prettify Variables
+@chapter Guix Environment Variables Mode
+
+Emacs-Guix provides a major mode based on @code{sh-mode} for
+prettifying @file{environment-variables} and @file{profile} files.  It
+will split all exported variables and separate them with a newline.
+All @file{/tmp/guix-build-*-*.drv-*/environment-variables} and
+@file{/etc/profile} will be prettified by default.
+
+You could also directly use @code{guix-env-var-prettify-buffer} to
+prettify current buffer without changing current major mode and
+@code{guix-env-var-prettify-variable} to prettify a variable at
+current line.
+
+@table @kbd
+
+@findex guix-env-var-mode
+@item M-x guix-env-var-mode
+Enable/disable prettifying for the current buffer.
+
+@findex guix-env-var-prettify-buffer
+@item M-x guix-env-var-prettify-buffer
+Prettify current buffer without switching to @code{guix-env-var-mode}.
+
+@findex guix-env-var-prettify-variable
+@item M-x guix-env-var-prettify-variable
+Prettify variable assignment at current line.
+
+@end table
 
 @c ----------------------------------------------------------------
 @node Build Log Mode
