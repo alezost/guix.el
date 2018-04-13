@@ -1,6 +1,6 @@
 ;;; guix-utils.el --- General utility functions  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -241,6 +241,14 @@ Return buffer with the prettified contents."
       (funcall (or mode 'scheme-mode)))
     (guix-pretty-print-buffer buffer)
     buffer))
+
+(defun guix-replace-match (regexp string &optional group)
+  "Replace all occurrences of REGEXP with STRING in the current buffer.
+GROUP specifies a parenthesized expression used in REGEXP."
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward regexp nil t)
+      (replace-match string nil nil nil group))))
 
 (defmacro guix-while-search (regexp &rest body)
   "Evaluate BODY after each search for REGEXP in the current buffer."

@@ -1,6 +1,6 @@
 ;;; guix-geiser.el --- Interacting with Geiser  -*- lexical-binding: t -*-
 
-;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -47,23 +47,7 @@ Return a list of strings with result values of evaluation."
 (defun guix-geiser-eval-read (str &optional repl)
   "Evaluate STR with guile expression using Geiser REPL.
 Return elisp expression of the first result value of evaluation."
-  ;; The goal is to convert a string with scheme expression into elisp
-  ;; expression.
-  (let ((result (car (guix-geiser-eval str repl))))
-    (cond
-     ((or (string= result "#f")
-          (string= result "#<unspecified>"))
-      nil)
-     ((string= result "#t")
-      t)
-     (t
-      (read (replace-regexp-in-string
-             "[ (]\\(#f\\)" "nil"
-             (replace-regexp-in-string
-              "[ (]\\(#t\\)" "t"
-              result
-              nil nil 1)
-             nil nil 1))))))
+  (guix-guile-read-from-string (car (guix-geiser-eval str repl))))
 
 (defun guix-geiser-eval-in-repl (str &optional repl no-history no-display)
   "Switch to Geiser REPL and evaluate STR with guile expression there.

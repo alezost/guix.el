@@ -1,6 +1,6 @@
 ;;; guix-guile.el --- Auxiliary tools for working with Guile code  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017, 2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'geiser-guile)
+(require 'guix-utils)
 
 (defvar guix-guile-definition-regexp
   (rx bol "(define"
@@ -94,6 +95,33 @@ PROC and ARGS should be strings."
   "Return non-nil, if STRING contains a Guile prompt."
   (or (string-match-p geiser-guile--prompt-regexp string)
       (string-match-p geiser-guile--debugger-prompt-regexp string)))
+
+(defun guix-guile-read ()
+  "Read guile code from the current buffer and 'transform' it into elisp.
+The contents of the current buffer may be modified."
+  (goto-char (point-min))
+  (cond
+   ((or (looking-at-p "^#f")
+        (looking-at-p "^#<unspecified>"))
+    nil)
+   ((looking-at-p "^#t")
+    t)
+   (t
+    (guix-replace-match "[ (]\\(#f\\)" "nil" 1)
+    (guix-replace-match "[ (]\\(#t\\)" "t" 1)
+    (read (current-buffer)))))
+
+(defun guix-guile-read-from-file (file-name)
+  "Read guile code from FILE-NAME and 'transform' it into elisp."
+  (with-temp-buffer
+    (insert-file-contents file-name)
+    (guix-guile-read)))
+
+(defun guix-guile-read-from-string (string)
+  "Read guile code from string and 'transform' it into elisp."
+  (with-temp-buffer
+    (insert string)
+    (guix-guile-read)))
 
 (provide 'guix-guile)
 
