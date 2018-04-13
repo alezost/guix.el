@@ -60,6 +60,7 @@ EL_FILES =					\
   %D%/guix-external.el				\
   %D%/guix-profiles.el				\
   %D%/guix-scheme.el				\
+  %D%/guix-env-var.el				\
   %D%/guix-guile.el				\
   %D%/guix-geiser.el				\
   %D%/guix-repl.el				\

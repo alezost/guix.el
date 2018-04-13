@@ -1,6 +1,7 @@
 ;;; guix-auto-mode.el --- Settings for `auto-mode-alist'
 
 ;; Copyright © 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2018 Oleg Pykhalov <go.wigust@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -57,6 +58,14 @@ shouldn't end with a trailing slash.")
                               (regexp ,chars-rx) ".drv" string-end)
                         t)
          . guix-derivation-mode)
+        (,(rx-to-string `(and "/etc/profile" string-end) t)
+         . guix-env-var-mode)
+        (,(rx-to-string
+           `(and "/tmp/guix-build-" (one-or-more (regexp ,chars-rx))
+                 ".drv-" (one-or-more digit) "/environment-variables"
+                 string-end)
+           t)
+         . guix-env-var-mode)
         (,(rx-to-string
            `(and "/guix/profiles/system" (* (regexp ,chars-rx)) "/"
                  (or "boot" "parameters")
