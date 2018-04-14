@@ -1,6 +1,6 @@
 ;;; guix-repl.el --- Making and using Guix REPL
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -100,7 +100,8 @@ If you have a slow system, try to increase this time."
   :type 'string
   :group 'guix-repl)
 
-(defcustom guix-repl-after-start-hook nil
+(defcustom guix-repl-after-start-hook
+  '(guix-repl-configure-guile-side)
   "Hook called after Guix REPL is started."
   :type 'hook
   :group 'guix-repl)
@@ -181,6 +182,25 @@ from operations performed in Guix REPL by a user.")
 This internal variable is used to define what actions should be
 executed after the current operation succeeds.
 See `guix-eval-in-repl' for details.")
+
+(defvar guix-repl-max-returned-list-size 10
+  "Maximal length of a list that is passed from the Guile side to
+the Emacs side directly through Geiser.
+
+This is a performance variable: passing big chunks of data
+through Geiser may be slow, so to improve the speed, the Guile
+side can write data (like a list of packages to display) to a
+file, and then this file is read directly by Emacs.
+
+So if a list is lesser than the value of this variable, it is
+passed through Geiser.  If it is bigger, it is written to a
+file (in `guix-temporary-directory').
+
+Set this variable to nil, if you want to pass a list of any size
+through Geiser (not recommended).
+
+After setting this variable, you need to kill
+`guix-repl-buffer-name' buffer to make the changes take effect.")
 
 (declare-function guix-emacs-autoload-packages "guix-emacs" t)
 
@@ -349,6 +369,18 @@ This is a replacement for `geiser-repl--output-filter'."
                                           (match-beginning 0))
     (geiser-autodoc--disinhibit-autodoc))))
 
+(defun guix-repl-configure-guile-side ()
+  "Do some configurations of the Guix REPL.
+See `guix-repl-max-returned-list-size'."
+  (let ((set-size (and guix-repl-max-returned-list-size
+                       (format "(set! %S %d)"
+                               '%max-returned-list-size
+                               guix-repl-max-returned-list-size)))
+        (set-dir (format "(set! %S \"%s\")"
+                         '%temporary-directory
+                         (guix-temporary-directory))))
+    (guix-eval (concat "(begin " set-size set-dir ")"))))
+
 (defun guix-repl-exit (&optional internal no-wait)
   "Exit the current Guix REPL.
 If INTERNAL is non-nil, exit the internal REPL.
@@ -494,7 +526,12 @@ See `guix-geiser-eval' for details."
 (defun guix-eval-read (str)
   "Evaluate STR with guile expression using Guix REPL.
 See `guix-geiser-eval-read' for details."
-  (guix-geiser-eval-read str (guix-get-repl-buffer 'internal)))
+  (let ((result (guix-geiser-eval-read
+                 str (guix-get-repl-buffer 'internal))))
+    (if (and (consp result)
+             (eq (car result) 'in-file))
+        (guix-guile-read-from-file (cdr result))
+      result)))
 
 (defun guix-eval-in-repl (str &optional operation-buffer operation-type)
   "Switch to Guix REPL and evaluate STR with guile expression there.

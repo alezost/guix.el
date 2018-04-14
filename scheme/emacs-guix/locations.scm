@@ -1,6 +1,6 @@
 ;;; locations.scm --- Locations of Guix package
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -30,6 +30,7 @@
   #:autoload   (guix ui) (location->string)
   #:use-module (guix utils)
   #:autoload   (emacs-guix packages) (package-by-id-or-name)
+  #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix utils)
   #:export (packages-by-location-file
             package-location-string
@@ -74,6 +75,7 @@
   (object-transformer %package-location-param-alist))
 
 (define (package-location-sexps)
-  (map package-location->sexp (package-location-files)))
+  (to-emacs-side
+   (map package-location->sexp (package-location-files))))
 
 ;;; locations.scm ends here

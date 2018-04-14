@@ -1,6 +1,6 @@
 ;;; licenses.scm --- Guix licenses
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -28,6 +28,7 @@
   #:use-module (srfi srfi-1)
   #:use-module (guix memoization)
   #:use-module (guix licenses)
+  #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix utils)
   #:export (licenses
             license-names
@@ -80,7 +81,8 @@
      (licenses))))
 
 (define (license-sexps search-type . search-values)
-  (map license->sexp
-       (apply find-licenses search-type search-values)))
+  (to-emacs-side
+   (map license->sexp
+        (apply find-licenses search-type search-values))))
 
 ;;; licenses.scm ends here

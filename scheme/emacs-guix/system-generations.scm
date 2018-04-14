@@ -1,6 +1,6 @@
 ;;; system-generations.scm --- Generations of system profiles
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -29,6 +29,7 @@
   #:use-module (gnu system uuid)
   #:use-module (guix memoization)
   #:use-module (guix profiles)
+  #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix generations)
   #:use-module (emacs-guix utils)
   #:export (system-generation-sexps))
@@ -81,6 +82,6 @@ get information with all available parameters, which are: 'id',
   (let ((generations (find-generations profile search-type search-values))
         (->sexp (object-transformer (system-generation-param-alist profile)
                                     params)))
-    (map ->sexp generations)))
+    (to-emacs-side (map ->sexp generations))))
 
 ;;; system-generations.scm ends here

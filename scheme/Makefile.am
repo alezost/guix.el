@@ -1,6 +1,6 @@
 # Makefile.am --- GNU Automake file to build guile modules
 
-# Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+# Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 # This file is part of Emacs-Guix.
 
@@ -23,6 +23,7 @@ AM_V_GUILEC_0 = @echo "  GUILEC     " $@;
 
 MODULES =					\
   emacs-guix/utils.scm				\
+  emacs-guix/emacs.scm				\
   emacs-guix/pack.scm				\
   emacs-guix/hash.scm				\
   emacs-guix/refresh.scm			\

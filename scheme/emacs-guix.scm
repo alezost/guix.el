@@ -1,6 +1,6 @@
 ;;; emacs-guix.scm --- Scheme side of Emacs-Guix
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -62,6 +62,9 @@
                                 pack-format-names)
   #:autoload (emacs-guix profiles) (search-paths)
   #:autoload (emacs-guix refresh) (refresh-updater-names)
+  #:autoload (emacs-guix emacs) (%max-returned-list-size
+                                 %temporary-directory
+                                 to-emacs-side)
   #:autoload (emacs-guix utils) (search-load-path))
 
 ;;; emacs-guix.scm ends here

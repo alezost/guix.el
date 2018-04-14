@@ -56,6 +56,7 @@
                                 license-name)
   #:autoload   (emacs-guix licenses) (lookup-license)
   #:autoload   (emacs-guix locations) (packages-by-location-file)
+  #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix profiles)
   #:use-module (emacs-guix utils)
   #:export (package-names
@@ -696,12 +697,13 @@ get information with all available parameters, which are: 'id', 'name',
                        (apply (patterns-maker entry-type search-type)
                               manifest search-values)))
          (->sexps ((pattern-transformer entry-type) manifest params)))
-    (append-map ->sexps patterns)))
+    (to-emacs-side (append-map ->sexps patterns))))
 
 (define (package-names)
   "Return a list of names of available packages."
+  (to-emacs-side
    (fold-packages (lambda (pkg res)
                     (cons (package-name pkg) res))
-                  '()))
+                  '())))
 
 ;;; packages.scm ends here

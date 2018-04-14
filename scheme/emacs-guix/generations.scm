@@ -1,6 +1,6 @@
 ;;; generations.scm --- Generations of profiles
 
-;; Copyright © 2014–2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2016, 2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -29,6 +29,7 @@
   #:use-module (srfi srfi-19)
   #:use-module (srfi srfi-26)
   #:use-module (guix profiles)
+  #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix utils)
   #:export (generation-param-alist
             matching-generations
@@ -95,6 +96,6 @@ get information with all available parameters, which are: 'id',
   (let ((generations (find-generations profile search-type search-values))
         (->sexp (object-transformer (generation-param-alist profile)
                                     params)))
-    (map ->sexp generations)))
+    (to-emacs-side (map ->sexp generations))))
 
 ;;; generations.scm ends here
