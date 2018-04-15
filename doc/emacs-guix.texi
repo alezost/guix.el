@@ -393,6 +393,14 @@ Search for packages with names matching a specified regexp.  This
 command is the same as @code{guix-search-by-regexp}, except only a
 package ``name'' is searched.
 
+@findex guix-number-of-packages
+@item M-x guix-number-of-packages
+This command just displays a message (in the minibuffer) with the
+number of available packages.  Along with the default Guix packages,
+this number includes the packages from @code{GUIX_PACKAGE_PATH}
+environment variable (@pxref{Package Modules,,, guix, The GNU Guix
+Reference Manual}).
+
 @end table
 
 @vindex guix-package-list-type

@@ -60,6 +60,7 @@
   #:use-module (emacs-guix profiles)
   #:use-module (emacs-guix utils)
   #:export (package-names
+            number-of-packages
             profile->specifications+file-names
             id->name+version
             package-by-id
@@ -705,5 +706,10 @@ get information with all available parameters, which are: 'id', 'name',
    (fold-packages (lambda (pkg res)
                     (cons (package-name pkg) res))
                   '())))
+
+(define (number-of-packages)
+  "Return the number of available packages."
+  (fold-packages (lambda (_ sum) (1+ sum))
+                 0))
 
 ;;; packages.scm ends here

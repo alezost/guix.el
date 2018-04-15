@@ -1590,6 +1590,15 @@ Interactively with prefix, prompt for PROFILE."
   (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'newest-available))
 
+;;;###autoload
+(defun guix-number-of-packages ()
+  "Display the number of available Guix packages.
+This number includes the packages from GUIX_PACKAGE_PATH (see
+Info node `(guix) Package Modules')."
+  (interactive)
+  (message "Total number of Guix packages: %d."
+           (guix-eval-read "(number-of-packages)")))
+
 (provide 'guix-ui-package)
 
 ;;; guix-ui-package.el ends here

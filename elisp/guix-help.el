@@ -83,6 +83,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-search-by-name
     guix-search-by-regexp
     guix-packages-from-system-config-file
+    guix-number-of-packages
 
     "Show profiles"
     guix-profiles
