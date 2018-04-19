@@ -225,6 +225,7 @@ to be modified."
     guix-command-improve-gc-argument
   '(("--list-dead" :char ?D)
     ("--list-live" :char ?L)
+    ("--derivers"  :char ?e)
     ("--referrers" :char ?f)
     ("--verify"    :fun guix-read-verify-options-string)))
 
