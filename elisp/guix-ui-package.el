@@ -1583,12 +1583,18 @@ Interactively with prefix, prompt for PROFILE."
   (guix-package-get-display profile 'all-available))
 
 ;;;###autoload
+(defalias 'guix-all-packages 'guix-all-available-packages)
+
+;;;###autoload
 (defun guix-newest-available-packages (&optional profile)
   "Display information about the newest available Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'newest-available))
+
+;;;###autoload
+(defalias 'guix-newest-packages 'guix-newest-available-packages)
 
 ;;;###autoload
 (defun guix-number-of-packages ()
