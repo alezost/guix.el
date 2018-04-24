@@ -121,7 +121,10 @@ work with Guix Scheme files (@pxref{Development}).
 @chapter Installation
 
 @cindex installation
-There are several ways to install Emacs-Guix:
+There are several ways@footnote{It is not recommended to mix several
+installations (in particular, installations from Guix and MELPA), as
+it may lead to incompatibilities in the source (@code{.scm}) and
+compiled (@code{.go}) Guile files.} to install Emacs-Guix:
 
 @itemize
 @item Installing using GNU Guix

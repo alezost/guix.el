@@ -59,7 +59,10 @@ changed since then).
 * Installation
 
 Emacs-Guix can be installed using Guix, from [[http://melpa.org/][MELPA]], or it can be used
-from a git checkout.
+from a git checkout.  *Note* that it is not recommended to mix several
+installations (in particular, Guix and MELPA), as it may lead to
+incompatibilities in the source (=.scm=) and compiled (=.go=) Guile
+files (see [[https://github.com/alezost/guix.el/issues/21][issue 21]]).
 
 ** Guix
 
