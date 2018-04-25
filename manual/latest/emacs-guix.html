@@ -254,7 +254,7 @@ Next: <a href="#Package-Management" accesskey="n" rel="next">Package Management<
 <h2 class="chapter">2 Installation</h2>
 
 <a name="index-installation"></a>
-<p>There are several ways to install Emacs-Guix:
+<p>There are several ways<a name="DOCF1" href="#FOOT1"><sup>1</sup></a> to install Emacs-Guix:
 </p>
 <ul>
 <li> Installing using GNU Guix
@@ -574,6 +574,15 @@ can be changed by modifying <code>guix-package-search-params</code> variable.
 <dd><p>Search for packages with names matching a specified regexp.  This
 command is the same as <code>guix-search-by-regexp</code>, except only a
 package &ldquo;name&rdquo; is searched.
+</p>
+<a name="index-guix_002dnumber_002dof_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-number-of-packages</kbd></dt>
+<dd><p>This command just displays a message (in the minibuffer) with the
+number of available packages.  Along with the default Guix packages,
+this number includes the packages from <code>GUIX_PACKAGE_PATH</code>
+environment variable (see <a href="http://www.gnu.org/software/guix/manual/guix.html#Package-Modules">Package Modules</a> in <cite>The GNU Guix
+Reference Manual</cite>).
 </p>
 </dd>
 </dl>
@@ -1755,7 +1764,7 @@ make it verbose.
 </p>
 <a name="index-Guix-REPL-2"></a>
 <p>Once <code>guix pull</code> has succeeded, the Guix REPL is
-restarted<a name="DOCF1" href="#FOOT1"><sup>1</sup></a>.  This allows you to keep
+restarted<a name="DOCF2" href="#FOOT2"><sup>2</sup></a>.  This allows you to keep
 using the Emacs interface with the updated Guix code.
 </p>
 <a name="index-guix_002dhash"></a>
@@ -1958,6 +1967,7 @@ Next: <a href="#Variable-Index" accesskey="n" rel="next">Variable Index</a>, Pre
 <tr><td></td><td valign="top"><a href="#index-guix_002dlicenses"><code>guix-licenses</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Licenses">Package Licenses</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dlocations"><code>guix-locations</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Locations">Package Locations</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dnewest_002davailable_002dpackages"><code>guix-newest-available-packages</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-guix_002dnumber_002dof_002dpackages"><code>guix-number-of-packages</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dobsolete_002dpackages"><code>guix-obsolete-packages</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dfrom_002dfile"><code>guix-package-from-file</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-Commands">Package Commands</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-guix_002dpackage_002dgraph"><code>guix-package-graph</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#More-Package-Commands">More Package Commands</a></td></tr>
@@ -2042,6 +2052,11 @@ Previous: <a href="#Command-Index" accesskey="p" rel="prev">Command Index</a>, U
 <h4 class="footnotes-heading">Footnotes</h4>
 
 <h3><a name="FOOT1" href="#DOCF1">(1)</a></h3>
+<p>It is not recommended to mix several
+installations (in particular, installations from Guix and MELPA), as
+it may lead to incompatibilities in the source (<code>.scm</code>) and
+compiled (<code>.go</code>) Guile files.</p>
+<h3><a name="FOOT2" href="#DOCF2">(2)</a></h3>
 <p>Note that name/version pairs cannot be used to
 identify packages (because a name is not necessarily unique), so
 Emacs-Guix uses special identifiers that live only during a guile
