@@ -17,10 +17,10 @@ http://www.gnu.org/licenses/fdl.html.
 <!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Prettify Mode (Emacs-Guix Reference Manual)</title>
+<title>Prettify Variables (Emacs-Guix Reference Manual)</title>
 
-<meta name="description" content="Prettify Mode (Emacs-Guix Reference Manual)">
-<meta name="keywords" content="Prettify Mode (Emacs-Guix Reference Manual)">
+<meta name="description" content="Prettify Variables (Emacs-Guix Reference Manual)">
+<meta name="keywords" content="Prettify Variables (Emacs-Guix Reference Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="texi2any">
@@ -28,8 +28,8 @@ http://www.gnu.org/licenses/fdl.html.
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
 <link href="index.html#Top" rel="up" title="Top">
-<link href="Prettify-Variables.html#Prettify-Variables" rel="next" title="Prettify Variables">
-<link href="Popup-Interface.html#Popup-Interface" rel="prev" title="Popup Interface">
+<link href="Build-Log-Mode.html#Build-Log-Mode" rel="next" title="Build Log Mode">
+<link href="Prettify-Mode.html#Prettify-Mode" rel="prev" title="Prettify Mode">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -63,54 +63,49 @@ ul.no-bullet {list-style: none}
 </head>
 
 <body lang="en">
-<a name="Prettify-Mode"></a>
+<a name="Prettify-Variables"></a>
 <div class="header">
 <p>
-Next: <a href="Prettify-Variables.html#Prettify-Variables" accesskey="n" rel="next">Prettify Variables</a>, Previous: <a href="Popup-Interface.html#Popup-Interface" accesskey="p" rel="prev">Popup Interface</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Build-Log-Mode.html#Build-Log-Mode" accesskey="n" rel="next">Build Log Mode</a>, Previous: <a href="Prettify-Mode.html#Prettify-Mode" accesskey="p" rel="prev">Prettify Mode</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Guix-Prettify-Mode"></a>
-<h2 class="chapter">7 Guix Prettify Mode</h2>
+<a name="Guix-Environment-Variables-Mode"></a>
+<h2 class="chapter">8 Guix Environment Variables Mode</h2>
 
-<p>Emacs-Guix also comes with &ldquo;guix-prettify.el&rdquo;.  It provides a minor
-mode for abbreviating store file names by replacing hash sequences of
-symbols with &ldquo;&hellip;&rdquo;:
+<p>Emacs-Guix provides a major mode based on <code>sh-mode</code> for
+prettifying <samp>environment-variables</samp> and <samp>profile</samp> files.  It
+will split all exported variables and separate them with a newline.
+All <samp>/tmp/guix-build-*-*.drv-*/environment-variables</samp> and
+<samp>/etc/profile</samp> will be prettified by default.
 </p>
-<div class="example">
-<pre class="example">/gnu/store/72f54nfp6g1hz873w8z3gfcah0h4nl9p-foo-0.1
-&rArr; /gnu/store/…-foo-0.1
-</pre></div>
-
+<a name="index-guix_002denv_002dvar_002denable_002dformatting"></a>
+<p>If you want to disable this prettifying, set
+<code>guix-env-var-enable-formatting</code> variable to nil.
+</p>
+<p>You could also directly use <code>guix-env-var-prettify-buffer</code> to
+prettify the current buffer without changing its major mode and
+<code>guix-env-var-prettify-variable</code> to prettify a variable at
+current line.
+</p>
 <dl compact="compact">
 <dd>
-<a name="index-guix_002dprettify_002dmode"></a>
+<a name="index-guix_002denv_002dvar_002dmode"></a>
 </dd>
-<dt><kbd>M-x guix-prettify-mode</kbd></dt>
+<dt><kbd>M-x guix-env-var-mode</kbd></dt>
 <dd><p>Enable/disable prettifying for the current buffer.
 </p>
-<a name="index-global_002dguix_002dprettify_002dmode"></a>
+<a name="index-guix_002denv_002dvar_002dprettify_002dbuffer"></a>
 </dd>
-<dt><kbd>M-x global-guix-prettify-mode</kbd></dt>
-<dd><p>Enable/disable prettifying globally.
+<dt><kbd>M-x guix-env-var-prettify-buffer</kbd></dt>
+<dd><p>Prettify current buffer without switching to <code>guix-env-var-mode</code>.
+</p>
+<a name="index-guix_002denv_002dvar_002dprettify_002dvariable"></a>
+</dd>
+<dt><kbd>M-x guix-env-var-prettify-variable</kbd></dt>
+<dd><p>Prettify variable assignment at current line.
 </p>
 </dd>
 </dl>
-
-<p>If you wish to enable <code>global-guix-prettify-mode</code> automatically
-on Emacs start, you may do it by adding the following line to your
-Emacs init file:
-</p>
-<div class="example">
-<pre class="example">(add-hook 'after-init-hook 'global-guix-prettify-mode)
-</pre></div>
-
-<p>If you want to enable it only for specific major modes, add it to the
-mode hooks (see <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html#Hooks">Hooks</a> in <cite>The GNU Emacs Manual</cite>), for example:
-</p>
-<div class="example">
-<pre class="example">(add-hook 'shell-mode-hook 'guix-prettify-mode)
-(add-hook 'dired-mode-hook 'guix-prettify-mode)
-</pre></div>
 
 
 
