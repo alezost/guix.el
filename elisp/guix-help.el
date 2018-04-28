@@ -304,7 +304,9 @@ See `guix-help-specifications' for the meaning of SPEC."
 (defun guix-help-insert-content ()
   "Insert summary of Emacs-Guix commands into the current buffer."
   (setq header-line-format
-        " Summary of the available M-x commands")
+        '(" Summary of the available "
+          (:propertize "M-x" face guix-help-key)
+          " commands"))
   (mapc #'guix-help-insert-specification
         guix-help-specifications)
   ;; Remove an extra newline in the beginning of buffer.
