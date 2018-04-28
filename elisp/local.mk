@@ -70,6 +70,7 @@ EL_FILES =					\
   %D%/guix-misc.el				\
   %D%/guix-build-log.el				\
   %D%/guix-command.el				\
+  %D%/guix-env-var.el				\
   %D%/guix-devel.el				\
   %D%/guix-hydra.el				\
   %D%/guix-hydra-build.el			\

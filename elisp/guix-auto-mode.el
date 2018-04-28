@@ -57,6 +57,13 @@ shouldn't end with a trailing slash.")
                               (regexp ,chars-rx) ".drv" string-end)
                         t)
          . guix-derivation-mode)
+        (,(rx-to-string `(and "/etc/profile" string-end) t) . guix-env-var-mode)
+        (,(rx-to-string
+           `(and "/tmp/guix-build-" (one-or-more (regexp ,chars-rx))
+                 ".drv-" (one-or-more digit) "/environment-variables"
+                 string-end)
+           t)
+         . guix-env-var-mode)
         (,(rx-to-string
            `(and "/guix/profiles/system" (* (regexp ,chars-rx)) "/"
                  (or "boot" "parameters")
