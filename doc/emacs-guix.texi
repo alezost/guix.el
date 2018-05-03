@@ -358,6 +358,13 @@ in a profile but cannot be found among the available packages).
 @item M-x guix-superseded-packages
 Display packages that are superseded by the other packages.
 
+@findex guix-dependent-packages
+@item M-x guix-dependent-packages
+Display packages that depend on the specified package(s).  This
+command is analogous to @code{guix refresh --list-dependent} shell
+command (@pxref{Invoking guix refresh,,, guix, The GNU Guix Reference
+Manual}).
+
 @findex guix-packages-by-name
 @item M-x guix-packages-by-name
 Display package(s) with the specified name.

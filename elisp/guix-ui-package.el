@@ -1575,6 +1575,19 @@ Interactively with prefix, prompt for PROFILE."
   (guix-package-get-display profile 'superseded))
 
 ;;;###autoload
+(defun guix-dependent-packages (packages &optional profile)
+  "Display Guix packages that depend on PACKAGES.
+This is similar to 'guix refresh --list-dependent PACKAGES ...'.
+See Info node `(guix) Invoking guix refresh' for details.
+
+If PROFILE is nil, use `guix-current-profile'.
+Interactively with prefix, prompt for PROFILE."
+  (interactive
+   (list (guix-read-package-names)
+         (guix-ui-read-package-profile)))
+  (guix-package-get-display profile 'dependent packages))
+
+;;;###autoload
 (defun guix-all-available-packages (&optional profile)
   "Display information about all available Guix packages.
 If PROFILE is nil, use `guix-current-profile'.

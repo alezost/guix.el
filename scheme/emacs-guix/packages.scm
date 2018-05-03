@@ -44,8 +44,12 @@
   #:use-module (srfi srfi-11)
   #:use-module (srfi srfi-26)
   #:use-module (gnu packages)
+  #:use-module (guix graph)
+  #:use-module (guix monads)
   #:use-module (guix packages)
   #:use-module (guix profiles)
+  #:use-module (guix scripts graph)
+  #:use-module (guix store)
   #:use-module (guix ui)
   #:use-module (guix utils)
   #:autoload   (gnu system) (operating-system-packages)
@@ -304,6 +308,17 @@ ID-OR-NAME may be either a package ID (object address) or its name."
          (lambda (name)
            (first-or-false (find-best-packages-by-name name #f)))))
 
+(define (objects->packages objects)
+  "Convert OBJECTS to packages.
+OBJECTS can be either package IDs, specifications or the packages
+themselves."
+  (filter-map (match-lambda
+                ((? package? package)
+                 package)
+                (id-or-name
+                 (package-by-id-or-name id-or-name)))
+              objects))
+
 (define (matching-packages predicate)
   "Return all packages matching PREDICATE.
 If (PREDICATE package) returns #f, it is not a matching package,
@@ -381,6 +396,24 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
 (define (packages-from-system-config-file file)
   "Return a list of packages from system configuration FILE."
   (operating-system-packages (read-operating-system file)))
+
+(define (dependent-packages packages)
+  ;; Some code for this procedure was taken from `list-dependents'
+  ;; procedure in (guix scripts refresh) module.
+  "Return a list of packages that need to be rebuilt if PACKAGES are changed."
+  (define (all-packages)
+    ;; XXX It is probably better to include hidden packages, but Emacs
+    ;; side should "understand" what a hidden package is.
+    (fold-packages cons '()
+                   ;; #:select? (const #t)  ; include hidden packages
+                   ))
+
+  (let ((packages (objects->packages packages)))
+    (with-store store
+      (run-with-store store
+        (mlet %store-monad ((edges (node-back-edges %bag-node-type
+                                                    (all-packages))))
+          (return (node-transitive-edges packages edges)))))))
 
 
 ;;; Making package/output patterns.
@@ -638,6 +671,8 @@ ENTRIES is a list of installed manifest entries."
                                   (packages-from-file file)))
          (os-file-proc          (lambda (_ file)
                                   (packages-from-system-config-file file)))
+         (dependent-proc        (lambda (_ packages)
+                                  (dependent-packages packages)))
          (superseded-proc       (lambda _ (superseded-packages)))
          (all-proc              (lambda _ (all-available-packages)))
          (newest-proc           (lambda _ (newest-available-packages))))
@@ -652,6 +687,7 @@ ENTRIES is a list of installed manifest entries."
        (from-file        . ,file-proc)
        (from-os-file     . ,os-file-proc)
        (superseded       . ,superseded-proc)
+       (dependent        . ,dependent-proc)
        (all-available    . ,all-proc)
        (newest-available . ,newest-proc))
       (output
@@ -665,6 +701,7 @@ ENTRIES is a list of installed manifest entries."
        (from-file        . ,file-proc)
        (from-os-file     . ,os-file-proc)
        (superseded       . ,superseded-proc)
+       (dependent        . ,dependent-proc)
        (all-available    . ,all-proc)
        (newest-available . ,newest-proc)))))
 
@@ -680,7 +717,8 @@ ENTRIES is a list of installed manifest entries."
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name',
 'regexp', 'all-available', 'newest-available', 'installed', 'unknown',
-'superseded', 'license', 'location', 'from-file', 'from-os-file'.
+'superseded', 'dependent', 'license', 'location',
+'from-file','from-os-file'.
 
 PARAMS is a list of parameters for receiving.  If it is an empty list,
 get information with all available parameters, which are: 'id', 'name',

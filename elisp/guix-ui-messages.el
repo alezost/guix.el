@@ -1,6 +1,6 @@
 ;;; guix-ui-messages.el --- Minibuffer messages for Guix package management interface
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -71,6 +71,10 @@
       (0 "No packages are superseded.")
       (1 "A single package is superseded.")
       (many "%d packages are superseded." count))
+     (dependent
+      (0 "No packages depend on: %s." val)
+      (1 "A single package depends on: %s." val)
+      (many "%d packages depend on: %s." count val))
      (unknown
       (0 "No obsolete packages in profile '%s'." profile)
       (1 "A single obsolete or unknown package in profile '%s'." profile)
@@ -120,6 +124,10 @@
       (0 "No packages are superseded.")
       (1 "A single package is superseded.")
       (many "%d package outputs are superseded." count))
+     (dependent
+      (0 "No packages depend on: %s." val)
+      (1 "A single package depends on: %s." val)
+      (many "%d package outputs depend on: %s." count val))
      (unknown
       (0 "No obsolete package outputs in profile '%s'." profile)
       (1 "A single obsolete or unknown package output in profile '%s'."
