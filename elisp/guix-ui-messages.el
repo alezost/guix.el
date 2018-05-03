@@ -55,11 +55,11 @@
       (0 "No packages matching '%s'." val)
       (1 "A single package matching '%s'." val)
       (many "%d packages matching '%s'." count val))
-     (all-available
+     (all
       (0 "No packages are available for some reason.")
       (1 "A single available package (that's strange).")
       (many "%d available packages." count))
-     (newest-available
+     (newest
       (0 "No packages are available for some reason.")
       (1 "A single newest available package (that's strange).")
       (many "%d newest available packages." count))
@@ -108,11 +108,11 @@
       (0 "No package outputs matching '%s'." val)
       (1 "A single package output matching '%s'." val)
       (many "%d package outputs matching '%s'." count val))
-     (all-available
+     (all
       (0 "No package outputs are available for some reason.")
       (1 "A single available package output (that's strange).")
       (many "%d available package outputs." count))
-     (newest-available
+     (newest
       (0 "No package outputs are available for some reason.")
       (1 "A single newest available package output (that's strange).")
       (many "%d newest available package outputs." count))

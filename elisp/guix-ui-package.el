@@ -1588,26 +1588,28 @@ Interactively with prefix, prompt for PROFILE."
   (guix-package-get-display profile 'dependent packages))
 
 ;;;###autoload
-(defun guix-all-available-packages (&optional profile)
-  "Display information about all available Guix packages.
+(defun guix-all-packages (&optional profile)
+  "Display all available Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive (list (guix-ui-read-package-profile)))
-  (guix-package-get-display profile 'all-available))
+  (guix-package-get-display profile 'all))
 
 ;;;###autoload
-(defalias 'guix-all-packages 'guix-all-available-packages)
+(define-obsolete-function-alias 'guix-all-available-packages
+  'guix-all-packages "0.4")
 
 ;;;###autoload
-(defun guix-newest-available-packages (&optional profile)
-  "Display information about the newest available Guix packages.
+(defun guix-newest-packages (&optional profile)
+  "Display the newest available Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive (list (guix-ui-read-package-profile)))
-  (guix-package-get-display profile 'newest-available))
+  (guix-package-get-display profile 'newest))
 
 ;;;###autoload
-(defalias 'guix-newest-packages 'guix-newest-available-packages)
+(define-obsolete-function-alias 'guix-newest-available-packages
+  'guix-newest-packages "0.4")
 
 ;;;###autoload
 (defun guix-number-of-packages ()

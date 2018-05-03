@@ -69,8 +69,8 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
 
 (defvar guix-help-specifications
   '("Show packages"
-    guix-all-available-packages
-    guix-newest-available-packages
+    guix-all-packages
+    guix-newest-packages
     guix-installed-user-packages
     guix-installed-system-packages
     guix-installed-packages

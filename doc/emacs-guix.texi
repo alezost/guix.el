@@ -331,10 +331,10 @@ will be prompted for a profile just for that command.
 
 @table @kbd
 
-@findex guix-all-available-packages
-@item M-x guix-all-available-packages
-@findex guix-newest-available-packages
-@itemx M-x guix-newest-available-packages
+@findex guix-all-packages
+@item M-x guix-all-packages
+@findex guix-newest-packages
+@itemx M-x guix-newest-packages
 Display all/newest available packages.
 
 @findex guix-installed-packages

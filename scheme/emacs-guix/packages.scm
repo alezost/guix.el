@@ -75,8 +75,8 @@
             packages-by-full-name
             packages-by-regexp
             packages-by-license
-            all-available-packages
-            newest-available-packages
+            all-packages
+            newest-packages
             packages-from-file
             matching-packages
             package/output-sexps))
@@ -371,11 +371,11 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
   "Return a list of superseded packages."
   (matching-packages package-superseded))
 
-(define (all-available-packages)
+(define (all-packages)
   "Return a list of all available packages."
   (matching-packages (const #t)))
 
-(define (newest-available-packages)
+(define (newest-packages)
   "Return a list of the newest available packages."
   (vhash-fold (lambda (name elem res)
                 (match elem
@@ -674,8 +674,8 @@ ENTRIES is a list of installed manifest entries."
          (dependent-proc        (lambda (_ packages)
                                   (dependent-packages packages)))
          (superseded-proc       (lambda _ (superseded-packages)))
-         (all-proc              (lambda _ (all-available-packages)))
-         (newest-proc           (lambda _ (newest-available-packages))))
+         (all-proc              (lambda _ (all-packages)))
+         (newest-proc           (lambda _ (newest-packages))))
     `((package
        (id               . ,(apply-to-rest ids->package-patterns))
        (name             . ,(apply-to-rest specifications->package-patterns))
@@ -688,8 +688,8 @@ ENTRIES is a list of installed manifest entries."
        (from-os-file     . ,os-file-proc)
        (superseded       . ,superseded-proc)
        (dependent        . ,dependent-proc)
-       (all-available    . ,all-proc)
-       (newest-available . ,newest-proc))
+       (all              . ,all-proc)
+       (newest           . ,newest-proc))
       (output
        (id               . ,(apply-to-rest ids->output-patterns))
        (name             . ,(apply-to-rest specifications->output-patterns))
@@ -702,8 +702,8 @@ ENTRIES is a list of installed manifest entries."
        (from-os-file     . ,os-file-proc)
        (superseded       . ,superseded-proc)
        (dependent        . ,dependent-proc)
-       (all-available    . ,all-proc)
-       (newest-available . ,newest-proc)))))
+       (all              . ,all-proc)
+       (newest           . ,newest-proc)))))
 
 (define (patterns-maker entry-type search-type)
   (or (and=> (assq-ref %patterns-makers entry-type)
@@ -716,9 +716,8 @@ ENTRIES is a list of installed manifest entries."
 
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name',
-'regexp', 'all-available', 'newest-available', 'installed', 'unknown',
-'superseded', 'dependent', 'license', 'location',
-'from-file','from-os-file'.
+'regexp', 'all', 'newest', 'installed', 'unknown', 'superseded',
+'dependent', 'license', 'location', 'from-file','from-os-file'.
 
 PARAMS is a list of parameters for receiving.  If it is an empty list,
 get information with all available parameters, which are: 'id', 'name',
