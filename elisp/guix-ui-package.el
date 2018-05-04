@@ -268,7 +268,8 @@ ENTRIES is a list of package entries to get info about packages."
   :hint 'guix-package-info-hint
   :titles '((home-url . "Home page")
             (systems . "Supported systems"))
-  :required '(id name version installed non-unique known-status superseded))
+  :required '(id name version installed non-unique known-status
+              superseded hidden))
 
 (bui-define-interface guix-installed-output info
   :format '((file-name simple guix-installed-output-info-insert-file-name)
@@ -397,6 +398,14 @@ directory with the old package recipes."
 (defface guix-package-info-superseded
   '((t :inherit shadow))
   "Face used for superseded packages."
+  :group 'guix-package-info-faces)
+
+(defface guix-package-info-hidden
+  '((t :inherit shadow))
+  "Face used for hidden packages.
+Most likely you will never see these packages (because they are
+hidden and hard to find), so you may not bother customizing this
+face."
   :group 'guix-package-info-faces)
 
 (defcustom guix-package-info-auto-find-package t
@@ -565,21 +574,25 @@ Face name is `guix-package-info-TYPE-inputs'."
 
 (defun guix-package-info-insert-additional-text (entry)
   "Insert some additional info for package ENTRY at point."
-  (cl-case (bui-entry-non-void-value entry 'known-status)
-    (known
-     (when (bui-entry-non-void-value entry 'non-unique)
-       (guix-package-info-insert-non-unique-text
-        (guix-package-entry->name-specification entry))
-       (bui-newline))
-     (--when-let (bui-entry-non-void-value entry 'superseded)
-       (guix-package-info-insert-superseded-text it)
-       (bui-newline)))
-    (obsolete (guix-package-info-insert-obsolete-text
-               (bui-entry-non-void-value entry 'name)))
-    (unknown  (guix-package-info-insert-unknown-text
-               (bui-entry-non-void-value entry 'name)))
-    (future   (guix-package-info-insert-future-text
-               (bui-entry-non-void-value entry 'name)))))
+  (if (bui-entry-non-void-value entry 'hidden)
+      (progn
+        (guix-package-info-insert-hidden-text)
+        (bui-newline))
+    (cl-case (bui-entry-non-void-value entry 'known-status)
+      (known
+       (when (bui-entry-non-void-value entry 'non-unique)
+         (guix-package-info-insert-non-unique-text
+          (guix-package-entry->name-specification entry))
+         (bui-newline))
+       (--when-let (bui-entry-non-void-value entry 'superseded)
+         (guix-package-info-insert-superseded-text it)
+         (bui-newline)))
+      (obsolete (guix-package-info-insert-obsolete-text
+                 (bui-entry-non-void-value entry 'name)))
+      (unknown  (guix-package-info-insert-unknown-text
+                 (bui-entry-non-void-value entry 'name)))
+      (future   (guix-package-info-insert-future-text
+                 (bui-entry-non-void-value entry 'name))))))
 
 (defun guix-package-info-insert-unknown-text (name)
   "Insert a message about unknown package at point."
@@ -620,6 +633,18 @@ is newer than the available package recipe for ")
   (bui-insert-button full-name 'guix-package-name)
   (insert " package.")
   (bui-newline))
+
+(defun guix-package-info-insert-hidden-text ()
+  "Insert a message that current package is hidden."
+  (insert "Congratulations, you have found the ")
+  (bui-format-insert "hidden" 'guix-package-info-hidden)
+  (insert " package!
+Now you have the power to display ")
+  (bui-insert-button
+   "all hidden packages" 'bui
+   'help-echo "Enter the hidden part of the Guixland!"
+   'action (lambda (_) (guix-hidden-packages)))
+  (insert ".\n"))
 
 (defun guix-package-info-insert-output (output entry)
   "Insert OUTPUT at point.
@@ -984,7 +1009,7 @@ more than one)."
             (outputs nil 13 t)
             (installed guix-package-list-get-installed-outputs 13 t)
             (synopsis bui-list-get-one-line 30 nil))
-  :required '(id known-status superseded)
+  :required '(id known-status superseded hidden)
   :hint 'guix-package-list-hint
   :sort-key '(name)
   :marks '((install . ?I)
@@ -1030,6 +1055,12 @@ See `guix-package-info-future' face for details."
   '((t :inherit guix-package-info-superseded))
   "Face used for superseded packages.
 See `guix-package-info-superseded' face for details."
+  :group 'guix-package-list-faces)
+
+(defface guix-package-list-hidden
+  '((t :inherit guix-package-info-hidden))
+  "Face used for hidden packages.
+See `guix-package-info-hidden' face for details."
   :group 'guix-package-list-faces)
 
 (defcustom guix-package-list-generation-marking-enabled nil
@@ -1080,16 +1111,18 @@ likely)."
 Colorize it with an appropriate face if needed."
   (bui-get-string
    name
-   (cl-case (bui-entry-non-void-value entry 'known-status)
-     ((known nil)
-      (cond
-       ((bui-entry-non-void-value entry 'superseded)
-        'guix-package-list-superseded)
-       ((bui-entry-non-void-value entry 'installed)
-        'guix-package-list-installed)))
-     (obsolete 'guix-package-list-obsolete)
-     (unknown  'guix-package-list-unknown)
-     (future   'guix-package-list-future))))
+   (if (bui-entry-non-void-value entry 'hidden)
+       'guix-package-list-hidden
+     (cl-case (bui-entry-non-void-value entry 'known-status)
+       ((known nil)
+        (cond
+         ((bui-entry-non-void-value entry 'superseded)
+          'guix-package-list-superseded)
+         ((bui-entry-non-void-value entry 'installed)
+          'guix-package-list-installed)))
+       (obsolete 'guix-package-list-obsolete)
+       (unknown  'guix-package-list-unknown)
+       (future   'guix-package-list-future)))))
 
 (defun guix-package-list-get-installed-outputs (installed &optional _)
   "Return string with outputs from INSTALLED entries."
@@ -1285,7 +1318,7 @@ for all ARGS."
             (output nil 9 t)
             (installed nil 12 t)
             (synopsis bui-list-get-one-line 30 nil))
-  :required '(id package-id known-status superseded)
+  :required '(id package-id known-status superseded hidden)
   :hint 'guix-output-list-hint
   :sort-key '(name)
   :marks '((install . ?I)
@@ -1586,6 +1619,12 @@ Interactively with prefix, prompt for PROFILE."
    (list (guix-read-package-names)
          (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'dependent packages))
+
+(defun guix-hidden-packages (&optional profile)
+  "Display hidden Guix packages.
+If PROFILE is nil, use `guix-current-profile'."
+  ;; Not interactive because..., well, the packages are hidden :-)
+  (guix-package-get-display profile 'hidden))
 
 ;;;###autoload
 (defun guix-all-packages (&optional profile)

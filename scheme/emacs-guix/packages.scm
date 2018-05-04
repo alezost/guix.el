@@ -182,8 +182,10 @@ and not installed in PROFILE2."
   "Return #t if PACKAGE is a single package with such name/version."
   (match (packages-by-name (package-name package)
                            (package-version package))
-    ((package) #t)
-    (_ #f)))
+    ((first rest ..1) #f)
+    ;; Empty list also leads to #t: if no packages have been found, then
+    ;; PACKAGE (probably the hidden one) is also considered unique.
+    (_ #t)))
 
 (define (package-known-status name version)
   "Return 'known status' of a package with NAME and VERSION.
@@ -214,6 +216,7 @@ The result is one of the following symbols:
     (outputs           . ,package-outputs)
     (systems           . ,package-supported-systems)
     (non-unique        . ,(negate package-unique?))
+    (hidden            . ,hidden-package?)
     (known-status      . ,(const 'known))
     (superseded        . ,(lambda (pkg)
                             (and=> (package-superseded pkg)
@@ -244,7 +247,8 @@ The result is one of the following symbols:
                        (lambda (package table)
                          (vhash-consq (object-address package)
                                       package table))
-                       vlist-null))))
+                       vlist-null
+                       #:select? (const #t)))))
     (values
      (lambda (address)
        "Return package by its object ADDRESS."
@@ -319,15 +323,18 @@ themselves."
                  (package-by-id-or-name id-or-name)))
               objects))
 
-(define (matching-packages predicate)
+(define* (matching-packages predicate
+                            #:key (select? (negate hidden-package?)))
   "Return all packages matching PREDICATE.
 If (PREDICATE package) returns #f, it is not a matching package,
-otherwise, it is."
+otherwise, it is.
+See `fold-packages' for the meaning of SELECT?."
   (fold-packages (lambda (pkg res)
                    (if (predicate pkg)
                        (cons pkg res)
                        res))
-                 '()))
+                 '()
+                 #:select? select?))
 
 (define (filter-packages-by-output packages output)
   (filter (lambda (package)
@@ -367,6 +374,11 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
    (lambda (package)
      (memq license (list-maybe (package-license package))))))
 
+(define (hidden-packages)
+  "Return a list of hidden packages."
+  (matching-packages hidden-package?
+                     #:select? (const #t)))
+
 (define (superseded-packages)
   "Return a list of superseded packages."
   (matching-packages package-superseded))
@@ -402,11 +414,7 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
   ;; procedure in (guix scripts refresh) module.
   "Return a list of packages that need to be rebuilt if PACKAGES are changed."
   (define (all-packages)
-    ;; XXX It is probably better to include hidden packages, but Emacs
-    ;; side should "understand" what a hidden package is.
-    (fold-packages cons '()
-                   ;; #:select? (const #t)  ; include hidden packages
-                   ))
+    (matching-packages (const #t) #:select? (const #t)))
 
   (let ((packages (objects->packages packages)))
     (with-store store
@@ -673,6 +681,7 @@ ENTRIES is a list of installed manifest entries."
                                   (packages-from-system-config-file file)))
          (dependent-proc        (lambda (_ packages)
                                   (dependent-packages packages)))
+         (hidden-proc           (lambda _ (hidden-packages)))
          (superseded-proc       (lambda _ (superseded-packages)))
          (all-proc              (lambda _ (all-packages)))
          (newest-proc           (lambda _ (newest-packages))))
@@ -686,6 +695,7 @@ ENTRIES is a list of installed manifest entries."
        (location         . ,location-proc)
        (from-file        . ,file-proc)
        (from-os-file     . ,os-file-proc)
+       (hidden           . ,hidden-proc)
        (superseded       . ,superseded-proc)
        (dependent        . ,dependent-proc)
        (all              . ,all-proc)
@@ -700,6 +710,7 @@ ENTRIES is a list of installed manifest entries."
        (location         . ,location-proc)
        (from-file        . ,file-proc)
        (from-os-file     . ,os-file-proc)
+       (hidden           . ,hidden-proc)
        (superseded       . ,superseded-proc)
        (dependent        . ,dependent-proc)
        (all              . ,all-proc)
