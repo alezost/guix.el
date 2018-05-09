@@ -1,6 +1,6 @@
 ;;; guix-ui-service.el --- Interface for displaying services  -*- lexical-binding: t -*-
 
-;; Copyright © 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2017–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -20,7 +20,6 @@
 ;;; Commentary:
 
 ;; This file provides 'list' interface to display Guix services.
-;; XXX Currently this interface does not provide anything useful :-)
 
 ;;; Code:
 
@@ -29,12 +28,12 @@
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-utils)
+(require 'guix-location)
 
 (guix-define-groups service)
 
 (bui-define-entry-type guix-service
-  :message-function 'guix-service-message
-  :titles '((type-name . "Name")))
+  :message-function 'guix-service-message)
 
 (defun guix-service-get-entries (search-type search-values params)
   "Receive 'service' entries.
@@ -64,7 +63,11 @@ SEARCH-TYPE may be one of the following symbols: `id', `from-os-file'."
   :buffer-name "*Guix Services*"
   :get-entries-function 'guix-service-list-get-entries
   :describe-function 'guix-service-list-describe
-  :format '((type-name nil 40 t)))
+  :format '((name nil 25 t)
+            (location guix-location-list-specification 35 t)
+            (description bui-list-get-one-line 30 t))
+  :sort-key '(name)
+  :hint 'guix-service-list-hint)
 
 (defvar guix-service-list-required-params
   '(id)
@@ -75,12 +78,31 @@ along with the displayed parameters.
 Do not remove `id' from this list as it is required for
 identifying an entry.")
 
+(let ((map guix-service-list-mode-map))
+  (define-key map (kbd "e") 'guix-service-list-edit))
+
+(defvar guix-service-list-default-hint
+  '(("\\[guix-service-list-edit]") " edit (go to) the service definition;\n"))
+
+(defun guix-service-list-hint ()
+  (bui-format-hints
+   guix-service-list-default-hint
+   (bui-default-hint)))
+
 (defun guix-service-list-get-entries (search-type &rest search-values)
   "Return 'service' entries for displaying them in 'list' buffer."
   (guix-service-get-entries
    search-type search-values
    (cl-union guix-service-list-required-params
              (bui-list-displayed-params 'guix-service))))
+
+(defun guix-service-list-edit (&optional directory)
+  "Go to the location of the current service.
+See `guix-find-location' for the meaning of DIRECTORY."
+  (interactive (list (guix-read-directory)))
+  (guix-find-location (bui-entry-value (bui-list-current-entry)
+                                       'location)
+                      directory))
 
 
 ;;; Interactive commands

@@ -51,6 +51,7 @@ A copy of the license is available at
 * Package Management::  Managing packages and profile generations.
 * Package Licenses::    Interface for licenses of packages.
 * Package Locations::   Interface for locations of package source files.
+* Services::            Interface for GuixSD services.
 * Popup Interface::     Magit-like interface for guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
 * Prettify Variables::  Split and indent Shell variables.
@@ -95,6 +96,7 @@ Interfaces for:
 @item packages (@pxref{Packages})
 @item package licenses (@pxref{Package Licenses})
 @item package locations (@pxref{Package Locations})
+@item services (@pxref{Services})
 @item @uref{https://hydra.gnu.org, Hydra build farm} (@pxref{Hydra})
 @end itemize
 
@@ -736,6 +738,25 @@ point position (unless @kbd{C-u} is used):
 @example
 (setq guix-read-package-name-function 'guix-read-package-name-at-point)
 @end example
+
+@c ----------------------------------------------------------------
+@node Services
+@chapter Services
+
+If you use GuixSD, you may have a wish to become more familiar with
+the system services (@pxref{Services,,, guix, The GNU Guix Reference
+Manual}).  Hopefully, the following commands will help you explore
+this part of Guix.  The interface for services is very similar to the
+interface for packages (@pxref{Packages}).
+
+@table @kbd
+
+@findex guix-services-from-system-config-file
+@item M-x guix-services-from-system-config-file
+Display services from the specified file with @code{operating-system}
+declaration.
+
+@end table
 
 @c ----------------------------------------------------------------
 @node Popup Interface

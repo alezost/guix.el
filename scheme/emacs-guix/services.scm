@@ -1,6 +1,6 @@
 ;;; services.scm --- Guix services
 
-;; Copyright © 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2017–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -29,12 +29,30 @@
   #:use-module (ice-9 vlist)
   #:use-module (srfi srfi-1)
   #:use-module (gnu services)
+  #:use-module (guix i18n)
+  #:use-module (guix ui)
+  #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix utils)
   #:autoload   (gnu system) (operating-system-services)
   #:autoload   (guix scripts system) (read-operating-system)
   #:export (service-sexps))
 
 (define service-id object-address)
+
+(define service-type-name*
+  (compose symbol->string service-type-name))
+
+(define (service-type* service)
+  "Return service-type of SERVICE.
+SERVICE can be either a service object, or a service type itself."
+  (if (service? service)
+      (service-kind service)
+      service))
+
+;; XXX The same as `package-field-string' in (guix ui) module.
+(define (texi-field->string object field-accessor)
+  (and=> (field-accessor object)
+         (compose texi->plain-text P_)))
 
 (define-values (service-by-id
                 register-service)
@@ -54,13 +72,18 @@
 
 (define %service-param-alist
   `((id         . ,service-id)
-    (type-name  . ,(lambda (service)
-                     (service-type-name (service-kind service))))
-    ;; (extensions . ,(lambda (service)
-    ;;                  (map (lambda (ext)
-    ;;                         (service-type-name
-    ;;                          (service-extension-target ext)))
-    ;;                       (service-type-extensions (service-kind service)))))
+    (name       . ,(lambda (service)
+                     (service-type-name* (service-type* service))))
+    (description . ,(lambda (service)
+                      (texi-field->string (service-type* service)
+                                          service-type-description)))
+    (location   . ,(lambda (service)
+                     (location->string
+                      (service-type-location (service-type* service)))))
+    (extensions . ,(lambda (service)
+                     (map (compose service-type-name*
+                                   service-extension-target)
+                          (service-type-extensions (service-type* service)))))
     ;; (parameters . ,(cut service-parameters <>))
     ))
 
@@ -92,6 +115,6 @@ SEARCH-TYPE should be one of the following symbols: 'id',
 'from-os-file'."
   (let ((services (find-services search-type search-values))
         (->sexp (object-transformer %service-param-alist params)))
-    (map ->sexp services)))
+    (to-emacs-side (map ->sexp services))))
 
 ;;; services.scm ends here
