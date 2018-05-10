@@ -19,7 +19,7 @@
 
 ;;; Commentary:
 
-;; This file provides 'list' interface to display Guix services.
+;; This file provides 'list'/'info' interface for GuixSD services.
 
 ;;; Code:
 
@@ -68,6 +68,61 @@ SEARCH-TYPE may be one of the following symbols: `id', `all',
          (message "%d available services." count))))))
 
 
+;;; Service 'info'
+
+(bui-define-interface guix-service info
+  :mode-name "Service-Info"
+  :buffer-name "*Guix Service Info*"
+  :get-entries-function 'guix-service-info-get-entries
+  :format '((name nil (simple guix-service-info-heading))
+            nil
+            (description nil (simple guix-service-info-description))
+            nil
+            (location format (format guix-location))
+            (extensions format (format guix-service-name))))
+
+(defface guix-service-info-heading
+  '((t :inherit bui-info-heading))
+  "Face used for 'info' buffer heading (service name)."
+  :group 'guix-service-info-faces)
+
+(defface guix-service-info-description
+  '((t))
+  "Face used for a description of a service."
+  :group 'guix-service-info-faces)
+
+(defface guix-service-info-extension
+  '((t :inherit button))
+  "Face used for service extensions."
+  :group 'guix-service-info-faces)
+
+(defvar guix-service-info-required-params
+  '(id)
+  "List of the required 'service' parameters.
+These parameters are received from the Scheme side
+along with the displayed parameters.
+
+Do not remove `id' from this info as it is required for
+identifying an entry.")
+
+(define-button-type 'guix-service-name
+  :supertype 'bui
+  'face 'guix-service-info-extension
+  'help-echo "Describe this service"
+  'action (lambda (btn)
+            (bui-get-display-entries-current
+             'guix-service 'info
+             (list 'name (button-label btn))
+             'add)))
+
+(defun guix-service-info-get-entries (search-type &rest search-values)
+  "Return 'service' entries for displaying them in 'info' buffer."
+  (guix-service-get-entries
+   search-type search-values
+   (cl-union guix-service-info-required-params
+             (bui-info-displayed-params 'guix-service))))
+
+
 ;;; Service 'list'
 
 (bui-define-interface guix-service list
@@ -107,6 +162,10 @@ identifying an entry.")
    search-type search-values
    (cl-union guix-service-list-required-params
              (bui-list-displayed-params 'guix-service))))
+
+(defun guix-service-list-describe (&rest ids)
+  "Describe services with IDS (list of identifiers)."
+  (bui-get-display-entries 'guix-service 'info (cons 'id ids)))
 
 (defun guix-service-list-edit (&optional directory)
   "Go to the location of the current service.
