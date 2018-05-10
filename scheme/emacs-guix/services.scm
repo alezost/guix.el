@@ -35,7 +35,9 @@
   #:use-module (emacs-guix utils)
   #:autoload   (gnu system) (operating-system-services)
   #:autoload   (guix scripts system) (read-operating-system)
-  #:export (service-sexps))
+  #:export (service-names
+            service-names*
+            service-sexps))
 
 (define service-id object-address)
 
@@ -75,6 +77,26 @@ SERVICE can be either a service object, or a service type itself."
                (delay (vhash-consq (service-id service)
                                    service table*))))))))
 
+(define-values (service-names
+                services-by-name)
+  (let ((table (delay (fold-service-types
+                       (lambda (type table)
+                         (vhash-consq (service-type-name type)
+                                      type table))
+                       vlist-null))))
+    (values
+     (lambda ()
+       "Return a list of names (symbols) of available service types."
+       (vhash-fold (lambda (name _ result)
+                     (cons name result))
+                   '()
+                   (force table)))
+     (lambda (name)
+       "Return services matching NAME."
+       (vhash-foldq* cons '()
+                     (string->symbol* name)
+                     (force table))))))
+
 (define %service-param-alist
   `((id         . ,service-id)
     (name       . ,(lambda (service)
@@ -101,6 +123,8 @@ SERVICE can be either a service object, or a service type itself."
   (case search-type
     ((id)
      (filter-map service-by-id (list-maybe search-values)))
+    ((name)
+     (services-by-name (car search-values)))
     ((all)
      (fold-service-types cons '()))
     ((from-os-file)
@@ -118,10 +142,15 @@ SERVICE can be either a service object, or a service type itself."
   "Return information (sexps) about services.
 
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
-SEARCH-TYPE should be one of the following symbols: 'id', 'all',
+SEARCH-TYPE should be one of the following symbols: 'id', 'name', 'all',
 'from-os-file'."
   (let ((services (find-services search-type search-values))
         (->sexp (object-transformer %service-param-alist params)))
     (to-emacs-side (map ->sexp services))))
+
+(define (service-names*)
+  "Return to emacs side a list of names (strings) of available services."
+  (to-emacs-side
+   (map symbol->string (service-names))))
 
 ;;; services.scm ends here

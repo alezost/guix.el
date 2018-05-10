@@ -755,6 +755,10 @@ interface for packages (@pxref{Packages}).
 @item M-x guix-all-services
 Display all available services.
 
+@findex guix-services-by-name
+@item M-x guix-services-by-name
+Display service(s) with the specified name.
+
 @findex guix-services-from-system-config-file
 @item M-x guix-services-from-system-config-file
 Display services from the specified file with @code{operating-system}

@@ -29,6 +29,7 @@
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-utils)
+(require 'guix-read)
 (require 'guix-location)
 
 (guix-define-groups service)
@@ -39,7 +40,7 @@
 (defun guix-service-get-entries (search-type search-values params)
   "Receive 'service' entries.
 SEARCH-TYPE may be one of the following symbols: `id', `all',
-`from-os-file'."
+`name', `from-os-file'."
   (guix-eval-read
    (guix-make-guile-expression
     'service-sexps search-type search-values params)))
@@ -58,6 +59,11 @@ SEARCH-TYPE may be one of the following symbols: `id', `all',
         (from-os-file
          (message "%d services from OS file '%s'."
                   count (car search-values)))
+        (name
+         (if (= 1 count)
+             (message "'%s' service." (car search-values))
+           (message "%d services with '%s' name."
+                    count (car search-values))))
         (all
          (message "%d available services." count))))))
 
@@ -126,6 +132,13 @@ See `guix-packages-from-system-config-file' for more details on FILE."
   "Display all available Guix services."
   (interactive)
   (guix-service-get-display 'all))
+
+;;;###autoload
+(defun guix-services-by-name (name)
+  "Display Guix service(s) with NAME."
+  (interactive
+   (list (guix-read-service-name)))
+  (guix-service-get-display 'name name))
 
 (provide 'guix-ui-service)
 

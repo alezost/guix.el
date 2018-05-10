@@ -100,6 +100,11 @@ See also `guix-package-names-use-duplicates' variable."
   (sort (guix-eval-read "(package-location-files)")
         #'string<))
 
+(guix-memoized-defun guix-service-names ()
+  "Return a list of names of available services."
+  (sort (guix-eval-read "(service-names*)")
+        #'string<))
+
 
 ;;; Readers
 
@@ -235,6 +240,12 @@ argument, read the name from minibuffer."
  :completions-getter guix-package-locations
  :single-reader guix-read-package-location
  :single-prompt "Location: ")
+
+(guix-define-readers
+ :completions-getter guix-service-names
+ :require-match nil
+ :single-reader guix-read-service-name
+ :single-prompt "Service: ")
 
 (provide 'guix-read)
 

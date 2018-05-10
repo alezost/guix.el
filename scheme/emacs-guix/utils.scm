@@ -1,6 +1,6 @@
 ;;; utils.scm --- General utilities
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -24,6 +24,7 @@
   #:use-module (srfi srfi-1)
   #:export (first-or-false
             list-maybe
+            string->symbol*
             search-load-path
             object-transformer))
 
@@ -31,8 +32,15 @@
   (and (not (null? lst))
        (first lst)))
 
-(define (list-maybe obj)
-  (if (list? obj) obj (list obj)))
+(define (list-maybe object)
+  "Return OBJECT if it is a list, or (OBJECT) otherwise."
+  (if (list? object) object (list object)))
+
+(define (string->symbol* string-or-symbol)
+  "Return symbol from STRING-OR-SYMBOL."
+  (if (symbol? string-or-symbol)
+      string-or-symbol
+      (string->symbol string-or-symbol)))
 
 (define* (object-transformer param-alist #:optional (params '()))
   "Return procedure transforming objects into alist of parameter/value pairs.
