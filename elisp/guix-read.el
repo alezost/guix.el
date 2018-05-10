@@ -85,7 +85,7 @@ Emacs."
 (guix-memoized-defun guix-package-names ()
   "Return a list of names of available packages.
 See also `guix-package-names-use-duplicates' variable."
-  (let ((names (guix-eval-read "(package-names)")))
+  (let ((names (guix-eval-read "(package-names*)")))
     (sort (if guix-package-names-use-duplicates
               names
             (cl-delete-duplicates names :test #'string=))

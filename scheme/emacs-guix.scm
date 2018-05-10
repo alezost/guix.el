@@ -39,7 +39,7 @@
   #:autoload (emacs-guix packages) (profile->specifications+file-names
                                     package/output-sexps
                                     number-of-packages
-                                    package-names)
+                                    package-names*)
   #:autoload (emacs-guix generations) (generation-sexps)
   #:autoload (emacs-guix system-generations) (system-generation-sexps)
   #:autoload (emacs-guix locations) (package-location-string

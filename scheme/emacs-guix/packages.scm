@@ -64,6 +64,7 @@
   #:use-module (emacs-guix profiles)
   #:use-module (emacs-guix utils)
   #:export (package-names
+            package-names*
             number-of-packages
             profile->specifications+file-names
             id->name+version
@@ -750,10 +751,13 @@ get information with all available parameters, which are: 'id', 'name',
 
 (define (package-names)
   "Return a list of names of available packages."
-  (to-emacs-side
-   (fold-packages (lambda (pkg res)
-                    (cons (package-name pkg) res))
-                  '())))
+  (fold-packages (lambda (pkg res)
+                   (cons (package-name pkg) res))
+                 '()))
+
+(define (package-names*)
+  "Return to emacs side a list of names of available packages."
+  (to-emacs-side (package-names)))
 
 (define (number-of-packages)
   "Return the number of available packages."
