@@ -267,11 +267,9 @@ The result is one of the following symbols:
 (define packages-by-name+version
   (let ((table (delay (fold-packages
                        (lambda (package table)
-                         (let ((file (location-file
-                                      (package-location package))))
-                           (vhash-cons (cons (package-name package)
-                                             (package-version package))
-                                       package table)))
+                         (vhash-cons (cons (package-name package)
+                                           (package-version package))
+                                     package table))
                        vlist-null))))
     (lambda (name version)
       "Return packages matching NAME and VERSION."
