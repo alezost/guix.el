@@ -342,11 +342,6 @@ ENTRIES is a list of package entries to get info about packages."
   "Face used for a license of a package."
   :group 'guix-package-info-faces)
 
-(defface guix-package-info-location
-  '((t :inherit bui-file-name))
-  "Face used for a location of a package."
-  :group 'guix-package-info-faces)
-
 (defface guix-package-info-source
   '((t :inherit bui-url :underline nil))
   "Face used for a source URL of a package."
@@ -449,13 +444,6 @@ Each function is called with 2 arguments: package ID and full name."
 It should be a '%s'-sequence.  After inserting an output name
 formatted with this string, an action button is inserted.")
 
-(define-button-type 'guix-package-location
-  :supertype 'bui
-  'face 'guix-package-info-location
-  'help-echo "Find location of this package"
-  'action (lambda (btn)
-            (guix-find-location (button-label btn))))
-
 (define-button-type 'guix-package-license
   :supertype 'bui
   'face 'guix-package-info-license
@@ -514,7 +502,7 @@ formatted with this string, an action button is inserted.")
 (defun guix-package-info-insert-location (location &optional _)
   "Insert package LOCATION at point."
   (bui-insert-non-nil location
-    (bui-info-insert-value-indent location 'guix-package-location)
+    (bui-info-insert-value-indent location 'guix-location)
     (let ((location-file (car (split-string location ":"))))
       ;; Do not show "Packages" button if a package 'from file' is displayed.
       (unless (eq (guix-ui-current-search-type) 'from-file)

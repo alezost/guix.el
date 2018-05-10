@@ -1,6 +1,6 @@
 ;;; guix-ui-location.el --- Interface for displaying package locations  -*- lexical-binding: t -*-
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -43,7 +43,7 @@
   :mode-name "Location-List"
   :buffer-name "*Guix Package Locations*"
   :get-entries-function 'guix-location-get-entries
-  :format '((location guix-location-list-file-name-specification 50 t)
+  :format '((location guix-location-list-specification 50 t)
             (number-of-packages nil 10 bui-list-sort-numerically-1
                                 :right-align t))
   :hint 'guix-location-list-hint
@@ -66,16 +66,6 @@
    guix-location-list-default-hint
    bui-list-sort-hint
    bui-common-hint))
-
-(defun guix-location-list-file-name-specification (location &optional _)
-  "Return LOCATION button specification for `tabulated-list-entries'."
-  (bui-get-non-nil location
-    (list location
-          :type 'bui-file
-          'action (lambda (btn)
-                    (guix-find-location (button-get btn 'location)))
-          'help-echo (concat "Find location: " location)
-          'location location)))
 
 (defun guix-location-list-edit ()
   "Go to the package location file at point."

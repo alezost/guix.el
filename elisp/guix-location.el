@@ -1,6 +1,6 @@
-;;; guix-location.el --- Package locations
+;;; guix-location.el --- Package and service locations  -*- lexical-binding: t -*-
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -19,14 +19,36 @@
 
 ;;; Commentary:
 
-;; This file provides the code to work with locations of Guix packages.
+;; This file provides the code to work with locations of Guix packages
+;; and services.
 
 ;;; Code:
 
 (require 'cl-lib)
+(require 'bui)
 (require 'guix-repl)
 (require 'guix-read)
 (require 'guix-guile)
+
+(defface guix-location
+  '((t :inherit bui-file-name))
+  "Face used for locations of packages and services."
+  :group 'guix-faces)
+
+(define-button-type 'guix-location
+  :supertype 'bui
+  'face 'guix-location
+  'help-echo "Find this location"
+  'action (lambda (btn)
+            (guix-find-location (or (button-get btn 'location)
+                                    (button-label btn)))))
+
+(defun guix-location-list-specification (location &optional _)
+  "Return LOCATION button specification for `tabulated-list-entries'."
+  (bui-get-non-nil location
+    (list location
+          :type 'guix-location
+          'location location)))
 
 (defun guix-package-location (id-or-name)
   "Return location of a package with ID-OR-NAME.
