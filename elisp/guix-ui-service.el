@@ -23,6 +23,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'bui)
 (require 'guix nil t)
 (require 'guix-repl)
@@ -37,7 +38,8 @@
 
 (defun guix-service-get-entries (search-type search-values params)
   "Receive 'service' entries.
-SEARCH-TYPE may be one of the following symbols: `id', `from-os-file'."
+SEARCH-TYPE may be one of the following symbols: `id', `all',
+`from-os-file'."
   (guix-eval-read
    (guix-make-guile-expression
     'service-sexps search-type search-values params)))
@@ -51,9 +53,13 @@ SEARCH-TYPE may be one of the following symbols: `id', `from-os-file'."
   "Display a message after showing service ENTRIES."
   (if (null entries)
       (message "Couldn't find services")
-    (when (eq search-type 'from-os-file)
-      (message "Services from OS file '%s'."
-               (car search-values)))))
+    (let ((count (length entries)))
+      (cl-case search-type
+        (from-os-file
+         (message "%d services from OS file '%s'."
+                  count (car search-values)))
+        (all
+         (message "%d available services." count))))))
 
 
 ;;; Service 'list'
@@ -114,6 +120,12 @@ See `guix-packages-from-system-config-file' for more details on FILE."
   (interactive
    (list (guix-read-file-name "System configuration file: ")))
   (guix-service-get-display 'from-os-file file))
+
+;;;###autoload
+(defun guix-all-services ()
+  "Display all available Guix services."
+  (interactive)
+  (guix-service-get-display 'all))
 
 (provide 'guix-ui-service)
 

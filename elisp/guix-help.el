@@ -113,6 +113,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-package-lint
 
     "Show services"
+    guix-all-services
     guix-services-from-system-config-file
 
     "Magit-like interface"

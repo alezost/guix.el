@@ -751,6 +751,10 @@ interface for packages (@pxref{Packages}).
 
 @table @kbd
 
+@findex guix-all-services
+@item M-x guix-all-services
+Display all available services.
+
 @findex guix-services-from-system-config-file
 @item M-x guix-services-from-system-config-file
 Display services from the specified file with @code{operating-system}

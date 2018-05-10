@@ -56,19 +56,24 @@ SERVICE can be either a service object, or a service type itself."
 
 (define-values (service-by-id
                 register-service)
-  (let ((table vlist-null))
+  (let ((table (delay (fold-service-types
+                       (lambda (service table)
+                         (vhash-consq (service-id service)
+                                      service table))
+                       vlist-null))))
     (values
      (lambda (id)
        "Return service by ID (its 'object-address') or #f."
-       (match (vhash-assq id table)
+       (match (vhash-assq id (force table))
          ((_ . service) service)
          (_ #f)))
      (lambda (service)
        "Register SERVICE by its 'object-address', so that later
 'service-by-id' can be used to access it."
-       (set! table
-             (vhash-consq (object-address service)
-                          service table))))))
+       (let ((table* (force table)))
+         (set! table
+               (delay (vhash-consq (service-id service)
+                                   service table*))))))))
 
 (define %service-param-alist
   `((id         . ,service-id)
@@ -96,6 +101,8 @@ SERVICE can be either a service object, or a service type itself."
   (case search-type
     ((id)
      (filter-map service-by-id (list-maybe search-values)))
+    ((all)
+     (fold-service-types cons '()))
     ((from-os-file)
      (match search-values
        ((file)
@@ -111,7 +118,7 @@ SERVICE can be either a service object, or a service type itself."
   "Return information (sexps) about services.
 
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
-SEARCH-TYPE should be one of the following symbols: 'id',
+SEARCH-TYPE should be one of the following symbols: 'id', 'all',
 'from-os-file'."
   (let ((services (find-services search-type search-values))
         (->sexp (object-transformer %service-param-alist params)))
