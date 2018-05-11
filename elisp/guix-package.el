@@ -27,6 +27,7 @@
 (require 'guix-read)
 (require 'guix-repl)
 (require 'guix-guile)
+(require 'guix-location)
 (require 'guix-misc)
 
 (defun guix-package-name-specification (name version &optional output)
@@ -151,6 +152,43 @@ See Info node `(guix) Invoking guix lint' for details about linting."
 
 ;;;###autoload
 (defalias 'guix-lint 'guix-package-lint)
+
+;;;###autoload
+(defun guix-find-package-location (location &optional directory)
+  "Go to the LOCATION of a package.
+
+See `guix-find-location' for the meaning of package location and
+DIRECTORY.
+
+Interactively, prompt for LOCATION.  With prefix argument, prompt
+for DIRECTORY as well."
+  (interactive
+   (list (guix-read-package-location)
+         (guix-read-directory)))
+  (guix-find-location location directory))
+
+(defun guix-package-location (id-or-name)
+  "Return location of a package with ID-OR-NAME.
+For the meaning of location, see `guix-find-location'."
+  (guix-eval-read (guix-make-guile-expression
+                   'package-location-string id-or-name)))
+
+;;;###autoload
+(defun guix-find-package-definition (id-or-name &optional directory)
+  "Go to the location of package with ID-OR-NAME.
+See `guix-find-location' for the meaning of package location and
+DIRECTORY.
+Interactively, with prefix argument, prompt for DIRECTORY."
+  (interactive
+   (list (guix-read-package-name)
+         (guix-read-directory)))
+  (let ((loc (guix-package-location id-or-name)))
+    (if loc
+        (guix-find-location loc directory)
+      (message "Couldn't find package location."))))
+
+;;;###autoload
+(defalias 'guix-edit 'guix-find-package-definition)
 
 (provide 'guix-package)
 

@@ -27,7 +27,6 @@
 (require 'cl-lib)
 (require 'bui)
 (require 'guix-repl)
-(require 'guix-read)
 (require 'guix-guile)
 
 (defface guix-location
@@ -50,27 +49,14 @@
           :type 'guix-location
           'location location)))
 
-(defun guix-package-location (id-or-name)
-  "Return location of a package with ID-OR-NAME.
-For the meaning of location, see `guix-find-location'."
-  (guix-eval-read (guix-make-guile-expression
-                   'package-location-string id-or-name)))
-
-;;;###autoload
 (defun guix-find-location (location &optional directory)
-  "Go to LOCATION of a package.
+  "Go to LOCATION.
 LOCATION is a string of the form:
 
   \"FILE:LINE:COLUMN\"
 
 If FILE is relative, it is considered to be relative to
-DIRECTORY (if it is specified and exists).
-
-Interactively, prompt for LOCATION.  With prefix argument, prompt
-for DIRECTORY as well."
-  (interactive
-   (list (guix-read-package-location)
-         (guix-read-directory)))
+DIRECTORY (if it is specified and exists)."
   (cl-multiple-value-bind (file line column)
       (split-string location ":")
     (let* ((file-name (expand-file-name file (or directory
@@ -81,7 +67,7 @@ for DIRECTORY as well."
                          (guix-make-guile-expression
                           'search-load-path file)))))
       (unless file-name         ; not found in Guile %load-path
-        (error "Package location file not found: %s" file))
+        (error "Location file not found: %s" file))
       (find-file file-name))
     (when (and line column)
       (let ((line   (string-to-number line))
@@ -90,23 +76,6 @@ for DIRECTORY as well."
         (forward-line (- line 1))
         (move-to-column column)
         (recenter 1)))))
-
-;;;###autoload
-(defun guix-find-package-definition (id-or-name &optional directory)
-  "Go to the location of package with ID-OR-NAME.
-See `guix-find-location' for the meaning of package location and
-DIRECTORY.
-Interactively, with prefix argument, prompt for DIRECTORY."
-  (interactive
-   (list (guix-read-package-name)
-         (guix-read-directory)))
-  (let ((loc (guix-package-location id-or-name)))
-    (if loc
-        (guix-find-location loc directory)
-      (message "Couldn't find package location."))))
-
-;;;###autoload
-(defalias 'guix-edit 'guix-find-package-definition)
 
 (provide 'guix-location)
 
