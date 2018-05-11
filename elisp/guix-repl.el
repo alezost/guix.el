@@ -433,7 +433,8 @@ additional internal REPL if it exists."
   "Default directory with Guix source.
 If it is not set by a user, it is set after starting Guix REPL.
 This directory is used to find packages and licenses by such
-commands as `guix-edit' or `guix-find-license-definition'.")
+commands as `guix-find-package-definition' or
+`guix-find-license-definition'.")
 
 (defun guix-read-directory ()
   "Return `guix-directory' or prompt for it.

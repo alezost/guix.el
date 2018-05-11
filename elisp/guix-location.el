@@ -92,8 +92,8 @@ for DIRECTORY as well."
         (recenter 1)))))
 
 ;;;###autoload
-(defun guix-edit (id-or-name &optional directory)
-  "Edit (go to location of) package with ID-OR-NAME.
+(defun guix-find-package-definition (id-or-name &optional directory)
+  "Go to the location of package with ID-OR-NAME.
 See `guix-find-location' for the meaning of package location and
 DIRECTORY.
 Interactively, with prefix argument, prompt for DIRECTORY."
@@ -104,6 +104,9 @@ Interactively, with prefix argument, prompt for DIRECTORY."
     (if loc
         (guix-find-location loc directory)
       (message "Couldn't find package location."))))
+
+;;;###autoload
+(defalias 'guix-edit 'guix-find-package-definition)
 
 (provide 'guix-location)
 

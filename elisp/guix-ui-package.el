@@ -1250,7 +1250,7 @@ The specification is suitable for `guix-process-package-actions'."
   "Go to the location of the current package.
 See `guix-find-location' for the meaning of DIRECTORY."
   (interactive (list (guix-read-directory)))
-  (guix-edit (bui-list-current-id) directory))
+  (guix-find-package-definition (bui-list-current-id) directory))
 
 (defun guix-package-list-graph (backend node-type)
   "Show BACKEND/NODE-TYPE graph for the current package."
@@ -1421,9 +1421,10 @@ The specification is suitable for `guix-process-output-actions'."
   "Go to the location of the current package.
 See `guix-find-location' for the meaning of DIRECTORY."
   (interactive (list (guix-read-directory)))
-  (guix-edit (bui-entry-non-void-value (bui-list-current-entry)
-                                       'package-id)
-             directory))
+  (guix-find-package-definition
+   (bui-entry-non-void-value (bui-list-current-entry)
+                             'package-id)
+   directory))
 
 (defun guix-output-list-graph (backend node-type)
   "Show BACKEND/NODE-TYPE graph for the current package."

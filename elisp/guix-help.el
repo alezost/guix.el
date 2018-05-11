@@ -105,7 +105,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     "Show/find package locations"
     guix-locations
     guix-find-location
-    guix-edit
+    guix-find-package-definition
 
     "Other package related commands"
     guix-package-graph

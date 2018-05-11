@@ -904,9 +904,9 @@ EXECUTOR function is called with the current command line arguments."
 ;;;###autoload (autoload 'guix "guix-command" "Popup window for 'guix'." t)
 (guix-command-define-popup-action guix)
 
-(declare-function guix-edit "guix-location" t)
+(declare-function guix-find-package-definition "guix-location" t)
 
-(defalias 'guix-edit-action #'guix-edit)
+(defalias 'guix-edit-action #'guix-find-package-definition)
 
 
 (defvar guix-command-font-lock-keywords

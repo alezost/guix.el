@@ -702,8 +702,10 @@ location button, @kbd{@key{RET}} will open this location file.
 Open the given package definition source file (press @kbd{@key{TAB}}
 to choose a location from a completion list).
 
+@findex guix-find-package-definition
+@item M-x guix-find-package-definition
 @findex guix-edit
-@item M-x guix-edit
+@itemx M-x guix-edit
 Find location of a specified package.  This is an Emacs analog of
 @command{guix edit} command (@pxref{Invoking guix edit,,, guix, The
 GNU Guix Reference Manual}).  As with
