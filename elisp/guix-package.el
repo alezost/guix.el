@@ -1,6 +1,6 @@
 ;;; guix-package.el --- Guix packages  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -131,7 +131,7 @@ Interactively, prompt for a package name and size TYPE."
               type))))
 
 ;;;###autoload
-(defun guix-lint (package &optional checkers)
+(defun guix-package-lint (package &optional checkers)
   "Lint PACKAGE using CHECKERS.
 PACKAGE can be either a package name or a package ID.
 CHECKERS is a list of checker names; if nil, use all checkers.
@@ -150,7 +150,7 @@ See Info node `(guix) Invoking guix lint' for details about linting."
     'lint-package package checkers)))
 
 ;;;###autoload
-(defalias 'guix-package-lint 'guix-lint)
+(defalias 'guix-lint 'guix-package-lint)
 
 (provide 'guix-package)
 
