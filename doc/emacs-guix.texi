@@ -191,8 +191,7 @@ Interface}).
 @item
 @uref{https://github.com/Fanael/edit-indirect, edit-indirect library},
 version 0.1.4 or later.  It is used only to edit synopsis/description
-in @code{guix-devel-mode} with @kbd{C-c '} key binding
-(@pxref{Development}).
+in @code{guix-devel-mode} (@pxref{Development}).
 
 @end itemize
 
@@ -1020,7 +1019,7 @@ Lint (check) a package defined by the current variable definition
 (@pxref{Invoking guix lint,,, guix, The GNU Guix Reference Manual})
 (@code{guix-devel-lint-package}).
 
-@item C-c '
+@item C-c . '
 Edit @code{description} or @code{synopsis} of the current package in
 @code{texinfo-mode} (@code{guix-devel-code-block-edit}).
 

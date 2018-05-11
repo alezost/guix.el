@@ -383,13 +383,13 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
     (define-key map (kbd "l") 'guix-devel-lint-package)
     (define-key map (kbd "k") 'guix-devel-copy-module-as-kill)
     (define-key map (kbd "u") 'guix-devel-use-module)
+    (define-key map (kbd "'") 'guix-devel-code-block-edit)
     map)
   "Keymap with subkeys for `guix-devel-mode-map'.")
 
 (defvar guix-devel-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c .") guix-devel-keys-map)
-    (define-key map (kbd "C-c '") 'guix-devel-code-block-edit)
     map)
   "Keymap for `guix-devel-mode'.")
 
