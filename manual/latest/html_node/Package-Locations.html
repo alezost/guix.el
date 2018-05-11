@@ -28,7 +28,7 @@ http://www.gnu.org/licenses/fdl.html.
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
 <link href="index.html#Top" rel="up" title="Top">
-<link href="Popup-Interface.html#Popup-Interface" rel="next" title="Popup Interface">
+<link href="Services.html#Services" rel="next" title="Services">
 <link href="Package-Licenses.html#Package-Licenses" rel="prev" title="Package Licenses">
 <style type="text/css">
 <!--
@@ -66,7 +66,7 @@ ul.no-bullet {list-style: none}
 <a name="Package-Locations"></a>
 <div class="header">
 <p>
-Next: <a href="Popup-Interface.html#Popup-Interface" accesskey="n" rel="next">Popup Interface</a>, Previous: <a href="Package-Licenses.html#Package-Licenses" accesskey="p" rel="prev">Package Licenses</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Services.html#Services" accesskey="n" rel="next">Services</a>, Previous: <a href="Package-Licenses.html#Package-Licenses" accesskey="p" rel="prev">Package Licenses</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
 <a name="Package-Locations-1"></a>
@@ -88,13 +88,16 @@ location in the same way as <kbd>M-x&nbsp;guix-packages-by-location</kbd>
 would do (see <a href="Package-Commands.html#Package-Commands">Package Commands</a>).  Note that when the point is on a
 location button, <kbd><span class="key">RET</span></kbd> will open this location file.
 </p>
-<a name="index-guix_002dfind_002dlocation"></a>
+<a name="index-guix_002dfind_002dpackage_002dlocation"></a>
 </dd>
-<dt><kbd>M-x guix-find-location</kbd></dt>
+<dt><kbd>M-x guix-find-package-location</kbd></dt>
 <dd><p>Open the given package definition source file (press <kbd><span class="key">TAB</span></kbd>
 to choose a location from a completion list).
 </p>
-<a name="index-guix_002dedit"></a>
+<a name="index-guix_002dfind_002dpackage_002ddefinition"></a>
+</dd>
+<dt><kbd>M-x guix-find-package-definition</kbd></dt>
+<dd><a name="index-guix_002dedit"></a>
 </dd>
 <dt><kbd>M-x guix-edit</kbd></dt>
 <dd><p>Find location of a specified package.  This is an Emacs analog of
@@ -108,9 +111,10 @@ complete a package name.
 
 <a name="index-guix_002ddirectory"></a>
 <p>If you are contributing to Guix, you may find it useful for
-<kbd>M-x&nbsp;guix-find-location</kbd> and <kbd>M-x&nbsp;guix-edit</kbd> to open
-locations from your Git checkout.  This can be done by setting
-<code>guix-directory</code> variable.  For example, after this:
+<kbd>M-x&nbsp;guix-find-package-location</kbd> and
+<kbd>M-x&nbsp;guix-find-package-definition</kbd> to open locations from
+your Git checkout.  This can be done by setting <code>guix-directory</code>
+variable.  For example, after this:
 </p>
 <div class="example">
 <pre class="example">(setq guix-directory &quot;~/src/guix&quot;)
@@ -120,7 +124,7 @@ locations from your Git checkout.  This can be done by setting
 <samp>~/src/guix/gnu/packages/package-management.scm</samp> file.
 </p>
 <p>Also you can use <kbd>C-u</kbd> prefix argument to specify a directory just
-for the current <kbd>M-x&nbsp;guix-find-location</kbd> or
+for the current <kbd>M-x&nbsp;guix-find-package-location</kbd> or
 <kbd>M-x&nbsp;guix-edit</kbd> command.
 </p>
 <a name="index-guix_002dread_002dpackage_002dname_002dfunction"></a>
@@ -136,7 +140,7 @@ point position (unless <kbd>C-u</kbd> is used):
 <hr>
 <div class="header">
 <p>
-Next: <a href="Popup-Interface.html#Popup-Interface" accesskey="n" rel="next">Popup Interface</a>, Previous: <a href="Package-Licenses.html#Package-Licenses" accesskey="p" rel="prev">Package Licenses</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Services.html#Services" accesskey="n" rel="next">Services</a>, Previous: <a href="Package-Licenses.html#Package-Licenses" accesskey="p" rel="prev">Package Licenses</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 
 

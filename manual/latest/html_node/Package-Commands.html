@@ -82,12 +82,12 @@ will be prompted for a profile just for that command.
 </p>
 <dl compact="compact">
 <dd>
-<a name="index-guix_002dall_002davailable_002dpackages"></a>
+<a name="index-guix_002dall_002dpackages"></a>
 </dd>
-<dt><kbd>M-x guix-all-available-packages</kbd></dt>
-<dd><a name="index-guix_002dnewest_002davailable_002dpackages"></a>
+<dt><kbd>M-x guix-all-packages</kbd></dt>
+<dd><a name="index-guix_002dnewest_002dpackages"></a>
 </dd>
-<dt><kbd>M-x guix-newest-available-packages</kbd></dt>
+<dt><kbd>M-x guix-newest-packages</kbd></dt>
 <dd><p>Display all/newest available packages.
 </p>
 <a name="index-guix_002dinstalled_002dpackages"></a>
@@ -115,6 +115,14 @@ in a profile but cannot be found among the available packages).
 </dd>
 <dt><kbd>M-x guix-superseded-packages</kbd></dt>
 <dd><p>Display packages that are superseded by the other packages.
+</p>
+<a name="index-guix_002ddependent_002dpackages"></a>
+</dd>
+<dt><kbd>M-x guix-dependent-packages</kbd></dt>
+<dd><p>Display packages that depend on the specified package(s).  This
+command is analogous to <code>guix refresh --list-dependent</code> shell
+command (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-refresh.html#Invoking-guix-refresh">Invoking guix refresh</a> in <cite>The GNU Guix Reference
+Manual</cite>).
 </p>
 <a name="index-guix_002dpackages_002dby_002dname"></a>
 </dd>
@@ -161,15 +169,6 @@ can be changed by modifying <code>guix-package-search-params</code> variable.
 <dd><p>Search for packages with names matching a specified regexp.  This
 command is the same as <code>guix-search-by-regexp</code>, except only a
 package &ldquo;name&rdquo; is searched.
-</p>
-<a name="index-guix_002dnumber_002dof_002dpackages"></a>
-</dd>
-<dt><kbd>M-x guix-number-of-packages</kbd></dt>
-<dd><p>This command just displays a message (in the minibuffer) with the
-number of available packages.  Along with the default Guix packages,
-this number includes the packages from <code>GUIX_PACKAGE_PATH</code>
-environment variable (see <a href="http://www.gnu.org/software/guix/manual/html_node/Package-Modules.html#Package-Modules">Package Modules</a> in <cite>The GNU Guix
-Reference Manual</cite>).
 </p>
 </dd>
 </dl>

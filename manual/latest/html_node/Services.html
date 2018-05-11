@@ -17,10 +17,10 @@ http://www.gnu.org/licenses/fdl.html.
 <!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>List/Info Interface (Emacs-Guix Reference Manual)</title>
+<title>Services (Emacs-Guix Reference Manual)</title>
 
-<meta name="description" content="List/Info Interface (Emacs-Guix Reference Manual)">
-<meta name="keywords" content="List/Info Interface (Emacs-Guix Reference Manual)">
+<meta name="description" content="Services (Emacs-Guix Reference Manual)">
+<meta name="keywords" content="Services (Emacs-Guix Reference Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="texi2any">
@@ -28,8 +28,8 @@ http://www.gnu.org/licenses/fdl.html.
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
 <link href="index.html#Top" rel="up" title="Top">
-<link href="List_002fInfo-Keys.html#List_002fInfo-Keys" rel="next" title="List/Info Keys">
-<link href="Hydra.html#Hydra" rel="prev" title="Hydra">
+<link href="Popup-Interface.html#Popup-Interface" rel="next" title="Popup Interface">
+<link href="Package-Locations.html#Package-Locations" rel="prev" title="Package Locations">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -63,28 +63,41 @@ ul.no-bullet {list-style: none}
 </head>
 
 <body lang="en">
-<a name="List_002fInfo-Interface"></a>
+<a name="Services"></a>
 <div class="header">
 <p>
-Next: <a href="Configuration.html#Configuration" accesskey="n" rel="next">Configuration</a>, Previous: <a href="Hydra.html#Hydra" accesskey="p" rel="prev">Hydra</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Popup-Interface.html#Popup-Interface" accesskey="n" rel="next">Popup Interface</a>, Previous: <a href="Package-Locations.html#Package-Locations" accesskey="p" rel="prev">Package Locations</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="List_002fInfo-Interface-1"></a>
-<h2 class="chapter">14 List/Info Interface</h2>
+<a name="Services-1"></a>
+<h2 class="chapter">6 Services</h2>
 
-<p>As you probably already know, there are multiple commands that display
-various lists (of packages, licenses, etc.).  This is so-called
-&ldquo;list&rdquo; interface.  Also you can get the same data displayed in
-&ldquo;info&rdquo; interface.  This chapter describes these interfaces.
+<p>If you use GuixSD, you may have a wish to become more familiar with
+the system services (see <a href="http://www.gnu.org/software/guix/manual/html_node/Services.html#Services">Services</a> in <cite>The GNU Guix Reference
+Manual</cite>).  Hopefully, the following commands will help you explore
+this part of Guix.  The interface for services is very similar to the
+interface for packages (see <a href="Packages.html#Packages">Packages</a>).
 </p>
-<table class="menu" border="0" cellspacing="0">
-<tr><td align="left" valign="top">&bull; <a href="List_002fInfo-Keys.html#List_002fInfo-Keys" accesskey="1">List/Info Keys</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Common keys for both interfaces.
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="List-buffer.html#List-buffer" accesskey="2">&ldquo;List&rdquo; buffer</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">List-like interface.
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Info-buffer.html#Info-buffer" accesskey="3">&ldquo;Info&rdquo; buffer</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Help-like interface.
-</td></tr>
-</table>
+<dl compact="compact">
+<dd>
+<a name="index-guix_002dall_002dservices"></a>
+</dd>
+<dt><kbd>M-x guix-all-services</kbd></dt>
+<dd><p>Display all available services.
+</p>
+<a name="index-guix_002dservices_002dby_002dname"></a>
+</dd>
+<dt><kbd>M-x guix-services-by-name</kbd></dt>
+<dd><p>Display service(s) with the specified name.
+</p>
+<a name="index-guix_002dservices_002dfrom_002dsystem_002dconfig_002dfile"></a>
+</dd>
+<dt><kbd>M-x guix-services-from-system-config-file</kbd></dt>
+<dd><p>Display services from the specified file with <code>operating-system</code>
+declaration.
+</p>
+</dd>
+</dl>
 
 
 
