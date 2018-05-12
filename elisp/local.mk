@@ -87,9 +87,9 @@ EL_FILES =					\
   %D%/guix-ui-messages.el			\
   %D%/guix-ui.el				\
   %D%/guix-ui-license.el			\
-  %D%/guix-ui-location.el			\
   %D%/guix-ui-profile.el			\
   %D%/guix-ui-package.el			\
+  %D%/guix-ui-package-location.el		\
   %D%/guix-ui-generation.el			\
   %D%/guix-ui-system-generation.el		\
   %D%/guix-ui-service.el

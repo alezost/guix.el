@@ -50,7 +50,6 @@ A copy of the license is available at
 * Installation::        Installing Emacs-Guix.
 * Package Management::  Managing packages and profile generations.
 * Package Licenses::    Interface for licenses of packages.
-* Package Locations::   Interface for locations of package source files.
 * Services::            Interface for GuixSD services.
 * Popup Interface::     Magit-like interface for guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
@@ -316,6 +315,7 @@ can either perform some actions in such ``package-list'' buffer, or
 @menu
 * Package Commands::    @kbd{M-x guix-@dots{}} to show packages.
 * Package Keys::        Key bindings in ``package-list'' buffer.
+* Package Locations::   Interface for locations of package source files.
 * More Package Commands:: Other @kbd{M-x guix-@dots{}} related to packages.
 @end menu
 
@@ -476,6 +476,69 @@ Show package size.
 @item L
 Lint the package.
 @end table
+
+@node Package Locations
+@subsection Package Locations
+
+@cindex package locations
+As you know, package definitions are placed in Guile files, also known
+as @dfn{package locations}.  The following commands should help you not
+get lost in these locations:
+
+@table @kbd
+
+@findex guix-package-locations
+@item M-x guix-package-locations
+Display a list of package locations.  You can press @kbd{P} or
+@kbd{@key{RET}} there to display packages placed in the current
+location in the same way as @kbd{M-x@tie{}guix-packages-by-location}
+would do (@pxref{Package Commands}).  Note that when the point is on a
+location button, @kbd{@key{RET}} will open this location file.
+
+@findex guix-find-package-location
+@item M-x guix-find-package-location
+Open the given package definition source file (press @kbd{@key{TAB}}
+to choose a location from a completion list).
+
+@findex guix-find-package-definition
+@item M-x guix-find-package-definition
+@findex guix-edit
+@itemx M-x guix-edit
+Find location of a specified package.  This is an Emacs analog of
+@command{guix edit} command (@pxref{Invoking guix edit,,, guix, The
+GNU Guix Reference Manual}).  As with
+@kbd{M-x@tie{}guix-packages-by-name}, you can press @kbd{@key{TAB}} to
+complete a package name.
+
+@end table
+
+@vindex guix-directory
+If you are contributing to Guix, you may find it useful for
+@kbd{M-x@tie{}guix-find-package-location} and
+@kbd{M-x@tie{}guix-find-package-definition} to open locations from
+your Git checkout.  This can be done by setting @code{guix-directory}
+variable.  For example, after this:
+
+@example
+(setq guix-directory "~/src/guix")
+@end example
+
+@kbd{M-x guix-edit guix} opens
+@file{~/src/guix/gnu/packages/package-management.scm} file.
+
+Also you can use @kbd{C-u} prefix argument to specify a directory just
+for the current @kbd{M-x@tie{}guix-find-package-location} or
+@kbd{M-x@tie{}guix-edit} command.
+
+@vindex guix-read-package-name-function
+By default, when you should specify a package name (for example, after
+@kbd{M-x guix-edit}), you will be prompted for it in the minibuffer,
+but you can configure Emacs-Guix to use a package name at the current
+point position (unless @kbd{C-u} is used):
+
+@example
+(setq guix-read-package-name-function 'guix-read-package-name-at-point)
+@end example
 
 @node More Package Commands
 @subsection More Package Commands
@@ -676,70 +739,6 @@ Commands}).
 Open @file{@dots{}/guix/licenses.scm} and move to the specified license.
 
 @end table
-
-@c ----------------------------------------------------------------
-@node Package Locations
-@chapter Package Locations
-
-@cindex package locations
-As you know, package definitions are placed in Guile files, also known
-as @dfn{package locations}.  The following commands should help you not
-get lost in these locations:
-
-@table @kbd
-
-@findex guix-locations
-@item M-x guix-locations
-Display a list of package locations.  You can press @kbd{P} or
-@kbd{@key{RET}} there to display packages placed in the current
-location in the same way as @kbd{M-x@tie{}guix-packages-by-location}
-would do (@pxref{Package Commands}).  Note that when the point is on a
-location button, @kbd{@key{RET}} will open this location file.
-
-@findex guix-find-package-location
-@item M-x guix-find-package-location
-Open the given package definition source file (press @kbd{@key{TAB}}
-to choose a location from a completion list).
-
-@findex guix-find-package-definition
-@item M-x guix-find-package-definition
-@findex guix-edit
-@itemx M-x guix-edit
-Find location of a specified package.  This is an Emacs analog of
-@command{guix edit} command (@pxref{Invoking guix edit,,, guix, The
-GNU Guix Reference Manual}).  As with
-@kbd{M-x@tie{}guix-packages-by-name}, you can press @kbd{@key{TAB}} to
-complete a package name.
-
-@end table
-
-@vindex guix-directory
-If you are contributing to Guix, you may find it useful for
-@kbd{M-x@tie{}guix-find-package-location} and
-@kbd{M-x@tie{}guix-find-package-definition} to open locations from
-your Git checkout.  This can be done by setting @code{guix-directory}
-variable.  For example, after this:
-
-@example
-(setq guix-directory "~/src/guix")
-@end example
-
-@kbd{M-x guix-edit guix} opens
-@file{~/src/guix/gnu/packages/package-management.scm} file.
-
-Also you can use @kbd{C-u} prefix argument to specify a directory just
-for the current @kbd{M-x@tie{}guix-find-package-location} or
-@kbd{M-x@tie{}guix-edit} command.
-
-@vindex guix-read-package-name-function
-By default, when you should specify a package name (for example, after
-@kbd{M-x guix-edit}), you will be prompted for it in the minibuffer,
-but you can configure Emacs-Guix to use a package name at the current
-point position (unless @kbd{C-u} is used):
-
-@example
-(setq guix-read-package-name-function 'guix-read-package-name-at-point)
-@end example
 
 @c ----------------------------------------------------------------
 @node Services

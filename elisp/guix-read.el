@@ -95,7 +95,7 @@ See also `guix-package-names-use-duplicates' variable."
   "Return a list of names of available licenses."
   (guix-eval-read "(license-names)"))
 
-(guix-memoized-defun guix-package-locations ()
+(guix-memoized-defun guix-package-location-files ()
   "Return a list of available package locations."
   (sort (guix-eval-read "(package-location-files)")
         #'string<))
@@ -237,9 +237,9 @@ argument, read the name from minibuffer."
  :single-prompt "License: ")
 
 (guix-define-readers
- :completions-getter guix-package-locations
+ :completions-getter guix-package-location-files
  :single-reader guix-read-package-location
- :single-prompt "Location: ")
+ :single-prompt "Package location: ")
 
 (guix-define-readers
  :completions-getter guix-service-names

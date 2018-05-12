@@ -103,7 +103,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-find-license-definition
 
     "Show/find package locations"
-    guix-locations
+    guix-package-locations
     guix-find-package-location
     guix-find-package-definition
 

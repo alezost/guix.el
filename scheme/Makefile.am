@@ -31,7 +31,6 @@ MODULES =					\
   emacs-guix/licenses.scm			\
   emacs-guix/profiles.scm			\
   emacs-guix/packages.scm			\
-  emacs-guix/locations.scm			\
   emacs-guix/generations.scm			\
   emacs-guix/system-generations.scm		\
   emacs-guix/graph.scm				\

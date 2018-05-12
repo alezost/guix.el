@@ -59,7 +59,6 @@
   #:autoload   (guix licenses) (license?
                                 license-name)
   #:autoload   (emacs-guix licenses) (lookup-license)
-  #:autoload   (emacs-guix locations) (packages-by-location-file)
   #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix profiles)
   #:use-module (emacs-guix utils)
@@ -80,7 +79,10 @@
             newest-packages
             packages-from-file
             matching-packages
-            package/output-sexps))
+            package/output-sexps
+            package-location-string
+            package-location-files
+            package-location-sexps))
 
 (define (full-name->name+version spec)
   "Given package specification SPEC with or without output,
@@ -761,5 +763,49 @@ get information with all available parameters, which are: 'id', 'name',
   "Return the number of available packages."
   (fold-packages (lambda (_ sum) (1+ sum))
                  0))
+
+
+;;; Package locations
+
+(define (package-location-string id-or-name)
+  "Return location string of a package with ID-OR-NAME."
+  (and=> (package-by-id-or-name id-or-name)
+         (compose location->string package-location)))
+
+(define-values (packages-by-location-file
+                package-location-files)
+  (let* ((table (delay (fold-packages
+                        (lambda (package table)
+                          (let ((file (location-file
+                                       (package-location package))))
+                            (vhash-cons file package table)))
+                        vlist-null)))
+         (files (delay (vhash-fold
+                        (lambda (file _ result)
+                          (if (member file result)
+                              result
+                              (cons file result)))
+                        '()
+                        (force table)))))
+    (values
+     (lambda (file)
+       "Return a list of packages defined in location FILE."
+       (vhash-fold* cons '() file (force table)))
+     (lambda ()
+       "Return a list of file names of all package locations."
+       (force files)))))
+
+(define %package-location-param-alist
+  `((id       . ,identity)
+    (location . ,identity)
+    (number-of-packages . ,(lambda (location)
+                             (length (packages-by-location-file location))))))
+
+(define package-location->sexp
+  (object-transformer %package-location-param-alist))
+
+(define (package-location-sexps)
+  (to-emacs-side
+   (map package-location->sexp (package-location-files))))
 
 ;;; packages.scm ends here

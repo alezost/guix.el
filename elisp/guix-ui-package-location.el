@@ -1,4 +1,4 @@
-;;; guix-ui-location.el --- Interface for displaying package locations  -*- lexical-binding: t -*-
+;;; guix-ui-package-location.el --- Interface for displaying package locations  -*- lexical-binding: t -*-
 
 ;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
@@ -30,51 +30,52 @@
 (require 'guix-repl)
 (require 'guix-utils)
 
-(guix-define-groups location)
+(guix-define-groups package-location)
 
-(defun guix-location-get-entries ()
+(defun guix-package-location-get-entries ()
   "Receive 'package location' entries."
   (guix-eval-read "(package-location-sexps)"))
 
 
 ;;; Location 'list'
 
-(bui-define-interface guix-location list
+(bui-define-interface guix-package-location list
   :mode-name "Location-List"
   :buffer-name "*Guix Package Locations*"
-  :get-entries-function 'guix-location-get-entries
+  :get-entries-function 'guix-package-location-get-entries
   :format '((location guix-location-list-specification 50 t)
             (number-of-packages nil 10 bui-list-sort-numerically-1
                                 :right-align t))
-  :hint 'guix-location-list-hint
+  :hint 'guix-package-location-list-hint
   :sort-key '(location))
 
-(let ((map guix-location-list-mode-map))
-  (define-key map (kbd "RET") 'guix-location-list-show-packages)
-  (define-key map (kbd "P")   'guix-location-list-show-packages)
-  (define-key map (kbd "e")   'guix-location-list-edit)
+(let ((map guix-package-location-list-mode-map))
+  (define-key map (kbd "RET") 'guix-package-location-list-show-packages)
+  (define-key map (kbd "P")   'guix-package-location-list-show-packages)
+  (define-key map (kbd "e")   'guix-package-location-list-edit)
   ;; "Location Info" buffer is not defined (it would be useless), so
   ;; unbind "i" key (by default, it is used to display Info buffer).
   (define-key map (kbd "i") nil))
 
-(defvar guix-location-list-default-hint
-  '(("\\[guix-location-list-show-packages]") " show packages;\n"
-    ("\\[guix-location-list-edit]") " edit (go to) the location file;\n"))
+(defvar guix-package-location-list-default-hint
+  '(("\\[guix-package-location-list-show-packages]") " show packages;\n"
+    ("\\[guix-package-location-list-edit]")
+    " edit (go to) the location file;\n"))
 
-(defun guix-location-list-hint ()
+(defun guix-package-location-list-hint ()
   (bui-format-hints
-   guix-location-list-default-hint
+   guix-package-location-list-default-hint
    bui-list-sort-hint
    bui-common-hint))
 
-(defun guix-location-list-edit ()
+(defun guix-package-location-list-edit ()
   "Go to the package location file at point."
   (interactive)
   (guix-find-location (bui-list-current-id)))
 
 (declare-function guix-packages-by-location "guix-ui-package" t)
 
-(defun guix-location-list-show-packages ()
+(defun guix-package-location-list-show-packages ()
   "Display packages placed in the location at point."
   (interactive)
   (guix-packages-by-location (bui-list-current-id)))
@@ -82,22 +83,27 @@
 
 ;;; Interactive commands
 
-(defun guix-locations-show ()
+(defun guix-package-locations-show ()
   "Display locations of the Guix packages.
-Unlike `guix-locations', this command always recreates
-`guix-location-list-buffer-name' buffer."
+Unlike `guix-package-locations', this command always recreates
+`guix-package-location-list-buffer-name' buffer."
   (interactive)
-  (bui-list-get-display-entries 'guix-location))
+  (bui-list-get-display-entries 'guix-package-location))
 
 ;;;###autoload
-(defun guix-locations ()
+(defun guix-package-locations ()
   "Display locations of the Guix packages.
-Switch to the `guix-location-list-buffer-name' buffer if it
-already exists."
+Switch to the `guix-package-location-list-buffer-name' buffer if
+it already exists."
   (interactive)
   (guix-switch-to-buffer-or-funcall
-   guix-location-list-buffer-name #'guix-locations-show 'message))
+   guix-package-location-list-buffer-name
+   #'guix-package-locations-show 'message))
 
-(provide 'guix-ui-location)
+;;;###autoload
+(define-obsolete-function-alias 'guix-locations
+  'guix-package-locations "0.4")
 
-;;; guix-ui-location.el ends here
+(provide 'guix-ui-package-location)
+
+;;; guix-ui-package-location.el ends here
