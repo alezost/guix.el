@@ -31,13 +31,16 @@
   #:use-module (gnu services)
   #:use-module (guix i18n)
   #:use-module (guix ui)
+  #:use-module (guix utils)
   #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix utils)
   #:autoload   (gnu system) (operating-system-services)
   #:autoload   (guix scripts system) (read-operating-system)
   #:export (service-names
             service-names*
-            service-sexps))
+            service-sexps
+            service-location-files
+            service-location-sexps))
 
 (define service-id object-address)
 
@@ -125,6 +128,8 @@ SERVICE can be either a service object, or a service type itself."
      (filter-map service-by-id (list-maybe search-values)))
     ((name)
      (services-by-name (car search-values)))
+    ((location)
+     (services-by-location-file (car search-values)))
     ((all)
      (fold-service-types cons '()))
     ((from-os-file)
@@ -143,7 +148,7 @@ SERVICE can be either a service object, or a service type itself."
 
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name', 'all',
-'from-os-file'."
+'location', 'from-os-file'."
   (let ((services (find-services search-type search-values))
         (->sexp (object-transformer %service-param-alist params)))
     (to-emacs-side (map ->sexp services))))
@@ -152,5 +157,48 @@ SEARCH-TYPE should be one of the following symbols: 'id', 'name', 'all',
   "Return to emacs side a list of names (strings) of available services."
   (to-emacs-side
    (map symbol->string (service-names))))
+
+
+;;; Service locations
+
+;; TODO The code below is almost the same as the "package locations"
+;; code.  It should be generalized!
+
+(define-values (services-by-location-file
+                service-location-files)
+  (let* ((table (delay (fold-service-types
+                        (lambda (type table)
+                          (let ((file (location-file
+                                       (service-type-location type))))
+                            (vhash-cons file type table)))
+                        vlist-null)))
+         (files (delay (vhash-fold
+                        (lambda (file _ result)
+                          (if (member file result)
+                              result
+                              (cons file result)))
+                        '()
+                        (force table)))))
+    (values
+     (lambda (file)
+       "Return a list of services defined in location FILE."
+       (vhash-fold* cons '() file (force table)))
+     (lambda ()
+       "Return a list of file names of all service locations."
+       (force files)))))
+
+(define %service-location-param-alist
+  `((id       . ,identity)
+    (location . ,identity)
+    (number-of-services . ,(lambda (location)
+                             (length (services-by-location-file
+                                      location))))))
+
+(define service-location->sexp
+  (object-transformer %service-location-param-alist))
+
+(define (service-location-sexps)
+  (to-emacs-side
+   (map service-location->sexp (service-location-files))))
 
 ;;; services.scm ends here

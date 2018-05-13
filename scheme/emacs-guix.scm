@@ -46,7 +46,9 @@
   #:autoload (emacs-guix generations) (generation-sexps)
   #:autoload (emacs-guix system-generations) (system-generation-sexps)
   #:autoload (emacs-guix services) (service-names*
-                                    service-sexps)
+                                    service-sexps
+                                    service-location-files
+                                    service-location-sexps)
   #:autoload (emacs-guix actions) (process-package-actions
                                    build-package*
                                    delete-generations*

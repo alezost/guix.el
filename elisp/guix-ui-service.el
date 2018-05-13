@@ -40,7 +40,7 @@
 (defun guix-service-get-entries (search-type search-values params)
   "Receive 'service' entries.
 SEARCH-TYPE may be one of the following symbols: `id', `all',
-`name', `from-os-file'."
+`name', `location', `from-os-file'."
   (guix-eval-read
    (guix-make-guile-expression
     'service-sexps search-type search-values params)))
@@ -198,6 +198,13 @@ See `guix-packages-from-system-config-file' for more details on FILE."
   (interactive
    (list (guix-read-service-name)))
   (guix-service-get-display 'name name))
+
+;;;###autoload
+(defun guix-services-by-location (location)
+  "Display Guix services placed in LOCATION file."
+  (interactive
+   (list (guix-read-service-location-file)))
+  (guix-service-get-display 'location location))
 
 (provide 'guix-ui-service)
 

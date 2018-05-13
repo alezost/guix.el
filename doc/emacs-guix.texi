@@ -760,6 +760,10 @@ Display all available services.
 @item M-x guix-services-by-name
 Display service(s) with the specified name.
 
+@findex guix-services-by-location
+@item M-x guix-services-by-location
+Display service(s) located in the specified file.
+
 @findex guix-services-from-system-config-file
 @item M-x guix-services-from-system-config-file
 Display services from the specified file with @code{operating-system}
