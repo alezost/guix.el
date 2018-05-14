@@ -92,7 +92,8 @@ EL_FILES =					\
   %D%/guix-ui-package-location.el		\
   %D%/guix-ui-generation.el			\
   %D%/guix-ui-system-generation.el		\
-  %D%/guix-ui-service.el
+  %D%/guix-ui-service.el			\
+  %D%/guix-ui-service-location.el
 
 # Elisp files generated from ".in".
 EL_GEN_FILES = %D%/guix-build-config.el

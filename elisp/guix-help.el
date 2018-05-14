@@ -119,6 +119,9 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-services-by-location
     guix-services-from-system-config-file
 
+    "Show/find service locations"
+    guix-service-locations
+
     "Magit-like interface"
     guix
 

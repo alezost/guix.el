@@ -775,6 +775,18 @@ declaration.
 
 @end table
 
+Also similarly to the package locations (@pxref{Package Locations}),
+you may look at the service locations:
+
+@table @kbd
+
+@findex guix-service-locations
+@item M-x guix-service-locations
+Display a list of service locations.  Press @kbd{@key{RET}} there to
+display services placed in the current location.
+
+@end table
+
 @c ----------------------------------------------------------------
 @node Popup Interface
 @chapter Popup Interface
