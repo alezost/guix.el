@@ -1488,7 +1488,7 @@ Interactively with prefix, prompt for PROFILE."
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
-   (list (guix-read-package-location)
+   (list (guix-read-package-location-file)
          (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'location location))
 

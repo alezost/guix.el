@@ -238,8 +238,8 @@ argument, read the name from minibuffer."
 
 (guix-define-readers
  :completions-getter guix-package-location-files
- :single-reader guix-read-package-location
- :single-prompt "Package location: ")
+ :single-reader guix-read-package-location-file
+ :single-prompt "Package location file: ")
 
 (guix-define-readers
  :completions-getter guix-service-names

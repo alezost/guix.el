@@ -154,18 +154,16 @@ See Info node `(guix) Invoking guix lint' for details about linting."
 (defalias 'guix-lint 'guix-package-lint)
 
 ;;;###autoload
-(defun guix-find-package-location (location &optional directory)
-  "Go to the LOCATION of a package.
+(defun guix-find-package-location-file (file &optional directory)
+  "Open package location FILE.
+See `guix-find-location' for the meaning of DIRECTORY.
 
-See `guix-find-location' for the meaning of package location and
-DIRECTORY.
-
-Interactively, prompt for LOCATION.  With prefix argument, prompt
-for DIRECTORY as well."
+Interactively, prompt for the location FILE.  With prefix
+argument, prompt for DIRECTORY as well."
   (interactive
-   (list (guix-read-package-location)
+   (list (guix-read-package-location-file)
          (guix-read-directory)))
-  (guix-find-location location directory))
+  (guix-find-location file directory))
 
 (defun guix-package-location (id-or-name)
   "Return location of a package with ID-OR-NAME.
