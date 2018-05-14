@@ -5,6 +5,8 @@ suggestions, bug reports, patches, or general help:
         Ludovic Courtès
         Clément Lassieur
         Mathieu Lirzin
+         Pierre Neidhardt
+           Oleg Pykhalov
 
 Emacs-Guix also includes Guix(SD) logotips (in "image" sub-directory).
 Thanks to Luis Felipe López Acevedo for making these great logos.
