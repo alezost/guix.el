@@ -785,6 +785,11 @@ you may look at the service locations:
 Display a list of service locations.  Press @kbd{@key{RET}} there to
 display services placed in the current location.
 
+@findex guix-find-service-location-file
+@item M-x guix-find-service-location-file
+Open a file with service definitions (press @kbd{@key{TAB}} to choose
+the file from a completion list).
+
 @end table
 
 @c ----------------------------------------------------------------

@@ -121,6 +121,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
 
     "Show/find service locations"
     guix-service-locations
+    guix-find-service-location-file
 
     "Magit-like interface"
     guix

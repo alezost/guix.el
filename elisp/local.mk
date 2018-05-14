@@ -81,6 +81,7 @@ EL_FILES =					\
   %D%/guix-license.el				\
   %D%/guix-location.el				\
   %D%/guix-package.el				\
+  %D%/guix-service.el				\
   %D%/guix-pcomplete.el				\
   %D%/guix-popup.el				\
   %D%/guix-prettify.el				\
