@@ -100,6 +100,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     "Show/browse package licenses"
     guix-licenses
     guix-browse-license-url
+    guix-find-license-location-file
     guix-find-license-definition
 
     "Show/find package locations"

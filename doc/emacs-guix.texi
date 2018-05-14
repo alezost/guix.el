@@ -734,6 +734,10 @@ there to display packages with this license in the same way as
 @kbd{M-x@tie{}guix-packages-by-license} would do (@pxref{Package
 Commands}).
 
+@findex guix-find-license-location-file
+@item M-x guix-find-license-location-file
+Open @file{@dots{}/guix/licenses.scm} file.
+
 @findex guix-find-license-definition
 @item M-x guix-find-license-definition
 Open @file{@dots{}/guix/licenses.scm} and move to the specified license.

@@ -1,6 +1,6 @@
 ;;; guix-license.el --- Licenses
 
-;; Copyright © 2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016, 2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -40,6 +40,14 @@ DIRECTORY is a directory with Guix source (`guix-directory' by default)."
       (error "Hm, I don't know URL of '%s' license" license)))
 
 ;;;###autoload
+(defun guix-find-license-location-file (&optional directory)
+  "Open FILE with license definitions.
+See `guix-license-file' for the meaning of DIRECTORY.
+Interactively, with prefix argument, prompt for DIRECTORY."
+  (interactive (list (guix-read-directory)))
+  (find-file (guix-license-file directory)))
+
+;;;###autoload
 (defun guix-find-license-definition (license &optional directory)
   "Open licenses file from DIRECTORY and move to the LICENSE definition.
 See `guix-license-file' for the meaning of DIRECTORY.
@@ -47,7 +55,7 @@ Interactively, with prefix argument, prompt for DIRECTORY."
   (interactive
    (list (guix-read-license-name)
          (guix-read-directory)))
-  (find-file (guix-license-file directory))
+  (guix-find-license-location-file directory)
   (goto-char (point-min))
   (when (re-search-forward (concat "\"" (regexp-quote license) "\"")
                            nil t)
