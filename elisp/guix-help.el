@@ -68,7 +68,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
   :group 'guix-help-faces)
 
 (defvar guix-help-specifications
-  '("Show packages"
+  '("Show packages and their definitions"
     guix-all-packages
     guix-newest-packages
     guix-installed-user-packages
@@ -84,12 +84,13 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-search-by-name
     guix-search-by-regexp
     guix-packages-from-system-config-file
-    guix-number-of-packages
+    nil
+    guix-package-locations
+    guix-find-package-location-file
+    guix-find-package-definition
 
-    "Show profiles"
+    "Show profiles and profile generations"
     guix-profiles
-
-    "Show profile generations"
     guix-generations
     guix-last-generations
     guix-generations-by-time
@@ -97,33 +98,28 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-last-system-generations
     guix-system-generations-by-time
 
+    "Show services and their definitions"
+    guix-all-services
+    guix-services-by-name
+    guix-services-by-regexp
+    guix-services-by-location
+    guix-services-from-system-config-file
+    nil
+    guix-service-locations
+    guix-find-service-location-file
+    guix-find-service-definition
+
     "Show/browse package licenses"
     guix-licenses
     guix-browse-license-url
     guix-find-license-location-file
     guix-find-license-definition
 
-    "Show/find package locations"
-    guix-package-locations
-    guix-find-package-location-file
-    guix-find-package-definition
-
     "Other package related commands"
+    guix-number-of-packages
     guix-package-graph
     guix-package-size
     guix-package-lint
-
-    "Show services"
-    guix-all-services
-    guix-services-by-name
-    guix-services-by-regexp
-    guix-services-by-location
-    guix-services-from-system-config-file
-
-    "Show/find service locations"
-    guix-service-locations
-    guix-find-service-location-file
-    guix-find-service-definition
 
     "Magit-like interface"
     guix
@@ -267,6 +263,8 @@ If INFO-BUTTON? is non-nil, insert 'info' button as well."
   "Insert command specification SPEC at point.
 See `guix-help-specifications' for the meaning of SPEC."
   (pcase spec
+    ((pred null)
+     (bui-newline))
     ((pred symbolp)
      (guix-help-insert-specification (list spec t t)))
     ((pred stringp)
