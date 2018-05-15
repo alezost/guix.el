@@ -178,6 +178,12 @@ See `guix-find-location' for the meaning of DIRECTORY."
 
 ;;; Interactive commands
 
+(defvar guix-service-search-params '(name description)
+  "Default list of service parameters for searching by regexp.")
+
+(defvar guix-service-search-history nil
+  "A history of minibuffer prompts.")
+
 ;;;###autoload
 (defun guix-services-from-system-config-file (file)
   "Display Guix services from the operating system configuration FILE.
@@ -198,6 +204,16 @@ See `guix-packages-from-system-config-file' for more details on FILE."
   (interactive
    (list (guix-read-service-name)))
   (guix-service-get-display 'name name))
+
+;;;###autoload
+(defun guix-services-by-regexp (regexp &optional params)
+  "Search for Guix services by REGEXP.
+PARAMS are service parameters that should be searched.
+If PARAMS are not specified, use `guix-service-search-params'."
+  (interactive
+   (list (read-regexp "Regexp: " nil 'guix-service-search-history)))
+  (guix-service-get-display 'regexp regexp
+                            (or params guix-service-search-params)))
 
 ;;;###autoload
 (defun guix-services-by-location (location)

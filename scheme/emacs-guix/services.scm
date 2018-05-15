@@ -28,6 +28,7 @@
   #:use-module (ice-9 match)
   #:use-module (ice-9 vlist)
   #:use-module (srfi srfi-1)
+  #:use-module (srfi srfi-26)
   #:use-module (gnu services)
   #:use-module (guix i18n)
   #:use-module (guix ui)
@@ -110,6 +111,22 @@ ID-OR-NAME may be either a service ID (object address) or its name."
              (()              #f)
              ((service _ ...) service)))))
 
+(define (services-by-regexp regexp match-params)
+  "Return a list of services matching REGEXP string.
+MATCH-PARAMS is a list of parameters that REGEXP can match."
+  (define (service-match? service regexp)
+    (any (lambda (param)
+           (let ((val (service-param service param)))
+             (and (string? val) (regexp-exec regexp val))))
+         match-params))
+
+  (let ((re (make-regexp regexp regexp/icase)))
+    (fold-service-types (lambda (type result)
+                          (if (service-match? type re)
+                              (cons type result)
+                              result))
+                        '())))
+
 (define %service-param-alist
   `((id         . ,service-id)
     (name       . ,(lambda (service)
@@ -127,6 +144,11 @@ ID-OR-NAME may be either a service ID (object address) or its name."
     ;; (parameters . ,(cut service-parameters <>))
     ))
 
+(define (service-param service param)
+  "Return a value of a SERVICE PARAM."
+  (and=> (assq-ref %service-param-alist param)
+         (cut <> service)))
+
 (define (services-from-system-config-file file)
   "Return a list of services from system configuration FILE."
   (operating-system-services (read-operating-system file)))
@@ -138,6 +160,11 @@ ID-OR-NAME may be either a service ID (object address) or its name."
      (filter-map service-by-id (list-maybe search-values)))
     ((name)
      (services-by-name (car search-values)))
+    ((regexp)
+     (match search-values
+       ((regexp params)
+        (services-by-regexp regexp params))
+       (_ '())))
     ((location)
      (services-by-location-file (car search-values)))
     ((all)

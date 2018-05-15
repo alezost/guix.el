@@ -394,8 +394,9 @@ declaration (@pxref{Using the Configuration System,,, guix, The GNU
 Guix Reference Manual}).
 
 @findex guix-search-by-regexp
+@vindex guix-package-search-params
 @item M-x guix-search-by-regexp
-Search for packages by a specified regexp.  By default ``name'',
+Search for packages by a specified regexp.  By default, ``name'',
 ``synopsis'' and ``description'' of the packages will be searched.  This
 can be changed by modifying @code{guix-package-search-params} variable.
 
@@ -763,6 +764,13 @@ Display all available services.
 @findex guix-services-by-name
 @item M-x guix-services-by-name
 Display service(s) with the specified name.
+
+@findex guix-services-by-regexp
+@vindex guix-service-search-params
+@item M-x guix-services-by-regexp
+Search for services by a specified regexp.  By default, ``name'' and
+``description'' of the services will be searched.  This can be changed
+by modifying @code{guix-service-search-params} variable.
 
 @findex guix-services-by-location
 @item M-x guix-services-by-location

@@ -116,6 +116,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     "Show services"
     guix-all-services
     guix-services-by-name
+    guix-services-by-regexp
     guix-services-by-location
     guix-services-from-system-config-file
 
