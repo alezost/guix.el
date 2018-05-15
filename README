@@ -26,9 +26,11 @@ In short, Emacs-Guix provides the following features:
 
   + packages
 
+  + services
+
   + package licenses
 
-  + package locations
+  + package and service locations
 
   + [[https://hydra.gnu.org][Hydra build farm]]
 
@@ -94,15 +96,13 @@ guix package --install-from-file=guix.scm
 * Usage
 
 Call =M-x guix-help= to get a summary of all available commands.
-Here is an incomplete list of them:
+Here is an *incomplete* list of them:
 
-- To show packages:
+- Show packages and their definitions:
 
-  : M-x guix-all-available-packages
-  : M-x guix-newest-available-packages
+  : M-x guix-all-packages
   : M-x guix-installed-user-packages
   : M-x guix-installed-system-packages
-  : M-x guix-obsolete-packages
   : M-x guix-packages-by-name
   : M-x guix-packages-by-license
   : M-x guix-packages-by-location
@@ -110,32 +110,36 @@ Here is an incomplete list of them:
   : M-x guix-search-by-name
   : M-x guix-search-by-regexp
 
-- To show profile generations:
+  : M-x guix-package-locations
+  : M-x guix-find-package-definition
 
+- Show profiles and profile generations:
+
+  : M-x guix-profiles
   : M-x guix-generations
-  : M-x guix-last-generations
-  : M-x guix-generations-by-time
   : M-x guix-system-generations
-  : M-x guix-last-system-generations
-  : M-x guix-system-generations-by-time
 
-- To show/browse package licenses:
+- Show services and their definitions:
+
+  : M-x guix-all-services
+  : M-x guix-services-by-name
+  : M-x guix-services-by-regexp
+  : M-x guix-services-by-location
+
+  : M-x guix-service-locations
+  : M-x guix-find-service-definition
+
+- Show/browse package licenses:
 
   : M-x guix-licenses
   : M-x guix-browse-license-url
   : M-x guix-find-license-definition
 
-- To show/find package locations:
-
-  : M-x guix-locations
-  : M-x guix-find-location
-  : M-x guix-edit
-
 - Magit-like interface:
 
   : M-x guix
 
-- To show Hydra builds and jobsets:
+- Show Hydra builds and jobsets:
 
   : M-x guix-hydra-latest-builds
   : M-x guix-hydra-queued-builds
@@ -143,6 +147,8 @@ Here is an incomplete list of them:
 
 - Miscellaneous commands:
 
+  : M-x guix-help
+  : M-x guix-about
   : M-x guix-pull
   : M-x guix-prettify-mode
   : M-x guix-build-log-mode
