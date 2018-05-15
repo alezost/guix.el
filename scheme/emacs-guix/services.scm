@@ -39,6 +39,7 @@
   #:export (service-names
             service-names*
             service-sexps
+            service-location-string
             service-location-files
             service-location-sexps))
 
@@ -99,6 +100,15 @@ SERVICE can be either a service object, or a service type itself."
        (vhash-foldq* cons '()
                      (string->symbol* name)
                      (force table))))))
+
+(define (service-by-id-or-name id-or-name)
+  "Return service object by ID-OR-NAME.
+ID-OR-NAME may be either a service ID (object address) or its name."
+  (or (service-by-id id-or-name)
+      (and (string? id-or-name)
+           (match (services-by-name id-or-name)
+             (()              #f)
+             ((service _ ...) service)))))
 
 (define %service-param-alist
   `((id         . ,service-id)
@@ -163,6 +173,11 @@ SEARCH-TYPE should be one of the following symbols: 'id', 'name', 'all',
 
 ;; TODO The code below is almost the same as the "package locations"
 ;; code.  It should be generalized!
+
+(define (service-location-string id-or-name)
+  "Return location string of a service with ID-OR-NAME."
+  (and=> (service-by-id-or-name id-or-name)
+         (compose location->string service-type-location)))
 
 (define-values (services-by-location-file
                 service-location-files)

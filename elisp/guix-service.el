@@ -24,6 +24,8 @@
 ;;; Code:
 
 (require 'guix-read)
+(require 'guix-repl)
+(require 'guix-guile)
 (require 'guix-location)
 
 ;;;###autoload
@@ -37,6 +39,26 @@ argument, prompt for DIRECTORY as well."
    (list (guix-read-service-location-file)
          (guix-read-directory)))
   (guix-find-location file directory))
+
+(defun guix-service-location (id-or-name)
+  "Return location of a service with ID-OR-NAME.
+For the meaning of location, see `guix-find-location'."
+  (guix-eval-read (guix-make-guile-expression
+                   'service-location-string id-or-name)))
+
+;;;###autoload
+(defun guix-find-service-definition (id-or-name &optional directory)
+  "Go to the location of service with ID-OR-NAME.
+See `guix-find-location' for the meaning of location and
+DIRECTORY.
+Interactively, with prefix argument, prompt for DIRECTORY."
+  (interactive
+   (list (guix-read-service-name)
+         (guix-read-directory)))
+  (let ((loc (guix-service-location id-or-name)))
+    (if loc
+        (guix-find-location loc directory)
+      (message "Couldn't find service location."))))
 
 (provide 'guix-service)
 

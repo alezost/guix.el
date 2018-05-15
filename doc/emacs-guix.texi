@@ -790,6 +790,11 @@ display services placed in the current location.
 Open a file with service definitions (press @kbd{@key{TAB}} to choose
 the file from a completion list).
 
+@findex guix-find-service-definition
+@item M-x guix-find-service-definition
+Go to the service location---i.e., open a file with the specified
+service and move the point to its definition.
+
 @end table
 
 @c ----------------------------------------------------------------
