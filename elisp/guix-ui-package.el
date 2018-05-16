@@ -503,7 +503,7 @@ formatted with this string, an action button is inserted.")
   "Insert package LOCATION at point."
   (bui-insert-non-nil location
     (bui-info-insert-value-indent location 'guix-location)
-    (let ((location-file (car (split-string location ":"))))
+    (let ((location-file (guix-location-file location)))
       ;; Do not show "Packages" button if a package 'from file' is displayed.
       (unless (eq (guix-ui-current-search-type) 'from-file)
         (bui-insert-indent)

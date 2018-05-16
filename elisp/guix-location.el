@@ -49,6 +49,10 @@
           :type 'guix-location
           'location location)))
 
+(defun guix-location-file (location)
+  "Return file name of the LOCATION."
+  (car (split-string location ":")))
+
 (defun guix-find-location (location &optional directory)
   "Go to LOCATION.
 LOCATION is a string of the form:

@@ -78,7 +78,7 @@ SEARCH-TYPE may be one of the following symbols: `id', `all',
             nil
             (description nil (simple guix-service-info-description))
             nil
-            (location format (format guix-location))
+            (location simple guix-service-info-insert-location)
             (extensions format (format guix-service-name))))
 
 (defface guix-service-info-heading
@@ -121,6 +121,20 @@ identifying an entry.")
    search-type search-values
    (cl-union guix-service-info-required-params
              (bui-info-displayed-params 'guix-service))))
+
+(defun guix-service-info-insert-location (location &optional _)
+  "Insert service LOCATION at point."
+  (bui-insert-non-nil location
+    (bui-info-insert-value-indent location 'guix-location)
+    (let ((location-file (guix-location-file location)))
+      (bui-insert-indent)
+      (bui-insert-action-button
+       "Services"
+       (lambda (btn)
+         (guix-service-get-display 'location
+                                   (button-get btn 'location)))
+       (format "Display services from location '%s'" location-file)
+       'location location-file))))
 
 
 ;;; Service 'list'
