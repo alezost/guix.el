@@ -99,7 +99,7 @@ SEARCH-TYPE may be one of the following symbols: `id', `all',
   :group 'guix-service-info-faces)
 
 (defface guix-service-info-description
-  '((t))
+  '((t :inherit font-lock-doc-face))
   "Face used for a description of a service."
   :group 'guix-service-info-faces)
 

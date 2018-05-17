@@ -333,7 +333,7 @@ ENTRIES is a list of package entries to get info about packages."
   :group 'guix-package-info-faces)
 
 (defface guix-package-info-description
-  '((t))
+  '((t :inherit font-lock-doc-face))
   "Face used for a description of a package."
   :group 'guix-package-info-faces)
 
