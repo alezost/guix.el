@@ -40,7 +40,7 @@
 (defun guix-service-get-entries (search-type search-values params)
   "Receive 'service' entries.
 SEARCH-TYPE may be one of the following symbols: `id', `all',
-`name', `location', `from-os-file'."
+`name', `regexp', `location', `from-os-file'."
   (guix-eval-read
    (guix-make-guile-expression
     'service-sexps search-type search-values params)))
@@ -63,6 +63,18 @@ SEARCH-TYPE may be one of the following symbols: `id', `all',
          (if (= 1 count)
              (message "'%s' service." (car search-values))
            (message "%d services with '%s' name."
+                    count (car search-values))))
+        (regexp
+         (if (= 1 count)
+             (message "A single service matching '%s'."
+                      (car search-values))
+           (message "%d services matching '%s'."
+                    count (car search-values))))
+        (location
+         (if (= 1 count)
+             (message "A single service placed in '%s'."
+                      (car search-values))
+           (message "%d services placed in '%s'."
                     count (car search-values))))
         (all
          (message "%d available services." count))))))
