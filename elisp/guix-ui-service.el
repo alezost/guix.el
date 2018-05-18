@@ -40,7 +40,7 @@
 (defun guix-service-get-entries (search-type search-values params)
   "Receive 'service' entries.
 SEARCH-TYPE may be one of the following symbols: `id', `all',
-`name', `regexp', `location', `from-os-file'."
+`name', `regexp', `location', `from-os-file', `from-expression'."
   (guix-eval-read
    (guix-make-guile-expression
     'service-sexps search-type search-values params)))
@@ -58,6 +58,9 @@ SEARCH-TYPE may be one of the following symbols: `id', `all',
       (cl-case search-type
         (from-os-file
          (message "%d services from OS file '%s'."
+                  count (car search-values)))
+        (from-expression
+         (message "%d services from '%s'."
                   count (car search-values)))
         (name
          (if (= 1 count)
@@ -235,6 +238,19 @@ See `guix-find-location' for the meaning of DIRECTORY."
 (defvar guix-service-search-history nil
   "A history of minibuffer prompts.")
 
+(defvar guix-default-services-variables
+  '(("%base-services"    . "(gnu services base)")
+    ("%desktop-services" . "(gnu services desktop)"))
+  "Alist of variables with services and their modules.
+Each element from this alist should have the following form:
+
+  (VAR-NAME . MODULE)
+
+VAR-NAME is the name (string) of a guile variable that evaluates
+to a list of services.
+
+MODULE is the guile module (string) where this variable is placed in.")
+
 ;;;###autoload
 (defun guix-services-from-system-config-file (file)
   "Display Guix services from the operating system configuration FILE.
@@ -248,6 +264,26 @@ See `guix-packages-from-system-config-file' for more details on FILE."
   "Display all available Guix services."
   (interactive)
   (guix-service-get-display 'all))
+
+;;;###autoload
+(defun guix-default-services (var-name)
+  "Display Guix services from VAR-NAME.
+VAR-NAME is a name of the variable from
+`guix-default-services-variables'."
+  (interactive
+   (list (completing-read
+          "Variable with services: "
+          guix-default-services-variables nil t nil nil
+          (caar guix-default-services-variables))))
+  (let ((module (bui-assoc-value guix-default-services-variables
+                                 var-name)))
+    (if module
+        (guix-service-get-display
+         'from-expression
+         (format "(@ %s %s)" module var-name))
+      (error "Unknown guile variable '%s'.
+Check the value of 'guix-default-services-variables'"
+             var-name))))
 
 ;;;###autoload
 (defun guix-services-by-name (name)

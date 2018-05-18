@@ -761,6 +761,14 @@ interface for packages (@pxref{Packages}).
 @item M-x guix-all-services
 Display all available services.
 
+@findex guix-default-services
+@item M-x guix-default-services
+Display services from @code{%base-services} (@pxref{Base Services,,,
+guix, The GNU Guix Reference Manual}) or @code{%desktop-services}
+(@pxref{Desktop Services,,, guix, The GNU Guix Reference Manual}).
+You will be prompted in the minibuffer for the variable name
+(completions available).
+
 @findex guix-services-by-name
 @item M-x guix-services-by-name
 Display service(s) with the specified name.

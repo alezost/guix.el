@@ -118,6 +118,11 @@ SERVICE can be either a service object, or a service type itself."
                (delay (vhash-consq (service-id service)
                                    service table*))))))))
 
+(define (register/return-services services)
+  "Call `register-service' on SERVICES and return them."
+  (map register-service services)
+  services)
+
 (define-values (service-names
                 services-by-name)
   (let ((table (delay (fold-service-types
@@ -205,13 +210,11 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
      (services-by-location-file (car search-values)))
     ((all)
      (fold-service-types cons '()))
+    ((from-expression)
+     (register/return-services (read-eval (car search-values))))
     ((from-os-file)
-     (match search-values
-       ((file)
-        (let ((services (services-from-system-config-file file)))
-          (map register-service services)
-          services))
-       (_ '())))
+     (register/return-services
+      (services-from-system-config-file (car search-values))))
     (else
      (error (format #f "Wrong search type '~a' for services"
                     search-type)))))
@@ -221,7 +224,7 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
 
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name', 'all',
-'regexp', 'location', 'from-os-file'."
+'regexp', 'location', 'from-os-file', 'from-expression'."
   (let ((services (find-services search-type search-values))
         (->sexp (object-transformer %service-param-alist params)))
     (to-emacs-side (map ->sexp services))))

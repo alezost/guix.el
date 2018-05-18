@@ -100,6 +100,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
 
     "Show services and their definitions"
     guix-all-services
+    guix-default-services
     guix-services-by-name
     guix-services-by-regexp
     guix-services-by-location

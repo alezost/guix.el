@@ -26,6 +26,7 @@
             list-maybe
             string->symbol*
             search-load-path
+            read-eval
             object-transformer))
 
 (define-syntax-rule (first-or-false lst)
@@ -78,5 +79,19 @@ Example:
 (define (search-load-path file-name)
   "Call (search-path %load-path FILE-NAME)."
   (search-path %load-path file-name))
+
+(define (read-eval str)
+  "Read and evaluate STR, raising an error if something goes wrong."
+  (let ((exp (catch #t
+               (lambda ()
+                 (call-with-input-string str read))
+               (lambda args
+                 (error (format #f "Failed to read expression ~s: ~s~%"
+                                str args))))))
+    (catch #t
+      (lambda ()
+        (eval exp (interaction-environment)))
+      (lambda args
+        (error (format #f "Failed to evaluate expression '~a'~%" exp))))))
 
 ;;; utils.scm ends here
