@@ -1,6 +1,6 @@
 ;;; screenshots.scm --- "Screenshots" page
 
-;; Copyright © 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2017–2018 Alex Kost <alezost@gmail.com>
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -39,6 +39,9 @@
     ("profiles.png"
      "Buffers with profiles"
      ,(manual-node-href "Profiles"))
+    ("services.png"
+     "Services"
+     ,(manual-node-href "Services"))
     ("licenses.png"
      "List of licenses"
      ,(manual-node-href "Package-Licenses"
