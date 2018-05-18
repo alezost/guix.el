@@ -28,8 +28,11 @@
   #:use-module (ice-9 match)
   #:use-module (ice-9 vlist)
   #:use-module (srfi srfi-1)
+  #:use-module (srfi srfi-11)
   #:use-module (srfi srfi-26)
+  #:use-module (srfi srfi-34)
   #:use-module (gnu services)
+  #:use-module (gnu services shepherd)
   #:use-module (guix i18n)
   #:use-module (guix ui)
   #:use-module (guix utils)
@@ -55,6 +58,39 @@ SERVICE can be either a service object, or a service type itself."
   (if (service? service)
       (service-kind service)
       service))
+
+(define (shepherd-services service-or-type)
+  "Return the list of Shepherd services created by SERVICE-OR-TYPE."
+  (let-values (((type service)
+                (if (service? service-or-type)
+                    (values (service-kind service-or-type)
+                            service-or-type)
+                    (values service-or-type
+                            (guard (c ((service-error? c) #f))
+                              (service service-or-type))))))
+    (match service
+      (#f '())
+      ((? service? service)
+       (let* ((extension (find (lambda (extension)
+                                 (eq? (service-extension-target extension)
+                                      shepherd-root-service-type))
+                               (service-type-extensions type)))
+              (compute   (and extension
+                              (service-extension-compute extension))))
+         (if compute
+             (compute (service-value service))
+             '()))))))
+
+(define %shepherd-service-param-alist
+  `((names         . ,shepherd-service-provision)
+    (documentation . ,shepherd-service-documentation)
+    (requirements  . ,shepherd-service-requirement)))
+
+(define shepherd-service->sexp
+  (object-transformer %shepherd-service-param-alist))
+
+(define (shepherd-services->sexp services)
+  (map shepherd-service->sexp services))
 
 ;; XXX The same as `package-field-string' in (guix ui) module.
 (define (texi-field->string object field-accessor)
@@ -141,8 +177,8 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
                      (map (compose service-type-name*
                                    service-extension-target)
                           (service-type-extensions (service-type* service)))))
-    ;; (parameters . ,(cut service-parameters <>))
-    ))
+    (shepherd   . ,(compose shepherd-services->sexp
+                            shepherd-services))))
 
 (define (service-param service param)
   "Return a value of a SERVICE PARAM."
@@ -185,7 +221,7 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
 
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name', 'all',
-'location', 'from-os-file'."
+'regexp', 'location', 'from-os-file'."
   (let ((services (find-services search-type search-values))
         (->sexp (object-transformer %service-param-alist params)))
     (to-emacs-side (map ->sexp services))))

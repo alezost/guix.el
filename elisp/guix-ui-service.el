@@ -91,7 +91,17 @@ SEARCH-TYPE may be one of the following symbols: `id', `all',
             (description nil (simple guix-service-info-description))
             nil
             (location simple guix-service-info-insert-location)
-            (extensions format (format guix-service-name))))
+            (extensions format (format guix-service-name))
+            nil
+            (shepherd simple guix-service-insert-shepherd-services))
+  :titles '((shepherd . "Shepherd service(s)")))
+
+(bui-define-interface guix-shepherd-service info
+  :format '((names format (format))
+            (documentation format (format guix-service-info-description))
+            (requirements format (format)))
+  :titles '((names . "Name(s)"))
+  :reduced? t)
 
 (defface guix-service-info-heading
   '((t :inherit bui-info-heading))
@@ -147,6 +157,21 @@ identifying an entry.")
                                    (button-get btn 'location)))
        (format "Display services from location '%s'" location-file)
        'location location-file))))
+
+(defvar guix-shepherd-service-info-delimiter
+  (concat (make-string 16 ?—) "\n")
+  "String used to separate shepherd services.")
+
+(defun guix-service-insert-shepherd-services (shepherd-services _)
+  "Insert SHEPHERD-SERVICES info at point."
+  (bui-insert-non-nil shepherd-services
+    (bui-newline)
+    (bui-mapinsert
+     (lambda (service)
+       (bui-info-insert-entry service 'guix-shepherd-service 1))
+     shepherd-services
+     (concat (bui-get-indent 1)
+             guix-shepherd-service-info-delimiter))))
 
 
 ;;; Service 'list'
