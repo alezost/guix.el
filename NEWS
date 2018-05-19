@@ -1,5 +1,83 @@
 -*- mode: org -*-
 
+* Changes in 0.4 (since 0.3.4)
+
+** User visible changes
+
+*** New commands
+
+**** M-x guix-all-services
+**** M-x guix-default-services
+**** M-x guix-services-by-name
+**** M-x guix-services-by-regexp
+**** M-x guix-services-by-location
+**** M-x guix-service-locations
+**** M-x guix-find-service-definition
+**** M-x guix-find-service-location-file
+**** M-x guix-find-license-location-file
+**** M-x guix-dependent-packages
+**** M-x guix-number-of-packages
+**** M-x guix-report-bug
+
+*** Renamed commands
+
+**** M-x guix-all-available-packages -> guix-all-packages
+**** M-x guix-newest-available-packages -> guix-newest-packages
+**** M-x guix-find-location -> guix-find-package-location-file
+**** M-x guix-locations -> guix-package-locations
+**** M-x guix-edit -> guix-find-package-definition
+
+'guix-edit' still exists as an alias for 'guix-find-package-definition'
+and it is not going to be removed.
+
+*** guix-devel-mode
+
+**** Possibility to edit synopsis/description in texinfo-mode
+
+The new 'guix-devel-code-block-edit' command that allows you to do this
+is bound to "C-c . '".
+
+**** Possibility to find package patch file at point
+
+To activate it, use:
+
+(add-to-list 'ffap-alist '("\\.patch" . guix-devel-ffap-patch))
+
+*** guix-env-var-mode
+
+It prettifies "/tmp/guix-build-*-*.drv-*/environment-variables" and
+"etc/profile" files.
+
+** Internal changes
+
+*** New faces
+
+- guix-hydra-build-status-unknown
+- guix-location
+
+'guix-package-info-location' face is removed (superseded by
+'guix-location').
+
+*** New variables
+
+Not counting the huge amount of variables for the new service interface.
+
+- guix-package-names-use-duplicates
+- guix-hydra-number-of-builds
+- guix-hydra-urls
+- guix-repl-max-returned-list-size
+
+*** Performance improvements
+
+Big portions of Guile data are passed to the Elisp side not through
+Geiser, but through a temporary file.  This makes Emacs-Guix faster and
+more reliable.  See commit 00c87a9cafa3d74840be02efa2516286515b6f93 for
+details.
+
+*** Requirements
+
+New requirement: "edit-indirect.el" library.
+
 * Changes in 0.3.4 (since 0.3.3)
 
 ** User visible changes
