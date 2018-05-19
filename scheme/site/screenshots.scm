@@ -47,9 +47,13 @@
      ,(manual-node-href "Package-Licenses"
                         #:title "Package licenses"))
     ("locations.png"
-     "List of locations"
-     ,(manual-node-href "Package-Locations"
-                        #:title "Package locations"))
+     "Lists of locations"
+     (,(manual-node-href "Package-Locations"
+                        #:title "Package")
+      " and "
+      ,(manual-node-href "Services"
+                        #:title "Service")
+      " locations"))
     ("build-log+popup.png"
      "Guix Build Log mode and magit-like popup buffer"
      (,(manual-node-href "Build-Log-Mode"
