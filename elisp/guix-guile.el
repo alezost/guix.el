@@ -39,9 +39,17 @@
 (defun guix-guile-current-definition ()
   "Return string with name of the current top-level guile definition."
   (save-excursion
+    ;; If the point is in the beginning of the current definition,
+    ;; `beginning-of-defun' will move it to the previous one, so we
+    ;; narrow to the definition at first (there is also a commentary
+    ;; about this problem in `narrow-to-defun').
+    (narrow-to-defun)
     (beginning-of-defun)
     (if (looking-at guix-guile-definition-regexp)
-        (match-string-no-properties 1)
+        (progn
+          (widen)
+          (match-string-no-properties 1))
+      (widen)
       (error "Couldn't find the current definition"))))
 
 (defun guix-guile-current-module ()
