@@ -1596,18 +1596,29 @@ Interactively with prefix, prompt for PROFILE."
   (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'superseded))
 
+(defun guix-read-package-dependent-type ()
+  "Prompt a user for a type of dependent packages."
+  (intern
+   (completing-read "Dependency type (\"all\" or \"direct\"): "
+                    '("all" "direct")
+                    nil t nil nil "all")))
+
 ;;;###autoload
-(defun guix-dependent-packages (packages &optional profile)
+(defun guix-dependent-packages (packages &optional type profile)
   "Display Guix packages that depend on PACKAGES.
 This is similar to 'guix refresh --list-dependent PACKAGES ...'.
 See Info node `(guix) Invoking guix refresh' for details.
+
+TYPE should be a symbol `all' or `direct'.  Interactively, prompt
+for it.
 
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
    (list (guix-read-package-names)
+         (guix-read-package-dependent-type)
          (guix-ui-read-package-profile)))
-  (guix-package-get-display profile 'dependent packages))
+  (guix-package-get-display profile 'dependent (or type 'all) packages))
 
 (defun guix-hidden-packages (&optional profile)
   "Display hidden Guix packages.

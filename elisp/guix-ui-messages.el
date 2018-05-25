@@ -72,9 +72,9 @@
       (1 "A single package is superseded.")
       (many "%d packages are superseded." count))
      (dependent
-      (0 "No packages depend on: %s." val)
-      (1 "A single package depends on: %s." val)
-      (many "%d packages depend on: %s." count val))
+      ,(lambda (_ entries values)
+         (guix-message-dependent-packages
+          entries 'package (car values) (cadr values))))
      (unknown
       (0 "No obsolete packages in profile '%s'." profile)
       (1 "A single obsolete or unknown package in profile '%s'." profile)
@@ -125,9 +125,9 @@
       (1 "A single package is superseded.")
       (many "%d package outputs are superseded." count))
      (dependent
-      (0 "No packages depend on: %s." val)
-      (1 "A single package depends on: %s." val)
-      (many "%d package outputs depend on: %s." count val))
+      ,(lambda (_ entries values)
+         (guix-message-dependent-packages
+          entries 'package (car values) (cadr values))))
      (unknown
       (0 "No obsolete package outputs in profile '%s'." profile)
       (1 "A single obsolete or unknown package output in profile '%s'."
@@ -226,6 +226,20 @@ Try \"\\[guix-search-by-name]\" to find this package.")
   (let* ((count   (length entries))
          (str-beg (guix-message-string-entries count entry-type))
          (str-end (format "placed in '%s'" location)))
+    (message "%s %s." str-beg str-end)))
+
+(defun guix-message-dependent-packages (entries entry-type
+                                        depend-type packages)
+  "Display a message for packages or outputs searched by PACKAGES.
+DEPEND-TYPE should a symbol `direct' or `all'."
+  (let* ((count (length entries))
+         (str-beg (guix-message-string-entries count entry-type))
+         (str-end (concat (if (eq depend-type 'direct)
+                              "directly "
+                            "")
+                          "depending on: "
+                          (mapconcat #'guix-message-string-name
+                                     packages ", "))))
     (message "%s %s." str-beg str-end)))
 
 (defun guix-message-generations-by-time (profile entries times)

@@ -364,7 +364,9 @@ Display packages that are superseded by the other packages.
 Display packages that depend on the specified package(s).  This
 command is analogous to @code{guix refresh --list-dependent} shell
 command (@pxref{Invoking guix refresh,,, guix, The GNU Guix Reference
-Manual}).
+Manual}).  You'll be prompted for a package name (or multiple names,
+separated by commas) and a dependency type (it should be either
+``all'' or ``direct'').
 
 @findex guix-packages-by-name
 @item M-x guix-packages-by-name

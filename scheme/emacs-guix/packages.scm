@@ -410,7 +410,7 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
   "Return a list of packages from system configuration FILE."
   (operating-system-packages (read-operating-system file)))
 
-(define (dependent-packages packages)
+(define* (dependent-packages packages #:key direct?)
   ;; Some code for this procedure was taken from `list-dependents'
   ;; procedure in (guix scripts refresh) module.
   "Return a list of packages that need to be rebuilt if PACKAGES are changed."
@@ -422,7 +422,9 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
       (run-with-store store
         (mlet %store-monad ((edges (node-back-edges %bag-node-type
                                                     (all-packages))))
-          (return (node-transitive-edges packages edges)))))))
+          (if direct?
+              (return (append-map edges packages))
+              (return (node-transitive-edges packages edges))))))))
 
 
 ;;; Making package/output patterns.
@@ -680,8 +682,10 @@ ENTRIES is a list of installed manifest entries."
                                   (packages-from-file file)))
          (os-file-proc          (lambda (_ file)
                                   (packages-from-system-config-file file)))
-         (dependent-proc        (lambda (_ packages)
-                                  (dependent-packages packages)))
+         (dependent-proc        (lambda (_ type packages)
+                                  (dependent-packages
+                                   packages
+                                   #:direct? (eq? type 'direct))))
          (hidden-proc           (lambda _ (hidden-packages)))
          (superseded-proc       (lambda _ (superseded-packages)))
          (all-proc              (lambda _ (all-packages)))
