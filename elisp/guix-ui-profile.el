@@ -288,9 +288,9 @@ If nothing is marked, use profile on the current line."
        (format "Make '%s' the current profile" profile)
        'profile profile))))
 
-(defun guix-profile-info-insert-number-of-packages (value entry)
-  "Insert boolean VALUE showing whether this profile is current."
-  (bui-format-insert value)
+(defun guix-profile-info-insert-number-of-packages (number entry)
+  "Insert the NUMBER of packages and button to display packages."
+  (bui-format-insert number)
   (bui-insert-indent)
   (let ((profile (bui-entry-non-void-value entry 'profile)))
     (bui-insert-action-button
@@ -300,9 +300,9 @@ If nothing is marked, use profile on the current line."
      (format "Show packages installed in profile '%s'" profile)
      'profile profile)))
 
-(defun guix-profile-info-insert-number-of-generations (value entry)
-  "Insert boolean VALUE showing whether this profile is current."
-  (bui-format-insert value)
+(defun guix-profile-info-insert-number-of-generations (number entry)
+  "Insert the NUMBER of generations and button to display generations."
+  (bui-format-insert number)
   (bui-insert-indent)
   (let ((profile (bui-entry-non-void-value entry 'profile)))
     (bui-insert-action-button
