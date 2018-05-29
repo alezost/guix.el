@@ -455,17 +455,28 @@ formatted with this string, an action button is inserted.")
              (list 'name (button-label btn))
              'add)))
 
+(defun guix-package-button-action (button)
+  "Display package info for package BUTTON."
+  (let* ((search-value (button-get button 'id))
+         (search-type  (if search-value 'id 'name))
+         (search-value (or search-value
+                           (button-get button 'spec)
+                           (button-label button))))
+    (if (eq major-mode 'guix-package-info-mode)
+        (bui-get-display-entries-current
+         'guix-package 'info
+         (list (guix-ui-current-profile)
+               search-type search-value))
+      (bui-get-display-entries
+       'guix-package 'info
+       (list guix-current-profile
+             search-type search-value)))))
+
 (define-button-type 'guix-package-name
   :supertype 'bui
   'face 'guix-package-info-name-button
   'help-echo "Describe this package"
-  'action (lambda (btn)
-            (bui-get-display-entries-current
-             'guix-package 'info
-             (list (guix-ui-current-profile)
-                   'name (or (button-get btn 'spec)
-                             (button-label btn)))
-             'add)))
+  'action 'guix-package-button-action)
 
 (define-button-type 'guix-package-heading
   :supertype 'guix-package-name
