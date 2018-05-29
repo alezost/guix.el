@@ -104,24 +104,24 @@ return two values: name and version.  For example, for SPEC
         (string-append full-name ":" output)
         full-name)))
 
-(define* (package->specification package #:optional output)
+(define* (package-specification package #:optional output)
   "Convert PACKAGE object to a package specification string."
   (make-package-specification (package-name package)
                               (package-version package)
                               output))
 
-(define (manifest-entry->package-specification entry)
+(define (manifest-entry-package-specification entry)
   (call-with-values
       (lambda () (manifest-entry->name+version+output entry))
     make-package-specification))
 
-(define (manifest-entries->package-specifications entries)
-  (map manifest-entry->package-specification entries))
+(define (manifest-entries-package-specifications entries)
+  (map manifest-entry-package-specification entries))
 
 (define (profile-package-specifications profile)
   "Return a list of package specifications for PROFILE."
   (let ((manifest (profile-manifest profile)))
-    (manifest-entries->package-specifications
+    (manifest-entries-package-specifications
      (manifest-entries manifest))))
 
 (define (profile->specifications+file-names profile)
@@ -130,7 +130,7 @@ Each element of the list is a list of the package specification and its
 file name."
   (let ((manifest (profile-manifest profile)))
     (map (lambda (entry)
-           (list (manifest-entry->package-specification entry)
+           (list (manifest-entry-package-specification entry)
                  (manifest-entry-item entry)))
          (manifest-entries manifest))))
 
@@ -156,9 +156,9 @@ and not installed in PROFILE2."
   "Return a list of full names of the packages from package INPUTS."
   (filter-map (match-lambda
                 ((_ (? package? package))
-                 (package->specification package))
+                 (package-specification package))
                 ((_ (? package? package) output)
-                 (package->specification package output))
+                 (package-specification package output))
                 (_ #f))
               inputs))
 
@@ -223,7 +223,7 @@ The result is one of the following symbols:
     (known-status      . ,(const 'known))
     (superseded        . ,(lambda (pkg)
                             (and=> (package-superseded pkg)
-                                   package->specification)))
+                                   package-specification)))
     (inputs            . ,(lambda (pkg)
                             (package-inputs-names
                              (package-inputs pkg))))
