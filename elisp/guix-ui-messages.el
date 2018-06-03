@@ -184,7 +184,7 @@
 (defun guix-message-packages-by-id (entries entry-type ids)
   "Display a message for packages or outputs searched by IDS."
   (let ((count (length entries)))
-    (if (zerop count)
+    (if (= 0 count)
         (message (substitute-command-keys "\
 No packages with ID %s.
 Most likely, Guix REPL was restarted, so IDs are not actual

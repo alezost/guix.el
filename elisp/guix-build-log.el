@@ -285,7 +285,7 @@ With ARG, do it that many times.  Negative ARG means move
 backward."
   (interactive "^p")
   (if arg
-      (when (zerop arg) (user-error "Try again"))
+      (when (= 0 arg) (user-error "Try again"))
     (setq arg 1))
   (let ((search-fun (if (> arg 0)
                         #'re-search-forward
@@ -294,7 +294,7 @@ backward."
         found last-found)
     (save-excursion
       (end-of-line (if (> arg 0) 1 0))  ; skip the current line
-      (while (and (not (zerop n))
+      (while (and (/= 0 n)
                   (setq found
                         (funcall search-fun
                                  guix-build-log-phase-start-regexp

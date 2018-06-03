@@ -55,7 +55,7 @@ add both to the end and to the beginning."
 (defun guix-number->bool (number)
   "Convert NUMBER to boolean value.
 Return nil, if NUMBER is 0; return t otherwise."
-  (not (zerop number)))
+  (/= 0 number))
 
 (defun guix-list-maybe (object)
   "If OBJECT is list, return it; otherwise return (list OBJECT)."
