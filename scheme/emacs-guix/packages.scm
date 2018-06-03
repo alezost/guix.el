@@ -152,13 +152,15 @@ and not installed in PROFILE2."
 (define (manifest-entries->sexps entries)
   (map manifest-entry->sexp entries))
 
-(define (package-inputs-names inputs)
+(define (package-inputs-sexps inputs)
   "Return a list of full names of the packages from package INPUTS."
   (filter-map (match-lambda
                 ((_ (? package? package))
-                 (package-specification package))
+                 (list (object-address package)
+                       (package-specification package)))
                 ((_ (? package? package) output)
-                 (package-specification package output))
+                 (list (object-address package)
+                       (package-specification package output)))
                 (_ #f))
               inputs))
 
@@ -224,17 +226,14 @@ The result is one of the following symbols:
     (superseded        . ,(lambda (pkg)
                             (and=> (package-superseded pkg)
                                    package-specification)))
-    (inputs            . ,(lambda (pkg)
-                            (package-inputs-names
-                             (package-inputs pkg))))
-    (native-inputs     . ,(lambda (pkg)
-                            (package-inputs-names
-                             (package-native-inputs pkg))))
-    (propagated-inputs . ,(lambda (pkg)
-                            (package-inputs-names
-                             (package-propagated-inputs pkg))))
-    (location          . ,(lambda (pkg)
-                            (location->string (package-location pkg))))))
+    (inputs            . ,(compose package-inputs-sexps
+                                   package-inputs))
+    (native-inputs     . ,(compose package-inputs-sexps
+                                   package-native-inputs))
+    (propagated-inputs . ,(compose package-inputs-sexps
+                                   package-propagated-inputs))
+    (location          . ,(compose location->string
+                                   package-location))))
 
 (define (package-param package param)
   "Return a value of a PACKAGE PARAM."
@@ -441,20 +440,41 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
         (package-specification->name+version+output specification #f))
     list))
 
-(define (id->package-pattern id)
-  (if (integer? id)
-      (package-by-address id)
-      (specification->package-pattern id)))
+(define (id->package-pattern id-or-spec)
+  "Return a package pattern by ID-OR-SPEC.
+Package pattern is either a package or (name version) list.
+ID-OR-SPEC should be a package address or a package specification
+or (ADDRESS SPEC) list."
+  (match id-or-spec
+    ((id spec)
+     (or (package-by-address id)
+         (specification->package-pattern spec)))
+    ((? integer? id)
+     (package-by-address id))
+    (_ (specification->package-pattern id-or-spec))))
 
-(define (id->output-pattern id)
-  "Return an output pattern by output ID.
-ID should be '<package-address>:<output>' or '<name>-<version>:<output>'."
-  (let-values (((name version output)
-                (package-specification->name+version+output id)))
-    (if version
-        (list name version output)
-        (list (package-by-address (string->number name))
-              output))))
+(define (id->output-pattern id-or-spec)
+  "Return an output pattern by output ID-OR-SPEC.
+Output pattern is either (package output) or (name version output) list.
+ID-OR-SPEC should be '<package-address>:<output>' string or
+'<name>-<version>:<output>' string or (ADDRESS SPEC) list."
+  (match id-or-spec
+    ((id spec)
+     (or (list (package-by-address id)
+               (let-values (((_name _version output)
+                             (package-specification->name+version+output
+                              spec)))
+                 output))
+         (specification->output-pattern spec)))
+    ((? integer? id)
+     (list (package-by-address id) "out"))
+    (_
+     (let-values (((name version output)
+                   (package-specification->name+version+output id-or-spec)))
+       (if version
+           (list name version output)
+           (list (package-by-address (string->number name))
+                 output))))))
 
 (define (specifications->package-patterns . specifications)
   (map specification->package-pattern specifications))

@@ -261,10 +261,12 @@ ENTRIES is a list of package entries to get info about packages."
             (home-url format (format bui-url))
             (license format (format guix-package-license))
             (systems format guix-package-info-insert-systems)
-            (inputs format (format guix-package-input))
-            (native-inputs format (format guix-package-native-input))
-            (propagated-inputs format
-                               (format guix-package-propagated-input)))
+            (inputs format (guix-package-info-insert-name-buttons
+                            guix-package-input))
+            (native-inputs format (guix-package-info-insert-name-buttons
+                                   guix-package-native-input))
+            (propagated-inputs format (guix-package-info-insert-name-buttons
+                                       guix-package-propagated-input)))
   :hint 'guix-package-info-hint
   :titles '((home-url . "Home page")
             (systems . "Supported systems"))
@@ -457,11 +459,10 @@ formatted with this string, an action button is inserted.")
 
 (defun guix-package-button-action (button)
   "Display package info for package BUTTON."
-  (let* ((search-value (button-get button 'id))
-         (search-type  (if search-value 'id 'name))
-         (search-value (or search-value
-                           (button-get button 'spec)
-                           (button-label button))))
+  (let ((search-type 'id)
+        (search-value (or (button-get button 'id)
+                          (button-get button 'spec)
+                          (button-label button))))
     (if (eq major-mode 'guix-package-info-mode)
         (bui-get-display-entries-current
          'guix-package 'info
@@ -542,9 +543,9 @@ formatted with this string, an action button is inserted.")
               (bui-entry-non-void-value entry 'version))))
 
 (defmacro guix-package-info-define-insert-inputs (&optional type)
-  "Define a face and a function for inserting package inputs.
+  "Define a face and a button for package inputs.
 TYPE is a type of inputs.
-Function name is `guix-package-info-insert-TYPE-inputs'.
+Button name is `guix-package-TYPE-input'.
 Face name is `guix-package-info-TYPE-inputs'."
   (let* ((type-str (symbol-name type))
          (type-name (and type (concat type-str "-")))
@@ -564,6 +565,35 @@ Face name is `guix-package-info-TYPE-inputs'."
 (guix-package-info-define-insert-inputs)
 (guix-package-info-define-insert-inputs native)
 (guix-package-info-define-insert-inputs propagated)
+
+(defun guix-package-info-insert-name-buttons (values &optional button)
+  "Insert package name buttons at point.
+Each element from VALUES should either be a specification string
+or (id spec) list."
+  (bui-insert-non-nil values
+    (let* ((text (with-temp-buffer
+                   (bui-mapinsert
+                    (lambda (value)
+                      (let ((spec (if (listp value)
+                                      (cadr value)
+                                    value)))
+                        (bui-insert-button
+                         spec (or button 'guix-package-name)
+                         'id value)))
+                    values
+                    bui-list-separator)
+                   (buffer-substring (point-min) (point-max))))
+           (strings (bui-split-string
+                     text
+                     (- (bui-fill-column)
+                        (length bui-info-multiline-prefix)))))
+      (bui-mapinsert #'insert
+                     strings
+                     (concat "\n" bui-info-multiline-prefix)))))
+
+(defun guix-package-info-insert-name-button (value &optional button)
+  "Insert package name button at point."
+  (guix-package-info-insert-name-buttons (list value) button))
 
 (defun guix-package-info-insert-outputs (outputs entry)
   "Insert OUTPUTS from package ENTRY at point."
