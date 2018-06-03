@@ -183,14 +183,10 @@
 
 (defun guix-message-packages-by-id (entries entry-type ids)
   "Display a message for packages or outputs searched by IDS."
-  (let* ((count (length entries))
-         (str-beg (guix-message-string-entries count entry-type))
-         (str-end (if (> count 1)
-                      (concat "with the following IDs: "
-                              (mapconcat #'bui-get-string ids ", "))
-                    (concat "with ID " (bui-get-string (car ids))))))
+  (let ((count (length entries)))
     (if (zerop count)
-        (message (substitute-command-keys "%s %s.
+        (message (substitute-command-keys "\
+No packages with ID %s.
 Most likely, Guix REPL was restarted, so IDs are not actual
 anymore, because they live only during the REPL process.
 
@@ -199,8 +195,8 @@ Emacs-Guix.  For example, it may be so called 'canonical package'
 used by '%%base-packages' in an operating-system declaration.
 
 Try \"\\[guix-search-by-name]\" to find this package.")
-                 str-beg str-end)
-      (message "%s %s." str-beg str-end))))
+                 (bui-get-string (car ids)))
+      (message ""))))
 
 (defun guix-message-packages-by-name (entries entry-type names)
   "Display a message for packages or outputs searched by NAMES."
