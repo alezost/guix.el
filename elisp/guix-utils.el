@@ -149,39 +149,6 @@ Return time value."
                         (pcmpl-unix-user-names)
                         nil nil initial-input))
 
-(defun guix-read-file-name (prompt &optional dir default-filename
-                                   mustmatch initial predicate)
-  "Read file name.
-This function is similar to `read-file-name' except it also
-expands the file name."
-  (expand-file-name (read-file-name prompt dir default-filename
-                                    mustmatch initial predicate)))
-
-(defcustom guix-find-file-function #'find-file
-  "Function used to find a file.
-This function is called by `guix-find-file' with a file name as a
-single argument."
-  :type '(choice (function-item find-file)
-                 (function-item org-open-file)
-                 (function :tag "Other function"))
-  :group 'guix)
-
-(defun guix-find-file (file)
-  "Find FILE (using `guix-find-file-function') if it exists."
-  (if (file-exists-p file)
-      (funcall guix-find-file-function file)
-    (message "File '%s' does not exist." file)))
-
-(defvar url-handler-regexp)
-
-(defun guix-find-file-or-url (file-or-url)
-  "Find FILE-OR-URL."
-  (require 'url-handlers)
-  (let ((file-name-handler-alist
-         (cons (cons url-handler-regexp 'url-file-handler)
-               file-name-handler-alist)))
-    (find-file file-or-url)))
-
 (defun guix-switch-to-buffer-or-funcall (buffer-or-name function
                                          &optional message)
   "Switch to BUFFER-OR-NAME if it exists.
@@ -297,6 +264,44 @@ See `bui-define-groups' for details."
      :parent-group guix
      :parent-faces-group guix-faces
      ,@args))
+
+
+;;; Files and Dired
+
+(defcustom guix-find-file-function #'find-file
+  "Function used to find a file.
+This function is called by `guix-find-file' with a file name as a
+single argument."
+  :type '(choice (function-item find-file)
+                 (function-item org-open-file)
+                 (function :tag "Other function"))
+  :group 'guix)
+
+(defun guix-read-file-name (&optional prompt dir default-filename
+                                      mustmatch initial predicate)
+  "Read file name.
+This function is similar to `read-file-name' except it also
+expands the file name."
+  (expand-file-name
+   (read-file-name (or prompt "File: ")
+                   dir default-filename
+                   mustmatch initial predicate)))
+
+(defun guix-find-file (file)
+  "Find FILE (using `guix-find-file-function') if it exists."
+  (if (file-exists-p file)
+      (funcall guix-find-file-function file)
+    (message "File '%s' does not exist." file)))
+
+(defvar url-handler-regexp)
+
+(defun guix-find-file-or-url (file-or-url)
+  "Find FILE-OR-URL."
+  (require 'url-handlers)
+  (let ((file-name-handler-alist
+         (cons (cons url-handler-regexp 'url-file-handler)
+               file-name-handler-alist)))
+    (find-file file-or-url)))
 
 
 ;;; Temporary file names
