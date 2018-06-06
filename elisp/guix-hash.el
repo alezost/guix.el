@@ -1,6 +1,6 @@
 ;;; guix-hash.el --- Calculate hashes of files  -*- lexical-binding: t -*-
 
-;; Copyright © 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2017–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -28,18 +28,10 @@
 (require 'guix-read)
 (require 'guix-repl)
 (require 'guix-guile)
+(require 'guix-utils)
 
-(defcustom guix-hash-support-dired t
-  "Whether '\\[guix-hash]' supports `dired-mode' or not.
-
-If non-nil, do not prompt for a file name in `dired-mode' and use
-the file on the current line instead.
-
-If nil, always prompt for a file name."
-  :type 'boolean
-  :group 'guix)
-
-(declare-function dired-get-filename "dired" t)
+(define-obsolete-variable-alias 'guix-hash-support-dired
+  'guix-support-dired "0.4.1")
 
 ;;;###autoload
 (defun guix-hash (file &optional format)
@@ -48,16 +40,12 @@ If nil, always prompt for a file name."
 If FILE is a directory, calculate its hash recursively excluding
 version-controlled files.
 
-Interactively, prompt for FILE (see also
-`guix-hash-support-dired' variable).  With prefix argument,
-prompt for FORMAT as well.
+Interactively, prompt for FILE (see also `guix-support-dired').
+With prefix argument, prompt for FORMAT as well.
 
 See also Info node `(guix) Invoking guix hash'."
   (interactive
-   (list (if (and guix-hash-support-dired
-                  (derived-mode-p 'dired-mode))
-             (dired-get-filename)
-           (read-file-name "File: "))
+   (list (guix-read-file-name-maybe)
          (and current-prefix-arg
               (guix-read-hash-format))))
   (let* ((file (expand-file-name file))

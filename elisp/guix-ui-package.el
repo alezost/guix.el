@@ -1537,9 +1537,10 @@ Interactively with prefix, prompt for PROFILE."
 (defun guix-package-from-file (file &optional profile)
   "Display Guix package that the code from FILE evaluates to.
 If PROFILE is nil, use `guix-current-profile'.
-Interactively with prefix, prompt for PROFILE."
+Interactively prompt for FILE (see also `guix-support-dired').
+With prefix argument, prompt for PROFILE as well."
   (interactive
-   (list (guix-read-file-name "File with package: ")
+   (list (guix-read-file-name-maybe "File with package: ")
          (guix-ui-read-package-profile)))
   (bui-get-display-entries
    'guix-package 'info
@@ -1550,7 +1551,7 @@ Interactively with prefix, prompt for PROFILE."
 (defun guix-packages-from-system-config-file (file &optional profile)
   "Display Guix packages from the operating system configuration FILE.
 
-Make sure FILE has a proper operating-system declaration.  You
+Make sure FILE has a proper 'operating-system' declaration.  You
 may check it, for example, by running the following shell command:
 
   guix system build --dry-run FILE
@@ -1560,8 +1561,8 @@ See also Info node `(guix) System Configuration'.
 If PROFILE is nil, use system profile (it is used to show what
 packages from FILE are installed in PROFILE).
 
-Interactively, prompt for FILE.  With prefix argument, also prompt
-for PROFILE.
+Interactively, prompt for FILE (see also `guix-support-dired').
+With prefix argument, prompt for PROFILE as well.
 
 Note: This command displays only those packages that are placed
 in 'packages' field of the 'operating-system' declaration.  An

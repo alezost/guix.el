@@ -1268,6 +1268,7 @@ look at @code{guix-ENTRY-TYPE-BUFFER-TYPE-format} variables
 * Guile and Build Options::     Settings for Guix REPL, Guile, etc.
 * Buffer Names::                Names of Guix buffers.
 * Keymaps::                     Configuring key bindings.
+* Miscellaneous Configuration:: Other configuration variables.
 @end menu
 
 @node Graph Configuration
@@ -1449,6 +1450,22 @@ management.
 
 @end table
 
+@node Miscellaneous Configuration
+@section Miscellaneous Configuration
+
+@table @code
+
+@vindex guix-support-dired
+@item guix-support-dired
+Some Emacs-Guix commands (for example, @kbd{M-x guix-hash} or @kbd{M-x
+guix-package-from-file}) may or may not support @code{dired-mode}
+(@pxref{Dired,,, emacs, The GNU Emacs Manual}).  By default, whenever
+you run them in a Dired buffer, they will use the file name at
+point---i.e., you will not be prompted for it.  If you wish to disable
+this feature, set @code{guix-support-dired} variable to nil.
+
+@end table
+
 @c ----------------------------------------------------------------
 @node Miscellaneous Commands
 @chapter Miscellaneous Commands
@@ -1487,13 +1504,6 @@ hash format.
 If you call this command on a directory, its hash will be calculated
 recursively without version-controlled files (so you can use this hash
 in a package recipe).
-
-@vindex guix-hash-support-dired
-Finally, this command supports @code{dired-mode} (@pxref{Dired,,,
-emacs, The GNU Emacs Manual}): whenever you run @kbd{M-x guix-hash} in
-a Dired buffer, a hash of the current file will be calculated---i.e.,
-you will not be prompted for a file name.  If you wish to disable this
-feature, set @code{guix-hash-support-dired} variable to nil.
 
 @end table
 

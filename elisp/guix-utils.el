@@ -277,6 +277,21 @@ single argument."
                  (function :tag "Other function"))
   :group 'guix)
 
+(defcustom guix-support-dired t
+  "Whether guix commands support `dired-mode' or not.
+
+Some commands (like `guix-hash' or `guix-package-from-file') take
+a file name as argument.  If you are in `dired-mode', you may or
+may not wish to use the file at point for these commands.  This
+variable allows you to control this behavior.
+
+If non-nil, do not prompt for a file name in `dired-mode' and use
+the file on the current line instead.
+
+If nil, always prompt for a file name."
+  :type 'boolean
+  :group 'guix)
+
 (defun guix-read-file-name (&optional prompt dir default-filename
                                       mustmatch initial predicate)
   "Read file name.
@@ -287,9 +302,21 @@ expands the file name."
                    dir default-filename
                    mustmatch initial predicate)))
 
+(declare-function dired-get-filename "dired" t)
+
+(defun guix-read-file-name-maybe (&optional prompt dir default-filename
+                                            mustmatch initial predicate)
+  "Read file name or get it from `dired-mode'.
+See `guix-support-dired' for details.  See also `guix-read-file-name'."
+  (if (and guix-support-dired
+           (derived-mode-p 'dired-mode))
+      (dired-get-filename)
+    (guix-read-file-name prompt dir default-filename
+                         mustmatch initial predicate)))
+
 (defun guix-read-os-file-name ()
   "Read file name with GuixSD 'operating-system' declaration."
-  (guix-read-file-name "System configuration file: "))
+  (guix-read-file-name-maybe "System configuration file: "))
 
 (defun guix-find-file (file)
   "Find FILE (using `guix-find-file-function') if it exists."
