@@ -110,6 +110,9 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-find-service-location-file
     guix-find-service-definition
 
+    "Interface for 'operating-system'"
+    guix-system-from-file
+
     "Show/browse package licenses"
     guix-licenses
     guix-browse-license-url

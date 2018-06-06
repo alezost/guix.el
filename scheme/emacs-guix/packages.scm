@@ -65,6 +65,8 @@
   #:export (package-names
             package-names*
             number-of-packages
+            register-package
+            package-specification
             profile->specifications+file-names
             id->name+version
             package-by-id

@@ -36,6 +36,7 @@ MODULES =					\
   emacs-guix/graph.scm				\
   emacs-guix/lint.scm				\
   emacs-guix/services.scm			\
+  emacs-guix/system.scm				\
   emacs-guix/actions.scm			\
   emacs-guix.scm
 

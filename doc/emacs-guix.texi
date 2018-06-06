@@ -50,6 +50,7 @@ A copy of the license is available at
 * Installation::        Installing Emacs-Guix.
 * Package Management::  Managing packages and profile generations.
 * Services::            Interface for GuixSD services.
+* System::              Interface for @code{operating-system} declaration.
 * Package Licenses::    Interface for licenses of packages.
 * Popup Interface::     Magit-like interface for guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
@@ -779,6 +780,27 @@ the file from a completion list).
 @item M-x guix-find-service-definition
 Go to the service location---i.e., open a file with the specified
 service and move the point to its definition.
+
+@end table
+
+@c ----------------------------------------------------------------
+@node System
+@chapter System
+
+Your system configuration file (for GuixSD) contains
+@code{operating-system} declaration (@pxref{operating-system
+Reference,,, guix, The GNU Guix Reference Manual}).
+
+And Emacs-Guix provides an interface for this @code{operating-system},
+where you can look at the packages, services, initrd modules that this
+system will install and some other stuff.
+
+@table @kbd
+
+@findex guix-system-from-file
+@item guix-system-from-file
+Find your system configuration file and look at the system it
+provides.
 
 @end table
 
