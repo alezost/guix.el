@@ -49,8 +49,8 @@ A copy of the license is available at
 * Introduction::        Quick overview.
 * Installation::        Installing Emacs-Guix.
 * Package Management::  Managing packages and profile generations.
-* Package Licenses::    Interface for licenses of packages.
 * Services::            Interface for GuixSD services.
+* Package Licenses::    Interface for licenses of packages.
 * Popup Interface::     Magit-like interface for guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
 * Prettify Variables::  Split and indent Shell variables.
@@ -715,39 +715,6 @@ with another marked generation.
 @end table
 
 @c ----------------------------------------------------------------
-@node Package Licenses
-@chapter Package Licenses
-
-@cindex package licenses
-If you want to browse the URL of a particular license, or to look at a
-list of licenses, you may use the following commands:
-
-@table @kbd
-
-@findex guix-browse-license-url
-@item M-x guix-browse-license-url
-Choose a license from a completion list to browse its URL using
-@code{browse-url} function (@pxref{Browse-URL,,, emacs, The GNU Emacs
-Manual}).
-
-@findex guix-licenses
-@item M-x guix-licenses
-Display a list of available licenses.  You can press @kbd{P} key
-there to display packages with this license in the same way as
-@kbd{M-x@tie{}guix-packages-by-license} would do (@pxref{Package
-Commands}).
-
-@findex guix-find-license-location-file
-@item M-x guix-find-license-location-file
-Open @file{@dots{}/guix/licenses.scm} file.
-
-@findex guix-find-license-definition
-@item M-x guix-find-license-definition
-Open @file{@dots{}/guix/licenses.scm} and move to the specified license.
-
-@end table
-
-@c ----------------------------------------------------------------
 @node Services
 @chapter Services
 
@@ -812,6 +779,39 @@ the file from a completion list).
 @item M-x guix-find-service-definition
 Go to the service location---i.e., open a file with the specified
 service and move the point to its definition.
+
+@end table
+
+@c ----------------------------------------------------------------
+@node Package Licenses
+@chapter Package Licenses
+
+@cindex package licenses
+If you want to browse the URL of a particular license, or to look at a
+list of licenses, you may use the following commands:
+
+@table @kbd
+
+@findex guix-browse-license-url
+@item M-x guix-browse-license-url
+Choose a license from a completion list to browse its URL using
+@code{browse-url} function (@pxref{Browse-URL,,, emacs, The GNU Emacs
+Manual}).
+
+@findex guix-licenses
+@item M-x guix-licenses
+Display a list of available licenses.  You can press @kbd{P} key
+there to display packages with this license in the same way as
+@kbd{M-x@tie{}guix-packages-by-license} would do (@pxref{Package
+Commands}).
+
+@findex guix-find-license-location-file
+@item M-x guix-find-license-location-file
+Open @file{@dots{}/guix/licenses.scm} file.
+
+@findex guix-find-license-definition
+@item M-x guix-find-license-definition
+Open @file{@dots{}/guix/licenses.scm} and move to the specified license.
 
 @end table
 
