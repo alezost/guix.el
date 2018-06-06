@@ -287,6 +287,10 @@ expands the file name."
                    dir default-filename
                    mustmatch initial predicate)))
 
+(defun guix-read-os-file-name ()
+  "Read file name with GuixSD 'operating-system' declaration."
+  (guix-read-file-name "System configuration file: "))
+
 (defun guix-find-file (file)
   "Find FILE (using `guix-find-file-function') if it exists."
   (if (file-exists-p file)

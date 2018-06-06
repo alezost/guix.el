@@ -1570,7 +1570,7 @@ services (like 'guix' or 'shepherd').  To see all the packages
 installed in a system profile, use
 '\\[guix-installed-system-packages]' command."
   (interactive
-   (list (guix-read-file-name "System configuration file: ")
+   (list (guix-read-os-file-name)
          (and current-prefix-arg
               (guix-read-package-profile guix-system-profile))))
   (guix-package-get-display (or profile guix-system-profile)

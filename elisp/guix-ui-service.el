@@ -255,8 +255,7 @@ MODULE is the guile module (string) where this variable is placed in.")
 (defun guix-services-from-system-config-file (file)
   "Display Guix services from the operating system configuration FILE.
 See `guix-packages-from-system-config-file' for more details on FILE."
-  (interactive
-   (list (guix-read-file-name "System configuration file: ")))
+  (interactive (list (guix-read-os-file-name)))
   (guix-service-get-display 'from-os-file file))
 
 ;;;###autoload
