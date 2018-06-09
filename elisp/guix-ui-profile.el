@@ -1,6 +1,6 @@
 ;;; guix-ui-profile.el --- Interface for displaying profiles  -*- lexical-binding: t -*-
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -362,6 +362,13 @@ Modify `guix-profiles' variable to add more profiles."
   (interactive)
   (guix-switch-to-buffer-or-funcall
    guix-profile-list-buffer-name #'guix-profiles-show 'message))
+
+;;;###autoload
+(defun guix-system-profile ()
+  "Display interface for `guix-system-profile'."
+  (interactive)
+  (bui-get-display-entries 'guix-profile 'info
+                           (list 'profile guix-system-profile)))
 
 (provide 'guix-ui-profile)
 

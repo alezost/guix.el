@@ -94,6 +94,8 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-generations
     guix-last-generations
     guix-generations-by-time
+
+    guix-system-profile
     guix-system-generations
     guix-last-system-generations
     guix-system-generations-by-time
