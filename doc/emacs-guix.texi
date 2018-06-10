@@ -48,9 +48,9 @@ A copy of the license is available at
 @menu
 * Introduction::        Quick overview.
 * Installation::        Installing Emacs-Guix.
-* Package Management::  Managing packages and profile generations.
-* Services::            Interface for GuixSD services.
-* System::              Interface for @code{operating-system} declaration.
+* Packages::            Interface for packages.
+* Profiles and Generations:: Interface for profiles and their generations.
+* System::              Interface for @code{operating-system} and services.
 * Package Licenses::    Interface for licenses of packages.
 * Popup Interface::     Magit-like interface for guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
@@ -94,9 +94,11 @@ Interfaces for:
 @item profiles (@pxref{Profiles})
 @item profile generations (@pxref{Generations})
 @item packages (@pxref{Packages})
-@item package licenses (@pxref{Package Licenses})
 @item package locations (@pxref{Package Locations})
+@item package licenses (@pxref{Package Licenses})
+@item @code{operating-system} declaration (@pxref{System From File})
 @item services (@pxref{Services})
+@item service locations (@pxref{Service Locations})
 @item @uref{https://hydra.gnu.org, Hydra build farm} (@pxref{Hydra})
 @end itemize
 
@@ -283,53 +285,36 @@ Emacs-Guix entry.  Also you can use @kbd{M-x guix-info} command to run
 the manual (@pxref{Help}).
 
 @c ----------------------------------------------------------------
-@node Package Management
-@chapter Package Management
-
-Emacs-Guix provides a visual interface for routine package management
-tasks, pretty much like the @command{guix package} command
-(@pxref{Invoking guix package,,, guix, The GNU Guix Reference
-Manual}).  Specifically, it makes it easy to:
-
-@itemize
-@item browse and display packages and generations;
-@item search, install, upgrade and remove packages;
-@item display packages from previous generations;
-@item do some other useful things.
-@end itemize
-
-@menu
-* Packages::                    Interface for packages.
-* Profiles::                    Interface for profiles.
-* Generations::                 Interface for profile generations.
-@end menu
-
 @node Packages
-@section Packages
+@chapter Packages
 
 @cindex packages
-There are multiple commands to display a list of Guix packages.  You
-can either perform some actions in such ``package-list'' buffer, or
-``describe'' package(s) with @kbd{@key{RET}} and do what you need in
-``info'' buffer.
+Emacs-Guix provides a visual interface for packages where you can
+perform routine package management tasks, pretty much like the
+@command{guix package} command (@pxref{Invoking guix package,,, guix,
+The GNU Guix Reference Manual}).
 
 @menu
 * Package Commands::    @kbd{M-x guix-@dots{}} to show packages.
-* Package Keys::        Key bindings in ``package-list'' buffer.
-* Package Locations::   Interface for locations of package source files.
+* Package Keys::        Key bindings in package ``list'' and ``info'' buffers.
+* Package Locations::   Interface for locations of packages.
 * More Package Commands:: Other @kbd{M-x guix-@dots{}} related to packages.
 @end menu
 
 @node Package Commands
-@subsection Package Commands
+@section Package Commands
 
-@vindex guix-current-profile
+There are multiple commands to display a list of Guix packages.  You
+can either perform some actions in such ``package-list'' buffer, or
+``describe'' package(s) in ``package-info'' buffer using
+@kbd{@key{RET}}.
+
 @findex guix-set-current-profile
-All commands for displaying packages use the current profile
-(@code{guix-current-profile} variable), which can be changed with
-@kbd{M-x@tie{}guix-set-current-profile}.  Alternatively, if you call
-any of the following commands with a prefix argument (@kbd{C-u}), you
-will be prompted for a profile just for that command.
+The following commands use the current profile, which can be changed
+globally with @kbd{M-x@tie{}guix-set-current-profile} (@pxref{Profile
+Commands}).  Alternatively, if you call any of the following commands
+with a prefix argument (@kbd{C-u}), you will be prompted for a profile
+just for that command.
 
 @table @kbd
 
@@ -421,9 +406,9 @@ with a @strong{package} per line, use the following setting:
 @end example
 
 @node Package Keys
-@subsection Package Keys
+@section Package Keys
 
-@subsubsection List Buffer
+@subsection List Buffer
 
 Along with the general ``list'' keys (@pxref{List buffer}), a
 ``package-list'' buffer additionally provides the following key
@@ -460,7 +445,7 @@ checker names.
 Display latest builds of the current package (@pxref{Hydra}).
 @end table
 
-@subsubsection Info Buffer
+@subsection Info Buffer
 
 Similarly, ``package-info'' buffer provides the following key bindings:
 
@@ -482,27 +467,27 @@ Lint the package.
 @end table
 
 @node Package Locations
-@subsection Package Locations
+@section Package Locations
 
 @cindex package locations
-As you know, package definitions are placed in Guile files, also known
-as @dfn{package locations}.  The following commands should help you not
-get lost in these locations:
+As you know, package definitions are placed in Guile files.  The
+following commands should help you not get lost in these @dfn{package
+locations}:
 
 @table @kbd
 
 @findex guix-package-locations
 @item M-x guix-package-locations
-Display a list of package locations.  You can press @kbd{P} or
-@kbd{@key{RET}} there to display packages placed in the current
-location in the same way as @kbd{M-x@tie{}guix-packages-by-location}
-would do (@pxref{Package Commands}).  Note that when the point is on a
-location button, @kbd{@key{RET}} will open this location file.
+Display a list of files with package definitions.  You can press @kbd{P}
+or @kbd{@key{RET}} there to display packages placed in the current file in
+the same way as @kbd{M-x@tie{}guix-packages-by-location} would do
+(@pxref{Package Commands}).  Note that when the point is on a location
+button, @kbd{@key{RET}} will open this location file.
 
 @findex guix-find-package-location-file
 @item M-x guix-find-package-location-file
-Open the given package definition source file (press @kbd{@key{TAB}}
-to choose a location from a completion list).
+Open a file with package definitions (press @kbd{@key{TAB}} to choose a
+file from the completion list).
 
 @findex guix-find-package-definition
 @item M-x guix-find-package-definition
@@ -545,7 +530,7 @@ point position (unless @kbd{C-u} is used):
 @end example
 
 @node More Package Commands
-@subsection More Package Commands
+@section More Package Commands
 
 And some more commands related to packages:
 
@@ -581,17 +566,55 @@ prefix argument, you'll be also prompted for checker names.
 
 @end table
 
+@c ----------------------------------------------------------------
+@node Profiles and Generations
+@chapter Profiles and Generations
+
+As you know, packages are installed in @dfn{profiles}.  The default
+user profile is @file{~/.guix-profile} (actually it is a symlink to
+the real profile) but you can also install packages to non-standard
+profiles (using @code{guix package --profile=@dots{}}).
+
+Profiles have @dfn{generations}.  They appear whenever you perform any
+profile action (installing/removing packages).  These generations are
+just symlinks to the previous versions of profile, so you can easily
+roll-back to any previous generation.
+
+As you may guess, Emacs-Guix provides an interface for profiles and
+their generations, where you can look at the packages from the old
+generations, switch to any generation, delete generations, etc.
+
+@menu
+* Profiles::            Interface for profiles.
+* Generations::         Interface for generations.
+@end menu
+
 @node Profiles
 @section Profiles
 
 @cindex profiles
+If you manage multiple Guix profiles, this section is for you.
+@kbd{M-x guix-profiles} is the entry point to display profiles.  There
+you can look at the profile generations, installed packages and more.
+Read further for details.
+
+@menu
+* Profile Commands::    @kbd{M-x guix-profiles} and friends.
+* Profile Keys::        Key bindings in profile ``list'' buffer.
+@end menu
+
+@node Profile Commands
+@subsection Profile Commands
+
+@table @kbd
+
 @findex guix-profiles
 @vindex guix-profiles
-You can keep track of your Guix profiles with @kbd{M-x guix-profiles}
-command.  By default, it displays only @file{~/.guix-profile} and a
-system profile (on GuixSD).  But if you manage multiple profiles, you
-can add them by setting @code{guix-profiles} variable, for example,
-like this:
+@item M-x guix-profiles
+Show a list of available Guix profiles.  By default, it displays only
+the default user profile and system profile (only on GuixSD).  But if
+you use multiple profiles, you can add them to this list by setting
+@code{guix-profiles} variable, for example, like this:
 
 @example
 (with-eval-after-load 'guix-ui-profile
@@ -601,9 +624,33 @@ like this:
                 guix-profiles)))
 @end example
 
+The ``profile-list'' buffer provides some keys to work with profiles
+(@pxref{Profile Keys}), but also there are the following standalone
+profile commands that can be called outside this buffer.
+
+@vindex guix-current-profile
+@findex guix-set-current-profile
+@item M-x guix-set-current-profile
+Set the current profile (@code{guix-current-profile} variable) to the
+specified one.  The current profile is used by the package commands
+(@pxref{Package Commands}) to check what package is installed in this
+profile, and by generation commands (@pxref{Generation Commands}).
+
+@findex guix-apply-manifest
+@item M-x guix-apply-manifest
+Apply a manifest file to the current profile or a specified profile,
+if the prefix argument is used.  This has the same meaning as
+@code{--manifest} option (@pxref{Invoking guix package,,, guix, The
+GNU Guix Reference Manual}).
+
+@end table
+
+@node Profile Keys
+@subsection Profile Keys
+
 Along with the general ``list'' keys (@pxref{List buffer}), a
-``profile-list'' buffer additionally provides the following
-bindings:
+``profile-list'' buffer (displayed by @kbd{M-x guix-profiles})
+additionally provides the following bindings:
 
 @table @kbd
 @item P
@@ -619,34 +666,30 @@ Manual}).
 @item c
 Make profile at point the current profile for the package commands
 (@pxref{Packages}).
+@item M
+Apply manifest from a specified file to the profile at point.
 @end table
-
-@findex guix-apply-manifest
-Finally, you can use @kbd{M-x guix-apply-manifest} to apply a manifest
-file to the current profile or to a specified profile, if prefix
-argument is used.  This has the same meaning as @code{--manifest}
-option (@pxref{Invoking guix package,,, guix, The GNU Guix Reference
-Manual}).
 
 @node Generations
 @section Generations
 
 @cindex generations
-Each Guix profile may have generations and Emacs-Guix allows you to
-display these generations, to switch to a particular generation, to
-look at the packages installed in it and to compare generations.
+Each Guix profile may have multiple generations and Emacs-Guix allows
+you to display these generations, to switch to a particular
+generation, to look at the packages installed in it and to compare 2
+generations.
 
 @menu
-* Generation Commands::    @kbd{M-x guix-@dots{}} to show generations.
-* Generation Keys::        Key bindings in ``generation-list'' buffer.
+* Generation Commands:: @kbd{M-x guix-@dots{}} to show profile generations.
+* Generation Keys::     Key bindings in generation ``list'' buffer.
 @end menu
 
 @node Generation Commands
 @subsection Generation Commands
 
 As with commands for displaying packages (@pxref{Package Commands}),
-commands for displaying generations use the current profile and can be
-called with a prefix argument.
+commands for displaying generations also use the current profile and
+can be called with a prefix argument.
 
 @table @kbd
 
@@ -667,16 +710,8 @@ date/time prompt,,, org, The Org Manual}).
 
 @end table
 
-Analogously, on GuixSD you can also display system generations:
-
-@table @kbd
-@findex guix-system-generations
-@item M-x guix-system-generations
-@findex guix-last-system-generations
-@item M-x guix-last-system-generations
-@findex guix-system-generations-by-time
-@item M-x guix-system-generations-by-time
-@end table
+If you use GuixSD, you may also look at the system generations using
+the similar commands (@pxref{System Commands}).
 
 @node Generation Keys
 @subsection Generation Keys
@@ -716,14 +751,65 @@ with another marked generation.
 @end table
 
 @c ----------------------------------------------------------------
-@node Services
-@chapter Services
+@node System
+@chapter System
 
+This chapter describes Emacs-Guix features related to GuixSD, in
+particular:
+
+@itemize
+@item interface for system configuration file;
+@item interface for system services;
+@item commands to display system profile and generations.
+@end itemize
+
+@menu
+* System From File::    Interface for @code{operating-system} declaration.
+* Services::            Interface for system services.
+* System Commands::     Other @kbd{M-x guix-@dots{}} related to system.
+@end menu
+
+@node System From File
+@section System From File
+
+@cindex system
+Your system configuration file (for GuixSD) contains
+@code{operating-system} declaration (@pxref{operating-system
+Reference,,, guix, The GNU Guix Reference Manual}).
+
+And Emacs-Guix provides an interface for this @code{operating-system},
+where you can look at the packages, services, initrd modules that this
+system will install and some other stuff.
+
+@table @kbd
+
+@findex guix-system-from-file
+@item guix-system-from-file
+Find your system configuration file and look at the system it
+provides.
+
+@end table
+
+@node Services
+@section Services
+
+@cindex services
 If you use GuixSD, you may have a wish to become more familiar with
 the system services (@pxref{Services,,, guix, The GNU Guix Reference
-Manual}).  Hopefully, the following commands will help you explore
-this part of Guix.  The interface for services is very similar to the
-interface for packages (@pxref{Packages}).
+Manual}).  Emacs-Guix provides several commands to display these
+services.
+
+@menu
+* Service Commands::    @kbd{M-x guix-@dots{}} to show services.
+* Service Locations::   Interface for locations of services.
+@end menu
+
+@node Service Commands
+@subsection Service Commands
+
+The interface for services is very similar to the interface for
+packages (@pxref{Packages}).  The following commands allows you to
+look at the GuixSD services.
 
 @table @kbd
 
@@ -761,15 +847,19 @@ declaration.
 
 @end table
 
-Also similarly to the package locations (@pxref{Package Locations}),
-you may look at the service locations:
+@node Service Locations
+@subsection Service Locations
+
+@cindex service Locations
+Similarly to the package locations (@pxref{Package Locations}), you
+may look at the service locations:
 
 @table @kbd
 
 @findex guix-service-locations
 @item M-x guix-service-locations
-Display a list of service locations.  Press @kbd{@key{RET}} there to
-display services placed in the current location.
+Display a list of files with service locations.  Press @kbd{@key{RET}}
+there to display services placed in the current location.
 
 @findex guix-find-service-location-file
 @item M-x guix-find-service-location-file
@@ -783,24 +873,41 @@ service and move the point to its definition.
 
 @end table
 
-@c ----------------------------------------------------------------
-@node System
-@chapter System
+@node System Commands
+@section System Commands
 
-Your system configuration file (for GuixSD) contains
-@code{operating-system} declaration (@pxref{operating-system
-Reference,,, guix, The GNU Guix Reference Manual}).
-
-And Emacs-Guix provides an interface for this @code{operating-system},
-where you can look at the packages, services, initrd modules that this
-system will install and some other stuff.
+Along with the commands for services and @code{operating-system},
+there are commands to look at the system profile
+(@file{/var/guix/profiles/system}), its generations and packages
+installed in it.
 
 @table @kbd
 
-@findex guix-system-from-file
-@item guix-system-from-file
-Find your system configuration file and look at the system it
-provides.
+@findex guix-system-profile
+@item M-x guix-system-profile
+Display ``info'' interface for the system profile.
+
+@findex guix-system-generations
+@item M-x guix-system-generations
+@findex guix-last-system-generations
+@itemx M-x guix-last-system-generations
+@findex guix-system-generations-by-time
+@itemx M-x guix-system-generations-by-time
+Display generations of the system profile.  These commands have the
+same meaning as the usual generation commands (@pxref{Generation
+Commands}).
+
+@findex guix-installed-system-packages
+@item M-x guix-installed-system-packages
+Display packages installed in the system profile.
+
+@findex guix-packages-from-system-config-file
+@item M-x guix-packages-from-system-config-file
+@findex guix-services-from-system-config-file
+@item M-x guix-services-from-system-config-file
+Display packages/services from the specified system configuration
+file.  You can also look at these packages/services from the
+``system-info'' interface (@pxref{System From File}).
 
 @end table
 
@@ -1131,8 +1238,9 @@ by @uref{https://nixos.org/hydra/, Hydra}.
 This section describes an Emacs interface to query Hydra to know the
 build status of specific packages, discover recent and ongoing builds,
 view build logs, and so on.  This interface is mostly the same as the
-``list''/``info'' interface for displaying packages and generations
-(@pxref{Package Management}).
+``list''/``info'' interface for displaying packages
+(@pxref{Packages}), generations (@pxref{Generations}) and other
+things.
 
 The following commands are available:
 
