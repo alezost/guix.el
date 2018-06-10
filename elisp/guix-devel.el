@@ -436,14 +436,6 @@ Look at Info node `(emacs-guix) Development' to see how
        (or (ffap-locate-file patch t guix-devel-ffap-patch-directories)
            (expand-file-name patch (car guix-devel-ffap-patch-directories)))))
 
-
-(defvar guix-devel-emacs-font-lock-keywords
-  (eval-when-compile
-    `((,(rx "(" (group "guix-devel-with-definition") symbol-end) . 1))))
-
-(font-lock-add-keywords 'emacs-lisp-mode
-                        guix-devel-emacs-font-lock-keywords)
-
 (provide 'guix-devel)
 
 ;;; guix-devel.el ends here

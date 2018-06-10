@@ -908,23 +908,6 @@ EXECUTOR function is called with the current command line arguments."
 
 (defalias 'guix-edit-action #'guix-find-package-definition)
 
-
-(defvar guix-command-font-lock-keywords
-  (eval-when-compile
-    `((,(rx "("
-            (group "guix-command-define-"
-                   (or "popup-action"
-                       "execute-action"
-                       "argument-improver"))
-            symbol-end
-            (zero-or-more blank)
-            (zero-or-one
-             (group (one-or-more (or (syntax word) (syntax symbol))))))
-       (1 font-lock-keyword-face)
-       (2 font-lock-function-name-face nil t)))))
-
-(font-lock-add-keywords 'emacs-lisp-mode guix-command-font-lock-keywords)
-
 (provide 'guix-command)
 
 ;;; guix-command.el ends here

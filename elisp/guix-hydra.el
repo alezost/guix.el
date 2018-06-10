@@ -322,16 +322,6 @@ ARGS are passed to `bui-define-interface' macro."
      :get-entries-function ',(guix-hydra-symbol entry-type 'get-entries)
      ,@args))
 
-
-(defvar guix-hydra-font-lock-keywords
-  (eval-when-compile
-    `((,(rx "(" (group (or "guix-hydra-define-entry-type"
-                           "guix-hydra-define-interface"))
-            symbol-end)
-       . 1))))
-
-(font-lock-add-keywords 'emacs-lisp-mode guix-hydra-font-lock-keywords)
-
 (provide 'guix-hydra)
 
 ;;; guix-hydra.el ends here

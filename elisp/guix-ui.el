@@ -219,16 +219,6 @@ See `guix-ui-buffer-name' for details."
            :buffer-name ',buffer-name-fun
            ,@%foreign-args)))))
 
-
-(defvar guix-ui-font-lock-keywords
-  (eval-when-compile
-    `((,(rx "(" (group (or "guix-ui-define-entry-type"
-                           "guix-ui-define-interface"))
-            symbol-end)
-       . 1))))
-
-(font-lock-add-keywords 'emacs-lisp-mode guix-ui-font-lock-keywords)
-
 (provide 'guix-ui)
 
 ;;; guix-ui.el ends here

@@ -524,27 +524,6 @@ See `defun' for the meaning of arguments."
      ,(or docstring
           (format "Memoized version of `%S'." definition))))
 
-
-(defvar guix-utils-font-lock-keywords
-  (eval-when-compile
-    `((,(rx "(" (group (or "guix-define-reader"
-                           "guix-define-readers"
-                           "guix-define-groups"
-                           "guix-while-null"
-                           "guix-while-search"))
-            symbol-end)
-       . 1)
-      (,(rx "("
-            (group "guix-memoized-" (or "defun" "defalias"))
-            symbol-end
-            (zero-or-more blank)
-            (zero-or-one
-             (group (one-or-more (or (syntax word) (syntax symbol))))))
-       (1 font-lock-keyword-face)
-       (2 font-lock-function-name-face nil t)))))
-
-(font-lock-add-keywords 'emacs-lisp-mode guix-utils-font-lock-keywords)
-
 (provide 'guix-utils)
 
 ;;; guix-utils.el ends here
