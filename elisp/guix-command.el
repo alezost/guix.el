@@ -60,9 +60,9 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'magit-popup)
 (require 'bui-utils)
 (require 'guix nil t)
-(require 'guix-popup)
 (require 'guix-utils)
 (require 'guix-help-vars)
 (require 'guix-read)
@@ -890,7 +890,7 @@ EXECUTOR function is called with the current command line arguments."
         (guix-command-generate-popup-actions popup-actions commands)
       (guix-command-generate-execute-actions execute-actions commands))
     (eval
-     `(guix-define-popup ,name
+     `(magit-define-popup ,name
         ,doc
         'guix-commands
         :man-page ,man-page
