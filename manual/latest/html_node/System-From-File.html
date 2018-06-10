@@ -17,19 +17,19 @@ http://www.gnu.org/licenses/fdl.html.
 <!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Package Management (Emacs-Guix Reference Manual)</title>
+<title>System From File (Emacs-Guix Reference Manual)</title>
 
-<meta name="description" content="Package Management (Emacs-Guix Reference Manual)">
-<meta name="keywords" content="Package Management (Emacs-Guix Reference Manual)">
+<meta name="description" content="System From File (Emacs-Guix Reference Manual)">
+<meta name="keywords" content="System From File (Emacs-Guix Reference Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="texi2any">
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Packages.html#Packages" rel="next" title="Packages">
-<link href="Using-the-Manual-from-Git.html#Using-the-Manual-from-Git" rel="prev" title="Using the Manual from Git">
+<link href="System.html#System" rel="up" title="System">
+<link href="Services.html#Services" rel="next" title="Services">
+<link href="System.html#System" rel="prev" title="System">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -63,35 +63,34 @@ ul.no-bullet {list-style: none}
 </head>
 
 <body lang="en">
-<a name="Package-Management"></a>
+<a name="System-From-File"></a>
 <div class="header">
 <p>
-Next: <a href="Package-Licenses.html#Package-Licenses" accesskey="n" rel="next">Package Licenses</a>, Previous: <a href="Installation.html#Installation" accesskey="p" rel="prev">Installation</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Services.html#Services" accesskey="n" rel="next">Services</a>, Up: <a href="System.html#System" accesskey="u" rel="up">System</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Package-Management-1"></a>
-<h2 class="chapter">3 Package Management</h2>
+<a name="System-From-File-1"></a>
+<h3 class="section">5.1 System From File</h3>
 
-<p>Emacs-Guix provides a visual interface for routine package management
-tasks, pretty much like the <code>guix package</code> command
-(see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-package.html#Invoking-guix-package">Invoking guix package</a> in <cite>The GNU Guix Reference
-Manual</cite>).  Specifically, it makes it easy to:
+<a name="index-system"></a>
+<p>Your system configuration file (for GuixSD) contains
+<code>operating-system</code> declaration (see <a href="http://www.gnu.org/software/guix/manual/html_node/operating_002dsystem-Reference.html#operating_002dsystem-Reference">operating-system
+Reference</a> in <cite>The GNU Guix Reference Manual</cite>).
 </p>
-<ul>
-<li> browse and display packages and generations;
-</li><li> search, install, upgrade and remove packages;
-</li><li> display packages from previous generations;
-</li><li> do some other useful things.
-</li></ul>
-
-<table class="menu" border="0" cellspacing="0">
-<tr><td align="left" valign="top">&bull; <a href="Packages.html#Packages" accesskey="1">Packages</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for packages.
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Profiles.html#Profiles" accesskey="2">Profiles</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for profiles.
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Generations.html#Generations" accesskey="3">Generations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for profile generations.
-</td></tr>
-</table>
+<p>And Emacs-Guix provides an interface for this <code>operating-system</code>,
+where you can look at the packages, services, initrd modules that this
+system will install and some other stuff.
+</p>
+<dl compact="compact">
+<dd>
+<a name="index-guix_002dsystem_002dfrom_002dfile"></a>
+</dd>
+<dt><kbd>guix-system-from-file</kbd></dt>
+<dd><p>Find your system configuration file and look at the system it
+provides.
+</p>
+</dd>
+</dl>
 
 
 

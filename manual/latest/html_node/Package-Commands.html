@@ -70,15 +70,18 @@ Next: <a href="Package-Keys.html#Package-Keys" accesskey="n" rel="next">Package 
 </div>
 <hr>
 <a name="Package-Commands-1"></a>
-<h4 class="subsection">3.1.1 Package Commands</h4>
+<h3 class="section">3.1 Package Commands</h3>
 
-<a name="index-guix_002dcurrent_002dprofile"></a>
+<p>There are multiple commands to display a list of Guix packages.  You
+can either perform some actions in such &ldquo;package-list&rdquo; buffer, or
+&ldquo;describe&rdquo; package(s) in &ldquo;package-info&rdquo; buffer using
+<kbd><span class="key">RET</span></kbd>.
+</p>
 <a name="index-guix_002dset_002dcurrent_002dprofile"></a>
-<p>All commands for displaying packages use the current profile
-(<code>guix-current-profile</code> variable), which can be changed with
-<kbd>M-x&nbsp;guix-set-current-profile</kbd>.  Alternatively, if you call
-any of the following commands with a prefix argument (<kbd>C-u</kbd>), you
-will be prompted for a profile just for that command.
+<p>The following commands use the current profile, which can be changed
+globally with <kbd>M-x&nbsp;guix-set-current-profile</kbd> (see <a href="Profile-Commands.html#Profile-Commands">Profile Commands</a>).  Alternatively, if you call any of the following commands
+with a prefix argument (<kbd>C-u</kbd>), you will be prompted for a profile
+just for that command.
 </p>
 <dl compact="compact">
 <dd>
@@ -122,7 +125,9 @@ in a profile but cannot be found among the available packages).
 <dd><p>Display packages that depend on the specified package(s).  This
 command is analogous to <code>guix refresh --list-dependent</code> shell
 command (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-refresh.html#Invoking-guix-refresh">Invoking guix refresh</a> in <cite>The GNU Guix Reference
-Manual</cite>).
+Manual</cite>).  You&rsquo;ll be prompted for a package name (or multiple names,
+separated by commas) and a dependency type (it should be either
+&ldquo;all&rdquo; or &ldquo;direct&rdquo;).
 </p>
 <a name="index-guix_002dpackages_002dby_002dname"></a>
 </dd>

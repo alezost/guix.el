@@ -17,19 +17,19 @@ http://www.gnu.org/licenses/fdl.html.
 <!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Package Licenses (Emacs-Guix Reference Manual)</title>
+<title>Service Locations (Emacs-Guix Reference Manual)</title>
 
-<meta name="description" content="Package Licenses (Emacs-Guix Reference Manual)">
-<meta name="keywords" content="Package Licenses (Emacs-Guix Reference Manual)">
+<meta name="description" content="Service Locations (Emacs-Guix Reference Manual)">
+<meta name="keywords" content="Service Locations (Emacs-Guix Reference Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="texi2any">
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Popup-Interface.html#Popup-Interface" rel="next" title="Popup Interface">
-<link href="System-Commands.html#System-Commands" rel="prev" title="System Commands">
+<link href="Services.html#Services" rel="up" title="Services">
+<link href="System-Commands.html#System-Commands" rel="next" title="System Commands">
+<link href="Service-Commands.html#Service-Commands" rel="prev" title="Service Commands">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -63,44 +63,38 @@ ul.no-bullet {list-style: none}
 </head>
 
 <body lang="en">
-<a name="Package-Licenses"></a>
+<a name="Service-Locations"></a>
 <div class="header">
 <p>
-Next: <a href="Popup-Interface.html#Popup-Interface" accesskey="n" rel="next">Popup Interface</a>, Previous: <a href="System.html#System" accesskey="p" rel="prev">System</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="Service-Commands.html#Service-Commands" accesskey="p" rel="prev">Service Commands</a>, Up: <a href="Services.html#Services" accesskey="u" rel="up">Services</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Package-Licenses-1"></a>
-<h2 class="chapter">6 Package Licenses</h2>
+<a name="Service-Locations-1"></a>
+<h4 class="subsection">5.2.2 Service Locations</h4>
 
-<a name="index-package-licenses"></a>
-<p>If you want to browse the URL of a particular license, or to look at a
-list of licenses, you may use the following commands:
+<a name="index-service-Locations"></a>
+<p>Similarly to the package locations (see <a href="Package-Locations.html#Package-Locations">Package Locations</a>), you
+may look at the service locations:
 </p>
 <dl compact="compact">
 <dd>
-<a name="index-guix_002dbrowse_002dlicense_002durl"></a>
+<a name="index-guix_002dservice_002dlocations"></a>
 </dd>
-<dt><kbd>M-x guix-browse-license-url</kbd></dt>
-<dd><p>Choose a license from a completion list to browse its URL using
-<code>browse-url</code> function (see <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Browse_002dURL.html#Browse_002dURL">Browse-URL</a> in <cite>The GNU Emacs
-Manual</cite>).
+<dt><kbd>M-x guix-service-locations</kbd></dt>
+<dd><p>Display a list of files with service locations.  Press <kbd><span class="key">RET</span></kbd>
+there to display services placed in the current location.
 </p>
-<a name="index-guix_002dlicenses"></a>
+<a name="index-guix_002dfind_002dservice_002dlocation_002dfile"></a>
 </dd>
-<dt><kbd>M-x guix-licenses</kbd></dt>
-<dd><p>Display a list of available licenses.  You can press <kbd>P</kbd> key
-there to display packages with this license in the same way as
-<kbd>M-x&nbsp;guix-packages-by-license</kbd> would do (see <a href="Package-Commands.html#Package-Commands">Package Commands</a>).
+<dt><kbd>M-x guix-find-service-location-file</kbd></dt>
+<dd><p>Open a file with service definitions (press <kbd><span class="key">TAB</span></kbd> to choose
+the file from a completion list).
 </p>
-<a name="index-guix_002dfind_002dlicense_002dlocation_002dfile"></a>
+<a name="index-guix_002dfind_002dservice_002ddefinition"></a>
 </dd>
-<dt><kbd>M-x guix-find-license-location-file</kbd></dt>
-<dd><p>Open <samp>&hellip;/guix/licenses.scm</samp> file.
-</p>
-<a name="index-guix_002dfind_002dlicense_002ddefinition"></a>
-</dd>
-<dt><kbd>M-x guix-find-license-definition</kbd></dt>
-<dd><p>Open <samp>&hellip;/guix/licenses.scm</samp> and move to the specified license.
+<dt><kbd>M-x guix-find-service-definition</kbd></dt>
+<dd><p>Go to the service location&mdash;i.e., open a file with the specified
+service and move the point to its definition.
 </p>
 </dd>
 </dl>

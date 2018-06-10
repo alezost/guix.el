@@ -27,9 +27,9 @@ http://www.gnu.org/licenses/fdl.html.
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Popup-Interface.html#Popup-Interface" rel="next" title="Popup Interface">
-<link href="Package-Licenses.html#Package-Licenses" rel="prev" title="Package Licenses">
+<link href="System.html#System" rel="up" title="System">
+<link href="Service-Commands.html#Service-Commands" rel="next" title="Service Commands">
+<link href="System-From-File.html#System-From-File" rel="prev" title="System From File">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -66,91 +66,25 @@ ul.no-bullet {list-style: none}
 <a name="Services"></a>
 <div class="header">
 <p>
-Next: <a href="Popup-Interface.html#Popup-Interface" accesskey="n" rel="next">Popup Interface</a>, Previous: <a href="Package-Licenses.html#Package-Licenses" accesskey="p" rel="prev">Package Licenses</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="System-Commands.html#System-Commands" accesskey="n" rel="next">System Commands</a>, Previous: <a href="System-From-File.html#System-From-File" accesskey="p" rel="prev">System From File</a>, Up: <a href="System.html#System" accesskey="u" rel="up">System</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
 <a name="Services-1"></a>
-<h2 class="chapter">5 Services</h2>
+<h3 class="section">5.2 Services</h3>
 
+<a name="index-services"></a>
 <p>If you use GuixSD, you may have a wish to become more familiar with
 the system services (see <a href="http://www.gnu.org/software/guix/manual/html_node/Services.html#Services">Services</a> in <cite>The GNU Guix Reference
-Manual</cite>).  Hopefully, the following commands will help you explore
-this part of Guix.  The interface for services is very similar to the
-interface for packages (see <a href="Packages.html#Packages">Packages</a>).
+Manual</cite>).  Emacs-Guix provides several commands to display these
+services.
 </p>
-<dl compact="compact">
-<dd>
-<a name="index-guix_002dall_002dservices"></a>
-</dd>
-<dt><kbd>M-x guix-all-services</kbd></dt>
-<dd><p>Display all available services.
-</p>
-<a name="index-guix_002ddefault_002dservices"></a>
-</dd>
-<dt><kbd>M-x guix-default-services</kbd></dt>
-<dd><p>Display services from <code>%base-services</code> (see <a href="http://www.gnu.org/software/guix/manual/html_node/Base-Services.html#Base-Services">Base Services</a> in <cite>The GNU Guix Reference Manual</cite>) or <code>%desktop-services</code>
-(see <a href="http://www.gnu.org/software/guix/manual/html_node/Desktop-Services.html#Desktop-Services">Desktop Services</a> in <cite>The GNU Guix Reference Manual</cite>).
-You will be prompted in the minibuffer for the variable name
-(completions available).
-</p>
-<a name="index-guix_002dservices_002dby_002dname"></a>
-</dd>
-<dt><kbd>M-x guix-services-by-name</kbd></dt>
-<dd><p>Display service(s) with the specified name.
-</p>
-<a name="index-guix_002dservices_002dby_002dregexp"></a>
-<a name="index-guix_002dservice_002dsearch_002dparams"></a>
-</dd>
-<dt><kbd>M-x guix-services-by-regexp</kbd></dt>
-<dd><p>Search for services by a specified regexp.  By default, &ldquo;name&rdquo; and
-&ldquo;description&rdquo; of the services will be searched.  This can be changed
-by modifying <code>guix-service-search-params</code> variable.
-</p>
-<a name="index-guix_002dservices_002dby_002dlocation"></a>
-</dd>
-<dt><kbd>M-x guix-services-by-location</kbd></dt>
-<dd><p>Display service(s) located in the specified file.
-</p>
-<a name="index-guix_002dservices_002dfrom_002dsystem_002dconfig_002dfile"></a>
-</dd>
-<dt><kbd>M-x guix-services-from-system-config-file</kbd></dt>
-<dd><p>Display services from the specified file with <code>operating-system</code>
-declaration.
-</p>
-</dd>
-</dl>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Service-Commands.html#Service-Commands" accesskey="1">Service Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top"><kbd>M-x guix-&hellip;</kbd> to show services.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Service-Locations.html#Service-Locations" accesskey="2">Service Locations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for locations of services.
+</td></tr>
+</table>
 
-<p>Also similarly to the package locations (see <a href="Package-Locations.html#Package-Locations">Package Locations</a>),
-you may look at the service locations:
-</p>
-<dl compact="compact">
-<dd>
-<a name="index-guix_002dservice_002dlocations"></a>
-</dd>
-<dt><kbd>M-x guix-service-locations</kbd></dt>
-<dd><p>Display a list of service locations.  Press <kbd><span class="key">RET</span></kbd> there to
-display services placed in the current location.
-</p>
-<a name="index-guix_002dfind_002dservice_002dlocation_002dfile"></a>
-</dd>
-<dt><kbd>M-x guix-find-service-location-file</kbd></dt>
-<dd><p>Open a file with service definitions (press <kbd><span class="key">TAB</span></kbd> to choose
-the file from a completion list).
-</p>
-<a name="index-guix_002dfind_002dservice_002ddefinition"></a>
-</dd>
-<dt><kbd>M-x guix-find-service-definition</kbd></dt>
-<dd><p>Go to the service location&mdash;i.e., open a file with the specified
-service and move the point to its definition.
-</p>
-</dd>
-</dl>
-
-<hr>
-<div class="header">
-<p>
-Next: <a href="Popup-Interface.html#Popup-Interface" accesskey="n" rel="next">Popup Interface</a>, Previous: <a href="Package-Licenses.html#Package-Licenses" accesskey="p" rel="prev">Package Licenses</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
-</div>
 
 
 

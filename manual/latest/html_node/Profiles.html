@@ -27,9 +27,9 @@ http://www.gnu.org/licenses/fdl.html.
 <link href="index.html#Top" rel="start" title="Top">
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Package-Management.html#Package-Management" rel="up" title="Package Management">
-<link href="Generations.html#Generations" rel="next" title="Generations">
-<link href="More-Package-Commands.html#More-Package-Commands" rel="prev" title="More Package Commands">
+<link href="Profiles-and-Generations.html#Profiles-and-Generations" rel="up" title="Profiles and Generations">
+<link href="Profile-Commands.html#Profile-Commands" rel="next" title="Profile Commands">
+<link href="Profiles-and-Generations.html#Profiles-and-Generations" rel="prev" title="Profiles and Generations">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -66,60 +66,25 @@ ul.no-bullet {list-style: none}
 <a name="Profiles"></a>
 <div class="header">
 <p>
-Next: <a href="Generations.html#Generations" accesskey="n" rel="next">Generations</a>, Previous: <a href="Packages.html#Packages" accesskey="p" rel="prev">Packages</a>, Up: <a href="Package-Management.html#Package-Management" accesskey="u" rel="up">Package Management</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Generations.html#Generations" accesskey="n" rel="next">Generations</a>, Up: <a href="Profiles-and-Generations.html#Profiles-and-Generations" accesskey="u" rel="up">Profiles and Generations</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
 <a name="Profiles-1"></a>
-<h3 class="section">3.2 Profiles</h3>
+<h3 class="section">4.1 Profiles</h3>
 
 <a name="index-profiles"></a>
-<a name="index-guix_002dprofiles"></a>
-<a name="index-guix_002dprofiles-1"></a>
-<p>You can keep track of your Guix profiles with <kbd>M-x guix-profiles</kbd>
-command.  By default, it displays only <samp>~/.guix-profile</samp> and a
-system profile (on GuixSD).  But if you manage multiple profiles, you
-can add them by setting <code>guix-profiles</code> variable, for example,
-like this:
+<p>If you manage multiple Guix profiles, this section is for you.
+<kbd>M-x guix-profiles</kbd> is the entry point to display profiles.  There
+you can look at the profile generations, installed packages and more.
+Read further for details.
 </p>
-<div class="example">
-<pre class="example">(with-eval-after-load 'guix-ui-profile
-  (setq guix-profiles
-        (append '(&quot;/path/to/my-profile1&quot;
-                  &quot;/path/to/my-profile2&quot;)
-                guix-profiles)))
-</pre></div>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Profile-Commands.html#Profile-Commands" accesskey="1">Profile Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top"><kbd>M-x guix-profiles</kbd> and friends.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Profile-Keys.html#Profile-Keys" accesskey="2">Profile Keys</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Key bindings in profile &ldquo;list&rdquo; buffer.
+</td></tr>
+</table>
 
-<p>Along with the general &ldquo;list&rdquo; keys (see <a href="List-buffer.html#List-buffer">List buffer</a>), a
-&ldquo;profile-list&rdquo; buffer additionally provides the following
-bindings:
-</p>
-<dl compact="compact">
-<dt><kbd>P</kbd></dt>
-<dd><p>Display packages installed in profile at point.
-</p></dd>
-<dt><kbd>G</kbd></dt>
-<dd><p>Display generations of profile at point.
-</p></dd>
-<dt><kbd>E</kbd></dt>
-<dd><p>Display &ldquo;search paths&rdquo; environment variables for the marked
-profiles, or the current profile if nothing is marked.  This command
-is analogous to <code>guix package --search-paths</code> shell command
-(see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-package.html#Invoking-guix-package">Invoking guix package</a> in <cite>The GNU Guix Reference
-Manual</cite>).
-</p></dd>
-<dt><kbd>c</kbd></dt>
-<dd><p>Make profile at point the current profile for the package commands
-(see <a href="Packages.html#Packages">Packages</a>).
-</p></dd>
-</dl>
-
-<a name="index-guix_002dapply_002dmanifest"></a>
-<p>Finally, you can use <kbd>M-x guix-apply-manifest</kbd> to apply a manifest
-file to the current profile or to a specified profile, if prefix
-argument is used.  This has the same meaning as <code>--manifest</code>
-option (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-package.html#Invoking-guix-package">Invoking guix package</a> in <cite>The GNU Guix Reference
-Manual</cite>).
-</p>
 
 
 

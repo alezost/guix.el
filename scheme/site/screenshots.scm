@@ -35,7 +35,8 @@
                         #:title "Profile generations"))
     ("system-generations.png"
      "System generations"
-     "System generations")
+     ,(manual-node-href "System-Commands"
+                        #:title "System generations"))
     ("profiles.png"
      "Buffers with profiles"
      ,(manual-node-href "Profiles"))
@@ -51,7 +52,7 @@
      (,(manual-node-href "Package-Locations"
                         #:title "Package")
       " and "
-      ,(manual-node-href "Services"
+      ,(manual-node-href "Service-Locations"
                         #:title "Service")
       " locations"))
     ("build-log+popup.png"

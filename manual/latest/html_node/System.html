@@ -17,10 +17,10 @@ http://www.gnu.org/licenses/fdl.html.
 <!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Packages (Emacs-Guix Reference Manual)</title>
+<title>System (Emacs-Guix Reference Manual)</title>
 
-<meta name="description" content="Packages (Emacs-Guix Reference Manual)">
-<meta name="keywords" content="Packages (Emacs-Guix Reference Manual)">
+<meta name="description" content="System (Emacs-Guix Reference Manual)">
+<meta name="keywords" content="System (Emacs-Guix Reference Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="texi2any">
@@ -28,8 +28,8 @@ http://www.gnu.org/licenses/fdl.html.
 <link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
 <link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
 <link href="index.html#Top" rel="up" title="Top">
-<link href="Package-Commands.html#Package-Commands" rel="next" title="Package Commands">
-<link href="Using-the-Manual-from-Git.html#Using-the-Manual-from-Git" rel="prev" title="Using the Manual from Git">
+<link href="System-From-File.html#System-From-File" rel="next" title="System From File">
+<link href="Generation-Keys.html#Generation-Keys" rel="prev" title="Generation Keys">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -63,28 +63,30 @@ ul.no-bullet {list-style: none}
 </head>
 
 <body lang="en">
-<a name="Packages"></a>
+<a name="System"></a>
 <div class="header">
 <p>
-Next: <a href="Profiles-and-Generations.html#Profiles-and-Generations" accesskey="n" rel="next">Profiles and Generations</a>, Previous: <a href="Installation.html#Installation" accesskey="p" rel="prev">Installation</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Package-Licenses.html#Package-Licenses" accesskey="n" rel="next">Package Licenses</a>, Previous: <a href="Profiles-and-Generations.html#Profiles-and-Generations" accesskey="p" rel="prev">Profiles and Generations</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Packages-1"></a>
-<h2 class="chapter">3 Packages</h2>
+<a name="System-1"></a>
+<h2 class="chapter">5 System</h2>
 
-<a name="index-packages"></a>
-<p>Emacs-Guix provides a visual interface for packages where you can
-perform routine package management tasks, pretty much like the
-<code>guix package</code> command (see <a href="http://www.gnu.org/software/guix/manual/html_node/Invoking-guix-package.html#Invoking-guix-package">Invoking guix package</a> in <cite>The GNU Guix Reference Manual</cite>).
+<p>This chapter describes Emacs-Guix features related to GuixSD, in
+particular:
 </p>
+<ul>
+<li> interface for system configuration file;
+</li><li> interface for system services;
+</li><li> commands to display system profile and generations.
+</li></ul>
+
 <table class="menu" border="0" cellspacing="0">
-<tr><td align="left" valign="top">&bull; <a href="Package-Commands.html#Package-Commands" accesskey="1">Package Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top"><kbd>M-x guix-&hellip;</kbd> to show packages.
+<tr><td align="left" valign="top">&bull; <a href="System-From-File.html#System-From-File" accesskey="1">System From File</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for <code>operating-system</code> declaration.
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Package-Keys.html#Package-Keys" accesskey="2">Package Keys</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Key bindings in package &ldquo;list&rdquo; and &ldquo;info&rdquo; buffers.
+<tr><td align="left" valign="top">&bull; <a href="Services.html#Services" accesskey="2">Services</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for system services.
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="Package-Locations.html#Package-Locations" accesskey="3">Package Locations</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Interface for locations of packages.
-</td></tr>
-<tr><td align="left" valign="top">&bull; <a href="More-Package-Commands.html#More-Package-Commands" accesskey="4">More Package Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Other <kbd>M-x guix-&hellip;</kbd> related to packages.
+<tr><td align="left" valign="top">&bull; <a href="System-Commands.html#System-Commands" accesskey="3">System Commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Other <kbd>M-x guix-&hellip;</kbd> related to system.
 </td></tr>
 </table>
 
