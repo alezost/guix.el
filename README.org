@@ -1,1 +1,2 @@
-README
+The code of the Emacs-Guix website moved to:
+https://gitlab.com/emacs-guix/website.
