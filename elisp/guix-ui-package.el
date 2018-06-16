@@ -258,6 +258,7 @@ ENTRIES is a list of package entries to get info about packages."
             guix-package-info-insert-misc
             (source simple guix-package-info-insert-source)
             (location simple guix-package-info-insert-location)
+            (upstream-name format (format))
             (home-url format (format bui-url))
             (license format (format guix-package-license))
             (systems format guix-package-info-insert-systems)

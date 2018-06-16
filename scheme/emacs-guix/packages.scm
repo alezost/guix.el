@@ -214,6 +214,7 @@ The result is one of the following symbols:
   `((id                . ,object-address)
     (package-id        . ,object-address)
     (name              . ,package-name)
+    (upstream-name     . ,package-upstream-name)
     (version           . ,package-version)
     (license           . ,package-license-names)
     (source            . ,package-source-names)
