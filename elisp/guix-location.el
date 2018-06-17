@@ -64,7 +64,7 @@ DIRECTORY (if it is specified and exists)."
   (cl-multiple-value-bind (file line column)
       (split-string location ":")
     (let* ((file-name (expand-file-name file (or directory
-                                                 guix-directory)))
+                                                 (guix-directory))))
            (file-name (if (file-exists-p file-name)
                           file-name
                         (guix-eval-read

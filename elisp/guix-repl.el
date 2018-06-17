@@ -434,18 +434,30 @@ additional internal REPL if it exists."
 
 (defvar guix-directory nil
   "Default directory with Guix source.
-If it is not set by a user, it is set after starting Guix REPL.
+
 This directory is used to find packages and licenses by such
 commands as `guix-find-package-definition' or
-`guix-find-license-definition'.")
+`guix-find-license-definition'.
+
+Most likely you don't need to set this variable because it is set
+automatically when needed.  However, you can still set it if you
+really want; your value will not be overwritten.")
+
+(defun guix-directory ()
+  "Set if needed and return `guix-directory'."
+  (or guix-directory
+      (let* ((guix.scm (guix-eval-read "(%search-load-path \"guix\")"))
+             (dir (and guix.scm
+                       (file-name-directory guix.scm))))
+        (setq guix-directory dir))))
 
 (defun guix-read-directory ()
   "Return `guix-directory' or prompt for it.
 This function is intended for using in `interactive' forms."
   (if current-prefix-arg
       (read-directory-name "Directory with Guix modules: "
-                           guix-directory)
-    guix-directory))
+                           (guix-directory))
+    (guix-directory)))
 
 ;; XXX Remove `guix-latest-directory' in future: it exists for backward
 ;; compatibility (in the past "guix pull" populated

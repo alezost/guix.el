@@ -31,7 +31,7 @@
   "Return name of the file with license definitions.
 DIRECTORY is a directory with Guix source (`guix-directory' by default)."
   (expand-file-name "guix/licenses.scm"
-                    (or directory guix-directory)))
+                    (or directory (guix-directory))))
 
 (defun guix-lookup-license-url (license)
   "Return URL of a LICENSE."
