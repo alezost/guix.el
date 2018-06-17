@@ -80,7 +80,7 @@ Interactively, use the module defined by the current scheme file."
                           "(guix store)"
                           "(guix ui)")
   ;; Without this workaround, the warning/build output disappears.  See
-  ;; <https://github.com/jaor/geiser/issues/83> for details.
+  ;; <https://gitlab.com/jaor/geiser/issues/83> for details.
   (guix-geiser-eval-in-repl-synchronously
    "(begin
       (guix-warning-port (current-warning-port))

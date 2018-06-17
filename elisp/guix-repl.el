@@ -34,7 +34,7 @@
 ;; about other packages at the same time.  If you prefer to use a single
 ;; Guix REPL, do not try to receive any information while there is a
 ;; running code in the REPL (see
-;; <https://github.com/jaor/geiser/issues/28>).
+;; <https://gitlab.com/jaor/geiser/issues/28>).
 ;;
 ;; Guix REPLs (unlike the usual Geiser REPLs) are not added to
 ;; `geiser-repl--repls' variable, and thus cannot be used for evaluating
