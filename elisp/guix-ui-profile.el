@@ -45,7 +45,8 @@
 (defcustom guix-profiles
   (-filter #'file-exists-p
            (list guix-user-profile
-                 guix-system-profile))
+                 guix-system-profile
+                 guix-pulled-profile))
   "List of profiles displayed by '\\[guix-profiles]' command."
   :type '(repeat file)
   :group 'guix-profile)
