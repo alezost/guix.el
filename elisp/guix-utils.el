@@ -334,6 +334,37 @@ See `guix-support-dired' for details.  See also `guix-read-file-name'."
                file-name-handler-alist)))
     (find-file file-or-url)))
 
+(defun guix-guile-site-directory (&optional root compiled)
+  "Return default directory with Guile site files.
+Return nil, if this directory does not exist.
+
+ROOT is the parent directory where the default one is placed.
+Example of ROOT: \"/usr/local\".
+
+By default, the directory with Scheme files is returned, for
+example:
+
+  ROOT/share/guile/site/2.2
+
+However, if COMPILED is non-nil, the directory with
+compiled (.go) files is returned, for example:
+
+  ROOT/lib/guile/2.2/site-ccache
+"
+  (let* ((dir (expand-file-name (if compiled
+                                    "lib/guile"
+                                  "share/guile/site")
+                                (or root "/")))
+         (dir (and (file-exists-p dir)
+                   ;; digit "[0-9]" is the part of file name (which is
+                   ;; "2.3" or alike).  Is there a better way to find
+                   ;; the directory?
+                   (car (directory-files dir t "[0-9]")))))
+    (when dir
+      (if compiled
+          (expand-file-name "site-ccache" dir)
+        dir))))
+
 
 ;;; Temporary file names
 

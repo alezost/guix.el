@@ -118,7 +118,7 @@ being installed/removed in the main Guix REPL."
   :group 'guix-repl)
 
 (defcustom guix-repl-use-latest t
-  "If non-nil, use \"~/.config/guix/latest\" directory.
+  "If non-nil, use \"~/.config/guix/current\" directory.
 It contains the latest Guix code populated after running \"guix pull\"."
   :type 'boolean
   :group 'guix-repl)
@@ -233,9 +233,12 @@ See `guix-emacs-activate-after-operation' for details."
     ,@(and guix-config-scheme-compiled-directory
            (list "-C" guix-config-scheme-compiled-directory))
     ,@(and guix-repl-use-latest
-           (let ((latest-dir (guix-latest-directory)))
-             (list "-L" latest-dir
-                   "-C" latest-dir)))
+           (if (file-exists-p guix-pulled-profile)
+               (--when-let (guix-guile-site-directory guix-pulled-profile)
+                 (list "-L" it "-C" it))
+             ;; For backward compatibility.
+             (--when-let (guix-latest-directory)
+               (list "-L" it "-C" it))))
     ,@(and guix-config-guix-scheme-directory
            (list "-L" guix-config-guix-scheme-directory
                  "-C" (or guix-config-guix-scheme-compiled-directory
@@ -444,17 +447,16 @@ This function is intended for using in `interactive' forms."
                            guix-directory)
     guix-directory))
 
+;; XXX Remove `guix-latest-directory' in future: it exists for backward
+;; compatibility (in the past "guix pull" populated
+;; "~/.config/guix/latest").
 (defun guix-latest-directory ()
-  "Return 'guix pull'-ed directory."
+  "Return 'guix pull'-ed directory or nil if it does not exist."
   (let* ((config-dir (or (getenv "XDG_CONFIG_HOME")
                          (expand-file-name "~/.config")))
          (latest-dir (expand-file-name "guix/latest" config-dir)))
-    (if (file-exists-p latest-dir)
-        (or guix-directory
-            (setq guix-directory latest-dir))
-      (message "Directory '%s' does not exist.
-Consider running \"guix pull\"." latest-dir))
-    latest-dir))
+    (and (file-exists-p latest-dir)
+         latest-dir)))
 
 
 ;;; Operation buffers

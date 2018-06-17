@@ -43,6 +43,13 @@
           "/guix-profile")
   "Default Guix profile.")
 
+(defvar guix-pulled-profile
+  ;; XXX There is `xdg-config-home' in "xdg.el" in Emacs 26.
+  (expand-file-name "guix/current"
+                    (or (getenv "XDG_CONFIG_HOME")
+                        (expand-file-name "~/.config")))
+  "Profile populated by 'guix pull' command.")
+
 (defvar guix-current-profile guix-default-profile
   "Current Guix profile.
 It is used by various commands as the default working profile.")
