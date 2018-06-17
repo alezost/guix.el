@@ -59,17 +59,15 @@
 (require 'guix-utils)
 
 (defvar guix-load-path nil
-  "List of directories prepended to Guile's `%load-path' when
-Guix REPL is started.
+  "Directory or a list of directories prepended to Guile's
+`%load-path' when Guix REPL is started.
 
-Most likely you don't need to set this variable, but if you
-really do, note that these directories take precedence over any
-other added directory (including Guile modules of Emacs-Guix and
-Guix itself).
+These directories take precedence over any other
+directory (including Guile modules of Emacs-Guix and Guix
+itself).  So this variable may be useful if you prefer to use
+guix from a git checkout:
 
-Directories are used as is, without expanding, so make sure they
-do not contain things like \"~\" or \"..\" (use
-`expand-file-name').
+  (setq guix-load-path \"/path/to/guix-from-git\")
 
 These directories are also prepended to `%load-compiled-path'
 unless `guix-load-compiled-path' is specified.")
@@ -227,8 +225,8 @@ See `guix-emacs-activate-after-operation' for details."
                   (lcp (if guix-load-compiled-path
                            (guix-list-maybe guix-load-compiled-path)
                          lp)))
-             (append (--mapcat (list "-L" it) lp)
-                     (--mapcat (list "-C" it) lcp))))
+             (append (--mapcat (list "-L" (expand-file-name it)) lp)
+                     (--mapcat (list "-C" (expand-file-name it)) lcp))))
     "-L" ,guix-scheme-directory
     ,@(and guix-config-scheme-compiled-directory
            (list "-C" guix-config-scheme-compiled-directory))

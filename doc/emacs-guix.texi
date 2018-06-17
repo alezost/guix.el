@@ -1442,19 +1442,35 @@ extension of the output file).  This can be done like this:
 @vindex guix-guile-program
 @item guix-guile-program
 If you have some special needs for starting a Guile process, you may
-set this variable.  For example, if you use Guix via
-@file{pre-inst-env} script (@pxref{Running Guix Before It Is
-Installed,,, guix, The GNU Guix Reference Manual}), you may customize
-this variable like this:
+set this variable.  For example, by default, Guile is started with
+@code{--no-auto-compile} flag (because auto-compilation may take a
+very long time), so if you just want @code{guile} without any flags,
+you may just use:
 
 @example
-(setq guix-guile-program
-      '("/path/to/guix/pre-inst-env" "guile" "--no-auto-compile"))
+(setq guix-guile-program "guile")
 @end example
 
-Note: @code{--no-auto-compile} flag is recommended as auto-compilation
-of a ``dirty'' tree may take a very long time and may even lead to
-unpredictable errors.
+@vindex guix-load-path
+@vindex guix-load-compiled-path
+@item guix-load-path
+@itemx guix-load-compiled-path
+Directory or a list of directories prepended to Guile's
+@code{%load-path} and @code{%load-compiled-path} (@pxref{Load Paths,,,
+guile, The GNU Guile Reference Manual}).
+
+If you use Guix from a git checkout (@pxref{Running Guix Before It Is
+Installed,,, guix, The GNU Guix Reference Manual}), you may want
+Emacs-Guix to use the same guix from git.  All you need is to point
+Emacs-Guix to this checkout:
+
+@example
+(setq guix-load-path "/path/to/guix-git-dir")
+@end example
+
+Note that setting @code{guix-load-compiled-path} is not needed when
+Scheme (@code{.scm}) and compiled (@code{.go}) files are placed in the
+same directories.
 
 @vindex guix-use-substitutes
 @item guix-use-substitutes
