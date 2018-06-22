@@ -697,9 +697,11 @@ current OUTPUT is installed (if there is such output in
                          'guix-package-info-uninstalled-outputs)
                        guix-package-info-output-format)
     ;; Do not allow a user to install/delete anything to/from a system
-    ;; profile, so add action buttons only for non-system profiles.
+    ;; profile or "guix pull"-ed profile, so add action buttons only for
+    ;; usual profiles.
     (when (and profile
-               (not (guix-system-profile? profile)))
+               (not (guix-system-profile? profile))
+               (not (guix-pulled-profile? profile)))
       (guix-package-info-insert-action-button action-type entry output)
       (when obsolete
         (bui-insert-indent)

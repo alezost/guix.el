@@ -62,6 +62,12 @@ It is used by various commands as the default working profile.")
                 t)
   "Regexp matching system profiles.")
 
+(defvar guix-pulled-profile-regexp
+  ;; XXX Should profiles from other users (HOME directories) be handled?
+  (rx-to-string `(and ,guix-pulled-profile)
+                t)
+  "Regexp matching 'guix pull'-ed profile.")
+
 (defvar guix-generation-file-name-regexp
   (rx (group (one-or-more any))
       "-" (one-or-more digit) "-link")
@@ -76,6 +82,10 @@ The first parenthesized group should match profile file name.")
 (defun guix-system-profile? (profile)
   "Return non-nil, if PROFILE is a system one."
   (string-match-p guix-system-profile-regexp profile))
+
+(defun guix-pulled-profile? (profile)
+  "Return non-nil, if PROFILE is populated by 'guix pull'."
+  (string-match-p guix-pulled-profile-regexp profile))
 
 (defun guix-assert-non-system-profile (profile)
   "Raise an error when PROFILE is a system one."
