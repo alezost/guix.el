@@ -43,10 +43,13 @@
             (number-of-generations . "Generations")))
 
 (defcustom guix-profiles
-  (-filter #'file-exists-p
-           (list guix-user-profile
-                 guix-system-profile
-                 guix-pulled-profile))
+  (--filter (and it (file-exists-p it))
+            (delete-dups
+             (list guix-user-profile
+                   guix-system-profile
+                   guix-pulled-profile
+                   (--when-let (getenv "GUIX_PROFILE")
+                     (expand-file-name it)))))
   "List of profiles displayed by '\\[guix-profiles]' command."
   :type '(repeat file)
   :group 'guix-profile)
