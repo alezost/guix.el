@@ -274,10 +274,18 @@ ENTRIES is a list of package entries to get info about packages."
   :required '(id name version installed non-unique known-status
               superseded hidden))
 
+;; Additional info for installed outputs.
 (bui-define-interface guix-installed-output info
   :format '((file-name simple guix-installed-output-info-insert-file-name)
             (dependencies simple (indent bui-file)))
   :titles '((file-name . "Store directory"))
+  :reduced? t)
+
+;; Additional info for "guix pull"-ed 'guix' package.
+(bui-define-interface guix-pulled-package info
+  :format '((url format (format bui-url))
+            (branch format (format))
+            (commit format (format)))
   :reduced? t)
 
 (let ((map guix-package-info-mode-map))
@@ -604,25 +612,24 @@ or (id spec) list."
 
 (defun guix-package-info-insert-additional-text (entry)
   "Insert some additional info for package ENTRY at point."
-  (if (bui-entry-non-void-value entry 'hidden)
-      (progn
-        (guix-package-info-insert-hidden-text)
-        (bui-newline))
-    (cl-case (bui-entry-non-void-value entry 'known-status)
-      (known
-       (when (bui-entry-non-void-value entry 'non-unique)
-         (guix-package-info-insert-non-unique-text
-          (guix-package-entry->name-specification entry))
-         (bui-newline))
-       (--when-let (bui-entry-non-void-value entry 'superseded)
-         (guix-package-info-insert-superseded-text it)
-         (bui-newline)))
-      (obsolete (guix-package-info-insert-obsolete-text
-                 (bui-entry-non-void-value entry 'name)))
-      (unknown  (guix-package-info-insert-unknown-text
-                 (bui-entry-non-void-value entry 'name)))
-      (future   (guix-package-info-insert-future-text
-                 (bui-entry-non-void-value entry 'name))))))
+  (let ((name (bui-entry-non-void-value entry 'name)))
+    (if (bui-entry-non-void-value entry 'hidden)
+        (progn
+          (guix-package-info-insert-hidden-text)
+          (bui-newline))
+      (cl-case (bui-entry-non-void-value entry 'known-status)
+        (known
+         (when (bui-entry-non-void-value entry 'non-unique)
+           (guix-package-info-insert-non-unique-text
+            (guix-package-entry->name-specification entry))
+           (bui-newline))
+         (--when-let (bui-entry-non-void-value entry 'superseded)
+           (guix-package-info-insert-superseded-text it)
+           (bui-newline)))
+        (obsolete (guix-package-info-insert-obsolete-text name))
+        (unknown  (guix-package-info-insert-unknown-text name))
+        (future   (guix-package-info-insert-future-text name))
+        (pull     (guix-package-info-insert-pull-text name entry))))))
 
 (defun guix-package-info-insert-unknown-text (name)
   "Insert a message about unknown package at point."
@@ -647,6 +654,17 @@ or (id spec) list."
 is newer than the available package recipe for ")
   (bui-insert-button name 'guix-package-name)
   (insert "."))
+
+(defun guix-package-info-insert-pull-text (name entry)
+  "Insert a message that NAME package was 'guix pull'-ed."
+  (insert "This ")
+  (bui-insert-button name 'guix-package-name)
+  (insert " package was installed by 'guix pull' command")
+  (let ((repository (bui-entry-non-void-value entry 'repository)))
+    (if (not repository)
+        (insert ".")
+      (insert "\nfrom the following repository:\n\n")
+      (bui-info-insert-entry repository 'guix-pulled-package 1))))
 
 (defun guix-package-info-insert-non-unique-text (full-name)
   "Insert a message about non-unique package with FULL-NAME at point."

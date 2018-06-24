@@ -39,8 +39,10 @@
 
 (define-module (emacs-guix packages)
   #:use-module (ice-9 match)
+  #:use-module (ice-9 regex)
   #:use-module (ice-9 vlist)
   #:use-module (srfi srfi-1)
+  #:use-module (srfi srfi-2)
   #:use-module (srfi srfi-11)
   #:use-module (srfi srfi-26)
   #:use-module (gnu packages)
@@ -542,12 +544,26 @@ for unknown packages."
 (define (unknown-package-sexp name version entries)
   "Return an alist with information about unknown package.
 ENTRIES is a list of installed manifest entries."
-  `((id        . ,(name+version->full-name name version))
-    (name      . ,name)
-    (version   . ,version)
-    (outputs   . ,(map manifest-entry-output entries))
-    (known-status . ,(package-known-status name version))
-    (installed . ,(manifest-entries->sexps entries))))
+  (define default
+    `((id        . ,(name+version->full-name name version))
+      (name      . ,name)
+      (version   . ,version)
+      (outputs   . ,(map manifest-entry-output entries))
+      (installed . ,(manifest-entries->sexps entries))))
+
+  ;; If it is 'guix' with commit-like version, then it sure is the
+  ;; package from "guix pull"-ed profile, isn't it?
+  (if (and (string=? name "guix")
+           (not (string-match "\\." version)))
+      (append
+       '((known-status . pull))
+       default
+       (or (and-let* ((props (manifest-entry-properties (car entries)))
+                      (source-sexp (assq 'source props)))
+             (cdr source-sexp))
+           '()))
+      (cons (cons 'known-status (package-known-status name version))
+            default)))
 
 (define (package-pattern-transformer manifest params)
   "Return 'package-pattern->package-sexps' procedure."
