@@ -593,9 +593,26 @@ Read further for details.
 @findex guix-profiles
 @vindex guix-profiles
 @item M-x guix-profiles
-Show a list of available Guix profiles.  By default, it displays only
-the default user profile and system profile (only on GuixSD).  But if
-you use multiple profiles, you can add them to this list by setting
+Show a list of available Guix profiles.  By default, it displays:
+
+@table @file
+
+@item ~/.guix-profile
+the default user profile
+
+@item ~/.config/guix/current
+profile, populated  by @code{guix pull}
+
+@item /var/guix/profiles/system
+system profile (only on GuixSD)
+
+@item @env{GUIX_PROFILE}
+(only if this environment variable is set and this profile is not the
+same as one of the above)
+
+@end table
+
+If you use multiple profiles, you can add them to this list by setting
 @code{guix-profiles} variable, for example, like this:
 
 @example
