@@ -1383,18 +1383,10 @@ section.  Also you can use Custom Interface (@pxref{Easy
 Customization,,, emacs, The GNU Emacs Manual}) to explore/set
 variables and faces---@kbd{M-x@tie{}customize-group @key{RET} guix}.
 
-@vindex guix-ENTRY-TYPE-BUFFER-TYPE-format
-If you wish to change the appearance of ``list'' / ``info'' buffers,
-look at @code{guix-ENTRY-TYPE-BUFFER-TYPE-format} variables
-(@dfn{ENTRY-TYPE} can be @code{package}, @code{output},
-@code{profile}, @code{generation} @code{system-generation},
-@code{license}, @code{location}, @code{hydra-build},
-@code{hydra-jobset}; @dfn{BUFFER-TYPE} is either @code{list} or
-@code{info}).
-
 @menu
 * Graph Configuration::         Set external viewer for graphs, etc.
 * Guile and Build Options::     Settings for Guix REPL, Guile, etc.
+* List/Info Configuration::     Variables for various interfaces.
 * Buffer Names::                Names of Guix buffers.
 * Keymaps::                     Configuring key bindings.
 * Miscellaneous Configuration:: Other configuration variables.
@@ -1519,6 +1511,36 @@ pull,,, guix, The GNU Guix Reference Manual}).
 
 @end table
 
+@node List/Info Configuration
+@section List/Info Configuration
+
+If you wish to change the appearance of various ``list'' and ``info''
+buffers (@pxref{List/Info Interface}), you may look at
+@code{guix-ENTRY-TYPE-BUFFER-TYPE-@dots{}} variables.  Here,
+@dfn{BUFFER-TYPE} is either @code{list} or @code{info}, and
+@dfn{ENTRY-TYPE} is one of the following:
+
+@table @code
+@item package
+@item package-location
+@item output
+@item profile
+@item generation
+@item system
+@item system-generation
+@item service
+@item service-location
+@item license
+@item hydra-build
+@item hydra-jobset
+@end table
+
+@vindex guix-ENTRY-TYPE-BUFFER-TYPE-format
+The main variable of them is
+@code{guix-ENTRY-TYPE-BUFFER-TYPE-format}: it defines what parameters,
+in what order and in what way are displayed.  You are welcome to play
+with these ``format'' variables and to explore the other ones.
+
 @node Buffer Names
 @section Buffer Names
 
@@ -1529,8 +1551,8 @@ may be changed with the following variables:
 
 @vindex guix-ENTRY-TYPE-BUFFER-TYPE-buffer-name
 @item guix-ENTRY-TYPE-BUFFER-TYPE-buffer-name
-@xref{Configuration}, for the meaning of @code{ENTRY-TYPE} and
-@code{BUFFER-TYPE}.
+@xref{List/Info Configuration}, for the meaning of @code{ENTRY-TYPE}
+and @code{BUFFER-TYPE}.
 
 @vindex guix-ui-buffer-name-function
 @item guix-ui-buffer-name-function
@@ -1575,8 +1597,8 @@ management.
 
 @vindex guix-ENTRY-TYPE-BUFFER-TYPE-mode-map
 @item guix-ENTRY-TYPE-BUFFER-TYPE-mode-map
-@xref{Configuration}, for the meaning of @code{ENTRY-TYPE} and
-@code{BUFFER-TYPE}.
+@xref{List/Info Configuration}, for the meaning of @code{ENTRY-TYPE}
+and @code{BUFFER-TYPE}.
 
 @vindex guix-build-log-common-map
 @item guix-build-log-common-map
