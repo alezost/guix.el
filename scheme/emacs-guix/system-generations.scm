@@ -25,7 +25,9 @@
 ;;; Code:
 
 (define-module (emacs-guix system-generations)
+  #:use-module (ice-9 match)
   #:use-module (gnu system)
+  #:use-module (gnu system file-systems)
   #:use-module (gnu system uuid)
   #:use-module (guix memoization)
   #:use-module (guix profiles)
@@ -35,11 +37,13 @@
   #:export (system-generation-sexps))
 
 (define (device->sexp device)
-  (cond ((string? device) device)
-        ((uuid? device)
-         (uuid->string (uuid-bytevector device) 'dce))
-        ((not device) #f)
-        (else "Unknown device type")))
+  (match device
+    ((? file-system-label? label)
+     (file-system-label->string label))
+    ((? uuid? uuid)
+     (uuid->string uuid))
+    ((string? device) device)
+    (_ "Unknown device type")))
 
 (define system-generation-boot-parameters
   (mlambda (profile generation)
