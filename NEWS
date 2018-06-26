@@ -1,5 +1,40 @@
 -*- mode: org -*-
 
+* Changes in 0.4.1 (since 0.4)
+
+The main purpose of this release is to support the new behaviour of
+"guix pull" command, which now makes a full-featured profile
+[[~/.config/guix/current]] instead of just building the latest guix modules
+and putting them into [[~/.config/guix/latest]] directory.
+
+** User visible changes
+
+*** New commands
+
+**** M-x guix-system-from-file
+**** M-x guix-system-profile
+
+*** Changed commands
+
+**** M-x guix-dependent-packages
+
+It asks for dependency type now: "all" or "direct".
+
+*** Profile List
+
+The new profile populated by "guix pull" is displayed by "M-x
+guix-profiles" now.
+
+*** Renamed variables
+
+guix-hash-support-dired -> guix-support-dired
+
+** Internal changes
+
+*** New variables
+
+- guix-pulled-profile
+
 * Changes in 0.4 (since 0.3.4)
 
 ** User visible changes
