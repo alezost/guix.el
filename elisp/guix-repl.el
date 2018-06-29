@@ -232,8 +232,12 @@ See `guix-emacs-activate-after-operation' for details."
            (list "-C" guix-config-scheme-compiled-directory))
     ,@(and guix-repl-use-latest
            (if (file-exists-p guix-pulled-profile)
-               (--when-let (guix-guile-site-directory guix-pulled-profile)
-                 (list "-L" it "-C" it))
+               (let ((scm-dir (guix-guile-site-directory
+                               guix-pulled-profile))
+                     (go-dir  (guix-guile-site-directory
+                               guix-pulled-profile 'go)))
+                 (list "-L" scm-dir
+                       "-C" (if go-dir go-dir scm-dir)))
              ;; For backward compatibility.
              (--when-let (guix-latest-directory)
                (list "-L" it "-C" it))))
