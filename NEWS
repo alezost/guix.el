@@ -1,5 +1,13 @@
 -*- mode: org -*-
 
+* Changes in 0.4.1.1 (since 0.4.1)
+
+This is a bug-fix release: earlier version of "guix pull" command put
+".go" files into the same directory as ".scm", but now they are placed
+in different directories.  This change is supported by this release.  It
+is a crucial change, as incompatibility between .scm and .go files may
+lead to unpredictable errors.
+
 * Changes in 0.4.1 (since 0.4)
 
 The main purpose of this release is to support the new behaviour of
