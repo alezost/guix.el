@@ -39,9 +39,9 @@
 (define (device->sexp device)
   (match device
     ((? file-system-label? label)
-     (file-system-label->string label))
+     (string-append (file-system-label->string label) " (label)"))
     ((? uuid? uuid)
-     (uuid->string uuid))
+     (string-append (uuid->string uuid) " (UUID)"))
     ((string? device) device)
     (_ "Unknown device type")))
 
