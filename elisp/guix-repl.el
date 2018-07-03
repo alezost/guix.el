@@ -237,7 +237,7 @@ See `guix-emacs-activate-after-operation' for details."
                      (go-dir  (guix-guile-site-directory
                                guix-pulled-profile 'go)))
                  (list "-L" scm-dir
-                       "-C" (if go-dir go-dir scm-dir)))
+                       "-C" (or go-dir scm-dir)))
              ;; For backward compatibility.
              (--when-let (guix-latest-directory)
                (list "-L" it "-C" it))))
