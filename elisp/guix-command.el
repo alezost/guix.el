@@ -163,7 +163,7 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-search-paths-argument
-  '(("--search-paths" :char ?P :fun guix-read-search-paths-type)))
+  '(("--search-paths" :char ?E :fun guix-read-search-paths-type)))
 
 (guix-command-define-argument-improver
     guix-command-improve-substitute-urls-argument
