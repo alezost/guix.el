@@ -127,7 +127,11 @@ Interactively, prompt for a package name and size TYPE."
               (list "size"
                     (concat "--map-file=" map-file)
                     package-or-file))
-             (guix-find-file map-file)))
+             (if (file-exists-p map-file)
+                 (guix-find-file map-file)
+               (error "\
+Couldn't create an image file.
+Please check 'guix size' shell command to make sure it works"))))
     (t (error "Unknown size type (should be `image' or `text'): %S"
               type))))
 
