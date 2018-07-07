@@ -190,7 +190,7 @@ INPUT is the current partially completed string."
      ((string= "--key-download" option)
       (complete* guix-help-key-policies))
 
-     ((and (command? "pack" "package" "weather" "refresh")
+     ((and (command? "environment" "pack" "package" "refresh" "weather")
            (option? "-m" "--manifest"))
       (complete* (pcomplete-entries)))
 

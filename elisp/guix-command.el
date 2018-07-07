@@ -340,6 +340,7 @@ to be modified."
      guix-command-improve-hash-argument)
     (("environment")
      guix-command-improve-common-build-argument
+     guix-command-improve-manifest-argument
      guix-command-improve-search-paths-argument
      guix-command-improve-system-type-argument
      guix-command-improve-environment-argument)
