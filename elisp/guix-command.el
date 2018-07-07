@@ -774,7 +774,10 @@ Perform pull-specific actions after operation, see
 `guix-after-pull-hook' and `guix-update-after-pull'."
   (guix-eval-in-repl
    (apply #'guix-make-guile-expression 'guix-command args)
-   nil 'pull))
+   nil
+   ;; Do not restart REPL if we just listing generations.
+   (unless (member "--list-generations" args)
+     'pull)))
 
 (defun guix-run-view-build-log (args)
   "Add --log-file to ARGS, run 'guix ARGS ...' build command, and
