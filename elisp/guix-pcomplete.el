@@ -218,6 +218,10 @@ INPUT is the current partially completed string."
            (option? "-s" "--system"))
       (complete* guix-help-system-types))
 
+     ((and (command? "environment" "publish")
+           (option? "-u" "--user"))
+      (complete* (pcmpl-unix-user-names)))
+
      ((and (command? "archive")
            (option? "-x" "--extract"))
       (complete* (pcomplete-dirs)))

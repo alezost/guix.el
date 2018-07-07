@@ -181,6 +181,10 @@ to be modified."
     guix-command-improve-key-policy-argument
   '(("--key-download" :fun guix-read-key-policy)))
 
+(guix-command-define-argument-improver
+    guix-command-improve-user-argument
+  '(("--user" :fun guix-read-user-name)))
+
 (defvar guix-command-improve-common-build-argument
   '(("--no-substitutes"  :char ?s)
     ("--no-build-hook"   :char ?h)
@@ -288,8 +292,7 @@ to be modified."
 (guix-command-define-argument-improver
     guix-command-improve-publish-argument
   '(("--public-key"  :char ?k :fun guix-read-file-name)
-    ("--private-key" :char ?K :fun guix-read-file-name)
-    ("--user" :fun guix-read-user-name)))
+    ("--private-key" :char ?K :fun guix-read-file-name)))
 
 (guix-command-define-argument-improver
     guix-command-improve-pull-argument
@@ -341,6 +344,7 @@ to be modified."
     (("environment")
      guix-command-improve-common-build-argument
      guix-command-improve-manifest-argument
+     guix-command-improve-user-argument
      guix-command-improve-search-paths-argument
      guix-command-improve-system-type-argument
      guix-command-improve-environment-argument)
@@ -370,7 +374,8 @@ to be modified."
     (("potluck")
      guix-command-improve-potluck-argument)
     (("publish")
-     guix-command-improve-publish-argument)
+     guix-command-improve-publish-argument
+     guix-command-improve-user-argument)
     (("pull")
      guix-command-improve-common-build-argument
      guix-command-improve-pull-argument)
