@@ -328,6 +328,7 @@ See `guix-support-dired' for details.  See also `guix-read-file-name'."
 
 (defun guix-find-file-or-url (file-or-url)
   "Find FILE-OR-URL."
+  ;; The code is taken from `browse-url-emacs'.
   (require 'url-handlers)
   (let ((file-name-handler-alist
          (cons (cons url-handler-regexp 'url-file-handler)
