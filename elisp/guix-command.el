@@ -142,6 +142,7 @@ to be modified."
     ("potluck"     :char ?L)
     ("publish"     :char ?u)
     ("pull"        :char ?P)
+    ("repl"        :char ?R)
     ("size"        :char ?z)))
 
 (guix-command-define-argument-improver
@@ -305,6 +306,10 @@ to be modified."
     ("--key-server" :char ?S)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-repl-argument
+  '(("--type" :fun guix-read-repl-type)))
+
+(guix-command-define-argument-improver
     guix-command-improve-size-argument
   '(("--map-file" :fun guix-read-file-name)
     ("--sort" :char ?S  :fun guix-read-size-sort-key)))
@@ -383,6 +388,8 @@ to be modified."
      guix-command-improve-key-policy-argument
      guix-command-improve-manifest-argument
      guix-command-improve-refresh-argument)
+    (("repl")
+     guix-command-improve-repl-argument)
     (("size")
      guix-command-improve-system-type-argument
      guix-command-improve-substitute-urls-argument

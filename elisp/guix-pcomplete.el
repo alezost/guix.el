@@ -285,6 +285,10 @@ INPUT is the current partially completed string."
         (guix-pcomplete-complete-comma-args
          (guix-refresh-updater-names)))))
 
+     ((and (command? "repl")
+           (option? "-t" "--type"))
+      (complete* guix-help-repl-types))
+
      ((command? "size")
       (cond
        ((option? "-m" "--map-file")

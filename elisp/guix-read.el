@@ -200,6 +200,12 @@ argument, read the name from minibuffer."
  :single-prompt "Search paths type: ")
 
 (guix-define-readers
+ :completions-var guix-help-repl-types
+ :default guix-default-repl-type
+ :single-reader guix-read-repl-type
+ :single-prompt "REPL type: ")
+
+(guix-define-readers
  :completions-getter guix-graph-backend-names
  :default guix-default-graph-backend
  :single-reader guix-read-graph-backend

@@ -1,6 +1,6 @@
 ;;; guix-help-vars.el --- Variables related to Guix --help output
 
-;; Copyright © 2015, 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017, 2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -111,6 +111,10 @@ options.")
   '("exact" "prefix" "suffix")
   "List of supported search-paths types for 'guix package' command.")
 
+(defvar guix-help-repl-types
+  '("guile" "machine")
+  "List of supported types for 'guix repl' command.")
+
 
 ;;; Default values of various options
 
@@ -133,6 +137,10 @@ options.")
 (defvar guix-default-search-paths-type
   "exact"
   "Default search-paths type for 'guix package' command.")
+
+(defvar guix-default-repl-type
+  "guile"
+  "Default type for 'guix repl' command.")
 
 (defvar guix-default-graph-backend
   "graphviz"
