@@ -61,7 +61,7 @@ shouldn't end with a trailing slash.")
         (,(rx-to-string `(and "/etc/profile" string-end) t)
          . guix-env-var-mode)
         (,(rx-to-string
-           `(and "/tmp/guix-build-" (one-or-more (regexp ,chars-rx))
+           `(and "/tmp/guix-build-" (regexp ,chars-rx)
                  ".drv-" (one-or-more digit) "/environment-variables"
                  string-end)
            t)
