@@ -822,7 +822,7 @@ PACKAGE-ID is an ID of the package which store path to show."
    (lambda (btn)
      (guix-build-package (button-get btn 'id)
                          (format "Build '%s' package?" full-name)))
-   (format "Build the current package")
+   "Build the current package"
    'id id))
 
 (defun guix-package-info-insert-build-log-button (id _name)
