@@ -40,7 +40,7 @@
   :group 'guix-faces)
 
 (defface guix-derivation-file-name
-  '((t :inherit link :underline nil))
+  '((t :inherit bui-file-name))
   "Face for store file names."
   :group 'guix-derivation-faces)
 
