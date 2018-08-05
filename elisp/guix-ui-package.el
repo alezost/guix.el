@@ -29,6 +29,7 @@
 (require 'bui)
 (require 'guix nil t)
 (require 'guix-ui)
+(require 'guix-ui-store-item)
 (require 'guix-misc)
 (require 'guix-repl)
 (require 'guix-guile)
@@ -276,8 +277,8 @@ ENTRIES is a list of package entries to get info about packages."
 
 ;; Additional info for installed outputs.
 (bui-define-interface guix-installed-output info
-  :format '((file-name simple guix-installed-output-info-insert-file-name)
-            (dependencies simple (indent bui-file)))
+  :format '((file-name simple (guix-info-insert-store-items))
+            (dependencies simple (guix-info-insert-store-items)))
   :titles '((file-name . "Store directory"))
   :reduced? t)
 
@@ -727,19 +728,6 @@ current OUTPUT is installed (if there is such output in
     (bui-newline)
     (when installed-entry
       (bui-info-insert-entry installed-entry 'guix-installed-output 2))))
-
-(defun guix-installed-output-info-insert-file-name (file-name &optional _)
-  "Insert package store FILE-NAME at point."
-  (bui-insert-non-nil file-name
-    (bui-info-insert-value-indent file-name 'bui-file)
-    (bui-insert-indent)
-    (bui-insert-action-button
-     "Size"
-     (lambda (btn)
-       (guix-package-size (button-get btn 'file-name)
-                          (guix-read-package-size-type)))
-     "View package size of the current store file name"
-     'file-name file-name)))
 
 (defun guix-package-info-insert-action-button (type entry output)
   "Insert button to process an action on a package OUTPUT at point.

@@ -1,6 +1,6 @@
 ;;; guix-ui-system-generation.el --- Interface for displaying system generations  -*- lexical-binding: t -*-
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -115,7 +115,7 @@ SEARCH-VALUES."
             (prev-number format guix-generation-info-insert-previous)
             (current format guix-generation-info-insert-current)
             (number-of-packages format guix-generation-info-insert-packages)
-            (file-name simple guix-system-generation-info-insert-file-name)
+            (file-name simple (guix-generation-info-insert-file-name))
             (time format (time))
             (bootloader format (format))
             (root-device format (format))
@@ -134,13 +134,6 @@ SEARCH-VALUES."
    profile search-type search-values
    (cl-union guix-system-generation-info-required-params
              (bui-info-displayed-params 'guix-system-generation))))
-
-(defun guix-system-generation-info-insert-file-name (file-name &optional _)
-  "Insert generation FILE-NAME at point."
-  (bui-info-insert-value-indent
-   (list file-name
-         (file-truename file-name))
-   'bui-file))
 
 
 ;;; System generation 'list'

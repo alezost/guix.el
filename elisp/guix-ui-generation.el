@@ -1,6 +1,6 @@
 ;;; guix-ui-generation.el --- Interface for displaying generations  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -31,6 +31,7 @@
 (require 'guix-ui)
 (require 'guix-ui-package)
 (require 'guix-ui-profile)
+(require 'guix-ui-store-item)
 (require 'guix-misc)
 (require 'guix-repl)
 (require 'guix-guile)
@@ -117,7 +118,7 @@ current profile's GENERATION."
             (prev-number format guix-generation-info-insert-previous)
             (current format guix-generation-info-insert-current)
             (number-of-packages format guix-generation-info-insert-packages)
-            (file-name simple (indent bui-file))
+            (file-name simple (guix-generation-info-insert-file-name))
             (time format (time)))
   :hint 'guix-generation-info-hint
   :titles '((prev-number . "Prev. generation"))
@@ -239,6 +240,11 @@ current profile's GENERATION."
                                   (current-buffer)))
        (format "Delete generation %d" number)
        'number number))))
+
+(defun guix-generation-info-insert-file-name (file-name)
+  "Insert generation FILE-NAME at point."
+  (bui-info-insert-value-indent file-name 'bui-file)
+  (guix-info-insert-store-items (file-truename file-name)))
 
 
 ;;; Generation 'list'
