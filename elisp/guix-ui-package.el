@@ -450,7 +450,7 @@ Each function is called with 2 arguments: package ID and full name."
 (defvar guix-package-info-download-buffer nil
   "Buffer from which a current download operation was performed.")
 
-(defvar guix-package-info-output-format "%-10s"
+(defvar guix-package-info-output-format "%-8s  "
   "String used to format output names of the packages.
 It should be a '%s'-sequence.  After inserting an output name
 formatted with this string, an action button is inserted.")
