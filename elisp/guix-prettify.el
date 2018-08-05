@@ -113,7 +113,8 @@ This will transform
   :group 'guix-prettify)
 
 (defvar guix-prettify-special-modes
-  '(ibuffer-mode)
+  '(ibuffer-mode
+    guix-store-item-list-mode)
   "List of special modes that support font-locking.
 
 By default, \\[global-guix-prettify-mode] enables prettifying in

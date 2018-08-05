@@ -112,6 +112,16 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-find-service-location-file
     guix-find-service-definition
 
+    "Show store items"
+    guix-store-item
+    guix-store-item-referrers
+    guix-store-item-references
+    guix-store-item-requisites
+    guix-store-item-derivers
+    guix-store-failures
+    guix-store-live-items
+    guix-store-dead-items
+
     "Interface for 'operating-system'"
     guix-system-from-file
 

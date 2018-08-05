@@ -51,6 +51,7 @@
                                     service-location-string
                                     service-location-files
                                     service-location-sexps)
+  #:autoload (emacs-guix store-items) (store-item-sexps)
   #:autoload (emacs-guix actions) (process-package-actions
                                    build-package*
                                    delete-generations*

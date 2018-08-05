@@ -37,6 +37,7 @@ MODULES =					\
   emacs-guix/lint.scm				\
   emacs-guix/services.scm			\
   emacs-guix/system.scm				\
+  emacs-guix/store-items.scm			\
   emacs-guix/actions.scm			\
   emacs-guix.scm
 

@@ -88,6 +88,7 @@ EL_FILES =					\
   %D%/guix-ui.el				\
   %D%/guix-ui-license.el			\
   %D%/guix-ui-profile.el			\
+  %D%/guix-ui-store-item.el			\
   %D%/guix-ui-package.el			\
   %D%/guix-ui-package-location.el		\
   %D%/guix-ui-generation.el			\

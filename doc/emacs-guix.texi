@@ -51,6 +51,7 @@ A copy of the license is available at
 * Packages::            Interface for packages.
 * Profiles and Generations:: Interface for profiles and their generations.
 * System::              Interface for @code{operating-system} and services.
+* Store Items::         Interface for store items.
 * Package Licenses::    Interface for licenses of packages.
 * Popup Interface::     Magit-like interface for guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
@@ -99,6 +100,7 @@ Interfaces for:
 @item @code{operating-system} declaration (@pxref{System From File})
 @item services (@pxref{Services})
 @item service locations (@pxref{Service Locations})
+@item store items (@pxref{Store Items})
 @item @uref{https://hydra.gnu.org, Hydra build farm} (@pxref{Hydra})
 @end itemize
 
@@ -908,6 +910,63 @@ Display packages/services from the specified system configuration
 file.  You can also look at these packages/services from the
 ``system-info'' interface (@pxref{System From File}).
 
+@end table
+
+@c ----------------------------------------------------------------
+@node Store Items
+@chapter Store Items
+
+@cindex store items
+Your @file{/gnu/store} is full of items, and Emacs-Guix provides
+several commands that allow you to look at these items closely.  Most
+of these commands are analogous to @code{guix gc} shell commands with
+the according options (@code{--referrers}, @code{--derivers}, etc.)
+(@pxref{Invoking guix gc,,, guix, The GNU Guix Reference Manual}).
+
+@table @kbd
+
+@findex guix-store-item
+@item M-x guix-store-item
+Display some info on the specified store file.
+
+@findex guix-store-item-referrers
+@item M-x guix-store-item-referrers
+Display referrers of the specified store file.
+
+@findex guix-store-item-references
+@item M-x guix-store-item-references
+Display references of the specified store file.
+
+@findex guix-store-item-requisites
+@item M-x guix-store-item-requisites
+Display requisites of the specified store file.
+
+@findex guix-store-item-derivers
+@item M-x guix-store-item-derivers
+Display derivers of the specified store file.
+
+@findex guix-store-failures
+@item M-x guix-store-failures
+Display store items corresponding to cached build failures.
+
+@findex guix-store-live-items
+@item M-x guix-store-live-items
+Display live store items.  Note that this and the next commands may
+take a long time if your store is big.
+
+@findex guix-store-dead-items
+@item M-x guix-store-dead-items
+Display dead store items.
+
+@end table
+
+Along with the general ``list'' keys (@pxref{List buffer}), a
+``store-item-list'' buffer additionally provides the following key
+bindings:
+
+@table @kbd
+@item e
+Go to the current store item.
 @end table
 
 @c ----------------------------------------------------------------
