@@ -1,6 +1,6 @@
 ;;; commands.scm --- Executing Guix commands
 
-;; Copyright © 2015-2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015-2016, 2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -32,6 +32,10 @@
             help-string
             guix-output-to-file
             pipe-guix-output))
+
+;; This is needed to prevent the `guix-command' warnings from
+;; disappearing.  See also the commentary in (emacs-guix actions).
+(guix-warning-port (current-warning-port))
 
 (define (output+error thunk)
   "Call THUNK and return 2 values: output and error output as strings."
