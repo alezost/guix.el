@@ -488,10 +488,24 @@ value of this variable.
 
 If nil, update nothing (do not revert any buffer).
 If `current', update the buffer from which an operation was performed.
-If `all', update all Guix buffers (not recommended)."
+If `all', update all Guix buffers (not recommended).
+
+See also `guix-ask-before-buffer-update'."
   :type '(choice (const :tag "Do nothing" nil)
                  (const :tag "Update operation buffer" current)
                  (const :tag "Update all Guix buffers" all))
+  :group 'guix-repl)
+
+(defcustom guix-ask-before-buffer-update 1000
+  "This variable defines if you are asked before buffer update or not.
+If nil, never ask; if t, always ask; if it is a number, ask only
+if the buffer displays this number of entries or more.
+
+See variable `guix-update-buffers-after-operation' for details on
+the buffer update."
+  :type '(choice (const :tag "Always ask" t)
+                 (const :tag "Never ask" nil)
+                 (integer :tag "Ask if buffer shows this number of entries"))
   :group 'guix-repl)
 
 (defvar guix-operation-buffer nil
@@ -523,12 +537,27 @@ See `guix-update-after-operation' for details."
          (and guix-operation-buffer
               (cl-case guix-update-buffers-after-operation
                 (current (and (buffer-live-p guix-operation-buffer)
-                              (guix-operation-buffer?
-                               guix-operation-buffer)
                               (list guix-operation-buffer)))
                 (all     (guix-operation-buffers))))))
     (setq guix-operation-buffer nil)
     (dolist (buffer to-update)
+      (guix-update-buffer-maybe buffer))))
+
+(declare-function bui-current-entries "bui-core" t)
+
+(defun guix-update-buffer-maybe (buffer)
+  "Update BUFFER if needed."
+  (let ((ask (if (and (numberp guix-ask-before-buffer-update)
+                      (fboundp 'bui-current-entries))
+                 (with-current-buffer buffer
+                   (let ((entries (bui-current-entries)))
+                     (and entries
+                          (> (length entries)
+                             guix-ask-before-buffer-update))))
+               guix-ask-before-buffer-update)))
+    (when (or (not ask)
+              (y-or-n-p (format "Update '%s' buffer? "
+                                (buffer-name buffer))))
       (with-current-buffer buffer
         (revert-buffer nil t)))))
 
