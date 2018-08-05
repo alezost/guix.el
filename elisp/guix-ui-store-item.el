@@ -30,6 +30,7 @@
 (require 'guix-package)
 (require 'guix-guile)
 (require 'guix-repl)
+(require 'guix-misc)
 (require 'guix-utils)
 (require 'guix-auto-mode)  ; for regexps
 
@@ -217,8 +218,9 @@ FILE-NAMES can be a list or a single string."
   :describe-function 'guix-store-item-list-describe
   :format '((id nil 65 guix-store-item-list-sort-file-names-0)
             (size nil 20 bui-list-sort-numerically-1 :right-align t))
+  :hint 'guix-store-item-list-hint
   :sort-key '(size . t)
-  :hint 'guix-store-item-list-hint)
+  :marks '((delete . ?D)))
 
 (defvar guix-store-item-list-required-params
   '(id)
@@ -230,10 +232,14 @@ Do not remove `id' from this list as it is required for
 identifying an entry.")
 
 (let ((map guix-store-item-list-mode-map))
-  (define-key map (kbd "e") 'guix-store-item-list-edit))
+  (define-key map (kbd "e") 'guix-store-item-list-edit)
+  (define-key map (kbd "d") 'guix-store-item-list-mark-delete)
+  (define-key map (kbd "x") 'guix-store-item-list-execute))
 
 (defvar guix-store-item-list-default-hint
-  '(("\\[guix-store-item-list-edit]") " go to the current store item;\n"))
+  '(("\\[guix-store-item-list-edit]") " go to the current store item;\n"
+    ("\\[guix-store-item-list-mark-delete]") " mark for deletion; "
+    ("\\[guix-store-item-list-execute]") " execute operation (deletions);\n"))
 
 (defun guix-store-item-list-hint ()
   (bui-format-hints
@@ -262,6 +268,32 @@ Return non-nil, if B is bigger than A."
   "Go to the current store item."
   (interactive)
   (guix-find-file (bui-list-current-id)))
+
+(defun guix-store-item-list-mark-delete (&optional arg)
+  "Mark the current store-item for deletion and move to the next line.
+With ARG, mark all store-items for deletion."
+  (interactive "P")
+  (if arg
+      (bui-list-mark-all 'delete)
+    (bui-list--mark 'delete t)))
+
+(defun guix-store-item-list-execute ()
+  "Delete store items marked with '\\[guix-store-item-list-mark-delete]'."
+  (interactive)
+  (let ((marked (bui-list-get-marked-id-list 'delete)))
+    (or marked
+        (user-error "No store items marked for deletion"))
+    (when (or (not guix-operation-confirm)
+              (y-or-n-p
+               (let ((count (length marked)))
+                 (if (> count 1)
+                     (format "Try to delete these %d store items? " count)
+                   (format "Try to delete store item '%s'? "
+                           (car marked))))))
+      (guix-eval-in-repl
+       (apply #'guix-make-guile-expression
+              'guix-command "gc" "--delete" marked)
+       (current-buffer)))))
 
 
 ;;; Interactive commands

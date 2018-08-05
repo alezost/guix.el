@@ -923,6 +923,14 @@ of these commands are analogous to @code{guix gc} shell commands with
 the according options (@code{--referrers}, @code{--derivers}, etc.)
 (@pxref{Invoking guix gc,,, guix, The GNU Guix Reference Manual}).
 
+@menu
+* Store Item Commands:: @kbd{M-x guix-@dots{}} to show store items.
+* Store Item Keys::     Key bindings in store item ``list'' buffer.
+@end menu
+
+@node Store Item Commands
+@section Store Item Commands
+
 @table @kbd
 
 @findex guix-store-item
@@ -960,6 +968,9 @@ Display dead store items.
 
 @end table
 
+@node Store Item Keys
+@section Store Item Keys
+
 Along with the general ``list'' keys (@pxref{List buffer}), a
 ``store-item-list'' buffer additionally provides the following key
 bindings:
@@ -967,6 +978,12 @@ bindings:
 @table @kbd
 @item e
 Go to the current store item.
+@item d
+Mark the current store item for deletion (with prefix, mark all store
+items).
+@item x
+Execute operation on the marked store items---i.e., attempt to delete
+them.  This is similar to @code{guix gc --delete @dots{}}.
 @end table
 
 @c ----------------------------------------------------------------
