@@ -130,7 +130,6 @@ SEARCH-TYPE may be one of the following symbols: `id', `live',
             guix-store-item-info-insert-buttons
             (size format guix-store-item-info-insert-size)
             (time format (time))
-            (hash format (format))
             (derivers simple (guix-info-insert-store-items))
             (references simple (guix-info-insert-store-items))))
 
