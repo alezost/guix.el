@@ -76,6 +76,11 @@ of the file names are ignored."
   :titles '((id . "File name")
             (time . "Registration time")))
 
+(defface guix-store-item-invalid
+  '((t :inherit font-lock-warning-face))
+  "Face used for store items that are not valid."
+  :group 'guix-store-item-faces)
+
 (defun guix-store-item-get-entries (search-type
                                     &optional search-values params)
   "Receive 'store-item' entries.
@@ -127,6 +132,7 @@ SEARCH-TYPE may be one of the following symbols: `id', `live',
   :get-entries-function 'guix-store-item-info-get-entries
   :format '((id nil (format bui-file))
             nil
+            guix-store-item-info-insert-invalid
             guix-store-item-info-insert-buttons
             (size format guix-store-item-info-insert-size)
             (time format (time))
@@ -207,6 +213,13 @@ FILE-NAMES can be a list or a single string."
       (bui-insert-indent)
       (guix-info-insert-store-item file-name))))
 
+(defun guix-store-item-info-insert-invalid (entry)
+  "Insert a text if the store item ENTRY is not valid."
+  (when (bui-entry-non-void-value entry 'invalid)
+    (insert "Guix daemon says this path is ")
+    (bui-format-insert "not valid" 'guix-store-item-invalid)
+    (insert ".\nApparently, you may remove it from the store.\n\n")))
+
 
 ;;; Store item 'list'
 
@@ -215,7 +228,8 @@ FILE-NAMES can be a list or a single string."
   :buffer-name "*Guix Store Items*"
   :get-entries-function 'guix-store-item-list-get-entries
   :describe-function 'guix-store-item-list-describe
-  :format '((id nil 65 guix-store-item-list-sort-file-names-0)
+  :format '((id guix-store-item-list-get-name 65
+                guix-store-item-list-sort-file-names-0)
             (size nil 20 bui-list-sort-numerically-1 :right-align t))
   :hint 'guix-store-item-list-hint
   :sort-key '(size . t)
@@ -251,6 +265,14 @@ identifying an entry.")
    search-type search-values
    (cl-union guix-store-item-list-required-params
              (bui-list-displayed-params 'guix-store-item))))
+
+(defun guix-store-item-list-get-name (name entry)
+  "Return NAME of the store item ENTRY.
+Colorize it with an appropriate face if needed."
+  (bui-get-string
+   name
+   (and (bui-entry-non-void-value entry 'invalid)
+        'guix-store-item-invalid)))
 
 (defun guix-store-item-list-sort-file-names-0 (a b)
   "Compare column 0 of tabulated entries A and B numerically.

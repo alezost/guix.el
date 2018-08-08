@@ -24,12 +24,23 @@
 ;;; Code:
 
 (define-module (emacs-guix store-items)
+  #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-26)
+  #:use-module (srfi srfi-34)
+  #:use-module (srfi srfi-35)
   #:use-module (guix base32)
   #:use-module (guix store)
   #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix utils)
   #:export (store-item-sexps))
+
+(define (store-item-param-alist store)
+  `((id         . ,identity)
+    (derivers   . ,(cut valid-derivers store <>))
+    (references . ,(cut references store <>))
+    (referrers  . ,(cut referrers store <>))
+    (requisites . ,(lambda (item)
+                     (requisites store (list item))))))
 
 (define %path-info-param-alist
   `((size       . ,path-info-nar-size)
@@ -37,7 +48,6 @@
     (hash       . ,(compose bytevector->nix-base32-string
                             path-info-hash))
     (deriver    . ,path-info-deriver)
-    (references . ,path-info-references)
     (time       . ,path-info-registration-time)))
 
 (define (store-items store search-type search-values)
@@ -63,6 +73,14 @@
      (error (format #f "Wrong search type '~a' for store items"
                     search-type)))))
 
+(define (query-path-info* server path)
+  "Like 'query-path-info' but returns #f if there is nix protocol error."
+  (guard (c ((nix-protocol-error? c)
+             (format (current-warning-port)
+                     "error in query-path-info: ~a~%" c)
+             #f))
+    (query-path-info server path)))
+
 (define (store-item-sexps search-type search-values params)
   "Return information (sexps) about store items.
 
@@ -71,21 +89,19 @@ SEARCH-TYPE should be one of the following symbols: 'id', 'live', 'dead',
 'referrers', 'references', 'derivers', 'requisites', 'failures'."
   (to-emacs-side
    (with-store store
-     (let* ((item->sexp
-             (if (equal? params '(id))
-                 (cut cons 'id <>)
-                 (let ((info->sexp
-                        (object-transformer %path-info-param-alist params)))
-                   (lambda (item)
-                     (cons (cons 'id item)
-                           (info->sexp (query-path-info store item)))))))
-            (item->sexp
-             (if (memq 'derivers params)
-                 (lambda (item)
-                   (cons (cons 'derivers (valid-derivers store item))
-                         (item->sexp item)))
-                 item->sexp)))
-       (map item->sexp
+     (let ((item-alist (store-item-param-alist store)))
+       (map (lambda (item)
+              (let ((info (query-path-info* store item)))
+                (if info
+                    ;; sexp for valid item.
+                    (append ((object-transformer item-alist params)
+                             item)
+                            ((object-transformer
+                              %path-info-param-alist params)
+                             info))
+                    ;; sexp for invalid item.
+                    `((id . ,item)
+                      (invalid . t)))))
             (store-items store search-type search-values))))))
 
 ;;; store-items.scm ends here
