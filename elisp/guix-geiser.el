@@ -26,6 +26,13 @@
 (require 'geiser-mode)
 (require 'guix-guile)
 
+(defvar guix-geiser-connection-timeout (* 3 60 1000) ; 3 minutes
+  "Time, in milliseconds, to wait for REPL to return a result.
+Same as `geiser-connection-timeout' but is used for Guix
+commands.  By default, this variable has a significant value,
+because some commands (like `guix-store-live-items') may take a
+very long time to run.")
+
 (defun guix-geiser-repl ()
   "Return the current Geiser REPL."
   (or geiser-repl--repl
@@ -38,7 +45,15 @@ If REPL is nil, use the current Geiser REPL.
 Return a list of strings with result values of evaluation."
   (let ((gc-cons-threshold (max gc-cons-threshold 10000000)))
     (with-current-buffer (or repl (guix-geiser-repl))
-      (let ((res (geiser-eval--send/wait `(:eval (:scm ,str)))))
+      (let ((res (geiser-eval--send/wait
+                  `(:eval (:scm ,str))
+                  guix-geiser-connection-timeout)))
+        (unless res
+          (error "\
+Sorry, the evaluation is aborted because it has taken too much time.
+Try to increase the value of `guix-geiser-connection-timeout'
+variable if you have a slow machine, or please report if you
+think this command takes unreasonably long time to run."))
         (if (geiser-eval--retort-error res)
             (error "Error in evaluating guile expression: %s"
                    (geiser-eval--retort-output res))
