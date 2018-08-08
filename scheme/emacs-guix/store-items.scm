@@ -87,6 +87,10 @@
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'live', 'dead',
 'referrers', 'references', 'derivers', 'requisites', 'failures'."
+  (define check-size
+    (or (null? params)
+        (memq 'size params)))
+
   (to-emacs-side
    (with-store store
      (let ((item-alist (store-item-param-alist store)))
@@ -100,8 +104,12 @@ SEARCH-TYPE should be one of the following symbols: 'id', 'live', 'dead',
                               %path-info-param-alist params)
                              info))
                     ;; sexp for invalid item.
-                    `((id . ,item)
-                      (invalid . t)))))
+                    (let ((base-sexp `((id . ,item)
+                                       (invalid . t))))
+                      (if check-size
+                          (cons (cons 'size (file-size item))
+                                base-sexp)
+                          base-sexp)))))
             (store-items store search-type search-values))))))
 
 ;;; store-items.scm ends here

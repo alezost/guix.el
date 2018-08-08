@@ -21,12 +21,16 @@
 
 (define-module (emacs-guix utils)
   #:use-module (ice-9 match)
+  #:use-module (ice-9 popen)
+  #:use-module (ice-9 rdelim)
+  #:use-module (ice-9 regex)
   #:use-module (srfi srfi-1)
   #:export (first-or-false
             list-maybe
             string->symbol*
             search-load-path
             read-eval
+            file-size
             object-transformer))
 
 (define-syntax-rule (first-or-false lst)
@@ -93,5 +97,20 @@ Example:
         (eval exp (interaction-environment)))
       (lambda args
         (error (format #f "Failed to evaluate expression '~a'~%" exp))))))
+
+(define file-size
+  (let ((rx (make-regexp "\\`[0-9]+")))
+    (lambda (name)
+      "Return size (in bytes) of NAME (file or directory).
+Return #f if file does not exist or if some other error happens during
+size calculation."
+      (let* ((port (open-pipe* OPEN_READ
+                               "du" "--summarize" "--bytes" name))
+             (out  (read-string port)))
+        (close-pipe port)
+        (and (not (string=? "" out))
+             (and=> (regexp-exec rx out)
+                    (lambda (m)
+                      (string->number (match:substring m)))))))))
 
 ;;; utils.scm ends here
