@@ -33,10 +33,6 @@
             guix-output-to-file
             pipe-guix-output))
 
-;; This is needed to prevent the `guix-command' warnings from
-;; disappearing.  See also the commentary in (emacs-guix actions).
-(guix-warning-port (current-warning-port))
-
 (define (output+error thunk)
   "Call THUNK and return 2 values: output and error output as strings."
   (let ((output-port (open-output-string))

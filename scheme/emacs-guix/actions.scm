@@ -50,12 +50,7 @@
             package-source-build-derivation
             package-build-log-file))
 
-;; Guix ports need to be set here, otherwise, the output from the
-;; guix-daemon (messages about building or downloading packages) would
-;; not be displayed in the Guix REPL.  The same workaround is made for
-;; `guix-devel-mode' to set up a Guile REPL (guix-devel-mode does not
-;; use Guix REPL).  See `guix-devel-setup-repl' elisp procedure.
-(guix-warning-port (current-warning-port))
+;; See the commentary in (emacs-guix) module.
 (current-build-output-port (current-error-port))
 
 (define* (package->manifest-entry* package #:optional output)

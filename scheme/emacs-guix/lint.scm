@@ -26,10 +26,6 @@
   #:export (lint-checker-names
             lint-package))
 
-;; This is needed to prevent the lint warnings from disappearing.  See
-;; also the commentary in (emacs-guix actions).
-(guix-warning-port (current-warning-port))
-
 (define (lint-checker-names)
   "Return a list of names of available lint checkers."
   (map (lambda (checker)

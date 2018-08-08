@@ -27,7 +27,7 @@
 ;;; Code:
 
 (define-module (emacs-guix)
-  #:autoload (guix ui) (switch-to-generation*)
+  #:use-module (guix ui)
   #:autoload (emacs-guix commands) (guix-command
                                     guix-command-output
                                     help-string
@@ -73,5 +73,16 @@
                                  %temporary-directory
                                  to-emacs-side)
   #:autoload (emacs-guix utils) (search-load-path))
+
+;; Set `guix-warning-port' here, otherwise, some output from the
+;; guix-daemon would not be displayed in the Guix REPL.  For the same
+;; `current-build-output-port' should also be set, but since it is used
+;; only by build procedures from (emacs-guix actions) module, it is set
+;; there.
+;;
+;; The same workaround is made for `guix-devel-mode' to set up a Guile
+;; REPL (guix-devel-mode does not use Guix REPL).  See
+;; `guix-devel-setup-repl' elisp procedure.
+(guix-warning-port (current-warning-port))
 
 ;;; emacs-guix.scm ends here
