@@ -127,6 +127,22 @@ SEARCH-TYPE may be one of the following symbols: `id', `live',
                        val))
            (t (message "%d %s of '%s'." count type val))))))))
 
+(defun guix-store-item-delete (&rest file-names)
+  "Delete FILE-NAMES from the store."
+  (or file-names
+      (error "Nothing to delete"))
+  (when (or (not guix-operation-confirm)
+            (y-or-n-p
+             (let ((count (length file-names)))
+               (if (> count 1)
+                   (format "Try to delete these %d store items? " count)
+                 (format "Try to delete store item '%s'? "
+                         (car file-names))))))
+    (guix-eval-in-repl
+     (apply #'guix-make-guile-expression
+            'guix-command "gc" "--delete" file-names)
+     (current-buffer))))
+
 
 ;;; Store item 'info'
 
@@ -134,7 +150,7 @@ SEARCH-TYPE may be one of the following symbols: `id', `live',
   :mode-name "Store-Item-Info"
   :buffer-name "*Guix Store Item Info*"
   :get-entries-function 'guix-store-item-info-get-entries
-  :format '((id nil (format bui-file))
+  :format '((id nil (guix-info-insert-file-name))
             nil
             guix-store-item-info-insert-invalid
             (size format guix-store-item-info-insert-size)
@@ -163,6 +179,17 @@ identifying an entry.")
    search-type search-values
    (cl-union guix-store-item-info-required-params
              (bui-info-displayed-params 'guix-store-item))))
+
+(defun guix-info-insert-file-name (file-name)
+  "Insert store item FILE-NAME at point."
+  (bui-insert-button file-name 'bui-file)
+  (bui-insert-indent)
+  (bui-insert-action-button
+   "Delete"
+   (lambda (btn)
+     (guix-store-item-delete (button-get btn 'file-name)))
+   (format "Delete '%s' from the store" file-name)
+   'file-name file-name))
 
 (defun guix-store-item-info-insert-size (size entry)
   "Insert SIZE of the store item ENTRY at point."
@@ -327,17 +354,7 @@ With ARG, mark all store-items for deletion."
   (let ((marked (bui-list-get-marked-id-list 'delete)))
     (or marked
         (user-error "No store items marked for deletion"))
-    (when (or (not guix-operation-confirm)
-              (y-or-n-p
-               (let ((count (length marked)))
-                 (if (> count 1)
-                     (format "Try to delete these %d store items? " count)
-                   (format "Try to delete store item '%s'? "
-                           (car marked))))))
-      (guix-eval-in-repl
-       (apply #'guix-make-guile-expression
-              'guix-command "gc" "--delete" marked)
-       (current-buffer)))))
+    (apply #'guix-store-item-delete marked)))
 
 
 ;;; Interactive commands
