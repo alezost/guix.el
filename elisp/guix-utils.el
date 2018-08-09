@@ -335,6 +335,12 @@ See `guix-support-dired' for details.  See also `guix-read-file-name'."
                file-name-handler-alist)))
     (find-file file-or-url)))
 
+(defun guix-assert-files-exist (&rest files)
+  "Raise an error if any of FILES does not exist."
+  (dolist (file files)
+    (unless (file-exists-p file)
+      (user-error "File does not exist: '%s'" file))))
+
 (defun guix-guile-site-directory (&optional root compiled)
   "Return default directory with Guile site files.
 Return nil, if this directory does not exist.

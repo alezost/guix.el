@@ -346,6 +346,7 @@ With ARG, mark all store-items for deletion."
   "Display store items with FILE-NAMES.
 Interactively, prompt for a single file name."
   (interactive (list (guix-store-file-name-read)))
+  (apply #'guix-assert-files-exist file-names)
   (apply #'guix-store-item-get-display 'id file-names))
 
 ;;;###autoload
@@ -354,6 +355,7 @@ Interactively, prompt for a single file name."
 This is analogous to 'guix gc --referrers FILE-NAME' shell
 command.  See Info node `(guix) Invoking guix gc'."
   (interactive (list (guix-store-file-name-read)))
+  (guix-assert-files-exist file-name)
   (guix-store-item-get-display 'referrers file-name))
 
 ;;;###autoload
@@ -362,6 +364,7 @@ command.  See Info node `(guix) Invoking guix gc'."
 This is analogous to 'guix gc --references FILE-NAME' shell
 command.  See Info node `(guix) Invoking guix gc'."
   (interactive (list (guix-store-file-name-read)))
+  (guix-assert-files-exist file-name)
   (guix-store-item-get-display 'references file-name))
 
 ;;;###autoload
@@ -370,6 +373,7 @@ command.  See Info node `(guix) Invoking guix gc'."
 This is analogous to 'guix gc --requisites FILE-NAME' shell
 command.  See Info node `(guix) Invoking guix gc'."
   (interactive (list (guix-store-file-name-read)))
+  (guix-assert-files-exist file-name)
   (guix-store-item-get-display 'requisites file-name))
 
 ;;;###autoload
@@ -378,6 +382,7 @@ command.  See Info node `(guix) Invoking guix gc'."
 This is analogous to 'guix gc --derivers FILE-NAME' shell
 command.  See Info node `(guix) Invoking guix gc'."
   (interactive (list (guix-store-file-name-read)))
+  (guix-assert-files-exist file-name)
   (guix-store-item-get-display 'derivers file-name))
 
 ;;;###autoload
