@@ -74,7 +74,11 @@ of the file names are ignored."
 (bui-define-entry-type guix-store-item
   :message-function 'guix-store-item-message
   :titles '((id . "File name")
-            (time . "Registration time")))
+            (time . "Registration time")
+            (number-of-derivers . "Derivers")
+            (number-of-references . "References")
+            (number-of-referrers . "Referrers")
+            (number-of-requisites . "Requisites")))
 
 (defface guix-store-item-invalid
   '((t :inherit font-lock-warning-face))
@@ -133,11 +137,16 @@ SEARCH-TYPE may be one of the following symbols: `id', `live',
   :format '((id nil (format bui-file))
             nil
             guix-store-item-info-insert-invalid
-            guix-store-item-info-insert-buttons
             (size format guix-store-item-info-insert-size)
             (time format (time))
-            (derivers simple (guix-info-insert-store-items))
-            (references simple (guix-info-insert-store-items))))
+            (number-of-derivers
+             format guix-store-item-info-insert-number-of-derivers)
+            (number-of-references
+             format guix-store-item-info-insert-number-of-references)
+            (number-of-referrers
+             format guix-store-item-info-insert-number-of-referrers)
+            (number-of-requisites
+             format guix-store-item-info-insert-number-of-requisites)))
 
 (defvar guix-store-item-info-required-params
   '(id)
@@ -148,35 +157,12 @@ along with the displayed parameters.
 Do not remove `id' from this info as it is required for
 identifying an entry.")
 
-(defvar guix-store-item-info-buttons
-  '(requisites referrers references derivers)
-  "List of search types for buttons displayed in info buffer.")
-
 (defun guix-store-item-info-get-entries (search-type &rest search-values)
   "Return 'store-item' entries for displaying them in 'info' buffer."
   (guix-store-item-get-entries
    search-type search-values
    (cl-union guix-store-item-info-required-params
              (bui-info-displayed-params 'guix-store-item))))
-
-(defun guix-store-item-info-insert-buttons (entry)
-  "Insert various buttons for store item ENTRY at point."
-  (let ((file-name (bui-entry-id entry)))
-    (bui-mapinsert
-     (lambda (type)
-       (let ((type-str (symbol-name type)))
-         (bui-insert-action-button
-          (capitalize type-str)
-          (lambda (btn)
-            (guix-store-item-get-display (button-get btn 'search-type)
-                                         (button-get btn 'file-name)))
-          (format "Show %s of %s" type-str file-name)
-          'search-type type
-          'file-name file-name)))
-     guix-store-item-info-buttons
-     (bui-get-indent)
-     :column (bui-fill-column)))
-  (bui-newline))
 
 (defun guix-store-item-info-insert-size (size entry)
   "Insert SIZE of the store item ENTRY at point."
@@ -190,7 +176,7 @@ identifying an entry.")
      (lambda (btn)
        (guix-package-size (button-get btn 'file-name)
                           (guix-read-package-size-type)))
-     (format "Show full size info on %s" file-name)
+     (format "Show full size info on '%s'" file-name)
      'file-name file-name)))
 
 (defun guix-info-insert-store-item (file-name)
@@ -219,6 +205,42 @@ FILE-NAMES can be a list or a single string."
     (insert "Guix daemon says this path is ")
     (bui-format-insert "not valid" 'guix-store-item-invalid)
     (insert ".\nApparently, you may remove it from the store.\n\n")))
+
+(defun guix-store-item-info-insert-type-button (type entry)
+  "Insert button to display TYPE of store item ENTRY at point.
+TYPE should be one of the following symbols: `derivers',
+`references', `referrers', `requisites'."
+  (let ((file-name (bui-entry-id entry))
+        (type-str (symbol-name type)))
+    (bui-insert-action-button
+     "Show"
+     (lambda (btn)
+       (guix-store-item-get-display (button-get btn 'search-type)
+                                    (button-get btn 'file-name)))
+     (format "Show %s of '%s'" type-str file-name)
+     'search-type type
+     'file-name file-name)))
+
+(defmacro guix-store-item-info-define-insert-number (type)
+  "Define a function to insert number of TYPE.
+See `guix-store-item-info-insert-type-button' for the meaningo of TYPE."
+  (let* ((type-str (symbol-name type))
+         (name (intern (concat "guix-store-item-info-insert-number-of-"
+                               type-str)))
+         (desc (concat "Insert NUMBER of " type-str
+                       " of store item ENTRY at point.")))
+    `(defun ,name (number entry)
+       ,desc
+       (bui-insert-non-nil number
+         (bui-format-insert number)
+         (unless (= 0 number)
+           (bui-insert-indent)
+           (guix-store-item-info-insert-type-button ',type entry))))))
+
+(guix-store-item-info-define-insert-number derivers)
+(guix-store-item-info-define-insert-number references)
+(guix-store-item-info-define-insert-number referrers)
+(guix-store-item-info-define-insert-number requisites)
 
 
 ;;; Store item 'list'

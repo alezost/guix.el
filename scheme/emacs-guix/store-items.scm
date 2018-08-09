@@ -40,7 +40,12 @@
     (references . ,(cut references store <>))
     (referrers  . ,(cut referrers store <>))
     (requisites . ,(lambda (item)
-                     (requisites store (list item))))))
+                     (requisites store (list item))))
+    (number-of-derivers   . ,(compose length (cut valid-derivers store <>)))
+    (number-of-references . ,(compose length (cut references store <>)))
+    (number-of-referrers  . ,(compose length (cut referrers store <>)))
+    (number-of-requisites . ,(lambda (item)
+                               (length (requisites store (list item)))))))
 
 (define %path-info-param-alist
   `((size       . ,path-info-nar-size)
