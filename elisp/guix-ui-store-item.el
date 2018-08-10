@@ -230,9 +230,11 @@ FILE-NAMES can be a list or a single string."
 (defun guix-store-item-info-insert-invalid (entry)
   "Insert a text if the store item ENTRY is not valid."
   (when (bui-entry-non-void-value entry 'invalid)
-    (insert "Guix daemon says this path is ")
-    (bui-format-insert "not valid" 'guix-store-item-invalid)
-    (insert ".\nApparently, you may remove it from the store.\n\n")))
+    (if (not (file-exists-p (bui-entry-id entry)))
+        (insert "This file does not exist.\n\n")
+      (insert "Guix daemon says this path is ")
+      (bui-format-insert "not valid" 'guix-store-item-invalid)
+      (insert ".\nApparently, you may remove it from the store.\n\n"))))
 
 (defun guix-store-item-info-insert-type-button (type entry)
   "Insert button to display TYPE of store item ENTRY at point.
