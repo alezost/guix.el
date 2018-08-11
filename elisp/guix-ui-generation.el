@@ -279,6 +279,7 @@ current profile's GENERATION."
 
 (defvar guix-generation-list-default-hint
   '(("\\[guix-generation-list-show-packages]") " show packages;\n"
+    ("\\[guix-generation-list-show-search-paths]") " show search paths;\n"
     ("\\[guix-generation-list-set-current]") " set current generation;\n"
     ("\\[guix-generation-list-diff]") " show Diff of the marked generations;\n"
     ("\\[guix-generation-list-mark-delete]") " mark for deletion; "
