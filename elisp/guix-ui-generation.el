@@ -295,11 +295,10 @@ current profile's GENERATION."
   "Return a list of file names of the marked generations.
 If nothing is marked, return a list with generation at point."
   (let ((entries (bui-current-entries)))
+    ;; XXX `bui-list-map-marked' should become available in bui > 1.1.0
     (mapcar (lambda (id)
               (bui-entry-non-void-value (bui-entry-by-id entries id)
                                         'file-name))
-            ;; XXX This should become available in bui > 1.1.0
-            ;; (bui-list-marked-or-current)
             (or (bui-list-get-marked-id-list)
                 (list (bui-list-current-id))))))
 
