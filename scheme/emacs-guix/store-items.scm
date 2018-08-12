@@ -24,6 +24,7 @@
 ;;; Code:
 
 (define-module (emacs-guix store-items)
+  #:use-module (ice-9 match)
   #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-26)
   #:use-module (srfi srfi-34)
@@ -55,17 +56,27 @@
     (deriver    . ,path-info-deriver)
     (time       . ,path-info-registration-time)))
 
+(define (relatives relatives paths)
+  "Return a list of RELATIVES of PATHS.
+RELATIVES should be a procedure taking a path as argument."
+  (match paths
+    ((path)
+     (relatives path))
+    ((paths ...)
+     (delete-duplicates (append-map relatives paths)))
+    (_ '())))
+
 (define (store-items store search-type search-values)
   "Find STORE items matching SEARCH-TYPE and SEARCH-VALUES."
   (case search-type
     ((id path)
      search-values)
     ((referrers)
-     (referrers store (car search-values)))
+     (relatives (cut referrers store <>) search-values))
     ((references)
-     (references store (car search-values)))
+     (relatives (cut references store <>) search-values))
     ((derivers)
-     (valid-derivers store (car search-values)))
+     (relatives (cut valid-derivers store <>) search-values))
     ((requisites)
      (requisites store search-values))
     ((failures)

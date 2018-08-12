@@ -117,15 +117,16 @@ SEARCH-TYPE may be one of the following symbols: `id', `live',
          (1 (message "A single failure found."))
          (t (message "%d failures found." count))))
       (t
-       (let ((type (symbol-name search-type)))
+       (let ((type (symbol-name search-type))
+             (paths (mapconcat #'identity search-values ", ")))
          (cl-case count
-           (0 (message "No %s of '%s' found." type val))
+           (0 (message "No %s of '%s' found." type paths))
            (1 (message "A single %s of '%s'."
                        ;; Remove the trailing "s" from the search type
                        ;; ("derivers" -> "deriver").
                        (substring type 0 (1- (length type)))
-                       val))
-           (t (message "%d %s of '%s'." count type val))))))))
+                       paths))
+           (t (message "%d %s of '%s'." count type paths))))))))
 
 (defun guix-store-item-delete (&rest file-names)
   "Delete FILE-NAMES from the store."
@@ -370,40 +371,40 @@ Interactively, prompt for a single file name."
   (apply #'guix-store-item-get-display 'id file-names))
 
 ;;;###autoload
-(defun guix-store-item-referrers (file-name)
-  "Display referrers of the FILE-NAME store item.
-This is analogous to 'guix gc --referrers FILE-NAME' shell
+(defun guix-store-item-referrers (&rest file-names)
+  "Display referrers of the FILE-NAMES store item.
+This is analogous to 'guix gc --referrers FILE-NAMES' shell
 command.  See Info node `(guix) Invoking guix gc'."
   (interactive (list (guix-store-file-name-read)))
-  (guix-assert-files-exist file-name)
-  (guix-store-item-get-display 'referrers file-name))
+  (apply #'guix-assert-files-exist file-names)
+  (apply #'guix-store-item-get-display 'referrers file-names))
 
 ;;;###autoload
-(defun guix-store-item-references (file-name)
-  "Display references of the FILE-NAME store item.
-This is analogous to 'guix gc --references FILE-NAME' shell
+(defun guix-store-item-references (&rest file-names)
+  "Display references of the FILE-NAMES store item.
+This is analogous to 'guix gc --references FILE-NAMES' shell
 command.  See Info node `(guix) Invoking guix gc'."
   (interactive (list (guix-store-file-name-read)))
-  (guix-assert-files-exist file-name)
-  (guix-store-item-get-display 'references file-name))
+  (apply #'guix-assert-files-exist file-names)
+  (apply #'guix-store-item-get-display 'references file-names))
 
 ;;;###autoload
-(defun guix-store-item-requisites (file-name)
-  "Display requisites of the FILE-NAME store item.
-This is analogous to 'guix gc --requisites FILE-NAME' shell
+(defun guix-store-item-requisites (&rest file-names)
+  "Display requisites of the FILE-NAMES store item.
+This is analogous to 'guix gc --requisites FILE-NAMES' shell
 command.  See Info node `(guix) Invoking guix gc'."
   (interactive (list (guix-store-file-name-read)))
-  (guix-assert-files-exist file-name)
-  (guix-store-item-get-display 'requisites file-name))
+  (apply #'guix-assert-files-exist file-names)
+  (apply #'guix-store-item-get-display 'requisites file-names))
 
 ;;;###autoload
-(defun guix-store-item-derivers (file-name)
-  "Display derivers of the FILE-NAME store item.
-This is analogous to 'guix gc --derivers FILE-NAME' shell
+(defun guix-store-item-derivers (&rest file-names)
+  "Display derivers of the FILE-NAMES store item.
+This is analogous to 'guix gc --derivers FILE-NAMES' shell
 command.  See Info node `(guix) Invoking guix gc'."
   (interactive (list (guix-store-file-name-read)))
-  (guix-assert-files-exist file-name)
-  (guix-store-item-get-display 'derivers file-name))
+  (apply #'guix-assert-files-exist file-names)
+  (apply #'guix-store-item-get-display 'derivers file-names))
 
 ;;;###autoload
 (defun guix-store-failures ()
