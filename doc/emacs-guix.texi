@@ -984,6 +984,14 @@ items).
 @item x
 Execute operation on the marked store items---i.e., attempt to delete
 them.  This is similar to @code{guix gc --delete @dots{}}.
+@item D
+Show derivers of the current (or marked) store item(s).
+@item R
+Show requisites of the current (or marked) store item(s).
+@item f
+Show referrers of the current (or marked) store item(s).
+@item F
+Show references of the current (or marked) store item(s).
 @end table
 
 @c ----------------------------------------------------------------

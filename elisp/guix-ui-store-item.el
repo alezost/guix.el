@@ -254,7 +254,7 @@ TYPE should be one of the following symbols: `derivers',
 
 (defmacro guix-store-item-info-define-insert-number (type)
   "Define a function to insert number of TYPE.
-See `guix-store-item-info-insert-type-button' for the meaningo of TYPE."
+See `guix-store-item-info-insert-type-button' for the meaning of TYPE."
   (let* ((type-str (symbol-name type))
          (name (intern (concat "guix-store-item-info-insert-number-of-"
                                type-str)))
@@ -300,10 +300,18 @@ identifying an entry.")
 (let ((map guix-store-item-list-mode-map))
   (define-key map (kbd "e") 'guix-store-item-list-edit)
   (define-key map (kbd "d") 'guix-store-item-list-mark-delete)
+  (define-key map (kbd "f") 'guix-store-item-list-referrers)
+  (define-key map (kbd "F") 'guix-store-item-list-references)
+  (define-key map (kbd "D") 'guix-store-item-list-derivers)
+  (define-key map (kbd "R") 'guix-store-item-list-requisites)
   (define-key map (kbd "x") 'guix-store-item-list-execute))
 
 (defvar guix-store-item-list-default-hint
   '(("\\[guix-store-item-list-edit]") " go to the current store item;\n"
+    ("\\[guix-store-item-list-derivers]") " show derivers; "
+    ("\\[guix-store-item-list-requisites]") " show requisites;\n"
+    ("\\[guix-store-item-list-referrers]") " show referrers; "
+    ("\\[guix-store-item-list-references]") " show references;\n"
     ("\\[guix-store-item-list-mark-delete]") " mark for deletion; "
     ("\\[guix-store-item-list-execute]") " execute operation (deletions);\n"))
 
@@ -358,6 +366,27 @@ With ARG, mark all store-items for deletion."
     (or marked
         (user-error "No store items marked for deletion"))
     (apply #'guix-store-item-delete marked)))
+
+(defmacro guix-store-item-list-define-show-items (type)
+  "Define a function to show items by TYPE.
+See `guix-store-item-list-insert-type-button' for the meaning of TYPE."
+  (let* ((type-str (symbol-name type))
+         (name (intern (concat "guix-store-item-list-" type-str)))
+         (desc (concat "Display " type-str
+                       " of the marked (or current) store items.")))
+    `(defun ,name ()
+       ,desc
+       (interactive)
+       (apply #'guix-store-item-get-display ',type
+              ;; XXX `bui-list-marked-or-current' should become
+              ;; available in bui > 1.1.0
+              (or (bui-list-get-marked-id-list 'general)
+                  (list (bui-list-current-id)))))))
+
+(guix-store-item-list-define-show-items derivers)
+(guix-store-item-list-define-show-items references)
+(guix-store-item-list-define-show-items referrers)
+(guix-store-item-list-define-show-items requisites)
 
 
 ;;; Interactive commands
