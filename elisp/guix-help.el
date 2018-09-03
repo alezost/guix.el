@@ -140,11 +140,6 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     "Magit-like interface"
     guix
 
-    "Show Hydra builds and jobsets"
-    guix-hydra-latest-builds
-    guix-hydra-queued-builds
-    guix-hydra-jobsets
-
     "Hide hash parts in \"/gnu/store/…-foo\" file names"
 
     (guix-prettify-mode nil t)

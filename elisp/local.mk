@@ -72,9 +72,6 @@ EL_FILES =					\
   %D%/guix-build-log.el				\
   %D%/guix-command.el				\
   %D%/guix-devel.el				\
-  %D%/guix-hydra.el				\
-  %D%/guix-hydra-build.el			\
-  %D%/guix-hydra-jobset.el			\
   %D%/guix-graph.el				\
   %D%/guix-hash.el				\
   %D%/guix-derivation.el			\

@@ -34,8 +34,6 @@
 (require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-utils)
-(require 'guix-hydra)
-(require 'guix-hydra-build)
 (require 'guix-read)
 (require 'guix-license)
 (require 'guix-location)
@@ -540,17 +538,8 @@ formatted with this string, an action button is inserted.")
 
 (defun guix-package-info-insert-systems (systems entry)
   "Insert supported package SYSTEMS at point."
-  (bui-info-insert-value-format
-   systems 'guix-hydra-build-system
-   'action (lambda (btn)
-             (let ((args (guix-hydra-build-latest-prompt-args
-                          :job (button-get btn 'job-name)
-                          :system (button-label btn))))
-               (apply #'guix-hydra-build-get-display
-                      'latest args)))
-   'job-name (guix-hydra-job-name-specification
-              (bui-entry-non-void-value entry 'name)
-              (bui-entry-non-void-value entry 'version))))
+  ;; TODO Use system buttons from "build-farm" package if it is available.
+  (bui-info-insert-value-format systems))
 
 (defmacro guix-package-info-define-insert-inputs (&optional type)
   "Define a face and a button for package inputs.
@@ -1335,13 +1324,9 @@ See `guix-lint' for details."
   "Display latest NUMBER of Hydra builds of the current package.
 Interactively, prompt for NUMBER.  With prefix argument, prompt
 for all ARGS."
-  (interactive
-   (let ((entry (bui-list-current-entry)))
-     (guix-hydra-build-latest-prompt-args
-      :job (guix-hydra-job-name-specification
-            (bui-entry-non-void-value entry 'name)
-            (bui-entry-non-void-value entry 'version)))))
-  (apply #'guix-hydra-latest-builds number args))
+  ;; TODO
+  (interactive (list 0))
+  (error "Sorry, this operation is not supported yet"))
 
 
 ;;; Output 'list'

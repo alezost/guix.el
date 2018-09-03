@@ -59,7 +59,6 @@ A copy of the license is available at
 * Build Log Mode::      Highlighting Guix build logs.
 * Completions::         Completing @command{guix} shell command.
 * Development::         Highlighting and tools for Guix code.
-* Hydra::               Interface for the Guix build farm.
 * List/Info Interface:: Describing ``list''/''info'' buffers.
 * Configuration::       Configuring Emacs-Guix.
 * Miscellaneous Commands:: @kbd{M-x guix-@dots{}} uncovered by other sections.
@@ -101,7 +100,6 @@ Interfaces for:
 @item services (@pxref{Services})
 @item service locations (@pxref{Service Locations})
 @item store items (@pxref{Store Items})
-@item @uref{https://hydra.gnu.org, Hydra build farm} (@pxref{Hydra})
 @end itemize
 
 @item
@@ -168,8 +166,7 @@ later.
 @uref{http://www.gnu.org/software/guix/, GNU Guix}, version 0.11.0 or
 later.  You need it for the most features of Emacs-Guix, but not for
 all: Guix is not needed if you want to look at log files (@pxref{Build
-Log Mode}), to ``prettify'' store file names (@pxref{Prettify Mode}),
-or to receive some info from Hydra (@pxref{Hydra}).
+Log Mode}) or to ``prettify'' store file names (@pxref{Prettify Mode}).
 
 @item
 @uref{http://nongnu.org/geiser/, Geiser}, version 0.8 or later.  It is
@@ -444,7 +441,7 @@ Lint the current package (@pxref{Invoking guix lint,,, guix, The GNU
 Guix Reference Manual}).  With prefix argument, you'll be prompted for
 checker names.
 @item B
-Display latest builds of the current package (@pxref{Hydra}).
+Display latest builds of the current package.
 @end table
 
 @subsection Info Buffer
@@ -1308,51 +1305,6 @@ To find a patch file at point with @kbd{M-x ffap} command, you may use:
 @end example
 
 @c ----------------------------------------------------------------
-@node Hydra
-@chapter Hydra
-
-@cindex hydra
-The continuous integration server at @code{hydra.gnu.org} builds all
-the distribution packages on the supported architectures and serves
-them as substitutes (@pxref{Substitutes,,, guix, The GNU Guix
-Reference Manual}).  Continuous integration is currently orchestrated
-by @uref{https://nixos.org/hydra/, Hydra}.
-
-This section describes an Emacs interface to query Hydra to know the
-build status of specific packages, discover recent and ongoing builds,
-view build logs, and so on.  This interface is mostly the same as the
-``list''/``info'' interface for displaying packages
-(@pxref{Packages}), generations (@pxref{Generations}) and other
-things.
-
-The following commands are available:
-
-@table @kbd
-
-@findex guix-hydra-latest-builds
-@vindex guix-hydra-number-of-builds
-@item M-x guix-hydra-latest-builds
-Display the latest failed or successful builds.  With @kbd{C-u}, you
-will be prompted for the number of builds and other parameters
-(project, jobset, job and system).  If you want to change the default
-number of builds, set @code{guix-hydra-number-of-builds} variable.
-
-@findex guix-hydra-queued-builds
-@item M-x guix-hydra-queued-builds
-Display scheduled or currently running builds.
-
-@findex guix-hydra-jobsets
-@item M-x guix-hydra-jobsets
-Display available jobsets (you will be prompted for a project).
-
-@end table
-
-In a list of builds you can press @kbd{L} key to display a build log of
-the current build.  Also both a list of builds and a list of jobsets
-provide @kbd{B} key to display latest builds of the current job or
-jobset (don't forget about @kbd{C-u}).
-
-@c ----------------------------------------------------------------
 @node List/Info Interface
 @chapter List/Info Interface
 
@@ -1615,8 +1567,6 @@ buffers (@pxref{List/Info Interface}), you may look at
 @item service
 @item service-location
 @item license
-@item hydra-build
-@item hydra-jobset
 @end table
 
 @vindex guix-ENTRY-TYPE-BUFFER-TYPE-format
