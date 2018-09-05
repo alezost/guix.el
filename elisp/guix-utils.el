@@ -32,6 +32,12 @@
   "Return non-nil, if current system is GuixSD."
   (file-exists-p "/run/current-system"))
 
+(defun guix-assert-build-farm ()
+  "Raise an error if `build-farm' package does not exist."
+  (unless (require 'build-farm nil t)
+    (error "This feature requires `build-farm' package, \
+which is not installed")))
+
 (defun guix-concat-strings (strings separator &optional location)
   "Return new string by concatenating STRINGS with SEPARATOR.
 If LOCATION is a symbol `head', add another SEPARATOR to the

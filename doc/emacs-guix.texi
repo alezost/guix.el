@@ -184,7 +184,7 @@ features as without Guix.
 interfaces (to display packages, generations, licenses, etc.).
 
 @item
-@uref{https://github.com/magit/magit, magit-popup library}.  You
+@uref{https://github.com/magit/magit-popup, magit-popup library}.  You
 already have this library if you use Magit 2.1.0 or later.  This
 library is required only for @kbd{M-x@tie{}guix} command (@pxref{Popup
 Interface}).
@@ -194,10 +194,16 @@ Interface}).
 version 0.1.4 or later.  It is used only to edit synopsis/description
 in @code{guix-devel-mode} (@pxref{Development}).
 
+@item
+@uref{https://gitlab.com/alezost-emacs/build-farm, Emacs-Build-Farm},
+version 0.2 or later.  Emacs-Guix provides some integration features
+for this package (if it is installed), for example, @kbd{B} key in a
+list of packages (@pxref{Package Keys}).
+
 @end itemize
 
 To sum up, most likely, you'll need all the above dependencies except
-maybe @code{magit-popup} and @code{edit-indirect}.
+maybe @code{magit-popup}, @code{edit-indirect} and @code{build-farm}.
 
 @node Using from Git
 @section Using from Git
@@ -441,7 +447,8 @@ Lint the current package (@pxref{Invoking guix lint,,, guix, The GNU
 Guix Reference Manual}).  With prefix argument, you'll be prompted for
 checker names.
 @item B
-Display latest builds of the current package.
+Display latest builds (from the Guix build farm) of the current
+package.
 @end table
 
 @subsection Info Buffer

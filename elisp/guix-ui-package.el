@@ -1320,13 +1320,23 @@ See `guix-lint' for details."
               (guix-read-lint-checker-names))))
   (guix-lint (bui-list-current-id) checkers))
 
+(declare-function build-farm-build-latest-prompt-args "build-farm-build" t)
+(declare-function build-farm-latest-builds "build-farm-build" t)
+(declare-function build-farm-job-name-specification "build-farm" t)
+
 (defun guix-package-list-latest-builds (number &rest args)
-  "Display latest NUMBER of Hydra builds of the current package.
-Interactively, prompt for NUMBER.  With prefix argument, prompt
-for all ARGS."
-  ;; TODO
-  (interactive (list 0))
-  (error "Sorry, this operation is not supported yet"))
+  "Display latest NUMBER of `build-farm' builds of the current package.
+Interactively, with prefix argument, prompt for NUMBER and ARGS."
+  (interactive
+   (let ((entry (bui-list-current-entry)))
+     (guix-assert-build-farm)
+     (require 'build-farm-build)
+     (build-farm-build-latest-prompt-args
+      :job (build-farm-job-name-specification
+            (bui-entry-non-void-value entry 'name)
+            (bui-entry-non-void-value entry 'version)))))
+  (guix-assert-build-farm)
+  (apply #'build-farm-latest-builds number args))
 
 
 ;;; Output 'list'
