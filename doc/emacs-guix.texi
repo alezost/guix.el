@@ -169,6 +169,11 @@ all: Guix is not needed if you want to look at log files (@pxref{Build
 Log Mode}) or to ``prettify'' store file names (@pxref{Prettify Mode}).
 
 @item
+@uref{https://notabug.org/cwebber/guile-gcrypt, Guile-Gcrypt}, version
+0.1.0 or later.  It is needed only for @kbd{M-x@tie{}guix-hash}
+command (@pxref{Miscellaneous Commands}).
+
+@item
 @uref{http://nongnu.org/geiser/, Geiser}, version 0.8 or later.  It is
 used to communicate with the Guix daemon, and to receive various info
 from the Guix Guile code.  So without Geiser, you can use the same

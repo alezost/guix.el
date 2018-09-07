@@ -69,13 +69,21 @@ else
   guix_ccache_part=
 endif
 
+if GUILE_GCRYPT_DIR
+  guile_gcrypt_module_part=":$(guilegcryptmoduledir)"
+  guile_gcrypt_ccache_part=":$(guilegcryptccachedir)"
+else
+  guile_gcrypt_module_part=
+  guile_gcrypt_ccache_part=
+endif
+
 # Guile PATHs shouldn't be unset: some guix modules want to load
 # (gnutls) module, that's why 'guix' package propagates 'gnutls', i.e.
 # a directory with gnutls module is placed in GUILE_LOAD_PATH.
 
-GUILEC_ENV +=										   \
-  GUILE_LOAD_PATH="$(abs_srcdir)$(guix_module_part):$$GUILE_LOAD_PATH"			   \
-  GUILE_LOAD_COMPILED_PATH="$(abs_builddir)$(guix_ccache_part):$$GUILE_LOAD_COMPILED_PATH"
+GUILEC_ENV += \
+  GUILE_LOAD_PATH="$(abs_srcdir)$(guix_module_part)$(guile_gcrypt_module_part):$$GUILE_LOAD_PATH" \
+  GUILE_LOAD_COMPILED_PATH="$(abs_builddir)$(guix_ccache_part)$(guile_gcrypt_ccache_part_part):$$GUILE_LOAD_COMPILED_PATH"
 
 $(GO_FILES): %.go: %.scm
 	-$(AM_V_GUILEC) $(GUILEC_ENV) \

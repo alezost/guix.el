@@ -1,6 +1,6 @@
 ;;; hash.scm --- Calculate file hash (for Guix packages)
 
-;; Copyright © 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2017–2018 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -22,9 +22,9 @@
 (define-module (emacs-guix hash)
   #:use-module (ice-9 match)
   #:use-module (srfi srfi-11)
+  #:use-module (gcrypt hash)
   #:use-module (guix base16)
   #:use-module (guix base32)
-  #:use-module (guix hash)
   #:use-module (guix serialization)
   #:export (file-hash))
 

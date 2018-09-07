@@ -62,15 +62,30 @@ AC_ARG_WITH([guix-site-ccache-dir],
     [directory with Guix compiled (*.go) files])],
   [guixccachedir="$withval"],
   [guixccachedir=""])
-
 dnl If ccache dir is not specified, set it to the module dir.
 AS_IF([test "x$guixccachedir" = "x" -a \
             "x$guixmoduledir" != "x"],
       [guixccachedir="$guixmoduledir"])
-
 AC_SUBST([guixccachedir])
-
 AM_CONDITIONAL([GUIX_DIR], [test "x$guixmoduledir" != "x"])
+
+AC_ARG_WITH([guile-gcrypt-site-dir],
+  [AS_HELP_STRING([--with-guile-gcrypt-site-dir],
+    [directory with Guile-Gcrypt modules (*.scm files)])],
+  [guilegcryptmoduledir="$withval"],
+  [guilegcryptmoduledir=""])
+AC_SUBST([guilegcryptmoduledir])
+
+AC_ARG_WITH([guile-gcrypt-site-ccache-dir],
+  [AS_HELP_STRING([--with-guile-gcrypt-site-ccache-dir],
+    [directory with Guile-Gcrypt compiled (*.go) files])],
+  [guilegcryptccachedir="$withval"],
+  [guilegcryptccachedir=""])
+AS_IF([test "x$guilegcryptccachedir" = "x" -a \
+            "x$guilegcryptmoduledir" != "x"],
+      [guilegcryptccachedir="$guilegcryptmoduledir"])
+AC_SUBST([guilegcryptccachedir])
+AM_CONDITIONAL([GUILE_GCRYPT_DIR], [test "x$guilegcryptmoduledir" != "x"])
 
 dnl ----------------------------------------------------------------
 dnl Emacs side
