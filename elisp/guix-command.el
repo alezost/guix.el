@@ -214,6 +214,10 @@ to be modified."
     ("--with-source" :fun guix-read-file-name)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-describe-argument
+  '(("--format" :fun guix-read-describe-format)))
+
+(guix-command-define-argument-improver
     guix-command-improve-copy-argument
   '(("--to" :char ?T)))
 
@@ -342,6 +346,8 @@ to be modified."
     (("copy")
      guix-command-improve-common-build-argument
      guix-command-improve-copy-argument)
+    (("describe")
+     guix-command-improve-describe-argument)
     (("download")
      guix-command-improve-hash-argument)
     (("hash")

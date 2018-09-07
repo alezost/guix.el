@@ -115,6 +115,10 @@ options.")
   '("guile" "machine")
   "List of supported types for 'guix repl' command.")
 
+(defvar guix-help-describe-formats
+  '("human" "channels")
+  "List of supported formats for 'guix describe' command.")
+
 
 ;;; Default values of various options
 
@@ -141,6 +145,10 @@ options.")
 (defvar guix-default-repl-type
   "guile"
   "Default type for 'guix repl' command.")
+
+(defvar guix-default-describe-format
+  "human"
+  "Default format for 'guix describe' command.")
 
 (defvar guix-default-graph-backend
   "graphviz"

@@ -232,6 +232,10 @@ INPUT is the current partially completed string."
                (string= "--with-source" option)))
       (complete* (pcomplete-entries)))
 
+     ((and (command? "describe")
+           (option? "-f" "--format"))
+      (complete* guix-help-describe-formats))
+
      ((command? "graph")
       (cond
        ((option? "-t" "--type")

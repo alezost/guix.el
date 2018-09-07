@@ -206,6 +206,12 @@ argument, read the name from minibuffer."
  :single-prompt "REPL type: ")
 
 (guix-define-readers
+ :completions-var guix-help-describe-formats
+ :default guix-default-describe-format
+ :single-reader guix-read-describe-format
+ :single-prompt "'guix describe' format: ")
+
+(guix-define-readers
  :completions-getter guix-graph-backend-names
  :default guix-default-graph-backend
  :single-reader guix-read-graph-backend
