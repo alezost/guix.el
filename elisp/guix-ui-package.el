@@ -538,8 +538,13 @@ formatted with this string, an action button is inserted.")
 
 (defun guix-package-info-insert-systems (systems entry)
   "Insert supported package SYSTEMS at point."
-  ;; TODO Use system buttons from "build-farm" package if it is available.
-  (bui-info-insert-value-format systems))
+  (if (require 'build-farm-build nil t)
+      (bui-info-insert-value-format
+       systems 'build-farm-system
+       'job (build-farm-job-name-specification
+             (bui-entry-non-void-value entry 'name)
+             (bui-entry-non-void-value entry 'version)))
+    (bui-info-insert-value-format systems)))
 
 (defmacro guix-package-info-define-insert-inputs (&optional type)
   "Define a face and a button for package inputs.

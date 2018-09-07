@@ -196,7 +196,7 @@ in @code{guix-devel-mode} (@pxref{Development}).
 
 @item
 @uref{https://gitlab.com/alezost-emacs/build-farm, Emacs-Build-Farm},
-version 0.2 or later.  Emacs-Guix provides some integration features
+version 0.2.1 or later.  Emacs-Guix provides some integration features
 for this package (if it is installed), for example, @kbd{B} key in a
 list of packages (@pxref{Package Keys}).
 
