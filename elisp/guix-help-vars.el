@@ -73,11 +73,7 @@ guix subcommand, system action, importer, etc.")
 options.")
 
 
-;;; Non-receivable lists of system types, hash formats, etc.
-
-(defvar guix-help-system-types
-  '("x86_64-linux" "i686-linux" "armhf-linux" "mips64el-linux")
-  "List of supported systems.")
+;;; Non-receivable lists
 
 (defvar guix-help-source-types
   '("package" "all" "transitive")

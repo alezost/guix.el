@@ -28,6 +28,7 @@
 
 (define-module (emacs-guix)
   #:use-module (guix ui)
+  #:autoload (guix packages) (%supported-systems)
   #:autoload (emacs-guix commands) (guix-command
                                     guix-command-output
                                     help-string

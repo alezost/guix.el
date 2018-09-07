@@ -58,6 +58,10 @@ Emacs."
   :type 'boolean
   :group 'guix)
 
+(guix-memoized-defun guix-system-types ()
+  "Return a list of supported systems."
+  (guix-eval-read "%supported-systems"))
+
 (guix-memoized-defun guix-graph-backend-names ()
   "Return a list of names of available graph backends."
   (guix-eval-read "(graph-backend-names)"))
@@ -143,7 +147,7 @@ argument, read the name from minibuffer."
            prompt initial-contents))
 
 (guix-define-readers
- :completions-var guix-help-system-types
+ :completions-getter guix-system-types
  :single-reader guix-read-system-type
  :single-prompt "System type: ")
 

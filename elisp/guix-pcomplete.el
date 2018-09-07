@@ -215,7 +215,7 @@ INPUT is the current partially completed string."
 
      ((and (command? "archive" "build" "environment" "size" "weather")
            (option? "-s" "--system"))
-      (complete* guix-help-system-types))
+      (complete* (guix-system-types)))
 
      ((and (command? "environment" "publish")
            (option? "-u" "--user"))
