@@ -136,6 +136,7 @@ to be modified."
     guix-command-improve-action-argument
   '(("container"   :char ?C)
     ("copy"        :char ?y)
+    ("describe"    :char ?D)
     ("graph"       :char ?G)
     ("environment" :char ?E)
     ("pack"        :char ?k)
