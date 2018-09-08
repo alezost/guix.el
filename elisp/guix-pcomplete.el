@@ -185,7 +185,8 @@ INPUT is the current partially completed string."
             (complete* (entries)
               (pcomplete-here* entries input t)))
     (cond
-     ((option? "-L" "--load-path")
+     ((or (option? "-L" "--load-path")
+          (option? "-p" "--profile"))
       (complete* (pcomplete-dirs)))
      ((string= "--key-download" option)
       (complete* guix-help-key-policies))
@@ -206,8 +207,6 @@ INPUT is the current partially completed string."
           (pcomplete-here (guix-package-names))))
        ((string= "--show" option)
         (complete (guix-package-names)))
-       ((option? "-p" "--profile")
-        (complete* (pcomplete-dirs)))
        ((string= "--search-paths" option)
         (complete* guix-help-search-paths-types))
        ((or (option? "-f" "--install-from-file")

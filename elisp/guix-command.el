@@ -179,6 +179,10 @@ to be modified."
   '(("--manifest" :fun guix-read-file-name)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-profile-argument
+  '(("--profile" :fun guix-read-file-name)))
+
+(guix-command-define-argument-improver
     guix-command-improve-key-policy-argument
   '(("--key-download" :fun guix-read-key-policy)))
 
@@ -279,7 +283,6 @@ to be modified."
      :name "--remove "  :fun guix-read-package-names-string
      :switch? nil :option? t)
     ("--install-from-file" :fun guix-read-file-name)
-    ("--profile"        :fun guix-read-file-name)
     ;; Although it is documented that regexp is optional for --upgrade
     ;; and --do-not-upgrade, use them only as options (not as switches).
     ("--upgrade"        :switch? nil)
@@ -301,7 +304,8 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-pull-argument
-  '(("--commit" :char ?C)))
+  '(("--commit"   :char ?o)
+    ("--channels" :fun guix-read-file-name)))
 
 (guix-command-define-argument-improver
     guix-command-improve-refresh-argument
@@ -381,6 +385,7 @@ to be modified."
      guix-command-improve-common-build-argument
      guix-command-improve-manifest-argument
      guix-command-improve-search-paths-argument
+     guix-command-improve-profile-argument
      guix-command-improve-package-argument)
     (("potluck")
      guix-command-improve-potluck-argument)
@@ -389,6 +394,7 @@ to be modified."
      guix-command-improve-user-argument)
     (("pull")
      guix-command-improve-common-build-argument
+     guix-command-improve-profile-argument
      guix-command-improve-pull-argument)
     (("refresh")
      guix-command-improve-key-policy-argument
