@@ -333,6 +333,8 @@ to be modified."
     ("switch-generation" :char ?S)
     ("--on-error"  :char ?E)
     ("--no-bootloader" :char ?B)
+    ("--skip-checks" :char ?S)
+    ("--expose"    :char ?x)
     ("--full-boot" :char ?b)))
 
 (defvar guix-command-argument-improvers
