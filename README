@@ -32,7 +32,7 @@ In short, Emacs-Guix provides the following features:
 
   + package and service locations
 
-  + [[https://hydra.gnu.org][Hydra build farm]]
+  + [[/gnu/store]] items
 
 - Magit-like popup interface for all guix shell commands (=M-x guix=).
 
@@ -129,6 +129,16 @@ Here is an *incomplete* list of them:
   : M-x guix-service-locations
   : M-x guix-find-service-definition
 
+- Show store items:
+
+  : M-x guix-store-live-items
+  : M-x guix-store-dead-items
+  : M-x guix-store-failures
+  : M-x guix-store-item-referrers
+  : M-x guix-store-item-references
+  : M-x guix-store-item-requisites
+  : M-x guix-store-item-derivers
+
 - Show/browse package licenses:
 
   : M-x guix-licenses
@@ -138,12 +148,6 @@ Here is an *incomplete* list of them:
 - Magit-like interface:
 
   : M-x guix
-
-- Show Hydra builds and jobsets:
-
-  : M-x guix-hydra-latest-builds
-  : M-x guix-hydra-queued-builds
-  : M-x guix-hydra-jobsets
 
 - Miscellaneous commands:
 
