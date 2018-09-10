@@ -1,5 +1,31 @@
 -*- mode: org -*-
 
+* Changes in 0.5 (since 0.4.1.1)
+
+** User visible changes
+
+*** New commands
+
+**** M-x guix-store-item
+**** M-x guix-store-item-referrers
+**** M-x guix-store-item-references
+**** M-x guix-store-item-requisites
+**** M-x guix-store-item-derivers
+**** M-x guix-store-failures
+**** M-x guix-store-live-items
+**** M-x guix-store-dead-items
+
+*** Interface for Hydra removed
+
+It was extracted into a stand-alone "Emacs-Build-Farm" package.
+
+** Internal changes
+
+*** New variables
+
+- guix-ask-before-buffer-update
+- guix-geiser-connection-timeout
+
 * Changes in 0.4.1.1 (since 0.4.1)
 
 This is a bug-fix release: earlier version of "guix pull" command put
