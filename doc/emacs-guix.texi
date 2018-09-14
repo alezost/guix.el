@@ -1692,6 +1692,12 @@ And some more commands that were not covered by the other chapters.
 Open a mail buffer to report a bug for GNU Guix similarly to
 @kbd{M-x@tie{}report-emacs-bug} command.
 
+@findex guix-set-emacs-environment
+@item M-x guix-set-emacs-environment
+Set current Emacs environment according to a specified profile.  Note
+that there is no way to restore the original environment (you have to
+restart Emacs if you wish to do it).
+
 @findex guix-pull
 @item M-x guix-pull
 It is the same as @command{guix pull} shell command (@pxref{Invoking

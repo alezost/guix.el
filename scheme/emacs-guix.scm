@@ -68,7 +68,8 @@
                                 lint-package)
   #:autoload (emacs-guix pack) (compressor-names
                                 pack-format-names)
-  #:autoload (emacs-guix profiles) (search-paths)
+  #:autoload (emacs-guix profiles) (search-paths
+                                    search-paths-specifications)
   #:autoload (emacs-guix refresh) (refresh-updater-names)
   #:autoload (emacs-guix emacs) (%max-returned-list-size
                                  %temporary-directory

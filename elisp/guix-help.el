@@ -158,6 +158,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     ;; `guix-emacs-autoload-packages' is available in Emacs installed
     ;; with Guix.
     (guix-emacs-autoload-packages t nil)
+    guix-set-emacs-environment
     guix-set-current-profile
     guix-pull
     guix-hash

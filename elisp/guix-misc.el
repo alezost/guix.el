@@ -1,6 +1,7 @@
 ;;; guix-misc.el --- Miscellaneous definitions  -*- lexical-binding: t -*-
 
 ;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
 ;; This file is part of Emacs-Guix.
 
@@ -220,6 +221,28 @@ FILE.  With a prefix argument, also prompt for PROFILE."
          "\n"))
       (sh-mode))
     (guix-display-buffer guix-search-paths-buffer-name)))
+
+;;;###autoload
+(defun guix-set-emacs-environment (&optional profile)
+  "Set Emacs environment to match PROFILE.
+PROFILE can be a named profile (like '~/.guix-profile',
+'~/.config/guix/work') or a direct link to profile from the
+store, like GUIX_ENVIRONMENT variable (see Info node `(guix)
+Invoking guix environment' for details).
+
+If PROFILE is nil, use `guix-current-profile'."
+  (interactive (list (guix-read-profile)))
+  (let ((specs (guix-eval-read
+                (guix-make-guile-expression
+                 'search-paths-specifications
+                 (guix-file-name profile)))))
+    (dolist (spec specs)
+      (-let* (((variable separator path) spec)
+              (current-value (getenv variable))
+              (value (if (and separator current-value)
+                         (concat path separator current-value)
+                       path)))
+        (setenv variable value)))))
 
 
 ;;; Executing guix commands

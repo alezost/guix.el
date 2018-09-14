@@ -1,6 +1,7 @@
 ;;; profiles.scm --- Code related to Guix profiles
 
-;; Copyright © 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2017–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
 ;; This file is part of Emacs-Guix.
 
@@ -27,11 +28,13 @@
   #:use-module (ice-9 match)
   #:use-module (srfi srfi-1)
   #:use-module (guix profiles)
+  #:use-module (guix search-paths)
   #:export (manifest-entry->name+version+output
             manifest-entries-by-name
             manifest-entry-by-output
             fold-manifest-by-name
             manifest-entry-dependencies-file-names
+            search-paths-specifications
             search-paths))
 
 
@@ -124,5 +127,16 @@ of RESULT.  ENTRIES is a list of manifest entries with NAME/VERSION."
                                 manifests)))
     (search-path-environment-variables
      entries profiles (const #f) #:kind type)))
+
+(define (search-paths-specifications profile)
+  "Return a list with 'search paths' specifications for PROFILE.
+Each specification is (VARIABLE SEPARATOR PATH) list."
+  (let ((specs (profile-search-paths profile)))
+    (map (match-lambda
+           ((spec . path)
+            (list (search-path-specification-variable spec)
+                  (search-path-specification-separator spec)
+                  path)))
+         specs)))
 
 ;;; profiles.scm ends here
