@@ -112,7 +112,7 @@ have a trailing slash and it is `guix-default-profile' if PROFILE
 is `guix-user-profile'.  `guix-user-profile' is special because
 it is actually a symlink to a real user profile, and the HOME
 directory does not contain profile generations."
-  (let ((profile (directory-file-name (expand-file-name profile))))
+  (let ((profile (guix-file-name profile)))
     (if (string= profile guix-user-profile)
         guix-default-profile
       profile)))

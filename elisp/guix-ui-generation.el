@@ -491,7 +491,7 @@ and its store file name."
 (defun guix-generation-packages-buffer-name-default (profile generation)
   "Return name of a buffer for displaying GENERATION's package outputs.
 Use base name of PROFILE file name."
-  (let ((profile-name (file-name-base (directory-file-name profile))))
+  (let ((profile-name (file-name-base (guix-file-name profile))))
     (format "*Guix %s: generation %s*"
             profile-name generation)))
 

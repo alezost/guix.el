@@ -109,7 +109,7 @@ The function is called with 2 arguments: BASE-NAME and PROFILE."
 (defun guix-ui-buffer-name-short (base-name profile)
   "Return buffer name by appending BASE-NAME and PROFILE's base file name."
   (guix-compose-buffer-name base-name
-                            (file-name-base (directory-file-name profile))))
+                            (file-name-base (guix-file-name profile))))
 
 (defun guix-ui-buffer-name-full (base-name profile)
   "Return buffer name by appending BASE-NAME and PROFILE's full name."

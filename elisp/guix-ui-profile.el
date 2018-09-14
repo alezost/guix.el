@@ -49,7 +49,7 @@
                    guix-system-profile
                    guix-pulled-profile
                    (--when-let (getenv "GUIX_PROFILE")
-                     (expand-file-name it)))))
+                     (guix-file-name it)))))
   "List of profiles displayed by '\\[guix-profiles]' command."
   :type '(repeat file)
   :group 'guix-profile)

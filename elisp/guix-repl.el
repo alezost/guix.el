@@ -225,8 +225,8 @@ See `guix-emacs-activate-after-operation' for details."
                   (lcp (if guix-load-compiled-path
                            (guix-list-maybe guix-load-compiled-path)
                          lp)))
-             (append (--mapcat (list "-L" (expand-file-name it)) lp)
-                     (--mapcat (list "-C" (expand-file-name it)) lcp))))
+             (append (--mapcat (list "-L" (guix-file-name it)) lp)
+                     (--mapcat (list "-C" (guix-file-name it)) lcp))))
     "-L" ,guix-scheme-directory
     ,@(and guix-config-scheme-compiled-directory
            (list "-C" guix-config-scheme-compiled-directory))

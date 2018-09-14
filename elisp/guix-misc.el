@@ -183,8 +183,8 @@ FILE.  With a prefix argument, also prompt for PROFILE."
      (guix-make-guile-expression
       'guix-command
       "package"
-      (concat "--profile="  (expand-file-name profile))
-      (concat "--manifest=" (expand-file-name file)))
+      (concat "--profile="  (guix-file-name profile))
+      (concat "--manifest=" (guix-file-name file)))
      operation-buffer)))
 
 (defcustom guix-search-paths-buffer-name "*Guix Search Paths*"

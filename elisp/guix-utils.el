@@ -289,6 +289,10 @@ If nil, always prompt for a file name."
   :type 'boolean
   :group 'guix)
 
+(defun guix-file-name (file-name)
+  "Expand FILE-NAME and remove trailing slash if needed."
+  (directory-file-name (expand-file-name file-name)))
+
 (defun guix-read-file-name (&optional prompt dir default-filename
                                       mustmatch initial predicate)
   "Read file name.

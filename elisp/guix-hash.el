@@ -48,7 +48,7 @@ See also Info node `(guix) Invoking guix hash'."
    (list (guix-read-file-name-maybe)
          (and current-prefix-arg
               (guix-read-hash-format))))
-  (let* ((file (expand-file-name file))
+  (let* ((file (guix-file-name file))
          (args (list :format (or format guix-default-hash-format)))
          (args (if (file-directory-p file)
                    (append '(:recursive? t) args)
@@ -58,7 +58,7 @@ See also Info node `(guix) Invoking guix hash'."
                        'file-hash file args))))
     (kill-new hash)
     (message "Hash of \"%s\" (%s) has been added to the kill ring."
-             (file-name-nondirectory (directory-file-name file))
+             (file-name-nondirectory file)
              hash)))
 
 (provide 'guix-hash)
