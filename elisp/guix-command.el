@@ -369,6 +369,7 @@ to be modified."
     (("gc")
      guix-command-improve-gc-argument)
     (("graph")
+     guix-command-improve-system-type-argument
      guix-command-improve-graph-argument)
     (("import")
      guix-command-improve-import-argument)

@@ -213,7 +213,8 @@ INPUT is the current partially completed string."
             (option? "-m" "--manifest"))
         (complete* (pcomplete-entries)))))
 
-     ((and (command? "archive" "build" "environment" "size" "weather")
+     ((and (command? "archive" "build" "environment" "graph"
+                     "size" "weather")
            (option? "-s" "--system"))
       (complete* (guix-system-types)))
 
