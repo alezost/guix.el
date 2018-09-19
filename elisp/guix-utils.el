@@ -71,8 +71,8 @@ This function is similar to `shell-quote-argument', but less strict."
       (rx (not (any alnum "-=,./\n"))) "\\\\\\&" argument))))
 
 (defun guix-command-symbol (&optional args)
-  "Return symbol by concatenating 'guix' and ARGS (strings)."
-  (intern (guix-concat-strings (cons "guix" args) "-")))
+  "Return symbol by concatenating 'guix-command' and ARGS (strings)."
+  (intern (guix-concat-strings (cons "guix-command" args) "-")))
 
 (defun guix-command-string (&optional args)
   "Return 'guix ARGS ...' string with quoted shell arguments."

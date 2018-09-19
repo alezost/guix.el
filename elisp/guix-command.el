@@ -1,4 +1,4 @@
-;;; guix-command.el --- Popup interface for guix commands  -*- lexical-binding: t -*-
+;;; guix-command.el --- Popup interface for guix shell commands  -*- lexical-binding: t -*-
 
 ;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
 
@@ -19,14 +19,16 @@
 
 ;;; Commentary:
 
-;; This file provides a magit-like popup interface for running guix
-;; commands in Guix REPL.  The entry point is "M-x guix".  When it is
-;; called the first time, "guix --help" output is parsed and
-;; `guix-COMMAND-action' functions are generated for each available guix
-;; COMMAND.  Then a window with these commands is popped up.  When a
-;; particular COMMAND is called, "guix COMMAND --help" output is parsed,
-;; and a user get a new popup window with available options for this
-;; command and so on.
+;; This file provides a magit-like popup interface for guix shell
+;; commands.  You can run a selected command in *shell* buffer, in Guix
+;; REPL, or simply copy it into `kill-ring'.
+;;
+;; The entry point is "M-x guix-command".  When it is called the first
+;; time, "guix --help" output is parsed and `guix-COMMAND-action'
+;; functions are generated for each available guix COMMAND.  Then a
+;; window with these commands is popped up.  When a particular COMMAND
+;; is called, "guix COMMAND --help" output is parsed, and a user get a
+;; new popup window with available options for this command and so on.
 
 ;; To avoid hard-coding all guix options, actions, etc., as much data is
 ;; taken from "guix ... --help" outputs as possible.  But this data is
@@ -37,7 +39,7 @@
 ;; (switches, options and actions) are `guix-command-argument'
 ;; structures.
 
-;; Only "M-x guix" command is available after this file is loaded.  The
+;; Only "M-x guix-command" is available after this file is loaded.  The
 ;; rest commands/actions/popups are generated on the fly only when they
 ;; are needed (that's why there is a couple of `eval'-s in this file).
 
@@ -931,10 +933,10 @@ EXECUTOR function is called with the current command line arguments."
         :actions  ',(mapcar #'guix-command-action->popup-action actions)
         :max-action-columns 4))))
 
-(declare-function guix-popup "guix-command" t)
+(declare-function guix-command-popup "guix-command" t)
 
-;;;###autoload (autoload 'guix "guix-command" "Popup window for 'guix'." t)
-(guix-command-define-popup-action guix)
+;;;###autoload (autoload 'guix-command "guix-command" "Popup window for 'guix' shell commands." t)
+(guix-command-define-popup-action guix-command)
 
 (declare-function guix-find-package-definition "guix-package" t)
 
