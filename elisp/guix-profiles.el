@@ -36,7 +36,7 @@
   (concat guix-state-directory "/profiles/system")
   "System profile.")
 
-(defvar guix-default-profile
+(defvar guix-default-user-profile
   (concat guix-state-directory
           "/profiles/per-user/"
           (getenv "USER")
@@ -50,7 +50,7 @@
                         (expand-file-name "~/.config")))
   "Profile populated by 'guix pull' command.")
 
-(defvar guix-current-profile guix-default-profile
+(defvar guix-current-profile guix-default-user-profile
   "Current Guix profile.
 It is used by various commands as the default working profile.")
 
@@ -108,13 +108,13 @@ Return nil if FILE-NAME does not look like a generation file name."
 (defun guix-profile (profile)
   "Return normalized file name of PROFILE.
 \"Normalized\" means the returned file name is expanded, does not
-have a trailing slash and it is `guix-default-profile' if PROFILE
+have a trailing slash and it is `guix-default-user-profile' if PROFILE
 is `guix-user-profile'.  `guix-user-profile' is special because
 it is actually a symlink to a real user profile, and the HOME
 directory does not contain profile generations."
   (let ((profile (guix-file-name profile)))
     (if (string= profile guix-user-profile)
-        guix-default-profile
+        guix-default-user-profile
       profile)))
 
 (defun guix-generation-profile (profile &optional generation)
@@ -221,10 +221,10 @@ See `guix-read-profile' for the meaning of DEFAULT, and
 (defun guix-set-current-profile (file-name)
   "Set `guix-current-profile' to FILE-NAME.
 Interactively, prompt for FILE-NAME.  With prefix, use
-`guix-default-profile'."
+`guix-user-profile'."
   (interactive
    (list (if current-prefix-arg
-             guix-default-profile
+             guix-user-profile
            (guix-read-package-profile))))
   (setq guix-current-profile file-name)
   (message "Current profile has been set to '%s'."
