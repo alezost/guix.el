@@ -28,20 +28,25 @@
 (require 'guix-config)
 (require 'guix-utils)
 
+(defun guix-profiles-directory ()
+  "Return default directory with Guix profiles."
+  (expand-file-name "profiles" guix-state-directory))
+
+(defun guix-user-profiles-directory (&optional user)
+  "Return default directory with USER Guix profiles."
+  (expand-file-name (concat "per-user/"
+                            (or user
+                                (getenv "USER")
+                                (getenv "LOGNAME")))
+                    (guix-profiles-directory)))
+
 (defvar guix-user-profile
   (expand-file-name "~/.guix-profile")
   "User profile.")
 
 (defvar guix-system-profile
-  (concat guix-state-directory "/profiles/system")
+  (expand-file-name "system" (guix-profiles-directory))
   "System profile.")
-
-(defvar guix-default-user-profile
-  (concat guix-state-directory
-          "/profiles/per-user/"
-          (getenv "USER")
-          "/guix-profile")
-  "Default Guix profile.")
 
 (defvar guix-pulled-profile
   ;; XXX There is `xdg-config-home' in "xdg.el" in Emacs 26.
@@ -49,6 +54,14 @@
                     (or (getenv "XDG_CONFIG_HOME")
                         (expand-file-name "~/.config")))
   "Profile populated by 'guix pull' command.")
+
+(defvar guix-default-user-profile
+  (or (file-symlink-p guix-user-profile)
+      (expand-file-name "guix-profile"
+                        (guix-user-profiles-directory)))
+  "Default user profile.
+Unlike `guix-user-profile', directory with this profile should
+also contain profile generations.")
 
 (defvar guix-current-profile guix-default-user-profile
   "Current Guix profile.
