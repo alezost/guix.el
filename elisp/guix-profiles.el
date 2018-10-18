@@ -63,6 +63,14 @@
 Unlike `guix-user-profile', directory with this profile should
 also contain profile generations.")
 
+(defvar guix-default-pulled-profile
+  (or (file-symlink-p guix-pulled-profile)
+      (expand-file-name "current-guix"
+                        (guix-user-profiles-directory)))
+  "Default profile populated by 'guix pull' command.
+Unlike `guix-pulled-profile', directory with this profile should
+also contain profile generations.")
+
 (defvar guix-current-profile guix-default-user-profile
   "Current Guix profile.
 It is used by various commands as the default working profile.")
@@ -77,7 +85,8 @@ It is used by various commands as the default working profile.")
 
 (defvar guix-pulled-profile-regexp
   ;; XXX Should profiles from other users (HOME directories) be handled?
-  (rx-to-string `(and ,guix-pulled-profile)
+  (rx-to-string `(or ,guix-pulled-profile
+                     ,guix-default-pulled-profile)
                 t)
   "Regexp matching 'guix pull'-ed profile.")
 
@@ -121,14 +130,16 @@ Return nil if FILE-NAME does not look like a generation file name."
 (defun guix-profile (profile)
   "Return normalized file name of PROFILE.
 \"Normalized\" means the returned file name is expanded, does not
-have a trailing slash and it is `guix-default-user-profile' if PROFILE
-is `guix-user-profile'.  `guix-user-profile' is special because
-it is actually a symlink to a real user profile, and the HOME
-directory does not contain profile generations."
+have a trailing slash and special profiles are handled:
+`guix-default-pulled-profile' instead of `guix-pulled-profile'
+and `guix-default-user-profile' instead of `guix-user-profile'."
   (let ((profile (guix-file-name profile)))
-    (if (string= profile guix-user-profile)
-        guix-default-user-profile
-      profile)))
+    (cond
+     ((string= profile guix-user-profile)
+      guix-default-user-profile)
+     ((string= profile guix-pulled-profile)
+      guix-default-pulled-profile)
+     (t profile))))
 
 (defun guix-generation-profile (profile &optional generation)
   "Return file name of PROFILE or its GENERATION.
