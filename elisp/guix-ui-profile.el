@@ -374,6 +374,13 @@ Modify `guix-profiles' variable to add more profiles."
   (bui-get-display-entries 'guix-profile 'info
                            (list 'profile guix-system-profile)))
 
+;;;###autoload
+(defun guix-current-profile ()
+  "Display interface for `guix-current-profile'."
+  (interactive)
+  (bui-get-display-entries 'guix-profile 'info
+                           (list 'profile guix-current-profile)))
+
 (provide 'guix-ui-profile)
 
 ;;; guix-ui-profile.el ends here
