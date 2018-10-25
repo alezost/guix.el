@@ -53,7 +53,7 @@ A copy of the license is available at
 * System::              Interface for @code{operating-system} and services.
 * Store Items::         Interface for store items.
 * Package Licenses::    Interface for licenses of packages.
-* Popup Interface::     Magit-like interface for guix commands.
+* Popup Interface::     Magit-like interface for Emacs-Guix commands.
 * Prettify Mode::       Abbreviating @file{/gnu/store/@dots{}} file names.
 * Prettify Variables::  Split and indent Shell variables.
 * Build Log Mode::      Highlighting Guix build logs.
@@ -77,12 +77,8 @@ Indexes
 Emacs-Guix (also known as ``guix.el'') provides various interfaces and
 tools related to the GNU Guix package manager.
 
-@findex guix-about
-Call @kbd{M-x guix-about} to see a splash screen similar to
-@kbd{M-x@tie{}about-emacs}.
-
-Call @kbd{M-x guix-help} to get a summary of all the available
-commands (@pxref{Help}).
+Call @kbd{M-x guix} if you prefer to dive in right away (@pxref{Popup
+Interface}).
 
 In short, Emacs-Guix provides the following features:
 
@@ -103,8 +99,8 @@ Interfaces for:
 @end itemize
 
 @item
-Magit-like popup interface for all guix shell commands
-(@pxref{Popup Interface}).
+Magit-like popup interface for all Emacs-Guix @kbd{M-x} commands and
+Guix shell commands (@pxref{Popup Interface}).
 
 @item
 Modes to view logs of package builds (@pxref{Build Log Mode}).
@@ -1046,11 +1042,47 @@ not acquainted with Magit, there should be no worries as it is very
 intuitive.
 
 @findex guix
-So @kbd{M-x@tie{}guix} command provides a top-level popup interface
-for all available guix commands.  When you select an option, you'll be
-prompted for a value in the minibuffer.  Many values have completions,
-so don't hesitate to press @kbd{@key{TAB}} key.  Multiple values (for
-example, packages or lint checkers) should be separated by commas.
+So, @kbd{M-x@tie{}guix} command provides a top-level popup interface
+for almost all the available Emacs-Guix commands.  It has 2 advantages
+comparing with calling @kbd{M-x@tie{}guix-@dots{}} commands directly:
+
+@itemize
+
+@item
+There is no need to remember the names of Emacs-Guix commands, as you
+can always find them in @kbd{M-x@tie{}guix} and its sub-popups.
+
+@item
+It is faster (well, if you know what you are going to call), as it may
+serve as a shortcut.  For example, instead of calling
+@kbd{M-x@tie{}guix-packages-by-name}, you can press:
+@kbd{M-x@tie{}guix@tie{}p@tie{}n}.
+
+@end itemize
+
+If you use @kbd{M-x@tie{}guix} often, you may wish to bind it to some
+easy accessible key combination, for example, to @kbd{@key{super}-g}:
+
+@example
+(global-set-key (kbd "s-g") 'guix)
+@end example
+
+@node Guix Popup Interface
+@section Guix Popup Interface
+
+@findex guix-command
+There is one rather special sub-popup in @kbd{M-x@tie{}guix}.  It is
+bind to @kbd{c} by default, and you can call it separately with
+@kbd{M-x@tie{}guix-command}.  It is a popup interface for
+@code{guix@tie{}@dots{}}  shell commands.  It is probably not very
+useful, as it provides all the options and flags for all the shell
+actions and subcommands, so it may be confusing to see them all at
+once.  Nevertheless, a description of this thing follows.
+
+When you select an option, you'll be prompted for a value in the
+minibuffer.  Many values have completions, so don't hesitate to press
+@kbd{@key{TAB}} key.  Multiple values (for example, packages or lint
+checkers) should be separated by commas.
 
 After specifying all options and switches for a command, you may choose
 one of the available actions.  The following default actions are

@@ -81,6 +81,7 @@ EL_FILES =					\
   %D%/guix-service.el				\
   %D%/guix-pcomplete.el				\
   %D%/guix-prettify.el				\
+  %D%/guix-popup.el				\
   %D%/guix-ui-messages.el			\
   %D%/guix-ui.el				\
   %D%/guix-ui-license.el			\
