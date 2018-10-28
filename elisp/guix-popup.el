@@ -38,6 +38,7 @@
              (?p "packages" guix-package-popup)
              (?P "profiles" guix-profile-popup)
              (?s "services" guix-service-popup)
+             (?y "system commands" guix-system-popup)
              (?l "package licenses" guix-license-popup)
              (?S "store" guix-store-popup)
              (?m "major/minor modes" guix-mode-popup)
@@ -45,7 +46,6 @@
              "Miscellaneous commands"
              (?H "calculate file hash" guix-hash)
              (?E "set Emacs environment" guix-set-emacs-environment)
-             (?y "system from file" guix-system-from-file)
              "Auxiliary commands"
              (?a "about" guix-about)
              (?h "help (\"refcard\")" guix-help)
@@ -163,6 +163,21 @@ This function is used by command `guix-package-popup'."
              (?e "\"edit\" service (find service definition)"
                  guix-find-service-definition)
              (?F "find location file" guix-find-service-location-file))
+  :max-action-columns 1)
+
+(magit-define-popup guix-system-popup
+  "Show popup buffer for system commands."
+  'guix-system-popup
+  :actions '("From system profile"
+             (?p "packages" guix-installed-system-packages)
+             (?P "profile" guix-system-profile)
+             (?g "all generations" guix-system-generations)
+             (?t "generations by time" guix-system-generations-by-time)
+             (?l "last generations" guix-last-system-generations)
+             "From system configuration file"
+             (?y "system" guix-system-from-file)
+             (?k "packages" guix-packages-from-system-config-file)
+             (?s "services" guix-services-from-system-config-file))
   :max-action-columns 1)
 
 (magit-define-popup guix-license-popup
