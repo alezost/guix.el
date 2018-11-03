@@ -143,6 +143,7 @@ to be modified."
     ("environment" :char ?E)
     ("pack"        :char ?k)
     ("potluck"     :char ?L)
+    ("processes"   :char ?o)
     ("publish"     :char ?u)
     ("pull"        :char ?P)
     ("repl"        :char ?R)
