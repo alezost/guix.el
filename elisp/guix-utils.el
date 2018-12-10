@@ -289,6 +289,26 @@ If nil, always prompt for a file name."
   :type 'boolean
   :group 'guix)
 
+(defcustom guix-file-size-string-function
+  #'guix-file-size-string-default
+  "Function used to return a string with file size.
+This function is called with a number (file size) as a single
+argument."
+  :type '(choice (function-item guix-file-size-string-default)
+                 (function-item file-size-human-readable)
+                 (function :tag "Other function"))
+  :group 'guix)
+
+(defun guix-file-size-string-default (size)
+  "Return file SIZE string in both human readable format and bytes."
+  (format "%s (%d bytes)"
+          (file-size-human-readable size)
+          size))
+
+(defun guix-file-size-string (size)
+  "Return file SIZE string using `guix-file-size-string-function'."
+  (funcall guix-file-size-string-function size))
+
 (defun guix-file-name (file-name)
   "Expand FILE-NAME and remove trailing slash if needed."
   (directory-file-name (expand-file-name file-name)))

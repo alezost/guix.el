@@ -195,9 +195,7 @@ identifying an entry.")
 (defun guix-store-item-info-insert-size (size entry)
   "Insert SIZE of the store item ENTRY at point."
   (bui-insert-non-nil size
-    (insert (format "%s (%d bytes)"
-                    (file-size-human-readable size)
-                    size))
+    (insert (guix-file-size-string size))
     (bui-insert-indent)
     (let ((file-name (bui-entry-id entry)))
       (bui-insert-action-button

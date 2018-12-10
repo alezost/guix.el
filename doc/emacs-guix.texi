@@ -1709,6 +1709,20 @@ you run them in a Dired buffer, they will use the file name at
 point---i.e., you will not be prompted for it.  If you wish to disable
 this feature, set @code{guix-support-dired} variable to nil.
 
+@vindex guix-file-size-string-function
+@item guix-file-size-string-function
+You may meet a string with file size in several places, in particular,
+in interface for store items (@pxref{Store Items}).  By default, this
+string looks like this: @samp{96.5k (98765 bytes)}.  You can modify
+this format by using your own function, for example:
+
+@example
+(defun my-guix-file-size-string (size)
+  (file-size-human-readable size 'si))
+
+(setq guix-file-size-string-function 'my-guix-file-size-string)
+@end example
+
 @end table
 
 @c ----------------------------------------------------------------
