@@ -324,6 +324,7 @@ identifying an entry.")
   (define-key map (kbd "F") 'guix-store-item-list-references)
   (define-key map (kbd "D") 'guix-store-item-list-derivers)
   (define-key map (kbd "R") 'guix-store-item-list-requisites)
+  (define-key map (kbd "z") 'guix-store-item-list-size)
   (define-key map (kbd "x") 'guix-store-item-list-execute))
 
 (defvar guix-store-item-list-default-hint
@@ -333,7 +334,8 @@ identifying an entry.")
     ("\\[guix-store-item-list-referrers]") " show referrers; "
     ("\\[guix-store-item-list-references]") " show references;\n"
     ("\\[guix-store-item-list-mark-delete]") " mark for deletion; "
-    ("\\[guix-store-item-list-execute]") " execute operation (deletions);\n"))
+    ("\\[guix-store-item-list-execute]") " execute operation (deletions);\n"
+    ("\\[guix-store-item-list-size]") " show size of the marked items;\n"))
 
 (defun guix-store-item-list-hint ()
   (bui-format-hints
@@ -386,6 +388,20 @@ With ARG, mark all store-items for deletion."
     (or marked
         (user-error "No store items marked for deletion"))
     (apply #'guix-store-item-delete marked)))
+
+(defun guix-store-item-list-size ()
+  "Show size of the marked (or current) store items.
+Store items can be marked with any mark."
+  (interactive)
+  (let* ((marked (bui-list-marked-or-current))
+         (count (length marked))
+         (msg (if (= 1 count)
+                  (format "Size of '%s': %%s." (car marked))
+                (format "Size of %d marked items: %%s." count)))
+         (size (guix-file-size-string
+                (guix-store-item-entries-size
+                 (bui-entries-by-ids (bui-current-entries) marked)))))
+    (message msg size)))
 
 (defmacro guix-store-item-list-define-show-items (type)
   "Define a function to show items by TYPE.

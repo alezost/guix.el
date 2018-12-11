@@ -989,6 +989,8 @@ items).
 @item x
 Execute operation on the marked store items---i.e., attempt to delete
 them.  This is similar to @code{guix gc --delete @dots{}}.
+@item z
+Show minibuffer message with total size of the marked store items.
 @item D
 Show derivers of the current (or marked) store item(s).
 @item R
