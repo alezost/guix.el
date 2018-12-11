@@ -26,6 +26,7 @@
 
 (require 'cl-lib)
 (require 'ffap)
+(require 'dash)
 (require 'bui)
 (require 'guix-package)
 (require 'guix-guile)
@@ -80,6 +81,11 @@ of the file names are ignored."
             (number-of-referrers . "Referrers")
             (number-of-requisites . "Requisites")))
 
+(defcustom guix-store-item-show-total-size t
+  "If non-nil, show total size after displaying store items."
+  :type 'boolean
+  :group 'guix-store-item)
+
 (defface guix-store-item-invalid
   '((t :inherit font-lock-warning-face))
   "Face used for store items that are not valid."
@@ -104,29 +110,38 @@ SEARCH-TYPE may be one of the following symbols: `id', `live',
   "Display a message after showing store item ENTRIES."
   (let ((count (length entries))
         (val (car search-values)))
-    (cl-case search-type
-      ((id path)
-       (cl-case count
-         (0 (message "No info on the store item(s) found."))
-         (1 (message "Store item '%s'." val))))
-      (live (message "%d live store items." count))
-      (dead (message "%d dead store items." count))
-      (failures
-       (cl-case count
-         (0 (message "No failures found."))
-         (1 (message "A single failure found."))
-         (t (message "%d failures found." count))))
-      (t
-       (let ((type (symbol-name search-type))
-             (paths (mapconcat #'identity search-values ", ")))
+    (cl-flet ((msg (str &rest args)
+                (if guix-store-item-show-total-size
+                    (apply #'message
+                           (concat str "\nTotal size: %s.")
+                           (-snoc args
+                                  (guix-file-size-string
+                                   (guix-store-item-entries-size entries))))
+                  (apply #'message str args ))))
+      (cl-case search-type
+        ((id path)
          (cl-case count
-           (0 (message "No %s of '%s' found." type paths))
-           (1 (message "A single %s of '%s'."
-                       ;; Remove the trailing "s" from the search type
-                       ;; ("derivers" -> "deriver").
-                       (substring type 0 (1- (length type)))
-                       paths))
-           (t (message "%d %s of '%s'." count type paths))))))))
+           (0 (message "No info on the store item(s) found."))
+           (1 (msg "Store item '%s'." val))
+           (t (msg "%d store items displayed." count))))
+        (live (msg "%d live store items." count))
+        (dead (msg "%d dead store items." count))
+        (failures
+         (cl-case count
+           (0 (message "No failures found."))
+           (1 (msg "A single failure found."))
+           (t (msg "%d failures found." count))))
+        (t
+         (let ((type (symbol-name search-type))
+               (paths (mapconcat #'identity search-values ", ")))
+           (cl-case count
+             (0 (message "No %s of '%s' found." type paths))
+             (1 (msg "A single %s of '%s'."
+                     ;; Remove the trailing "s" from the search type
+                     ;; ("derivers" -> "deriver").
+                     (substring type 0 (1- (length type)))
+                     paths))
+             (t (msg "%d %s of '%s'." count type paths)))))))))
 
 (defun guix-store-item-delete (&rest file-names)
   "Delete FILE-NAMES from the store."
@@ -143,6 +158,13 @@ SEARCH-TYPE may be one of the following symbols: `id', `live',
      (apply #'guix-make-guile-expression
             'guix-command "gc" "--delete" file-names)
      (current-buffer))))
+
+(defun guix-store-item-entries-size (entries)
+  "Return total size of store item ENTRIES."
+  (--reduce-from (+ acc
+                    (or (bui-entry-non-void-value it 'size)
+                        0))
+                 0 entries))
 
 
 ;;; Store item 'info'
