@@ -376,10 +376,7 @@ See `guix-store-item-list-insert-type-button' for the meaning of TYPE."
        ,desc
        (interactive)
        (apply #'guix-store-item-get-display ',type
-              ;; XXX `bui-list-marked-or-current' should become
-              ;; available in bui > 1.1.0
-              (or (bui-list-get-marked-id-list 'general)
-                  (list (bui-list-current-id)))))))
+              (bui-list-marked-or-current 'general)))))
 
 (guix-store-item-list-define-show-items derivers)
 (guix-store-item-list-define-show-items references)

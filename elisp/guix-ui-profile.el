@@ -145,10 +145,7 @@ are multiple entries, prompt for a profile name and return it."
 (defun guix-profile-list-marked-profiles ()
   "Return a list of file names of the marked profiles.
 If nothing is marked, return a list with profile at point."
-  ;; XXX This should become available in bui > 1.1.0
-  ;; (bui-list-marked-or-current)
-  (or (bui-list-get-marked-id-list)
-      (list (bui-list-current-id))))
+  (bui-list-marked-or-current))
 
 (declare-function guix-installed-packages "guix-ui-package" t)
 (declare-function guix-generations "guix-ui-generation" t)

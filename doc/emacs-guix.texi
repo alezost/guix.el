@@ -181,7 +181,7 @@ features as without Guix.
 
 @item
 @uref{https://gitlab.com/alezost-emacs/bui, BUI library}, version
-1.1.0 or later.  It is used to define various ``list''/``info''
+1.2.0 or later.  It is used to define various ``list''/``info''
 interfaces (to display packages, generations, licenses, etc.).
 
 @item
