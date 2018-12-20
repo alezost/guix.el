@@ -112,7 +112,7 @@ options.")
   "List of supported types for 'guix repl' command.")
 
 (defvar guix-help-describe-formats
-  '("human" "channels")
+  '("human" "channels" "json" "recutils")
   "List of supported formats for 'guix describe' command.")
 
 (defvar guix-help-on-error-strategies
