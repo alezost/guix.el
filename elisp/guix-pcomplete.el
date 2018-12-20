@@ -190,6 +190,8 @@ INPUT is the current partially completed string."
       (complete* (pcomplete-dirs)))
      ((string= "--key-download" option)
       (complete* guix-help-key-policies))
+     ((string= "--on-error" option)
+      (complete* guix-help-on-error-strategies))
 
      ((and (command? "environment" "pack" "package" "refresh" "weather")
            (option? "-m" "--manifest"))

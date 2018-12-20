@@ -216,6 +216,12 @@ argument, read the name from minibuffer."
  :single-prompt "'guix describe' format: ")
 
 (guix-define-readers
+ :completions-var guix-help-on-error-strategies
+ :default guix-default-on-error-strategy
+ :single-reader guix-read-on-error-strategy
+ :single-prompt "On error strategy: ")
+
+(guix-define-readers
  :completions-getter guix-graph-backend-names
  :default guix-default-graph-backend
  :single-reader guix-read-graph-backend

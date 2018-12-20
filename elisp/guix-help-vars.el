@@ -115,6 +115,10 @@ options.")
   '("human" "channels")
   "List of supported formats for 'guix describe' command.")
 
+(defvar guix-help-on-error-strategies
+  '("nothing-special" "backtrace" "debug")
+  "List of on-error strategies for 'guix system' command.")
+
 
 ;;; Default values of various options
 
@@ -153,6 +157,10 @@ options.")
 (defvar guix-default-graph-node-type
   "package"
   "Default node type for 'guix graph' command.")
+
+(defvar guix-default-on-error-strategy
+  "nothing-special"
+  "Default on-error strategy for 'guix system' command.")
 
 (provide 'guix-help-vars)
 

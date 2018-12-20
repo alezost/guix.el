@@ -342,7 +342,7 @@ to be modified."
     ("search"      :char ?s)
     ("shepherd-graph" :char ?h)
     ("switch-generation" :char ?S)
-    ("--on-error"  :char ?E)
+    ("--on-error"  :char ?E :fun guix-read-on-error-strategy)
     ("--no-bootloader" :char ?B)
     ("--skip-checks" :char ?S)
     ("--expose"    :char ?x)
