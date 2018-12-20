@@ -199,9 +199,7 @@ to be modified."
     ("--no-build-hook"   :char ?h)
     ("--max-silent-time" :char ?X)
     ("--rounds"          :char ?R :fun read-number)
-    ("--no-grafts"       :char ?G)
-    ("--with-graft"      :char ?g)
-    ("--with-input"      :char ?W)))
+    ("--no-grafts"       :char ?G)))
 
 (defun guix-command-improve-common-build-argument (argument)
   (guix-command-modify-argument-from-alist
@@ -209,6 +207,17 @@ to be modified."
    (append guix-command-improve-load-path-argument
            guix-command-improve-substitute-urls-argument
            guix-command-improve-common-build-argument)))
+
+(defvar guix-command-improve-transformation-argument
+  '(("--with-branch" :char ?b)
+    ("--with-commit" :char ?o)
+    ("--with-graft"  :char ?g)
+    ("--with-input"  :char ?W)
+    ("--with-source" :fun guix-read-file-name)))
+
+(defun guix-command-improve-transformation-argument (argument)
+  (guix-command-modify-argument-from-alist
+   argument guix-command-improve-transformation-argument))
 
 (guix-command-define-argument-improver
     guix-command-improve-archive-argument
@@ -218,8 +227,7 @@ to be modified."
     guix-command-improve-build-argument
   '(("--file"        :fun guix-read-file-name)
     ("--root"        :fun guix-read-file-name)
-    ("--sources"     :char ?S :fun guix-read-source-type :switch? nil)
-    ("--with-source" :fun guix-read-file-name)))
+    ("--sources"     :char ?S :fun guix-read-source-type :switch? nil)))
 
 (guix-command-define-argument-improver
     guix-command-improve-describe-argument
@@ -350,6 +358,7 @@ to be modified."
      guix-command-improve-archive-argument)
     (("build")
      guix-command-improve-common-build-argument
+     guix-command-improve-transformation-argument
      guix-command-improve-target-argument
      guix-command-improve-system-type-argument
      guix-command-improve-build-argument)
@@ -364,6 +373,7 @@ to be modified."
      guix-command-improve-hash-argument)
     (("environment")
      guix-command-improve-common-build-argument
+     guix-command-improve-transformation-argument
      guix-command-improve-manifest-argument
      guix-command-improve-user-argument
      guix-command-improve-search-paths-argument
@@ -384,12 +394,14 @@ to be modified."
      guix-command-improve-lint-argument)
     (("pack")
      guix-command-improve-common-build-argument
+     guix-command-improve-transformation-argument
      guix-command-improve-manifest-argument
      guix-command-improve-system-type-argument
      guix-command-improve-target-argument
      guix-command-improve-pack-argument)
     (("package")
      guix-command-improve-common-build-argument
+     guix-command-improve-transformation-argument
      guix-command-improve-manifest-argument
      guix-command-improve-search-paths-argument
      guix-command-improve-profile-argument
