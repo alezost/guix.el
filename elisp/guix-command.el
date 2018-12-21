@@ -367,7 +367,8 @@ to be modified."
      guix-command-improve-common-build-argument
      guix-command-improve-copy-argument)
     (("describe")
-     guix-command-improve-describe-argument)
+     guix-command-improve-describe-argument
+     guix-command-improve-profile-argument)
     (("download")
      guix-command-improve-hash-argument)
     (("hash")
