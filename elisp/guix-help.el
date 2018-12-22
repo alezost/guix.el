@@ -68,7 +68,9 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
   :group 'guix-help-faces)
 
 (defvar guix-help-specifications
-  '("Show packages and their definitions"
+  '("Popup interface for the rest commands"
+    guix
+    "Show packages and their definitions"
     guix-all-packages
     guix-newest-packages
     guix-installed-user-packages
@@ -138,9 +140,6 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-package-graph
     guix-package-size
     guix-package-lint
-
-    "Magit-like interface"
-    guix
 
     "Hide hash parts in \"/gnu/store/…-foo\" file names"
 
