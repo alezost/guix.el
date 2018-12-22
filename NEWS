@@ -1,5 +1,39 @@
 -*- mode: org -*-
 
+* Changes in 0.5.1 (since 0.5)
+
+** User visible changes
+
+*** "M-x guix" — new popup interface for Emacs-Guix commands
+
+The old "M-x guix" (interface for guix shell commands) is renamed to
+"M-x guix-command" (also it is one of the sub-popups of the new "M-x
+guix" now).
+
+*** New commands
+
+**** M-x guix-set-emacs-environment
+**** M-x guix-current-profile
+
+*** Store Item List
+
+New key binding — "z": display a total size of the marked store items.
+
+*** New variables
+
+- guix-file-size-string-function
+- guix-store-item-show-total-size
+
+** Internal changes
+
+*** Renamed variables
+
+- guix-default-profile -> guix-default-user-profile
+
+*** New variables
+
+- guix-default-pulled-profile
+
 * Changes in 0.5 (since 0.4.1.1)
 
 ** User visible changes
