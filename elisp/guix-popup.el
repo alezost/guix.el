@@ -1,6 +1,6 @@
 ;;; guix-popup.el --- Popup interface for Emacs-Guix commands
 
-;; Copyright © 2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2018–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'magit-popup)
+(require 'guix-profiles)
 
 (defgroup guix-popup nil
   "Popup interface for Emacs-Guix commands."
