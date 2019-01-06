@@ -1,6 +1,6 @@
 ;;; guix-command.el --- Popup interface for guix shell commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -324,7 +324,8 @@ to be modified."
     guix-command-improve-refresh-argument
   '(("--select"     :fun guix-read-refresh-subset)
     ("--type"       :fun guix-read-refresh-updater-names-string)
-    ("--key-server" :char ?S)))
+    ("--key-server" :char ?S)
+    ("--list-transitive" :char ?t)))
 
 (guix-command-define-argument-improver
     guix-command-improve-repl-argument
