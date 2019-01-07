@@ -1,6 +1,6 @@
 ;;; guix-pcomplete.el --- Functions for completing guix commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2015, 2017, 2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -216,7 +216,7 @@ INPUT is the current partially completed string."
         (complete* (pcomplete-entries)))))
 
      ((and (command? "archive" "build" "environment" "graph"
-                     "size" "weather")
+                     "pull" "size" "weather")
            (option? "-s" "--system"))
       (complete* (guix-system-types)))
 

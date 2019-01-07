@@ -417,6 +417,7 @@ to be modified."
     (("pull")
      guix-command-improve-common-build-argument
      guix-command-improve-profile-argument
+     guix-command-improve-system-type-argument
      guix-command-improve-pull-argument)
     (("refresh")
      guix-command-improve-key-policy-argument
