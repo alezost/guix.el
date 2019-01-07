@@ -1,5 +1,12 @@
 -*- mode: org -*-
 
+* Changes in 0.5.1.1 (since 0.5.1)
+
+This is a bug-fix release: "M-x guix", introduced by the previous
+release, failed after pressing "p" or "P" because of a missing
+requirement in "guix-popup.el".  This is fixed in this release (commit
+d7b54784bc3962570519aac472f54598c10299ae).
+
 * Changes in 0.5.1 (since 0.5)
 
 ** User visible changes
