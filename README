@@ -34,7 +34,8 @@ In short, Emacs-Guix provides the following features:
 
   + [[/gnu/store]] items
 
-- Magit-like popup interface for all guix shell commands (=M-x guix=).
+- Magit-like popup interface for all Emacs-Guix and Guix shell commands
+  (=M-x guix=).
 
 - Modes to view logs of package builds (=guix-build-log-mode= and
   =guix-build-log-minor-mode=).
@@ -93,10 +94,48 @@ the current commit of Emacs-Guix using [[file:guix.scm]] file:
 guix package --install-from-file=guix.scm
 #+END_SRC
 
+* IMPORTANT NOTE for non-GuixSD users
+
+If you installed Guix using [[https://www.gnu.org/software/guix/manual/en/html_node/Binary-Installation.html][Binary Installation]] method, most likely your
+environment (in particular, =GUILE_LOAD_PATH=) does not know where Guile
+modules of Guix and its dependencies are placed (they are somewhere in
+the store).  But these Guile modules are needed for Emacs-Guix, so…
+
+…  if (during using Emacs-Guix) you encounter errors about missing
+modules, undefined variables, other strange errors from Guile REPL, or
+if you see unexpectedly small amount of Guix packages, you may try the
+following workaround for this problem:
+
+- Install =guix= and =guile= into your user profile:
+
+  #+BEGIN_SRC sh
+  guix package -i guile guix
+  #+END_SRC
+
+  This guarantees that all Guile modules required by Guix will be
+  available for external programs (in particular, for Guile and
+  Emacs-Guix).
+
+- Make sure your system uses Guix environment, i.e., check that your
+  =~/.bash_profile= contains lines like these:
+
+  #+BEGIN_SRC sh
+  source "$HOME/.guix-profile/etc/profile"
+  source "$HOME/.config/guix/current/etc/profile"
+  #+END_SRC
+
+  Note, that the "current" profile should be sourced the last.  Thus the
+  latest guix (fetched by =guix pull=) will have a priority.
+
+If you still have a problem after the above steps, feel free to open an
+issue about it.
+
 * Usage
 
-Call =M-x guix-help= to get a summary of all available commands.
-Here is an *incomplete* list of them:
+=M-x guix= is the entry point for the available features.
+
+You can also call =M-x guix-help= to get a summary of all available
+commands.  Here is an *incomplete* list of them:
 
 - Show packages and their definitions:
 
