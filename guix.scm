@@ -1,6 +1,7 @@
 ;;; guix.scm --- Guix package for Emacs-Guix
 
 ;; Copyright © 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2019 Oleg Pykhalov <go.wigust@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -56,7 +57,7 @@ newspace."
   (with-directory-excursion %source-dir
     (let* ((port   (apply open-pipe* OPEN_READ "git" args))
            (output (read-string port)))
-      (close-port port)
+      (close-pipe port)
       (string-trim-right output #\newline))))
 
 (define (current-commit)
