@@ -44,6 +44,7 @@
  (guix packages)
  (gnu packages autotools)
  (gnu packages emacs)
+ (gnu packages emacs-xyz)
  (gnu packages pkg-config)
  (gnu packages texinfo))
 
