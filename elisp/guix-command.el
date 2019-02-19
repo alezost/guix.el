@@ -195,11 +195,12 @@ to be modified."
   '(("--user" :fun guix-read-user-name)))
 
 (defvar guix-command-improve-common-build-argument
-  '(("--no-substitutes"  :char ?s)
-    ("--no-build-hook"   :char ?h)
+  '(("--debug"           :char ?D :fun read-number)
     ("--max-silent-time" :char ?X)
-    ("--rounds"          :char ?R :fun read-number)
-    ("--no-grafts"       :char ?G)))
+    ("--no-build-hook"   :char ?h)
+    ("--no-grafts"       :char ?G)
+    ("--no-substitutes"  :char ?s)
+    ("--rounds"          :char ?R :fun read-number)))
 
 (defun guix-command-improve-common-build-argument (argument)
   (guix-command-modify-argument-from-alist
