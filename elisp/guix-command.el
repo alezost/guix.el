@@ -339,6 +339,7 @@ to be modified."
 (guix-command-define-argument-improver
     guix-command-improve-system-argument
   '(("disk-image"  :char ?D)
+    ("docker-image" :char ?O)
     ("vm-image"    :char ?V)
     ("roll-back"   :char ?R)
     ("search"      :char ?s)
