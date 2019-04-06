@@ -1,6 +1,6 @@
 ;;; store-items.scm --- Guix store items
 
-;; Copyright © 2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2018–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -90,8 +90,8 @@ RELATIVES should be a procedure taking a path as argument."
                     search-type)))))
 
 (define (query-path-info* server path)
-  "Like 'query-path-info' but returns #f if there is nix protocol error."
-  (guard (c ((nix-protocol-error? c)
+  "Like 'query-path-info' but returns #f if there is store protocol error."
+  (guard (c ((store-protocol-error? c)
              (format (current-warning-port)
                      "error in query-path-info: ~a~%" c)
              #f))
