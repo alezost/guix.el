@@ -1,6 +1,6 @@
 ;;; guix-ui-package.el --- Interface for displaying packages  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -1686,20 +1686,12 @@ Interactively with prefix, prompt for PROFILE."
   (guix-package-get-display profile 'all))
 
 ;;;###autoload
-(define-obsolete-function-alias 'guix-all-available-packages
-  'guix-all-packages "0.4")
-
-;;;###autoload
 (defun guix-newest-packages (&optional profile)
   "Display the newest available Guix packages.
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'newest))
-
-;;;###autoload
-(define-obsolete-function-alias 'guix-newest-available-packages
-  'guix-newest-packages "0.4")
 
 ;;;###autoload
 (defun guix-number-of-packages ()
