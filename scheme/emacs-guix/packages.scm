@@ -1,6 +1,6 @@
 ;;; packages.scm --- Guix packages and generations
 
-;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -80,7 +80,6 @@
             packages-by-regexp
             packages-by-license
             all-packages
-            newest-packages
             packages-from-file
             matching-packages
             package/output-sexps
@@ -391,15 +390,6 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
 (define (all-packages)
   "Return a list of all available packages."
   (matching-packages (const #t)))
-
-(define (newest-packages)
-  "Return a list of the newest available packages."
-  (vhash-fold (lambda (name elem res)
-                (match elem
-                  ((_ newest pkgs ...)
-                   (cons newest res))))
-              '()
-              (find-newest-available-packages)))
 
 (define (packages-from-file file)
   "Return a list of packages from FILE."
@@ -727,8 +717,7 @@ ENTRIES is a list of installed manifest entries."
                                    #:direct? (eq? type 'direct))))
          (hidden-proc           (lambda _ (hidden-packages)))
          (superseded-proc       (lambda _ (superseded-packages)))
-         (all-proc              (lambda _ (all-packages)))
-         (newest-proc           (lambda _ (newest-packages))))
+         (all-proc              (lambda _ (all-packages))))
     `((package
        (id               . ,(apply-to-rest ids->package-patterns))
        (name             . ,(apply-to-rest specifications->package-patterns))
@@ -742,8 +731,7 @@ ENTRIES is a list of installed manifest entries."
        (hidden           . ,hidden-proc)
        (superseded       . ,superseded-proc)
        (dependent        . ,dependent-proc)
-       (all              . ,all-proc)
-       (newest           . ,newest-proc))
+       (all              . ,all-proc))
       (output
        (id               . ,(apply-to-rest ids->output-patterns))
        (name             . ,(apply-to-rest specifications->output-patterns))
@@ -757,8 +745,7 @@ ENTRIES is a list of installed manifest entries."
        (hidden           . ,hidden-proc)
        (superseded       . ,superseded-proc)
        (dependent        . ,dependent-proc)
-       (all              . ,all-proc)
-       (newest           . ,newest-proc)))))
+       (all              . ,all-proc)))))
 
 (define (patterns-maker entry-type search-type)
   (or (and=> (assq-ref %patterns-makers entry-type)
@@ -771,7 +758,7 @@ ENTRIES is a list of installed manifest entries."
 
 SEARCH-TYPE and SEARCH-VALUES define how to get the information.
 SEARCH-TYPE should be one of the following symbols: 'id', 'name',
-'regexp', 'all', 'newest', 'installed', 'unknown', 'superseded',
+'regexp', 'all', 'installed', 'unknown', 'superseded',
 'dependent', 'license', 'location', 'from-file','from-os-file'.
 
 PARAMS is a list of parameters for receiving.  If it is an empty list,

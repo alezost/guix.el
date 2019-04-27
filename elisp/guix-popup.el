@@ -96,7 +96,6 @@ String is made of variable VAR-NAME and its value."
   :variables (list guix-popup-profile-variable)
   :actions '("Show packages"
              (?a "all" guix-all-packages)
-             (?A "newest" guix-newest-packages)
              (?i "installed" guix-installed-packages)
              (?o "obsolete" guix-obsolete-packages)
              (?s "superseded" guix-superseded-packages)

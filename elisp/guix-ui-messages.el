@@ -1,6 +1,6 @@
 ;;; guix-ui-messages.el --- Minibuffer messages for Guix package management interface
 
-;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -59,10 +59,6 @@
       (0 "No packages are available for some reason.")
       (1 "A single available package (that's strange).")
       (many "%d available packages." count))
-     (newest
-      (0 "No packages are available for some reason.")
-      (1 "A single newest available package (that's strange).")
-      (many "%d newest available packages." count))
      (installed
       (0 "No packages installed in profile '%s'." profile)
       (1 "A single package installed in profile '%s'." profile)
@@ -112,10 +108,6 @@
       (0 "No package outputs are available for some reason.")
       (1 "A single available package output (that's strange).")
       (many "%d available package outputs." count))
-     (newest
-      (0 "No package outputs are available for some reason.")
-      (1 "A single newest available package output (that's strange).")
-      (many "%d newest available package outputs." count))
      (installed
       (0 "No package outputs installed in profile '%s'." profile)
       (1 "A single package output installed in profile '%s'." profile)

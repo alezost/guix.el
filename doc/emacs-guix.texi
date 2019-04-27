@@ -9,7 +9,7 @@ This document describes Emacs-Guix, the Emacs interface for the
 @uref{https://www.gnu.org/software/guix/, GNU Guix} package manager.
 
 @quotation
-Copyright @copyright{} 2014-2018 Alex Kost@*
+Copyright @copyright{} 2014-2019 Alex Kost@*
 Copyright @copyright{} 2018 Oleg Pykhalov
 
 Permission is granted to copy, distribute and/or modify this document
@@ -326,9 +326,7 @@ just for that command.
 
 @findex guix-all-packages
 @item M-x guix-all-packages
-@findex guix-newest-packages
-@itemx M-x guix-newest-packages
-Display all/newest available packages.
+Display all available packages.
 
 @findex guix-installed-packages
 @item M-x guix-installed-packages

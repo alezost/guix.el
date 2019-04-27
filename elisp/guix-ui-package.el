@@ -1686,12 +1686,8 @@ Interactively with prefix, prompt for PROFILE."
   (guix-package-get-display profile 'all))
 
 ;;;###autoload
-(defun guix-newest-packages (&optional profile)
-  "Display the newest available Guix packages.
-If PROFILE is nil, use `guix-current-profile'.
-Interactively with prefix, prompt for PROFILE."
-  (interactive (list (guix-ui-read-package-profile)))
-  (guix-package-get-display profile 'newest))
+(define-obsolete-function-alias 'guix-newest-packages
+  'guix-all-packages "0.5.2")
 
 ;;;###autoload
 (defun guix-number-of-packages ()

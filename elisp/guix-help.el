@@ -1,6 +1,6 @@
 ;;; guix-help.el --- Help commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -72,7 +72,6 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix
     "Show packages and their definitions"
     guix-all-packages
-    guix-newest-packages
     guix-installed-user-packages
     guix-installed-system-packages
     guix-installed-packages

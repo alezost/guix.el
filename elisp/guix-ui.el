@@ -72,7 +72,7 @@ ENTRY-TYPE should be one of the following symbols: `package' or
 `output'.
 
 SEARCH-TYPE may be one of the following symbols: `id', `name',
-`regexp', `all', `newest', `installed', `unknown', `superseded',
+`regexp', `all', `installed', `unknown', `superseded',
 `dependent', `license', `location', `from-file', `from-os-file'.
 
 PARAMS is a list of parameters for receiving.  If nil, get data
