@@ -212,6 +212,7 @@ to be modified."
 (defvar guix-command-improve-transformation-argument
   '(("--with-branch" :char ?b)
     ("--with-commit" :char ?o)
+    ("--with-git-url" :char ?G)
     ("--with-graft"  :char ?g)
     ("--with-input"  :char ?W)
     ("--with-source" :fun guix-read-file-name)))
