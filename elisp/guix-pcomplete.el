@@ -162,12 +162,24 @@ group - the argument.")
                       args)))
         (pcomplete-here* entries input)))))
 
+(defvar guix-pcomplete-package-commands
+  '("archive"
+    "build"
+    "challenge"
+    "copy"
+    "edit"
+    "environment"
+    "graph"
+    "lint"
+    "pack"
+    "refresh"
+    "size")
+  "List of commands that take package names as their last arguments.")
+
 (defun guix-pcomplete-complete-command-arg (command)
   "Complete argument for guix COMMAND."
   (cond
-   ((member command
-            '("archive" "build" "challenge" "copy" "edit" "environment"
-              "graph" "lint" "pack" "refresh" "size"))
+   ((member command guix-pcomplete-package-commands)
     (while t
       (pcomplete-here (guix-package-names))))
    (t (pcomplete-here* (pcomplete-entries)))))

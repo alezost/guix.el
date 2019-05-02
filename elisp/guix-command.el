@@ -493,6 +493,18 @@ to be modified."
                 args)))
       args)))
 
+(defvar guix-command-package-commands
+  '("archive"
+    "build"
+    "challenge"
+    "copy"
+    "edit"
+    "graph"
+    "lint"
+    "pack"
+    "refresh")
+  "List of commands that take package names as their last arguments.")
+
 (defun guix-command-rest-argument (&optional commands)
   "Return '--' argument for COMMANDS."
   (cl-flet ((argument (&rest args)
@@ -500,9 +512,7 @@ to be modified."
                      :name "-- " :char ?= :option? t args)))
     (let ((command (car commands)))
       (cond
-       ((member command
-                '("archive" "build" "challenge" "copy" "edit"
-                  "graph" "lint" "pack" "refresh"))
+       ((member command guix-command-package-commands)
         (argument :doc "Packages" :fun 'guix-read-package-names-string))
        ((equal commands '("container" "exec"))
         (argument :doc "PID Command [Args...]"))
