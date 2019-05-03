@@ -139,15 +139,19 @@ to be modified."
   '(("container"   :char ?C)
     ("copy"        :char ?y)
     ("describe"    :char ?D)
-    ("graph"       :char ?G)
     ("environment" :char ?E)
+    ("graph"       :char ?G)
+    ("install"     :char ?I)
     ("pack"        :char ?k)
     ("potluck"     :char ?L)
     ("processes"   :char ?o)
     ("publish"     :char ?u)
     ("pull"        :char ?P)
-    ("repl"        :char ?R)
-    ("size"        :char ?z)))
+    ("remove"      :char ?R)
+    ("repl"        :char ?L)
+    ("search"      :char ?S)
+    ("size"        :char ?z)
+    ("upgrade"     :char ?U)))
 
 (guix-command-define-argument-improver
     guix-command-improve-common-argument
@@ -396,6 +400,10 @@ to be modified."
      guix-command-improve-key-policy-argument)
     (("import" "elpa")
      guix-command-improve-import-elpa-argument)
+    (("install")
+     guix-command-improve-common-build-argument
+     guix-command-improve-transformation-argument
+     guix-command-improve-profile-argument)
     (("lint")
      guix-command-improve-lint-argument)
     (("pack")
@@ -426,6 +434,9 @@ to be modified."
      guix-command-improve-key-policy-argument
      guix-command-improve-manifest-argument
      guix-command-improve-refresh-argument)
+    (("remove")
+     guix-command-improve-common-build-argument
+     guix-command-improve-profile-argument)
     (("repl")
      guix-command-improve-repl-argument)
     (("size")
@@ -435,6 +446,10 @@ to be modified."
     (("system")
      guix-command-improve-common-build-argument
      guix-command-improve-system-argument)
+    (("upgrade")
+     guix-command-improve-common-build-argument
+     guix-command-improve-transformation-argument
+     guix-command-improve-profile-argument)
     (("weather")
      guix-command-improve-manifest-argument
      guix-command-improve-system-type-argument
@@ -500,9 +515,11 @@ to be modified."
     "copy"
     "edit"
     "graph"
+    "install"
     "lint"
     "pack"
-    "refresh")
+    "refresh"
+    "remove")
   "List of commands that take package names as their last arguments.")
 
 (defun guix-command-rest-argument (&optional commands)
@@ -524,7 +541,9 @@ to be modified."
         (argument :doc "[Args...]"))
        ((string= command "gc")
         (argument :doc "Paths" :fun 'guix-read-file-name))
-       ((equal commands '("system" "search"))
+       ((or (string= command "search")
+            (string= command "upgrade")
+            (equal commands '("system" "search")))
         (argument :doc "Regexp"))
        ((member command '("hash" "system"))
         (argument :doc "File" :fun 'guix-read-file-name))

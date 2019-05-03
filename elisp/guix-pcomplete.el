@@ -170,9 +170,11 @@ group - the argument.")
     "edit"
     "environment"
     "graph"
+    "install"
     "lint"
     "pack"
     "refresh"
+    "remove"
     "size")
   "List of commands that take package names as their last arguments.")
 
