@@ -258,8 +258,9 @@ to be modified."
 
 (guix-command-define-argument-improver
     guix-command-improve-gc-argument
-  '(("--list-dead" :char ?D)
+  '(("--list-dead" :char ?E)
     ("--list-live" :char ?L)
+    ("--list-failures" :char ?F)
     ("--derivers"  :char ?e)
     ("--referrers" :char ?f)
     ("--verify"    :fun guix-read-verify-options-string)))
