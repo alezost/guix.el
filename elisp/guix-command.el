@@ -291,6 +291,7 @@ to be modified."
   '(("--compression" :fun guix-read-compressor-name)
     ("--format" :fun guix-read-pack-format-name)
     ("--localstatedir" :char ?L)
+    ("--save-provenance" :char ?p)
     ;; "--symlink" is not completed as it should be "FILE-NAME=TARGET".
     ;; ("--symlink" :fun guix-read-file-name)
     ))
