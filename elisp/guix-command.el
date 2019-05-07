@@ -183,6 +183,10 @@ to be modified."
   '(("--format" :fun guix-read-hash-format)))
 
 (guix-command-define-argument-improver
+    guix-command-improve-expose-argument
+  '(("--expose" :char ?x)))
+
+(guix-command-define-argument-improver
     guix-command-improve-manifest-argument
   '(("--manifest" :fun guix-read-file-name)))
 
@@ -354,7 +358,6 @@ to be modified."
     ("--on-error"  :char ?E :fun guix-read-on-error-strategy)
     ("--no-bootloader" :char ?B)
     ("--skip-checks" :char ?S)
-    ("--expose"    :char ?x)
     ("--full-boot" :char ?b)))
 
 (defvar guix-command-argument-improvers
@@ -388,6 +391,7 @@ to be modified."
      guix-command-improve-user-argument
      guix-command-improve-search-paths-argument
      guix-command-improve-system-type-argument
+     guix-command-improve-expose-argument
      guix-command-improve-environment-argument)
     (("gc")
      guix-command-improve-gc-argument)
@@ -445,6 +449,7 @@ to be modified."
      guix-command-improve-size-argument)
     (("system")
      guix-command-improve-common-build-argument
+     guix-command-improve-expose-argument
      guix-command-improve-system-argument)
     (("upgrade")
      guix-command-improve-common-build-argument
