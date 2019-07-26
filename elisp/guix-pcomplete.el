@@ -278,10 +278,11 @@ INPUT is the current partially completed string."
         (complete* (guix-compressor-names)))
        ((option? "-f" "--format")
         (complete* (guix-pack-format-names)))
-       ;; Although the argument should be "FILE-NAME=TARGET", it is
-       ;; still better to complete the FILE-NAME than to complete
-       ;; nothing.
-       ((option? "-S" "--symlink")
+       ;; Although the argument for "--symlink" should be
+       ;; "FILE-NAME=TARGET", it is still better to complete FILE-NAME
+       ;; than to complete nothing.
+       ((or (option? "-r" "--root")
+            (option? "-S" "--symlink"))
         (complete* (pcomplete-entries)))))
 
      ((command? "potluck")

@@ -290,8 +290,10 @@ to be modified."
 (guix-command-define-argument-improver
     guix-command-improve-pack-argument
   '(("--compression" :fun guix-read-compressor-name)
+    ("--entry-point" :char ?P)
     ("--format" :fun guix-read-pack-format-name)
     ("--localstatedir" :char ?L)
+    ("--root" :fun guix-read-file-name)
     ("--save-provenance" :char ?p)
     ;; "--symlink" is not completed as it should be "FILE-NAME=TARGET".
     ;; ("--symlink" :fun guix-read-file-name)
