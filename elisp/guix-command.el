@@ -252,6 +252,7 @@ to be modified."
   '(("--ad-hoc"
      :name "--ad-hoc " :fun guix-read-package-names-string
      :switch? nil :option? t)
+    ("--no-cwd" :char ?c)
     ("--expose" :char ?E)
     ("--share" :char ?S)
     ("--load" :fun guix-read-file-name)))
