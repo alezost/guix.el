@@ -310,6 +310,11 @@ INPUT is the current partially completed string."
            (option? "-t" "--type"))
       (complete* guix-help-repl-types))
 
+     ((and (command? "gc")
+           (string= "--verify" option))
+      (guix-pcomplete-complete-comma-args
+       guix-help-verify-options))
+
      ((command? "size")
       (cond
        ((option? "-m" "--map-file")
