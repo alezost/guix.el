@@ -138,6 +138,7 @@ to be modified."
     guix-command-improve-action-argument
   '(("container"   :char ?C)
     ("copy"        :char ?y)
+    ("deploy"      :char ?Y)
     ("describe"    :char ?D)
     ("environment" :char ?E)
     ("graph"       :char ?G)
@@ -382,6 +383,8 @@ to be modified."
     (("copy")
      guix-command-improve-common-build-argument
      guix-command-improve-copy-argument)
+    (("deploy")
+     guix-command-improve-common-build-argument)
     (("describe")
      guix-command-improve-describe-argument
      guix-command-improve-profile-argument)
@@ -555,7 +558,7 @@ to be modified."
             (string= command "upgrade")
             (equal commands '("system" "search")))
         (argument :doc "Regexp"))
-       ((member command '("hash" "system"))
+       ((member command '("hash" "system" "deploy"))
         (argument :doc "File" :fun 'guix-read-file-name))
        ((string= command "size")
         (argument :doc "Package" :fun 'guix-read-package-name))
