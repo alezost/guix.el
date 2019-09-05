@@ -1,6 +1,6 @@
 ;;; lint.scm --- Code related to linting Guix packages
 
-;; Copyright © 2015, 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017, 2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -20,6 +20,7 @@
 ;;; Code:
 
 (define-module (emacs-guix lint)
+  #:use-module (guix lint)
   #:use-module (guix scripts lint)
   #:use-module (guix ui)
   #:autoload   (emacs-guix packages) (package-by-id-or-name)
@@ -30,7 +31,7 @@
   "Return a list of names of available lint checkers."
   (map (lambda (checker)
          (symbol->string (lint-checker-name checker)))
-       %checkers))
+       %all-checkers))
 
 (define (checkers-by-names names)
   "Return lint checkers by their NAMES (strings)."
@@ -38,7 +39,7 @@
     (filter (lambda (checker)
               (memq (lint-checker-name checker)
                     names))
-            %checkers)))
+            %all-checkers)))
 
 (define* (lint-package id-or-name #:optional (checkers '()))
   "Lint package with ID-OR-NAME using CHECKERS.
@@ -49,7 +50,7 @@ empty, use all available checkers."
         (begin
           (run-checkers package
                         (if (null? checkers)
-                            %checkers
+                            %all-checkers
                             (checkers-by-names checkers)))
           (display "Package checking completed.")
           (newline))
