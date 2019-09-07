@@ -1,6 +1,6 @@
 ;;; emacs-guix.scm --- Scheme side of Emacs-Guix
 
-;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -65,6 +65,7 @@
                                  make-package-graph)
   #:autoload (emacs-guix hash) (file-hash)
   #:autoload (emacs-guix lint) (lint-checker-names
+                                lint-checker-sexps
                                 lint-package)
   #:autoload (emacs-guix pack) (compressor-names
                                 pack-format-names)

@@ -23,8 +23,11 @@
   #:use-module (guix lint)
   #:use-module (guix scripts lint)
   #:use-module (guix ui)
+  #:use-module (emacs-guix emacs)
+  #:use-module (emacs-guix utils)
   #:autoload   (emacs-guix packages) (package-by-id-or-name)
   #:export (lint-checker-names
+            lint-checker-sexps
             lint-package))
 
 (define (lint-checker-names)
@@ -57,5 +60,36 @@ empty, use all available checkers."
         (format (current-error-port)
                 "Couldn't find '~A' package~%"
                 id-or-name))))
+
+(define (lint-checker-type checker)
+  "Return a type of the CHECKER."
+  (if (memq checker %local-checkers)
+      'local
+      'network))
+
+(define %lint-checker-param-alist
+  `((id . ,lint-checker-name)
+    (name . ,lint-checker-name)
+    (type . ,lint-checker-type)
+    (description . ,lint-checker-description)))
+
+(define lint-checker->sexp
+  (object-transformer %lint-checker-param-alist))
+
+(define (find-lint-checkers search-type . search-values)
+  "Return a list of lint checkers depending on SEARCH-TYPE and SEARCH-VALUES."
+  (case search-type
+    ((id name)
+     (let ((names search-values))
+       (checkers-by-names names)))
+    ((local)
+     %local-checkers)
+    ((all)
+     %all-checkers)))
+
+(define (lint-checker-sexps search-type . search-values)
+  (to-emacs-side
+   (map lint-checker->sexp
+        (apply find-lint-checkers search-type search-values))))
 
 ;;; lint.scm ends here

@@ -119,6 +119,7 @@ String is made of variable VAR-NAME and its value."
              (?g "package graph" guix-package-graph)
              (?z "package size" guix-package-size)
              (?t "package lint" guix-package-lint)
+             (?C "lint checkers" guix-lint-checkers)
              (?T "total number of packages" guix-number-of-packages))
   :max-action-columns #'guix-package-popup-max-columns)
 

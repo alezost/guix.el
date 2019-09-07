@@ -1,6 +1,6 @@
 # local.mk --- Local Automake file for emacs-lisp code  -*- makefile-automake -*-
 
-# Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
+# Copyright © 2014–2019 Alex Kost <alezost@gmail.com>
 # Copyright © 2016 Mathieu Lirzin <mthl@gnu.org>
 
 # This file is part of Emacs-Guix.
@@ -87,6 +87,7 @@ EL_FILES =					\
   %D%/guix-ui-license.el			\
   %D%/guix-ui-profile.el			\
   %D%/guix-ui-store-item.el			\
+  %D%/guix-ui-lint-checker.el			\
   %D%/guix-ui-package.el			\
   %D%/guix-ui-package-location.el		\
   %D%/guix-ui-generation.el			\

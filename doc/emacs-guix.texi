@@ -551,6 +551,11 @@ Lint a package (@pxref{Invoking guix lint,,, guix, The GNU Guix
 Reference Manual}).  You'll be prompted for a package name.  With
 prefix argument, you'll be also prompted for checker names.
 
+@findex guix-lint-checkers
+@item M-x guix-lint-checkers
+Show a list of available lint checkers similar to @code{guix lint
+--list-checkers} shell command.
+
 @end table
 
 @c ----------------------------------------------------------------

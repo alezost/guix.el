@@ -139,6 +139,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-package-graph
     guix-package-size
     guix-package-lint
+    guix-lint-checkers
 
     "Hide hash parts in \"/gnu/store/…-foo\" file names"
 
