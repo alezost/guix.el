@@ -349,6 +349,11 @@ in a profile but cannot be found among the available packages).
 @item M-x guix-superseded-packages
 Display packages that are superseded by the other packages.
 
+@findex guix-hidden-packages
+@item M-x guix-hidden-packages
+Display packages that are hidden from user interfaces (usually because
+they are for internal use only).
+
 @findex guix-dependent-packages
 @item M-x guix-dependent-packages
 Display packages that depend on the specified package(s).  This

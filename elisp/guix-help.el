@@ -77,6 +77,7 @@ If ARG is non-nil (interactively with prefix), show Guix info manual."
     guix-installed-packages
     guix-obsolete-packages
     guix-superseded-packages
+    guix-hidden-packages
     guix-dependent-packages
     guix-packages-by-name
     guix-packages-by-license

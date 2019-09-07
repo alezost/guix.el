@@ -99,6 +99,7 @@ String is made of variable VAR-NAME and its value."
              (?i "installed" guix-installed-packages)
              (?o "obsolete" guix-obsolete-packages)
              (?s "superseded" guix-superseded-packages)
+             (?h "hidden" guix-hidden-packages)
              "Search for packages"
              (?n "by name" guix-packages-by-name)
              (?N "by regexp (in name only)" guix-search-by-name)

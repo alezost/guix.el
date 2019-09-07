@@ -67,6 +67,10 @@
       (0 "No packages are superseded.")
       (1 "A single package is superseded.")
       (many "%d packages are superseded." count))
+     (hidden
+      (0 "No packages are hidden currently.")
+      (1 "A single package is hidden.")
+      (many "%d packages are hidden." count))
      (dependent
       ,(lambda (_ entries values)
          (guix-message-dependent-packages
@@ -116,6 +120,10 @@
       (0 "No packages are superseded.")
       (1 "A single package is superseded.")
       (many "%d package outputs are superseded." count))
+     (hidden
+      (0 "No packages are hidden currently.")
+      (1 "A single package is hidden.")
+      (many "%d package outputs are hidden." count))
      (dependent
       ,(lambda (_ entries values)
          (guix-message-dependent-packages

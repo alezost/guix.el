@@ -679,15 +679,9 @@ is newer than the available package recipe for ")
 
 (defun guix-package-info-insert-hidden-text ()
   "Insert a message that current package is hidden."
-  (insert "Congratulations, you have found the ")
+  (insert "This package is ")
   (bui-format-insert "hidden" 'guix-package-info-hidden)
-  (insert " package!
-Now you have the power to display ")
-  (bui-insert-button
-   "all hidden packages" 'bui
-   'help-echo "Enter the hidden part of the Guixland!"
-   'action (lambda (_) (guix-hidden-packages)))
-  (insert ".\n"))
+  (insert ", so do not tell anyone about it ;-)\n"))
 
 (defun guix-package-info-insert-output (output entry)
   "Insert OUTPUT at point.
@@ -1671,10 +1665,11 @@ Interactively with prefix, prompt for PROFILE."
          (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'dependent (or type 'all) packages))
 
+;;;###autoload
 (defun guix-hidden-packages (&optional profile)
   "Display hidden Guix packages.
 If PROFILE is nil, use `guix-current-profile'."
-  ;; Not interactive because..., well, the packages are hidden :-)
+  (interactive (list (guix-ui-read-package-profile)))
   (guix-package-get-display profile 'hidden))
 
 ;;;###autoload
