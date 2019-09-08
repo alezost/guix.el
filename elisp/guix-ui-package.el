@@ -838,9 +838,9 @@ PACKAGE-ID is an ID of the package which store path to show."
   (bui-insert-action-button
    "Lint"
    (lambda (btn)
-     (guix-lint (button-get btn 'id)
-                (and current-prefix-arg
-                     (guix-read-lint-checker-names))))
+     (guix-package-lint (button-get btn 'id)
+                        (and current-prefix-arg
+                             (guix-read-lint-checker-names))))
    "Lint the current package"
    'id id))
 
@@ -963,14 +963,14 @@ See `guix-package-size' for the meaning of TYPE."
 (defun guix-package-info-lint (entry &optional checkers)
   "Lint the package ENTRY.
 Interactively with prefix, prompt for CHECKERS.
-See `guix-lint' for details."
+See `guix-package-lint' for details."
   (interactive
    (let ((entry (guix-read-package-entry-by-name)))
      (guix-package-entry-ensure-known entry)
      (list entry
            (and current-prefix-arg
                 (guix-read-lint-checker-names)))))
-  (guix-lint (bui-entry-id entry) checkers))
+  (guix-package-lint (bui-entry-id entry) checkers))
 
 (defun guix-package-info-install (entry output)
   "Install package OUTPUT to the current profile.
@@ -1313,11 +1313,11 @@ See `guix-package-size' for the meaning of TYPE."
 (defun guix-package-list-lint (&optional checkers)
   "Lint the current package.
 Interactively with prefix, prompt for CHECKERS.
-See `guix-lint' for details."
+See `guix-package-lint' for details."
   (interactive
    (list (and current-prefix-arg
               (guix-read-lint-checker-names))))
-  (guix-lint (bui-list-current-id) checkers))
+  (guix-package-lint (bui-list-current-id) checkers))
 
 (declare-function build-farm-build-latest-prompt-args "build-farm-build" t)
 (declare-function build-farm-latest-builds "build-farm-build" t)
@@ -1485,13 +1485,14 @@ See `guix-find-location' for the meaning of DIRECTORY."
 (defun guix-output-list-lint (&optional checkers)
   "Lint the current package.
 Interactively with prefix, prompt for CHECKERS.
-See `guix-lint' for details."
+See `guix-package-lint' for details."
   (interactive
    (list (and current-prefix-arg
               (guix-read-lint-checker-names))))
-  (guix-lint (bui-entry-non-void-value (bui-list-current-entry)
-                                       'package-id)
-             checkers))
+  (guix-package-lint
+   (bui-entry-non-void-value (bui-list-current-entry)
+                             'package-id)
+   checkers))
 
 
 ;;; Interactive commands
