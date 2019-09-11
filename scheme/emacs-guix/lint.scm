@@ -28,7 +28,8 @@
   #:autoload   (emacs-guix packages) (package-by-id-or-name)
   #:export (lint-checker-names
             lint-checker-sexps
-            lint-package))
+            lint-package
+            lint-packages))
 
 (define (lint-checker-names)
   "Return a list of names of available lint checkers."
@@ -55,11 +56,18 @@ empty, use all available checkers."
                         (if (null? checkers)
                             %all-checkers
                             (checkers-by-names checkers)))
-          (display "Package checking completed.")
-          (newline))
+          (format #t "Package '~a' checked.~%"
+                  (package-specification package)))
         (format (current-error-port)
                 "Couldn't find '~A' package~%"
                 id-or-name))))
+
+(define* (lint-packages names #:optional (checkers '()))
+  "Lint packages with NAMES using CHECKERS.
+See `lint-package' for details."
+  (for-each (lambda (name)
+              (lint-package name checkers))
+            names))
 
 (define (lint-checker-type checker)
   "Return a type of the CHECKER."

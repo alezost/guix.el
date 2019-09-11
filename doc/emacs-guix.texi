@@ -552,9 +552,10 @@ type (it should be either ``text'' or ``image'').
 
 @findex guix-package-lint
 @item M-x guix-package-lint
-Lint a package (@pxref{Invoking guix lint,,, guix, The GNU Guix
-Reference Manual}).  You'll be prompted for a package name.  With
-prefix argument, you'll be also prompted for checker names.
+Lint packages (@pxref{Invoking guix lint,,, guix, The GNU Guix
+Reference Manual}).  You'll be prompted for comma separated package
+names.  With prefix argument, you'll be also prompted for checker
+names.
 
 @findex guix-lint-checkers
 @item M-x guix-lint-checkers

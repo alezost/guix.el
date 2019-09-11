@@ -838,7 +838,7 @@ PACKAGE-ID is an ID of the package which store path to show."
   (bui-insert-action-button
    "Lint"
    (lambda (btn)
-     (guix-package-lint (button-get btn 'id)
+     (guix-package-lint (list (button-get btn 'id))
                         (and current-prefix-arg
                              (guix-read-lint-checker-names))))
    "Lint the current package"
@@ -970,7 +970,7 @@ See `guix-package-lint' for details."
      (list entry
            (and current-prefix-arg
                 (guix-read-lint-checker-names)))))
-  (guix-package-lint (bui-entry-id entry) checkers))
+  (guix-package-lint (list (bui-entry-id entry)) checkers))
 
 (defun guix-package-info-install (entry output)
   "Install package OUTPUT to the current profile.
@@ -1311,13 +1311,13 @@ See `guix-package-size' for the meaning of TYPE."
                      type))
 
 (defun guix-package-list-lint (&optional checkers)
-  "Lint the current package.
+  "Lint marked (or the current) packages.
 Interactively with prefix, prompt for CHECKERS.
 See `guix-package-lint' for details."
   (interactive
    (list (and current-prefix-arg
               (guix-read-lint-checker-names))))
-  (guix-package-lint (bui-list-current-id) checkers))
+  (guix-package-lint (bui-list-marked-or-current) checkers))
 
 (declare-function build-farm-build-latest-prompt-args "build-farm-build" t)
 (declare-function build-farm-latest-builds "build-farm-build" t)
@@ -1490,8 +1490,8 @@ See `guix-package-lint' for details."
    (list (and current-prefix-arg
               (guix-read-lint-checker-names))))
   (guix-package-lint
-   (bui-entry-non-void-value (bui-list-current-entry)
-                             'package-id)
+   (list (bui-entry-non-void-value (bui-list-current-entry)
+                                   'package-id))
    checkers))
 
 

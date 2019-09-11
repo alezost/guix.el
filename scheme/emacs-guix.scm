@@ -66,7 +66,8 @@
   #:autoload (emacs-guix hash) (file-hash)
   #:autoload (emacs-guix lint) (lint-checker-names
                                 lint-checker-sexps
-                                lint-package)
+                                lint-package
+                                lint-packages)
   #:autoload (emacs-guix pack) (compressor-names
                                 pack-format-names)
   #:autoload (emacs-guix profiles) (search-paths
