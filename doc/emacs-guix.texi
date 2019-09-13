@@ -304,6 +304,7 @@ The GNU Guix Reference Manual}).
 * Package Commands::    @kbd{M-x guix-@dots{}} to show packages.
 * Package Keys::        Key bindings in package ``list'' and ``info'' buffers.
 * Package Locations::   Interface for locations of packages.
+* Lint Checkers::       Interface for package lint checkers.
 * More Package Commands:: Other @kbd{M-x guix-@dots{}} related to packages.
 @end menu
 
@@ -521,6 +522,29 @@ point position (unless @kbd{C-u} is used):
 (setq guix-read-package-name-function 'guix-read-package-name-at-point)
 @end example
 
+@node Lint Checkers
+@section Lint Checkers
+
+The following commands provides functionality similar to @code{guix
+lint} shell command (@pxref{Invoking guix lint,,, guix, The GNU Guix
+Reference Manual}).
+
+@table @kbd
+
+@findex guix-lint-checkers
+@item M-x guix-lint-checkers
+Display a list of available lint checkers.  You can press @kbd{L}
+there to lint the packages you will be prompted for with the marked
+checkers.
+
+@findex guix-package-lint
+@item M-x guix-package-lint
+Lint packages.  You will be prompted for comma separated package
+names.  With prefix argument, you will also be prompted for checker
+names.
+
+@end table
+
 @node More Package Commands
 @section More Package Commands
 
@@ -549,18 +573,6 @@ an external graph viewer.
 Show a package size (@pxref{Invoking guix size,,, guix, The GNU Guix
 Reference Manual}).  You'll be prompted for a package name and a size
 type (it should be either ``text'' or ``image'').
-
-@findex guix-package-lint
-@item M-x guix-package-lint
-Lint packages (@pxref{Invoking guix lint,,, guix, The GNU Guix
-Reference Manual}).  You'll be prompted for comma separated package
-names.  With prefix argument, you'll be also prompted for checker
-names.
-
-@findex guix-lint-checkers
-@item M-x guix-lint-checkers
-Show a list of available lint checkers similar to @code{guix lint
---list-checkers} shell command.
 
 @end table
 

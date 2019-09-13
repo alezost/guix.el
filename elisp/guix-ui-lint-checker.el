@@ -27,8 +27,11 @@
 (require 'bui)
 (require 'guix nil t)
 (require 'guix-repl)
+(require 'guix-repl)
 (require 'guix-guile)
 (require 'guix-utils)
+(require 'guix-read)
+(require 'guix-package)
 
 (guix-define-groups lint-checker)
 
@@ -67,11 +70,35 @@ SEARCH-TYPE may be one of the following symbols: `all', `local',
   :describe-function 'guix-lint-checker-list-describe
   :format '((name nil 30 t)
             (type nil 10 t)
-            (description nil 50 t)))
+            (description nil 50 t))
+  :hint 'guix-lint-checker-list-hint)
 
 (let ((map guix-lint-checker-list-mode-map))
   (define-key map (kbd "i") nil)
-  (define-key map (kbd "RET") nil))
+  (define-key map (kbd "RET") nil)
+  (define-key map (kbd "L") 'guix-lint-checker-list-lint))
+
+(defvar guix-lint-checker-list-default-hint
+  '(("\\[guix-lint-checker-list-lint]") " lint packages;\n"))
+
+(defun guix-lint-checker-list-hint ()
+  (bui-format-hints
+   guix-lint-checker-list-default-hint
+   (bui-list-hint)
+   bui-common-hint))
+
+(defun guix-lint-checker-marked-or-current ()
+  "Return names (strings) of the marked lint checkers."
+  (mapcar #'symbol-name (bui-list-marked-or-current)))
+
+(defun guix-lint-checker-list-lint (packages)
+  "Lint PACKAGES with the marked lint checkers.
+If there are no marked checkers, use checker on the current line.
+Interactively, prompt for PACKAGES."
+  (interactive
+   (list (guix-read-package-names "Lint package,s: ")))
+  (guix-package-lint packages
+                     (guix-lint-checker-marked-or-current)))
 
 
 ;;; Interactive commands
