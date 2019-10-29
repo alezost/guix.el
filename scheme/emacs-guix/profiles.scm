@@ -1,6 +1,6 @@
 ;;; profiles.scm --- Code related to Guix profiles
 
-;; Copyright © 2017–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2017–2019 Alex Kost <alezost@gmail.com>
 ;; Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
 ;; This file is part of Emacs-Guix.
@@ -29,13 +29,15 @@
   #:use-module (srfi srfi-1)
   #:use-module (guix profiles)
   #:use-module (guix search-paths)
+  #:autoload   (guix store roots) (gc-roots)
   #:export (manifest-entry->name+version+output
             manifest-entries-by-name
             manifest-entry-by-output
             fold-manifest-by-name
             manifest-entry-dependencies-file-names
             search-paths-specifications
-            search-paths))
+            search-paths
+            user-profiles))
 
 
 ;;; Manifest entries
@@ -138,5 +140,17 @@ Each specification is (VARIABLE SEPARATOR PATH) list."
                   (search-path-specification-separator spec)
                   path)))
          specs)))
+
+
+;;; Profiles
+
+(define (user-profiles)
+  "Return a list of all user profiles."
+  (delete-duplicates
+   (filter-map (lambda (root)
+                 (and (or (zero? (getuid))
+                          (user-owned? root))
+                      (generation-profile root)))
+               (gc-roots))))
 
 ;;; profiles.scm ends here

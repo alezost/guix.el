@@ -1,6 +1,6 @@
 ;;; guix-ui-profile.el --- Interface for displaying profiles  -*- lexical-binding: t -*-
 
-;; Copyright © 2016–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -42,17 +42,28 @@
   :titles '((number-of-packages    . "Packages")
             (number-of-generations . "Generations")))
 
-(defcustom guix-profiles
-  (--filter (and it (file-exists-p it))
-            (delete-dups
-             (list guix-user-profile
-                   guix-system-profile
-                   guix-pulled-profile
-                   (--when-let (getenv "GUIX_PROFILE")
-                     (guix-file-name it)))))
-  "List of profiles displayed by '\\[guix-profiles]' command."
-  :type '(repeat file)
-  :group 'guix-profile)
+(defvar guix-profiles nil
+  "List of profiles displayed by '\\[guix-profiles]' command.
+This variable is set automatically when it is needed (on the
+first use).
+
+If you need to add more profiles to it, see Info
+node `(emacs-guix) Profile Commands' to learn how to do it
+properly.")
+
+(defun guix-all-profiles ()
+  "Return a list of all profiles."
+  (or guix-profiles
+      (setq guix-profiles
+            (--filter
+             (and it (file-exists-p it))
+             (delete-dups
+              (-cons* guix-default-user-profile
+                      guix-default-pulled-profile
+                      guix-system-profile
+                      (--when-let (getenv "GUIX_PROFILE")
+                        (guix-file-name it))
+                      (guix-eval-read "(user-profiles)")))))))
 
 (defun guix-profile->entry (profile)
   "Return 'guix-profile' entry by PROFILE file-name."
@@ -73,7 +84,7 @@
   (let ((profiles (cond
                    ((or (null search-type)
                         (eq search-type 'all))
-                    guix-profiles)
+                    (guix-all-profiles))
                    ((memq search-type '(id profile file-name))
                     args)
                    (t (error "Wrong search-type: %S" search-type)))))
@@ -82,7 +93,8 @@
 (defun guix-profile-message (entries &rest _)
   "Display a message after showing profile ENTRIES."
   (unless entries
-    (message "Guix profiles not found.  Set `guix-profiles' variable.")))
+    (message "Oops, Guix profiles not found.
+Please check `guix-profiles' variable.")))
 
 (defun guix-read-profile-from-entries (&optional entries)
   "Return profile file name from ENTRIES (current entries by default).

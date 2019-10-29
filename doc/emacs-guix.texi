@@ -629,7 +629,7 @@ Show a list of available Guix profiles.  By default, it displays:
 the default user profile
 
 @item ~/.config/guix/current
-profile, populated  by @code{guix pull}
+profile, populated by @code{guix pull}
 
 @item /var/guix/profiles/system
 system profile (only on GuixSD)
@@ -640,15 +640,17 @@ same as one of the above)
 
 @end table
 
-If you use multiple profiles, you can add them to this list by setting
-@code{guix-profiles} variable, for example, like this:
+and other profiles shown by @code{guix package --list-profiles} shell
+command.  If it is not enough for you, you can add even more profiles
+to this list by setting @code{guix-profiles} variable, for example,
+like this:
 
 @example
 (with-eval-after-load 'guix-ui-profile
   (setq guix-profiles
         (append '("/path/to/my-profile1"
                   "/path/to/my-profile2")
-                guix-profiles)))
+                (guix-all-profiles))))
 @end example
 
 The ``profile-list'' buffer provides some keys to work with profiles
