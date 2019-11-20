@@ -1,6 +1,6 @@
 ;;; guix-repl.el --- Making and using Guix REPL
 
-;; Copyright © 2014–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -166,7 +166,6 @@ This REPL is used for receiving information only if
 
 (defvar guix-repl-after-operation-hook
   '(guix-update-buffers-after-operation
-    guix-repl-autoload-emacs-packages-maybe
     guix-repl-operation-success-message)
   "Hook run after executing successful operation in Guix REPL.")
 
@@ -199,20 +198,6 @@ through Geiser (not recommended).
 
 After setting this variable, you need to kill
 `guix-repl-buffer-name' buffer to make the changes take effect.")
-
-(declare-function guix-emacs-autoload-packages "guix-emacs" t)
-
-(defun guix-repl-autoload-emacs-packages-maybe ()
-  "Load autoloads for Emacs packages if needed.
-See `guix-emacs-activate-after-operation' for details."
-  (and guix-emacs-activate-after-operation
-       (require 'guix-emacs nil t)
-       ;; FIXME Since a user can work with a non-current profile (using
-       ;; C-u before `guix-search-by-name' and other commands), emacs
-       ;; packages can be installed to another profile, and the
-       ;; following code will not work (i.e., the autoloads for this
-       ;; profile will not be loaded).
-       (guix-emacs-autoload-packages guix-current-profile)))
 
 (defun guix-repl-operation-success-message ()
   "Message telling about successful Guix operation."
