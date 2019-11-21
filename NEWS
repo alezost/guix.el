@@ -1,5 +1,31 @@
 -*- mode: org -*-
 
+* Changes in 0.5.2 (since 0.5.1.1)
+
+** User visible changes
+
+*** New commands
+
+**** M-x guix-lint-checkers
+**** M-x guix-hidden-packages
+
+*** Removed commands
+
+**** M-x guix-newest-packages
+
+"M-x guix-all-packages" should be used instead.
+
+*** Changed commands
+
+**** M-x guix-package-lint
+
+It asks for multiple packages now.
+
+*** Profile List
+
+It displays all profiles that have gc roots (similarly to
+"guix package --list-profiles" shell command) now.
+
 * Changes in 0.5.1.1 (since 0.5.1)
 
 This is a bug-fix release: "M-x guix", introduced by the previous
