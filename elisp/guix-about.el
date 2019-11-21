@@ -1,6 +1,6 @@
 ;;; guix-about.el --- Various info about Guix and Emacs-Guix  -*- lexical-binding: t -*-
 
-;; Copyright © 2016–2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2016–2017, 2019 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -87,6 +87,12 @@ Return nil, if the image cannot be found."
                           "guixsd-logo.svg"
                         "guix-logo.svg")
                       guix-image-directory)))
+
+;; Guix builds Emacs-Guix with 'emacs-minimal' package which does not
+;; support many things including image stuff.  This leads to a
+;; (harmless) warning about missing `image-size' function during ELC
+;; compilation.  The following line hides this useless warning.
+(declare-function image-size "image.c")
 
 (defun guix-insert-logo ()
   "Insert Guix(SD) logo into the current buffer."
