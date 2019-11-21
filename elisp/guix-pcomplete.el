@@ -208,8 +208,15 @@ INPUT is the current partially completed string."
      ((string= "--on-error" option)
       (complete* guix-help-on-error-strategies))
 
-     ((and (command? "environment" "pack" "package" "refresh" "weather")
-           (option? "-m" "--manifest"))
+     ((or (and (command? "environment"
+                         "pack"
+                         "package"
+                         "refresh"
+                         "weather")
+               (option? "-m" "--manifest"))
+          (and (command? "pull"
+                         "time-machine")
+               (option? "-C" "--channels")))
       (complete* (pcomplete-entries)))
 
      ((command? "package")

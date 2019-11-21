@@ -333,7 +333,7 @@ to be modified."
     ("--private-key" :char ?K :fun guix-read-file-name)))
 
 (guix-command-define-argument-improver
-    guix-command-improve-pull-argument
+    guix-command-improve-pull-argument ; XXX also used by "time-machine"
   '(("--commit"   :char ?o)
     ("--channels" :fun guix-read-file-name)))
 
@@ -462,6 +462,9 @@ to be modified."
      guix-command-improve-common-build-argument
      guix-command-improve-expose-argument
      guix-command-improve-system-argument)
+    (("time-machine")
+     guix-command-improve-common-build-argument
+     guix-command-improve-pull-argument)
     (("upgrade")
      guix-command-improve-common-build-argument
      guix-command-improve-transformation-argument
@@ -565,6 +568,8 @@ to be modified."
         (argument :doc "File" :fun 'guix-read-file-name))
        ((member command '("size" "show"))
         (argument :doc "Package" :fun 'guix-read-package-name))
+       ((string= command "time-machine")
+        (argument :doc "Command Args..."))
        ((equal commands '("import" "nix"))
         (argument :doc "Nixpkgs Attribute"))
        ;; Other 'guix import' subcommands, but not 'import' itself.
