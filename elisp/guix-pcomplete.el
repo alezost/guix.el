@@ -175,6 +175,7 @@ group - the argument.")
     "pack"
     "refresh"
     "remove"
+    "show"
     "size")
   "List of commands that take package names as their last arguments.")
 

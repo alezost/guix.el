@@ -151,6 +151,7 @@ to be modified."
     ("remove"      :char ?R)
     ("repl"        :char ?L)
     ("search"      :char ?S)
+    ("show"        :char ?W)
     ("size"        :char ?z)
     ("upgrade"     :char ?U)))
 
@@ -451,6 +452,8 @@ to be modified."
      guix-command-improve-profile-argument)
     (("repl")
      guix-command-improve-repl-argument)
+    (("show")
+     guix-command-improve-load-path-argument)
     (("size")
      guix-command-improve-system-type-argument
      guix-command-improve-substitute-urls-argument
@@ -560,7 +563,7 @@ to be modified."
         (argument :doc "Regexp"))
        ((member command '("hash" "system" "deploy"))
         (argument :doc "File" :fun 'guix-read-file-name))
-       ((string= command "size")
+       ((member command '("size" "show"))
         (argument :doc "Package" :fun 'guix-read-package-name))
        ((equal commands '("import" "nix"))
         (argument :doc "Nixpkgs Attribute"))
