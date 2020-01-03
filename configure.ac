@@ -1,5 +1,5 @@
 define(EMACS_GUIX_CONFIGURE_COPYRIGHT, [[
-Copyright (C) 2016-2019 Alex Kost <alezost@gmail.com>
+Copyright (C) 2016-2020 Alex Kost <alezost@gmail.com>
 
 This file is part of Emacs-Guix.
 
@@ -29,7 +29,7 @@ AM_SILENT_RULES([yes])
 dnl ----------------------------------------------------------------
 dnl Guile side
 
-GUILE_PKG([2.2 2.0])
+GUILE_PKG([3.0 2.2 2.0])
 GUILE_PROGS([2.0.2])
 
 AC_ARG_WITH([guile-site-dir],
