@@ -1,6 +1,7 @@
 ;;; guix-build-log.el --- Major and minor modes for build logs  -*- lexical-binding: t -*-
 
 ;; Copyright © 2015 Alex Kost <alezost@gmail.com>
+;; Copyright © 2020 Daniel Nagy
 
 ;; This file is part of Emacs-Guix.
 
@@ -116,6 +117,10 @@
 (defvar guix-build-log-phase-start-regexp
   (concat "^starting phase " guix-build-log-phase-name-regexp)
   "Regexp for the start line of a 'build' phase.")
+
+(defvar guix-build-log-imenu-generic-expression
+  `((nil ,guix-build-log-phase-start-regexp 1))
+  "Imenu generic expression for `guix-build-log-mode'.")
 
 (defun guix-build-log-title-regexp (&optional state)
   "Return regexp for the log title.
@@ -322,7 +327,9 @@ forward."
   "Major mode for viewing Guix build logs.
 
 \\{guix-build-log-mode-map}"
-  (setq font-lock-defaults '(guix-build-log-font-lock-keywords t)))
+  (setq
+   font-lock-defaults '(guix-build-log-font-lock-keywords t)
+   imenu-generic-expression guix-build-log-imenu-generic-expression))
 
 ;;;###autoload
 (define-minor-mode guix-build-log-minor-mode
