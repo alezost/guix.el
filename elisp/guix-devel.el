@@ -2,6 +2,7 @@
 
 ;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
 ;; Copyright © 2018 Oleg Pykhalov <go.wigust@gmail.com>
+;; Copyright © 2020 Maxim Cournoyer
 
 ;; This file is part of Emacs-Guix.
 
@@ -156,11 +157,12 @@ Use this function to compute SHA256 hash of the package source."
 See Info node `(guix) Invoking guix lint' for details."
   (interactive)
   (guix-devel-with-definition def
-    (guix-devel-use-modules "(guix scripts lint)")
+    (guix-devel-use-modules "(guix lint)"
+			    "(guix scripts lint)")
     (when (or (not guix-operation-confirm)
               (y-or-n-p (format "Lint '%s' package?" def)))
       (guix-geiser-eval-in-repl
-       (format "(run-checkers %s)" def)))))
+       (format "(run-checkers %s %%all-checkers)" def)))))
 
 
 ;;; Font-lock
