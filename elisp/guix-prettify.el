@@ -1,6 +1,6 @@
 ;;; guix-prettify.el --- Prettify Guix store file names
 
-;; Copyright © 2014, 2015, 2017 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014, 2015, 2017, 2020 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -86,9 +86,11 @@ disabling `guix-prettify-mode' a little faster."
   ;; http://hydra.gnu.org/nar/hrr424q661d9wdpkr48gyk5a9w8nrlcr-foo-0.1
   ;; http://hydra.gnu.org/log/fjbx25bap58k3mywzpmc8w9fjdydxqv8-foo-0.1
   ;; https://bayfront.guixsd.org/nar/gzip/m4ccn9nzlsbvlj36w45555pq98spy007-foo-0.1
+  ;; https://ci.guix.gnu.org/nar/lzip/6njvvg1541ny17x5mpv1gar7yzd19g6a-zile-on-guile-2.4.14-0.fd09781
 
   (rx-to-string `(and "/" (or "store" "log"
-                              (and "nar" (zero-or-one "/gzip")))
+                              (and "nar" (zero-or-one
+                                          (or "/lzip" "/gzip"))))
                       "/" (group (regexp ,guix-hash-regexp)))
                 t)
   "Regexp matching file names for prettifying.
