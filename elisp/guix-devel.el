@@ -1,6 +1,6 @@
 ;;; guix-devel.el --- Development tools  -*- lexical-binding: t -*-
 
-;; Copyright © 2015–2018 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2018, 2020 Alex Kost <alezost@gmail.com>
 ;; Copyright © 2018 Oleg Pykhalov <go.wigust@gmail.com>
 ;; Copyright © 2020 Maxim Cournoyer
 
@@ -194,16 +194,24 @@ to find 'modify-phases' keywords."
       (save-excursion (up-list) (point)))))
 
 (defconst guix-devel-keywords
-  '("call-with-compressed-output-port"
-    "call-with-container"
-    "call-with-decompressed-port"
-    "call-with-derivation-narinfo"
-    "call-with-derivation-substitute"
-    "call-with-error-handling"
-    "call-with-gzip-input-port"
-    "call-with-gzip-output-port"
-    "call-with-temporary-directory"
-    "call-with-temporary-output-file"
+  '(;; The `call-…' symbols are procedures, not macros, so they probably
+    ;; should not be highlighted.
+    ;;
+    ;; "call-with-compressed-output-port"
+    ;; "call-with-container"
+    ;; "call-with-decompressed-port"
+    ;; "call-with-derivation-narinfo"
+    ;; "call-with-derivation-substitute"
+    ;; "call-with-error-handling"
+    ;; "call-with-gzip-input-port"
+    ;; "call-with-gzip-output-port"
+    ;; "call-with-lzip-intput-port"
+    ;; "call-with-lzip-output-port"
+    ;; "call-with-progress-reporter"
+    ;; "call-with-prompt"
+    ;; "call-with-temporary-directory"
+    ;; "call-with-temporary-output-file"
+    ;; "call-with-transaction"
     "define-enumerate-type"
     "define-gexp-compiler"
     "define-lift"
@@ -231,12 +239,23 @@ to find 'modify-phases' keywords."
     "use-system-modules"
     "with-atomic-file-output"
     "with-atomic-file-replacement"
+    "with-build-handler"
+    "with-database"
     "with-derivation-narinfo"
     "with-derivation-substitute"
     "with-directory-excursion"
     "with-error-handling"
+    "with-extensions"
+    "with-external-store"
+    "with-file-lock"
+    "with-file-lock/no-wait"
     "with-imported-modules"
     "with-monad"
+    "with-parameters"
+    "with-profile-lock"
+    "with-status-report"
+    "with-status-verbosity"
+    "with-temporary-git-repository"
     "with-mutex"
     "with-store"))
 
@@ -294,15 +313,21 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (build-system 0)
   (call-with-compressed-output-port 2)
   (call-with-container 1)
-  (call-with-gzip-input-port 1)
-  (call-with-gzip-output-port 1)
   (call-with-decompressed-port 2)
   (call-with-error-handling 0)
+  (call-with-gzip-input-port 1)
+  (call-with-gzip-output-port 1)
+  (call-with-lzip-input-port 1)
+  (call-with-lzip-output-port 1)
+  (call-with-progress-reporter 1)
+  (call-with-prompt 1)
+  (call-with-transaction 1)
   (container-excursion 1)
   (emacs-batch-edit-file 1)
   (emacs-batch-eval 0)
   (emacs-substitute-sexps 1)
   (emacs-substitute-variables 1)
+  (eventually 1)
   (file-system 0)
   (graft 0)
   (manifest-entry 0)
@@ -324,16 +349,28 @@ Each rule should have a form (SYMBOL VALUE).  See `put' for details."
   (signature-case 1)
   (substitute* 1)
   (substitute-keyword-arguments 1)
+  (syntax-parameterize 1)
   (test-assertm 1)
   (with-atomic-file-output 1)
+  (with-build-handler 1)
+  (with-database 2)
   (with-derivation-narinfo 1)
   (with-derivation-substitute 2)
   (with-directory-excursion 1)
   (with-error-handling 0)
+  (with-extensions 1)
+  (with-external-store 1)
+  (with-file-lock 1)
+  (with-file-lock/no-wait 1)
   (with-imported-modules 1)
   (with-monad 1)
   (with-mutex 1)
+  (with-parameters 1)
+  (with-profile-lock 1)
+  (with-status-report 1)
+  (with-status-verbosity 1)
   (with-store 1)
+  (with-temporary-git-repository 1)
   (wrap-program 1)
 
   ;; 'modify-phases' keywords:
