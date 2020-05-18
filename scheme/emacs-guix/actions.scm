@@ -1,6 +1,6 @@
 ;;; actions.scm --- Various store actions on packages and generations
 
-;; Copyright © 2014-2016 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2016, 2020 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -116,14 +116,15 @@ OUTPUTS is a list of package outputs (may be an empty list)."
     (unless (and (null? install) (null? remove))
       (parameterize ((%graft? (not dry-run?)))
         (with-store store
-          (set-build-options store
-                             #:print-build-trace #f
-                             #:use-substitutes? use-substitutes?)
-          (show-manifest-transaction store manifest transaction
-                                     #:dry-run? dry-run?)
-          (build-and-use-profile store profile new-manifest
-                                 #:use-substitutes? use-substitutes?
-                                 #:dry-run? dry-run?))))))
+          (with-build-handler (build-notifier
+                               #:use-substitutes? use-substitutes?
+                               #:dry-run? dry-run?)
+            (set-build-options store
+                               #:print-build-trace #f
+                               #:use-substitutes? use-substitutes?)
+            (show-manifest-transaction store manifest transaction
+                                       #:dry-run? dry-run?)
+            (build-and-use-profile store profile new-manifest)))))))
 
 (define (build-package* package . build-options)
   "Build PACKAGE using BUILD-OPTIONS acceptable by 'set-build-options'.
@@ -173,17 +174,20 @@ GENERATIONS is a list of generation numbers."
     (with-store store
       (let* ((derivation  (package-source-derivation store source))
              (derivations (list derivation)))
-        (set-build-options store
-                           #:print-build-trace #f
-                           #:use-substitutes? use-substitutes?)
-        (show-what-to-build store derivations
-                            #:use-substitutes? use-substitutes?
-                            #:dry-run? dry-run?)
-        (unless dry-run?
-          (build-derivations store derivations))
-        (format #t "The source store file name: ~a~%"
-                (package-source-derivation->store-file-name
-                 derivation))))))
+        (with-build-handler (build-notifier
+                             #:use-substitutes? use-substitutes?
+                             #:dry-run? dry-run?)
+          (set-build-options store
+                             #:print-build-trace #f
+                             #:use-substitutes? use-substitutes?)
+          (show-what-to-build store derivations
+                              #:use-substitutes? use-substitutes?
+                              #:dry-run? dry-run?)
+          (unless dry-run?
+            (build-derivations store derivations))
+          (format #t "The source store file name: ~a~%"
+                  (package-source-derivation->store-file-name
+                   derivation)))))))
 
 (define (package-build-log-file package-id)
   "Return the build log file of a package PACKAGE-ID.
