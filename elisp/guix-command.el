@@ -317,6 +317,7 @@ to be modified."
     ;; and --do-not-upgrade, use them only as options (not as switches).
     ("--upgrade"        :switch? nil)
     ("--do-not-upgrade" :char ?n :switch? nil)
+    ("--list-profiles"  :char ?P)
     ("--roll-back"      :char ?R)
     ("--show"           :char ?h :fun guix-read-package-name)))
 
