@@ -1,6 +1,6 @@
 ;;; guix-command.el --- Popup interface for guix shell commands  -*- lexical-binding: t -*-
 
-;; Copyright © 2015–2019 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015–2020 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -207,8 +207,8 @@ to be modified."
 (defvar guix-command-improve-common-build-argument
   '(("--debug"           :char ?D :fun read-number)
     ("--max-silent-time" :char ?X)
-    ("--no-build-hook"   :char ?h)
     ("--no-grafts"       :char ?G)
+    ("--no-offload"      :char ?O)
     ("--no-substitutes"  :char ?s)
     ("--rounds"          :char ?R :fun read-number)))
 
