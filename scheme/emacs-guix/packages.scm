@@ -393,7 +393,7 @@ MATCH-PARAMS is a list of parameters that REGEXP can match."
 
 (define (packages-from-file file)
   "Return a list of packages from FILE."
-  (let ((package (load (canonicalize-path file))))
+  (let ((package (primitive-load (canonicalize-path file))))
     (if (package? package)
         (begin
           (register-package package)
