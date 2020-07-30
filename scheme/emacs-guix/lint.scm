@@ -1,6 +1,6 @@
 ;;; lint.scm --- Code related to linting Guix packages
 
-;; Copyright © 2015, 2017, 2019 Alex Kost <alezost@gmail.com>
+;; Copyright © 2015, 2017, 2019–2020 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -25,7 +25,8 @@
   #:use-module (guix ui)
   #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix utils)
-  #:autoload   (emacs-guix packages) (package-by-id-or-name)
+  #:autoload   (emacs-guix packages) (package-specification
+                                      package-by-id-or-name)
   #:export (lint-checker-names
             lint-checker-sexps
             lint-package

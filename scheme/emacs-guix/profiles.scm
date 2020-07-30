@@ -1,6 +1,6 @@
 ;;; profiles.scm --- Code related to Guix profiles
 
-;; Copyright © 2017–2019 Alex Kost <alezost@gmail.com>
+;; Copyright © 2017–2020 Alex Kost <alezost@gmail.com>
 ;; Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
 ;; This file is part of Emacs-Guix.
@@ -29,7 +29,7 @@
   #:use-module (srfi srfi-1)
   #:use-module (guix profiles)
   #:use-module (guix search-paths)
-  #:autoload   (guix store roots) (gc-roots)
+  #:autoload   (guix store roots) (user-owned? gc-roots)
   #:export (manifest-entry->name+version+output
             manifest-entries-by-name
             manifest-entry-by-output
