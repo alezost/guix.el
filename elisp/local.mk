@@ -109,7 +109,7 @@ nodist_lisp_DATA =				\
   $(AUTOLOADS)
 
 $(AUTOLOADS): $(EL_FILES)
-	$(AM_V_GEN) $(EMACS) -Q --batch --eval					\
+	$(AM_V_GEN) $(EMACS) -Q --batch -l autoload --eval			\
 	  "(let ((backup-inhibited t)						\
 	         (generated-autoload-file \"$(abs_builddir)/$(AUTOLOADS)\"))	\
 	     (update-directory-autoloads \"$(abs_srcdir)/%D%\"))"
