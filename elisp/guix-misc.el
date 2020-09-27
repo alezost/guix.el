@@ -243,7 +243,7 @@ If PROFILE is nil, use `guix-current-profile'."
                          (concat path separator current-value)
                        path)))
         (setenv variable value)
-        (when (equalp variable "PATH")
+        (when (equal variable "PATH")
           (setq exec-path (split-string value ":")))))))
 
 
