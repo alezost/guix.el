@@ -309,6 +309,7 @@ this address (it should be defined by
     (with-current-buffer buffer
       (geiser-repl-mode)
       (geiser-impl--set-buffer-implementation impl)
+      (geiser-repl--set-this-buffer-project 'guix)
       (geiser-repl--autodoc-mode -1)
       (goto-char (point-max))
       (let ((prompt (geiser-con--combined-prompt
