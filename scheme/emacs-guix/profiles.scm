@@ -29,6 +29,8 @@
   #:use-module (srfi srfi-1)
   #:use-module (guix profiles)
   #:use-module (guix search-paths)
+  #:use-module ((guix scripts package)
+                #:select (search-path-environment-variables))
   #:autoload   (guix store roots) (user-owned? gc-roots)
   #:export (manifest-entry->name+version+output
             manifest-entries-by-name
@@ -117,10 +119,6 @@ of RESULT.  ENTRIES is a list of manifest entries with NAME/VERSION."
 
 
 ;;; Search paths
-
-(define search-path-environment-variables
-  ;; It is not exported from (guix scripts package) module.
-  (@@ (guix scripts package) search-path-environment-variables))
 
 (define* (search-paths profiles #:key (type 'exact))
   "Return a list with 'search paths' environment variables for PROFILES."
