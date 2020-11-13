@@ -28,8 +28,7 @@
 
 (define (compressor-names)
   "Return a list of names of available pack compressors."
-  (map (@@ (guix scripts pack) compressor-name)
-       (@@ (guix scripts pack) %compressors)))
+  (map compressor-name %compressors))
 
 (define (pack-format-names)
   "Return a list of names of available pack formats."
@@ -37,6 +36,6 @@
                 ((name . _proc)
                  (symbol->string name))
                 (_ #f))
-              (@@ (guix scripts pack) %formats)))
+              %formats))
 
 ;;; pack.scm ends here
