@@ -27,6 +27,8 @@
 (define-module (emacs-guix system)
   #:use-module (gnu system)
   #:use-module (gnu bootloader)
+  #:use-module ((gnu system)
+                #:select (operating-system-firmware))
   #:use-module (guix utils)
   #:use-module (emacs-guix emacs)
   #:use-module (emacs-guix utils)
@@ -51,8 +53,7 @@
 (define (system-firmware-sexp os)
   "Return sexp for the firmware packages of OS."
   (map package-specification
-       ;; 'operating-system-firmware' is not exported.
-       ((@@ (gnu system) operating-system-firmware) os)))
+       (operating-system-firmware os)))
 
 (define %system-param-alist
   `((kernel             . ,system-kernel-sexp)
