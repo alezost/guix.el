@@ -38,6 +38,7 @@
   #:use-module (guix derivations)
   #:use-module (guix ui)
   #:autoload   (guix scripts) (build-package)
+  #:autoload   (guix scripts build) (log-url)
   #:autoload   (guix scripts package) (build-and-use-profile
                                        delete-generations)
   #:use-module (emacs-guix utils)
@@ -197,6 +198,6 @@ Return #f if the build log is not found."
       (let* ((derivation (package-derivation store package))
              (file       (derivation-file-name derivation)))
         (or (log-file store file)
-            ((@@ (guix scripts build) log-url) store file))))))
+            (log-url store file))))))
 
 ;;; actions.scm ends here
