@@ -19,7 +19,7 @@
 
 ;;; Commentary:
 
-;; This file provides 'info' interface for GuixSD system configuration
+;; This file provides 'info' interface for Guix System configuration
 ;; files – i.e., for 'operating-system' declaration.
 
 ;;; Code:

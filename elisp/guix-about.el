@@ -80,13 +80,10 @@ This is not really a text, it is a list of arguments passed to
 `fancy-splash-insert'.")
 
 (defun guix-logo-file ()
-  "Return the file name of Guix(SD) logo image.
-Return nil, if the image cannot be found."
+  "Return the file name of the Guix logo image.
+Return nil if the image cannot be found."
   (when guix-image-directory
-    (expand-file-name (if (guix-guixsd?)
-                          "guixsd-logo.svg"
-                        "guix-logo.svg")
-                      guix-image-directory)))
+    (expand-file-name "guix-logo.svg" guix-image-directory)))
 
 ;; Guix builds Emacs-Guix with 'emacs-minimal' package which does not
 ;; support many things including image stuff.  This leads to a

@@ -20,7 +20,7 @@
 ;;; Commentary:
 
 ;; This file provides a 'list' interface for displaying locations of
-;; GuixSD services.
+;; Guix System services.
 
 ;;; Code:
 

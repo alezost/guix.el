@@ -22,7 +22,7 @@ In short, Emacs-Guix provides the following features:
 
   + profiles
 
-  + profile generations (including system generations for GuixSD)
+  + profile generations (including system generations for Guix System)
 
   + packages
 
@@ -94,7 +94,7 @@ the current commit of Emacs-Guix using [[file:guix.scm]] file:
 guix package --install-from-file=guix.scm
 #+END_SRC
 
-* IMPORTANT NOTE for non-GuixSD users
+* IMPORTANT NOTE for non-Guix-System users
 
 If you installed Guix using [[https://www.gnu.org/software/guix/manual/en/html_node/Binary-Installation.html][Binary Installation]] method, most likely your
 environment (in particular, =GUILE_LOAD_PATH=) does not know where Guile

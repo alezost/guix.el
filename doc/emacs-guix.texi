@@ -339,7 +339,7 @@ Display installed packages.  As explained above, @kbd{M-x
 guix-installed-packages} uses an arbitrary profile that you can specify,
 while the other commands display packages installed in 2 special
 profiles: @file{~/.guix-profile} and @file{/run/current-system/profile}
-(only on GuixSD).
+(only on Guix System).
 
 @findex guix-obsolete-packages
 @item M-x guix-obsolete-packages
@@ -632,7 +632,7 @@ the default user profile
 profile, populated by @code{guix pull}
 
 @item /var/guix/profiles/system
-system profile (only on GuixSD)
+system profile (only on Guix System)
 
 @item @env{GUIX_PROFILE}
 (only if this environment variable is set and this profile is not the
@@ -739,7 +739,7 @@ date/time prompt,,, org, The Org Manual}).
 
 @end table
 
-If you use GuixSD, you may also look at the system generations using
+If you use Guix System, you may also look at the system generations using
 the similar commands (@pxref{System Commands}).
 
 @node Generation Keys
@@ -783,7 +783,7 @@ with another marked generation.
 @node System
 @chapter System
 
-This chapter describes Emacs-Guix features related to GuixSD, in
+This chapter describes Emacs-Guix features related to Guix System, in
 particular:
 
 @itemize
@@ -802,7 +802,7 @@ particular:
 @section System From File
 
 @cindex system
-Your system configuration file (for GuixSD) contains
+Your system configuration file (for Guix System) contains
 @code{operating-system} declaration (@pxref{operating-system
 Reference,,, guix, The GNU Guix Reference Manual}).
 
@@ -823,7 +823,7 @@ provides.
 @section Services
 
 @cindex services
-If you use GuixSD, you may have a wish to become more familiar with
+If you use Guix System, you may have a wish to become more familiar with
 the system services (@pxref{Services,,, guix, The GNU Guix Reference
 Manual}).  Emacs-Guix provides several commands to display these
 services.
@@ -838,7 +838,7 @@ services.
 
 The interface for services is very similar to the interface for
 packages (@pxref{Packages}).  The following commands allows you to
-look at the GuixSD services.
+look at the Guix System services.
 
 @table @kbd
 

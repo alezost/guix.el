@@ -20,7 +20,7 @@
 ;;; Commentary:
 
 ;; This module provides the code to get info about system generations of
-;; GuixSD profiles.
+;; Guix System profiles.
 
 ;;; Code:
 

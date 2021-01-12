@@ -28,10 +28,6 @@
 (require 'bui-utils)
 (require 'guix nil t)
 
-(defun guix-guixsd? ()
-  "Return non-nil, if current system is GuixSD."
-  (file-exists-p "/run/current-system"))
-
 (defun guix-assert-build-farm ()
   "Raise an error if `build-farm' package does not exist."
   (unless (require 'build-farm nil t)
@@ -336,7 +332,7 @@ See `guix-support-dired' for details.  See also `guix-read-file-name'."
                          mustmatch initial predicate)))
 
 (defun guix-read-os-file-name ()
-  "Read file name with GuixSD 'operating-system' declaration."
+  "Read file name with Guix System 'operating-system' declaration."
   (guix-read-file-name-maybe "System configuration file: "))
 
 (defun guix-find-file (file)

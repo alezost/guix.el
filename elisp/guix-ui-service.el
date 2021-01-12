@@ -19,7 +19,7 @@
 
 ;;; Commentary:
 
-;; This file provides 'list'/'info' interface for GuixSD services.
+;; This file provides 'list'/'info' interface for Guix System services.
 
 ;;; Code:
 
