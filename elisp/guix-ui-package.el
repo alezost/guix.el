@@ -1,6 +1,6 @@
 ;;; guix-ui-package.el --- Interface for displaying packages  -*- lexical-binding: t -*-
 
-;; Copyright © 2014–2019 Alex Kost <alezost@gmail.com>
+;; Copyright © 2014–2019, 2021 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -1512,8 +1512,13 @@ a version number.  Examples: \"guile\", \"guile@2.0.11\".
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
-   (list (guix-read-package-name)
-         (guix-ui-read-package-profile)))
+   (let ((packages (guix-package-names))
+         (at-point (car (split-string (thing-at-point 'symbol t)
+                                      "@"))))
+     (list (guix-read-package-name "Package: "
+                                   (and (member at-point packages)
+                                        at-point))
+           (guix-ui-read-package-profile))))
   (guix-package-get-display profile 'name name))
 
 ;;;###autoload
