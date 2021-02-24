@@ -194,7 +194,7 @@ Or it may be some package variant that cannot be handled by
 Emacs-Guix.  For example, it may be so called 'canonical package'
 used by '%%base-packages' in an operating-system declaration.
 
-Try \"\\[guix-search-by-name]\" to find this package.")
+Try \"\\[guix-packages-by-name-regexp]\" to find this package.")
                  (bui-get-string (car ids)))
       (message ""))))
 

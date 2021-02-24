@@ -9,7 +9,7 @@ This document describes Emacs-Guix, the Emacs interface for the
 @uref{https://www.gnu.org/software/guix/, GNU Guix} package manager.
 
 @quotation
-Copyright @copyright{} 2014-2019 Alex Kost@*
+Copyright @copyright{} 2014-2019, 2021 Alex Kost@*
 Copyright @copyright{} 2018 Oleg Pykhalov
 
 Permission is granted to copy, distribute and/or modify this document
@@ -368,6 +368,19 @@ separated by commas) and a dependency type (it should be either
 @item M-x guix-packages-by-name
 Display package(s) with the specified name.
 
+@findex guix-packages-by-regexp
+@vindex guix-package-search-params
+@item M-x guix-packages-by-regexp
+Search for packages by a specified regexp.  By default, ``name'',
+``synopsis'' and ``description'' of the packages will be searched.  This
+can be changed by modifying @code{guix-package-search-params} variable.
+
+@findex guix-packages-by-name-regexp
+@item M-x guix-packages-by-name-regexp
+Search for packages with names matching a specified regexp.  This
+command is the same as @code{guix-packages-by-regexp}, except only a
+package ``name'' is searched.
+
 @findex guix-packages-by-license
 @item M-x guix-packages-by-license
 Display package(s) with the specified license.
@@ -390,19 +403,6 @@ look like.
 Display packages from the specified file with @code{operating-system}
 declaration (@pxref{Using the Configuration System,,, guix, The GNU
 Guix Reference Manual}).
-
-@findex guix-search-by-regexp
-@vindex guix-package-search-params
-@item M-x guix-search-by-regexp
-Search for packages by a specified regexp.  By default, ``name'',
-``synopsis'' and ``description'' of the packages will be searched.  This
-can be changed by modifying @code{guix-package-search-params} variable.
-
-@findex guix-search-by-name
-@item M-x guix-search-by-name
-Search for packages with names matching a specified regexp.  This
-command is the same as @code{guix-search-by-regexp}, except only a
-package ``name'' is searched.
 
 @end table
 

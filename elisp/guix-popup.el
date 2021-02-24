@@ -1,6 +1,6 @@
 ;;; guix-popup.el --- Popup interface for Emacs-Guix commands
 
-;; Copyright © 2018–2019 Alex Kost <alezost@gmail.com>
+;; Copyright © 2018–2019, 2021 Alex Kost <alezost@gmail.com>
 
 ;; This file is part of Emacs-Guix.
 
@@ -102,9 +102,9 @@ String is made of variable VAR-NAME and its value."
              (?h "hidden" guix-hidden-packages)
              "Search for packages"
              (?n "by name" guix-packages-by-name)
-             (?N "by regexp (in name only)" guix-search-by-name)
+             (?N "by regexp (in name only)" guix-packages-by-name-regexp)
              (?r "by regexp (in name, synopsis, description)"
-                 guix-search-by-regexp)
+                 guix-packages-by-regexp)
              (?L "by location" guix-packages-by-location)
              (?c "by license" guix-packages-by-license)
              (?d "depending on other package(s)" guix-dependent-packages)

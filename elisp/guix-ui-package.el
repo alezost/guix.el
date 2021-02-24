@@ -1521,6 +1521,40 @@ Interactively with prefix, prompt for PROFILE."
            (guix-ui-read-package-profile))))
   (guix-package-get-display profile 'name name))
 
+
+;;;###autoload
+(defun guix-packages-by-regexp (regexp &optional params profile)
+  "Search for Guix packages by REGEXP.
+PARAMS are package parameters that should be searched.
+If PARAMS are not specified, use `guix-package-search-params'.
+
+If PROFILE is nil, use `guix-current-profile'.
+Interactively with prefix, prompt for PROFILE."
+  (interactive
+   (list (read-regexp "Regexp: " nil 'guix-package-search-history)
+         nil (guix-ui-read-package-profile)))
+  (guix-package-get-display profile 'regexp regexp
+                            (or params guix-package-search-params)))
+
+;;;###autoload
+(define-obsolete-function-alias 'guix-search-by-regexp
+  'guix-packages-by-regexp "0.5.3")
+
+;;;###autoload
+(defun guix-packages-by-name-regexp (regexp &optional profile)
+  "Search for Guix packages matching REGEXP in a package name.
+If PROFILE is nil, use `guix-current-profile'.
+Interactively with prefix, prompt for PROFILE."
+  (interactive
+   (list (read-string "Package name by regexp: "
+                      nil 'guix-package-search-history)
+         (guix-ui-read-package-profile)))
+  (guix-packages-by-regexp regexp '(name) profile))
+
+;;;###autoload
+(define-obsolete-function-alias 'guix-search-by-name
+  'guix-packages-by-name-regexp "0.5.3")
+
 ;;;###autoload
 (defun guix-packages-by-license (license &optional profile)
   "Display Guix packages with LICENSE.
@@ -1585,31 +1619,6 @@ installed in a system profile, use
               (guix-read-package-profile guix-system-profile))))
   (guix-package-get-display (or profile guix-system-profile)
                             'from-os-file file))
-
-;;;###autoload
-(defun guix-search-by-regexp (regexp &optional params profile)
-  "Search for Guix packages by REGEXP.
-PARAMS are package parameters that should be searched.
-If PARAMS are not specified, use `guix-package-search-params'.
-
-If PROFILE is nil, use `guix-current-profile'.
-Interactively with prefix, prompt for PROFILE."
-  (interactive
-   (list (read-regexp "Regexp: " nil 'guix-package-search-history)
-         nil (guix-ui-read-package-profile)))
-  (guix-package-get-display profile 'regexp regexp
-                            (or params guix-package-search-params)))
-
-;;;###autoload
-(defun guix-search-by-name (regexp &optional profile)
-  "Search for Guix packages matching REGEXP in a package name.
-If PROFILE is nil, use `guix-current-profile'.
-Interactively with prefix, prompt for PROFILE."
-  (interactive
-   (list (read-string "Package name by regexp: "
-                      nil 'guix-package-search-history)
-         (guix-ui-read-package-profile)))
-  (guix-search-by-regexp regexp '(name) profile))
 
 ;;;###autoload
 (defun guix-installed-packages (&optional profile)
