@@ -1513,8 +1513,9 @@ If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
    (let ((packages (guix-package-names))
-         (at-point (car (split-string (thing-at-point 'symbol t)
-                                      "@"))))
+         (at-point (car (split-string
+                         (or (thing-at-point 'symbol t) "")
+                         "@"))))
      (list (guix-read-package-name "Package: "
                                    (and (member at-point packages)
                                         at-point))
