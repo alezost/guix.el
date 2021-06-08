@@ -52,6 +52,13 @@ a separate line)."
                  (const :tag "List of outputs" output))
   :group 'guix-package)
 
+(defcustom guix-package-use-name-at-point t
+  "If non-nil, \\[guix-packages-by-name] uses symbol at point as default
+if it is a package name.
+If nil, then no default name is used."
+  :type 'boolean
+  :group 'guix-package)
+
 (defun guix-package-list-type ()
   "Return BUI list entry-type by `guix-package-list-type' variable."
   (guix-make-symbol guix-package-list-type))
@@ -1512,12 +1519,13 @@ a version number.  Examples: \"guile\", \"guile@2.0.11\".
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
-   (let ((at-point (thing-at-point 'symbol t))
-         default-pkg)
-     (when (stringp at-point)
-       (let ((at-point (car (split-string at-point "@"))))
-         (setq default-pkg (and (member at-point (guix-package-names))
-                            at-point))))
+   (let (default-pkg)
+     (when guix-package-use-name-at-point
+       (let ((at-point (thing-at-point 'symbol t)))
+         (when (stringp at-point)
+           (let ((at-point (car (split-string at-point "@"))))
+             (setq default-pkg (and (member at-point (guix-package-names))
+                                    at-point))))))
      (list (guix-read-package-name "Package: " default-pkg)
            (guix-ui-read-package-profile))))
   (guix-package-get-display profile 'name name))
