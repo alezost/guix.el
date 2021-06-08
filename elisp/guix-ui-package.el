@@ -1512,15 +1512,15 @@ a version number.  Examples: \"guile\", \"guile@2.0.11\".
 If PROFILE is nil, use `guix-current-profile'.
 Interactively with prefix, prompt for PROFILE."
   (interactive
-   (let ((packages (guix-package-names))
-         (at-point (car (split-string (thing-at-point 'symbol t)
-                                      "@"))))
-     (list (guix-read-package-name "Package: "
-                                   (and (member at-point packages)
-                                        at-point))
+   (let ((at-point (thing-at-point 'symbol t))
+         default-pkg)
+     (when (stringp at-point)
+       (let ((at-point (car (split-string at-point "@"))))
+         (setq default-pkg (and (member at-point (guix-package-names))
+                            at-point))))
+     (list (guix-read-package-name "Package: " default-pkg)
            (guix-ui-read-package-profile))))
   (guix-package-get-display profile 'name name))
-
 
 ;;;###autoload
 (defun guix-packages-by-regexp (regexp &optional params profile)
