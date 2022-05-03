@@ -328,7 +328,6 @@ this address (it should be defined by
                geiser-guile--debugger-prompt-regexp))
         (geiser-repl--startup impl address)
         (geiser-repl--autodoc-mode 1)
-        (geiser-company--setup geiser-repl-company-p)
         (add-hook 'comint-output-filter-functions
                   'guix-repl-output-filter
                   nil t)
