@@ -29,7 +29,7 @@
 ;; The main purpose of this file though is to make a development
 ;; environment for building Emacs-Guix:
 ;;
-;;   guix environment --pure --load=guix.scm
+;;   guix shell --pure --file=guix.scm
 ;;   ./autogen.sh
 ;;   ./configure
 ;;   make
